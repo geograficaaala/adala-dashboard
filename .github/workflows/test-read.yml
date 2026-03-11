@@ -1,1 +1,36 @@
-name: placeholder
+name: Test read Google Sheets
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-read:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create folders
+        run: mkdir -p data_raw/atitlan_recicla data_processed
+
+      - name: Read sheets
+        env:
+          GOOGLE_CREDS_JSON: ${{ secrets.GOOGLE_CREDS_JSON }}
+          SHEET_ID_CDM_ATITLAN: ${{ secrets.SHEET_ID_CDM_ATITLAN }}
+          SHEET_ID_MATERIALES_ATITLAN: ${{ secrets.SHEET_ID_MATERIALES_ATITLAN }}
+        run: python scripts/test_read_sheets.py
+
+      - name: Upload CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-csv-atitlan
+          path: data_raw/atitlan_recicla/*.csv
