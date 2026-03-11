@@ -38,8 +38,8 @@ def main():
     sheet_id_cdm = os.environ["SHEET_ID_CDM_ATITLAN"]
     sheet_id_materiales = os.environ["SHEET_ID_MATERIALES_ATITLAN"]
 
-    rows_cdm = read_range(service, sheet_id_cdm, "A1:ZZ1000")
-    rows_materiales = read_range(service, sheet_id_materiales, "A1:ZZ3000")
+   rows_cdm = read_range(service, sheet_id_cdm, "EXPORT_GITHUB!A1:ZZ1000")
+rows_materiales = read_range(service, sheet_id_materiales, "EXPORT_COMPRAS!A1:ZZ3000")
 
     save_csv(rows_cdm, "data_raw/atitlan_recicla/cdm_raw.csv")
     save_csv(rows_materiales, "data_raw/atitlan_recicla/materiales_raw.csv")
