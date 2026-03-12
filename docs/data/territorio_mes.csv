@@ -1,0 +1,166 @@
+record_key,programa,anio,mes_num,mes,zona,territorio,tipo_operacion,mujeres_activas,mujeres_actividades,mujeres_comercializacion,mujeres_comercializacion_no_inscritas,mujeres_inscritas_total,mujeres_nuevas_inscritas,materiales_lideresas_qq,materiales_municipalidad_qq,total_materiales_qq,ingreso_bruto_lideresas,gasto_transporte,pago_coop_lideresas,ingreso_neto_lideresas,ingreso_bruto_municipalidad,pago_coop_municipalidad,ingreso_neto_municipalidad,ingreso_bruto_total,ingreso_neto_total_territorio,ingreso_neto_cooperativa,horas_trabajadas_lideresas,ingreso_diario_lideresa,pet_qq,vidrio_cerveza_gronn_unid,vidrio_vino_gronn_unid,vidrio_cerveza_surusic_unid,vidrio_vino_surusic_unid,vidrio_peso_qq,vidrio_total_qq,ingreso_pet,ingreso_vidrio_peso,ingreso_vidrio_gronn,ingreso_vidrio_surusic
+ATITLAN_RECICLA|2026|01|San Andrés Semetabaj,atitlan_recicla,2026,1,ENE,Kaqchiquel,San Andrés Semetabaj,mujeres,3.0,1.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|San Antonio Palopó,atitlan_recicla,2026,1,ENE,Kaqchiquel,San Antonio Palopó,mujeres,4.0,4.0,0.0,0.0,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|Santa Catarina Palopó,atitlan_recicla,2026,1,ENE,Kaqchiquel,Santa Catarina Palopó,mujeres,4.0,2.0,1.0,0.0,4.0,0.0,25.56,0.0,25.56,430.1,0.0,0.0,430.1,0.0,0.0,0.0,430.1,430.1,0.0,53.0,86.02000000000001,1.4,0.0,0.0,0.0,0.0,22.0,22.0,47.0,352.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|Sololá,atitlan_recicla,2026,1,ENE,Kaqchiquel,Sololá,mujeres_y_muni,6.0,5.0,2.0,0.0,6.0,0.0,160.87,0.0,160.87,3082.3,0.0,14.4,3067.9,0.0,0.0,0.0,3082.3,3067.9,14.4,294.0,306.79,4.96,0.0,0.0,0.0,0.0,70.1,70.1,177.0,1430.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|Jaibalito,atitlan_recicla,2026,1,ENE,Las Lagunas,Jaibalito,mujeres,2.0,2.0,2.0,0.0,3.0,0.0,17.81,0.0,17.81,363.25,0.0,0.0,363.25,0.0,0.0,0.0,363.25,363.25,0.0,31.7,36.325,1.26,0.0,0.0,0.0,0.0,4.95,4.95,43.65,92.1,0.0,0.0
+ATITLAN_RECICLA|2026|01|San Juan La Laguna,atitlan_recicla,2026,1,ENE,Las Lagunas,San Juan La Laguna,mujeres,3.0,3.0,2.0,0.0,5.0,0.0,78.46,0.0,78.46,1455.12,0.0,0.0,1455.12,0.0,0.0,0.0,1455.12,1455.12,0.0,101.3,145.512,0.56,0.0,0.0,0.0,0.0,48.98,48.98,22.4,1018.07,0.0,0.0
+ATITLAN_RECICLA|2026|01|San Marcos La Laguna,atitlan_recicla,2026,1,ENE,Las Lagunas,San Marcos La Laguna,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,40.11,40.11,0.0,0.0,0.0,0.0,897.55,224.0,673.55,897.55,673.55,224.0,0.0,,8.31,0.0,0.0,0.0,0.0,22.9,22.9,175.4,363.9,0.0,0.0
+ATITLAN_RECICLA|2026|01|Santa Cruz La Laguna,atitlan_recicla,2026,1,ENE,Las Lagunas,Santa Cruz La Laguna,mujeres,3.0,3.0,3.0,0.0,5.0,0.0,37.3,0.0,37.3,636.21,0.0,0.0,636.21,0.0,0.0,0.0,636.21,636.21,0.0,125.1,42.414,1.02,0.0,0.0,0.0,0.0,30.62,30.62,33.6,536.96,0.0,0.0
+ATITLAN_RECICLA|2026|01|Tzununá,atitlan_recicla,2026,1,ENE,Las Lagunas,Tzununá,mujeres,4.0,4.0,4.0,0.0,5.0,0.0,84.49,0.0,84.49,2271.04,0.0,367.8,1903.24,0.0,0.0,0.0,2271.04,1903.24,367.8,150.3,95.162,5.64,454.0,176.0,0.0,0.0,55.52,59.550000000000004,222.5,1159.19,283.5,0.0
+ATITLAN_RECICLA|2026|01|Panajachel,atitlan_recicla,2026,1,ENE,Tzolojya,Panajachel,mujeres,11.0,11.0,4.0,0.0,7.0,0.0,950.04,0.0,950.04,19993.56,1750.0,4.8,19988.760000000002,0.0,0.0,0.0,19993.56,19988.760000000002,4.8,475.0,999.4380000000001,68.57,0.0,0.0,0.0,0.0,520.03,520.03,2251.8,11929.36,0.0,
+ATITLAN_RECICLA|2026|01|Santa Clara La Laguna,atitlan_recicla,2026,1,ENE,Tzolojya,Santa Clara La Laguna,mujeres,5.0,4.0,3.0,1.0,5.0,0.0,53.44,0.0,53.44,1188.28,0.0,0.0,1188.28,0.0,0.0,0.0,1188.28,1188.28,0.0,44.0,59.414,0.7,0.0,0.0,0.0,0.0,51.24,51.24,23.5,1127.28,0.0,0.0
+ATITLAN_RECICLA|2026|01|Santa Lucía Utatlán,atitlan_recicla,2026,1,ENE,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,26.25,26.25,0.0,0.0,0.0,0.0,598.85,59.1,539.75,598.85,539.75,59.1,0.0,,4.93,0.0,0.0,0.0,0.0,15.6,15.6,146.55,312.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|Santa María Visitación,atitlan_recicla,2026,1,ENE,Tzolojya,Santa María Visitación,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,2.94,2.94,0.0,0.0,,0.0,64.68,5.88,58.800000000000004,64.68,58.800000000000004,5.88,0.0,,0.0,0.0,0.0,0.0,0.0,2.94,2.94,0.0,58.8,0.0,0.0
+ATITLAN_RECICLA|2026|01|San Lucas Tolimán,atitlan_recicla,2026,1,ENE,Zona Sur,San Lucas Tolimán,mujeres_y_muni,7.0,7.0,7.0,2.0,6.0,0.0,259.53,0.0,259.53,6903.5,425.0,146.4,6757.1,0.0,0.0,0.0,6903.5,6757.1,146.4,435.0,150.15777777777777,40.35,0.0,0.0,0.0,0.0,138.0,138.0,1859.5,2379.0,0.0,0.0
+ATITLAN_RECICLA|2026|01|Santiago Atitlán,atitlan_recicla,2026,1,ENE,Zona Sur,Santiago Atitlán,mujeres_y_muni,9.0,9.0,8.0,0.0,11.0,0.0,156.5,0.0,156.5,3774.25,480.0,72.0,3702.25,0.0,0.0,0.0,3774.25,3702.25,72.0,395.0,92.55625,3.5,0.0,0.0,0.0,0.0,140.0,140.0,140.0,2490.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|San Andrés Semetabaj,atitlan_recicla,2026,2,FEB,Kaqchiquel,San Andrés Semetabaj,mujeres,3.0,1.0,1.0,0.0,3.0,0.0,36.79,0.0,36.79,688.77,0.0,0.0,688.77,0.0,0.0,0.0,688.77,688.77,0.0,90.0,137.754,0.52,0.0,0.0,0.0,0.0,22.41,22.41,20.8,457.02,0.0,0.0
+ATITLAN_RECICLA|2026|02|San Antonio Palopó,atitlan_recicla,2026,2,FEB,Kaqchiquel,San Antonio Palopó,mujeres,4.0,4.0,0.0,0.0,4.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santa Catarina Palopó,atitlan_recicla,2026,2,FEB,Kaqchiquel,Santa Catarina Palopó,mujeres,4.0,2.0,1.0,0.0,4.0,0.0,19.28,0.0,19.28,294.82,0.0,0.0,294.82,0.0,0.0,0.0,294.82,294.82,0.0,32.0,58.964,0.91,0.0,0.0,0.0,0.0,15.81,15.81,29.9,227.82,0.0,0.0
+ATITLAN_RECICLA|2026|02|Sololá,atitlan_recicla,2026,2,FEB,Kaqchiquel,Sololá,mujeres_y_muni,6.0,5.0,1.0,0.0,6.0,0.0,103.73,0.0,103.73,1928.84,0.0,17.1,1911.74,0.0,0.0,0.0,1928.84,1911.74,17.1,268.0,382.348,4.13,0.0,0.0,0.0,0.0,33.86,33.86,135.0,667.64,0.0,0.0
+ATITLAN_RECICLA|2026|02|Jaibalito,atitlan_recicla,2026,2,FEB,Las Lagunas,Jaibalito,mujeres,2.0,2.0,2.0,0.0,3.0,0.0,18.19,0.0,18.19,356.8,0.0,0.0,356.8,0.0,0.0,0.0,356.8,356.8,0.0,35.8,35.68,0.73,0.0,0.0,0.0,0.0,7.3,7.3,27.4,137.8,0.0,0.0
+ATITLAN_RECICLA|2026|02|San Juan La Laguna,atitlan_recicla,2026,2,FEB,Las Lagunas,San Juan La Laguna,mujeres,3.0,3.0,3.0,0.0,5.0,0.0,79.79,0.0,79.79,1552.93,0.0,0.0,1552.93,0.0,0.0,0.0,1552.93,1552.93,0.0,90.0,103.52866666666667,2.4,0.0,0.0,0.0,0.0,66.26,66.26,79.0,1287.3,0.0,0.0
+ATITLAN_RECICLA|2026|02|San Marcos La Laguna,atitlan_recicla,2026,2,FEB,Las Lagunas,San Marcos La Laguna,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,97.66,97.66,0.0,0.0,0.0,0.0,1652.09,303.16,1348.9299999999998,1652.09,1348.9299999999998,303.16,0.0,,6.3,0.0,0.0,0.0,0.0,62.02,62.02,150.9,934.84,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santa Cruz La Laguna,atitlan_recicla,2026,2,FEB,Las Lagunas,Santa Cruz La Laguna,mujeres,3.0,3.0,3.0,0.0,5.0,0.0,44.62,0.0,44.62,1028.86,0.0,0.0,1028.86,0.0,0.0,0.0,1028.86,1028.86,0.0,126.9,68.59066666666666,1.6,0.0,0.0,0.0,0.0,37.45,37.45,50.35,698.26,0.0,0.0
+ATITLAN_RECICLA|2026|02|Tzununá,atitlan_recicla,2026,2,FEB,Las Lagunas,Tzununá,mujeres,4.0,4.0,4.0,0.0,5.0,0.0,59.85,0.0,59.85,1054.91,0.0,0.0,1054.91,0.0,0.0,0.0,1054.91,1054.91,0.0,98.0,52.74550000000001,1.18,0.0,0.0,0.0,0.0,47.94,47.94,39.45,921.7,0.0,0.0
+ATITLAN_RECICLA|2026|02|Panajachel,atitlan_recicla,2026,2,FEB,Tzolojya,Panajachel,mujeres,11.0,5.0,5.0,0.0,7.0,0.0,599.91,0.0,599.91,11456.75,1300.0,2.75,11454.0,0.0,0.0,0.0,11456.75,11454.0,2.75,328.0,458.16,26.56,0.0,0.0,0.0,0.0,303.28,303.28,799.0,6732.6,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santa Clara La Laguna,atitlan_recicla,2026,2,FEB,Tzolojya,Santa Clara La Laguna,mujeres,5.0,2.0,2.0,1.0,5.0,0.0,42.0,0.0,42.0,924.0,0.0,0.0,924.0,0.0,0.0,0.0,924.0,924.0,0.0,38.0,61.6,0.0,0.0,0.0,0.0,0.0,42.0,42.0,0.0,924.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santa Lucía Utatlán,atitlan_recicla,2026,2,FEB,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,,,0.0,32.92,32.92,0.0,0.0,0.0,0.0,749.5,70.65,678.85,749.5,678.85,70.65,0.0,,5.09,0.0,0.0,0.0,0.0,20.8,20.8,163.15,416.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santa María Visitación,atitlan_recicla,2026,2,FEB,Tzolojya,Santa María Visitación,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,15.9,15.9,0.0,0.0,0.0,0.0,528.0,64.5,463.5,528.0,463.5,64.5,0.0,,7.3,0.0,0.0,0.0,0.0,5.0,5.0,255.5,100.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|San Lucas Tolimán,atitlan_recicla,2026,2,FEB,Zona Sur,San Lucas Tolimán,mujeres_y_muni,6.0,6.0,5.0,1.0,6.0,0.0,214.0,0.0,214.0,5555.0,485.0,88.75,5466.25,0.0,0.0,0.0,5555.0,5466.25,88.75,465.0,182.20833333333331,34.25,0.0,0.0,0.0,0.0,137.0,137.0,1540.0,2285.0,0.0,0.0
+ATITLAN_RECICLA|2026|02|Santiago Atitlán,atitlan_recicla,2026,2,FEB,Zona Sur,Santiago Atitlán,mujeres_y_muni,7.0,7.0,7.0,0.0,11.0,0.0,198.45,0.0,198.45,4350.75,395.0,60.0,4290.75,0.0,0.0,0.0,4350.75,4290.75,60.0,410.0,122.59285714285713,4.15,0.0,0.0,0.0,0.0,177.0,177.0,163.0,3156.0,0.0,0.0
+ATITLAN_RECICLA|2026|03|San Andrés Semetabaj,atitlan_recicla,2026,3,MAR,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|03|San Antonio Palopó,atitlan_recicla,2026,3,MAR,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Santa Catarina Palopó,atitlan_recicla,2026,3,MAR,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Sololá,atitlan_recicla,2026,3,MAR,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Jaibalito,atitlan_recicla,2026,3,MAR,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|San Juan La Laguna,atitlan_recicla,2026,3,MAR,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|San Marcos La Laguna,atitlan_recicla,2026,3,MAR,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|03|Santa Cruz La Laguna,atitlan_recicla,2026,3,MAR,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|03|Tzununá,atitlan_recicla,2026,3,MAR,Las Lagunas,Tzununá,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Panajachel,atitlan_recicla,2026,3,MAR,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Santa Clara La Laguna,atitlan_recicla,2026,3,MAR,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Santa Lucía Utatlán,atitlan_recicla,2026,3,MAR,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|03|Santa María Visitación,atitlan_recicla,2026,3,MAR,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|03|San Lucas Tolimán,atitlan_recicla,2026,3,MAR,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|03|Santiago Atitlán,atitlan_recicla,2026,3,MAR,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|San Andrés Semetabaj,atitlan_recicla,2026,4,ABR,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|04|San Antonio Palopó,atitlan_recicla,2026,4,ABR,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Santa Catarina Palopó,atitlan_recicla,2026,4,ABR,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Sololá,atitlan_recicla,2026,4,ABR,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Jaibalito,atitlan_recicla,2026,4,ABR,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|San Juan La Laguna,atitlan_recicla,2026,4,ABR,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|San Marcos La Laguna,atitlan_recicla,2026,4,ABR,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|04|Santa Cruz La Laguna,atitlan_recicla,2026,4,ABR,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|04|Tzununá,atitlan_recicla,2026,4,ABR,Las Lagunas,Tzununá,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Panajachel,atitlan_recicla,2026,4,ABR,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Santa Clara La Laguna,atitlan_recicla,2026,4,ABR,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Santa Lucía Utatlán,atitlan_recicla,2026,4,ABR,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|04|Santa María Visitación,atitlan_recicla,2026,4,ABR,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|04|San Lucas Tolimán,atitlan_recicla,2026,4,ABR,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|04|Santiago Atitlán,atitlan_recicla,2026,4,ABR,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|San Andrés Semetabaj,atitlan_recicla,2026,5,MAY,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|05|San Antonio Palopó,atitlan_recicla,2026,5,MAY,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Santa Catarina Palopó,atitlan_recicla,2026,5,MAY,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Sololá,atitlan_recicla,2026,5,MAY,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Jaibalito,atitlan_recicla,2026,5,MAY,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|San Juan La Laguna,atitlan_recicla,2026,5,MAY,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|San Marcos La Laguna,atitlan_recicla,2026,5,MAY,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|05|Santa Cruz La Laguna,atitlan_recicla,2026,5,MAY,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|05|Tzununá,atitlan_recicla,2026,5,MAY,Las Lagunas,Tzununá,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Panajachel,atitlan_recicla,2026,5,MAY,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Santa Clara La Laguna,atitlan_recicla,2026,5,MAY,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Santa Lucía Utatlán,atitlan_recicla,2026,5,MAY,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|05|Santa María Visitación,atitlan_recicla,2026,5,MAY,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|05|San Lucas Tolimán,atitlan_recicla,2026,5,MAY,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|05|Santiago Atitlán,atitlan_recicla,2026,5,MAY,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|San Andrés Semetabaj,atitlan_recicla,2026,6,JUN,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|06|San Antonio Palopó,atitlan_recicla,2026,6,JUN,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Santa Catarina Palopó,atitlan_recicla,2026,6,JUN,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Sololá,atitlan_recicla,2026,6,JUN,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Jaibalito,atitlan_recicla,2026,6,JUN,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|San Juan La Laguna,atitlan_recicla,2026,6,JUN,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|San Marcos La Laguna,atitlan_recicla,2026,6,JUN,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|06|Santa Cruz La Laguna,atitlan_recicla,2026,6,JUN,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|06|Tzununá,atitlan_recicla,2026,6,JUN,Las Lagunas,Tzununá,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Panajachel,atitlan_recicla,2026,6,JUN,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Santa Clara La Laguna,atitlan_recicla,2026,6,JUN,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Santa Lucía Utatlán,atitlan_recicla,2026,6,JUN,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|06|Santa María Visitación,atitlan_recicla,2026,6,JUN,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|06|San Lucas Tolimán,atitlan_recicla,2026,6,JUN,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|06|Santiago Atitlán,atitlan_recicla,2026,6,JUN,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|07|San Andrés Semetabaj,atitlan_recicla,2026,7,JUL,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|07|San Antonio Palopó,atitlan_recicla,2026,7,JUL,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|07|Santa Catarina Palopó,atitlan_recicla,2026,7,JUL,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|Sololá,atitlan_recicla,2026,7,JUL,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|07|Jaibalito,atitlan_recicla,2026,7,JUL,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|San Juan La Laguna,atitlan_recicla,2026,7,JUL,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|San Marcos La Laguna,atitlan_recicla,2026,7,JUL,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|Santa Cruz La Laguna,atitlan_recicla,2026,7,JUL,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|Tzununá,atitlan_recicla,2026,7,JUL,Las Lagunas,Tzununá,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|07|Panajachel,atitlan_recicla,2026,7,JUL,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|07|Santa Clara La Laguna,atitlan_recicla,2026,7,JUL,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|Santa Lucía Utatlán,atitlan_recicla,2026,7,JUL,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|Santa María Visitación,atitlan_recicla,2026,7,JUL,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|07|San Lucas Tolimán,atitlan_recicla,2026,7,JUL,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|07|Santiago Atitlán,atitlan_recicla,2026,7,JUL,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|08|San Andrés Semetabaj,atitlan_recicla,2026,8,AGO,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|08|San Antonio Palopó,atitlan_recicla,2026,8,AGO,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|08|Santa Catarina Palopó,atitlan_recicla,2026,8,AGO,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|Sololá,atitlan_recicla,2026,8,AGO,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|08|Jaibalito,atitlan_recicla,2026,8,AGO,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|San Juan La Laguna,atitlan_recicla,2026,8,AGO,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|San Marcos La Laguna,atitlan_recicla,2026,8,AGO,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|Santa Cruz La Laguna,atitlan_recicla,2026,8,AGO,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|Tzununá,atitlan_recicla,2026,8,AGO,Las Lagunas,Tzununá,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|08|Panajachel,atitlan_recicla,2026,8,AGO,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|08|Santa Clara La Laguna,atitlan_recicla,2026,8,AGO,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|Santa Lucía Utatlán,atitlan_recicla,2026,8,AGO,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|Santa María Visitación,atitlan_recicla,2026,8,AGO,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|08|San Lucas Tolimán,atitlan_recicla,2026,8,AGO,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|08|Santiago Atitlán,atitlan_recicla,2026,8,AGO,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|09|San Andrés Semetabaj,atitlan_recicla,2026,9,SEP,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,0.0,0.0
+ATITLAN_RECICLA|2026|09|San Antonio Palopó,atitlan_recicla,2026,9,SEP,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|09|Santa Catarina Palopó,atitlan_recicla,2026,9,SEP,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|Sololá,atitlan_recicla,2026,9,SEP,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|09|Jaibalito,atitlan_recicla,2026,9,SEP,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|San Juan La Laguna,atitlan_recicla,2026,9,SEP,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|San Marcos La Laguna,atitlan_recicla,2026,9,SEP,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,0.0,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|Santa Cruz La Laguna,atitlan_recicla,2026,9,SEP,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|Tzununá,atitlan_recicla,2026,9,SEP,Las Lagunas,Tzununá,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|09|Panajachel,atitlan_recicla,2026,9,SEP,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|09|Santa Clara La Laguna,atitlan_recicla,2026,9,SEP,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|Santa Lucía Utatlán,atitlan_recicla,2026,9,SEP,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|Santa María Visitación,atitlan_recicla,2026,9,SEP,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|09|San Lucas Tolimán,atitlan_recicla,2026,9,SEP,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|09|Santiago Atitlán,atitlan_recicla,2026,9,SEP,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|San Andrés Semetabaj,atitlan_recicla,2026,10,OCT,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|San Antonio Palopó,atitlan_recicla,2026,10,OCT,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0
+ATITLAN_RECICLA|2026|10|Santa Catarina Palopó,atitlan_recicla,2026,10,OCT,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|Sololá,atitlan_recicla,2026,10,OCT,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|Jaibalito,atitlan_recicla,2026,10,OCT,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|San Juan La Laguna,atitlan_recicla,2026,10,OCT,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|San Marcos La Laguna,atitlan_recicla,2026,10,OCT,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|Santa Cruz La Laguna,atitlan_recicla,2026,10,OCT,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|Tzununá,atitlan_recicla,2026,10,OCT,Las Lagunas,Tzununá,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|Panajachel,atitlan_recicla,2026,10,OCT,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|Santa Clara La Laguna,atitlan_recicla,2026,10,OCT,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|Santa Lucía Utatlán,atitlan_recicla,2026,10,OCT,Tzolojya,Santa Lucía Utatlán,muni,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|Santa María Visitación,atitlan_recicla,2026,10,OCT,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,0.0,0.0,0.0,0.0,,,0.0,0.0,0.0,0.0,0.0,,,,,,,,0.0,,,,0.0
+ATITLAN_RECICLA|2026|10|San Lucas Tolimán,atitlan_recicla,2026,10,OCT,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|10|Santiago Atitlán,atitlan_recicla,2026,10,OCT,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,0.0,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|San Andrés Semetabaj,atitlan_recicla,2026,11,NOV,Kaqchiquel,San Andrés Semetabaj,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|San Antonio Palopó,atitlan_recicla,2026,11,NOV,Kaqchiquel,San Antonio Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santa Catarina Palopó,atitlan_recicla,2026,11,NOV,Kaqchiquel,Santa Catarina Palopó,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Sololá,atitlan_recicla,2026,11,NOV,Kaqchiquel,Sololá,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Jaibalito,atitlan_recicla,2026,11,NOV,Las Lagunas,Jaibalito,mujeres,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|San Juan La Laguna,atitlan_recicla,2026,11,NOV,Las Lagunas,San Juan La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|San Marcos La Laguna,atitlan_recicla,2026,11,NOV,Las Lagunas,San Marcos La Laguna,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santa Cruz La Laguna,atitlan_recicla,2026,11,NOV,Las Lagunas,Santa Cruz La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Tzununá,atitlan_recicla,2026,11,NOV,Las Lagunas,Tzununá,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Panajachel,atitlan_recicla,2026,11,NOV,Tzolojya,Panajachel,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santa Clara La Laguna,atitlan_recicla,2026,11,NOV,Tzolojya,Santa Clara La Laguna,mujeres,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santa Lucía Utatlán,atitlan_recicla,2026,11,NOV,Tzolojya,Santa Lucía Utatlán,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santa María Visitación,atitlan_recicla,2026,11,NOV,Tzolojya,Santa María Visitación,muni,,,,,,,,,0.0,,,,0.0,,,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|San Lucas Tolimán,atitlan_recicla,2026,11,NOV,Zona Sur,San Lucas Tolimán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,
+ATITLAN_RECICLA|2026|11|Santiago Atitlán,atitlan_recicla,2026,11,NOV,Zona Sur,Santiago Atitlán,mujeres_y_muni,,,,,,,,,0.0,,,,0.0,0.0,0.0,0.0,0.0,0.0,0.0,,,,,,,,,0.0,,,,

@@ -1,0 +1,242 @@
+record_key,programa,anio,mes,recolector,municipio_origen,zona_codigo,material,cantidad,pagado_unit_gtq,precio_vendido_unit_gtq,gtq_total_pagados,ingreso_total_venta,ingreso_cooperativa,source_sheet,source_row,mes_num
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|PET transparente|5,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,PET transparente,0.95,40.0,40.0,38.0,38.0,0.0,Compras,5,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|PET celeste|6,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,PET celeste,0.2,20.0,20.0,4.0,4.0,0.0,Compras,6,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|PET verde|7,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,PET verde,0.11,15.0,15.0,1.65,1.65,0.0,Compras,7,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|Chatarra 2da. |8,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,Chatarra 2da.,11.15,20.0,20.0,223.0,223.0,0.0,Compras,8,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|Cartón |9,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,Cartón,0.45,10.0,10.0,4.5,4.5,0.0,Compras,9,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|Quintal vidrio mixto|10,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,Quintal vidrio mixto,3.55,22.0,22.0,78.1,78.1,0.0,Compras,10,1
+Cooperativa Atitlán Recicla|ENE|LL - Jaibalito|Quintal vidrio VER|11,atitlan_recicla,2026,ENE,Lideresas,LL - Jaibalito,LL,Quintal vidrio VER,1.4,10.0,10.0,14.0,14.0,0.0,Compras,11,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|PET transparente|12,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,PET transparente,0.7,40.0,40.0,28.0,28.0,0.0,Compras,12,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|PET celeste|13,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,PET celeste,0.16,20.0,20.0,3.2,3.2,0.0,Compras,13,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|PET verde|14,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,PET verde,0.16,15.0,15.0,2.4,2.4,0.0,Compras,14,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|Galones de aceite |15,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,Galones de aceite,0.03,20.0,20.0,0.6,0.6,0.0,Compras,15,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|Plástico soplado (PEAD)|16,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,Plástico soplado (PEAD),0.35,35.0,35.0,12.25,12.25,0.0,Compras,16,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|Cartón |17,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,Cartón,5.28,10.0,10.0,52.800000000000004,52.800000000000004,0.0,Compras,17,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|Quintal vidrio mixto|18,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,Quintal vidrio mixto,19.23,22.0,22.0,423.06,423.06,0.0,Compras,18,1
+Cooperativa Atitlán Recicla|ENE|LL - Santa Cruz la Laguna|Quintal vidrio VER|19,atitlan_recicla,2026,ENE,Lideresas,LL - Santa Cruz la Laguna,LL,Quintal vidrio VER,11.39,10.0,10.0,113.9,113.9,0.0,Compras,19,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|PET transparente|20,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,PET transparente,3.94,50.0,50.0,197.0,197.0,0.0,Compras,20,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|PET celeste|21,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,PET celeste,0.65,15.0,15.0,9.75,9.75,0.0,Compras,21,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|PET verde|22,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,PET verde,1.05,15.0,15.0,15.75,15.75,0.0,Compras,22,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Galones de aceite |23,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Galones de aceite,0.73,15.0,15.0,10.95,10.95,0.0,Compras,23,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Plástico duro (PP)|24,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Plástico duro (PP),0.34,25.0,25.0,8.5,8.5,0.0,Compras,24,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Plástico soplado (PEAD)|25,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Plástico soplado (PEAD),1.67,30.0,30.0,50.099999999999994,50.099999999999994,0.0,Compras,25,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Cartón |26,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Cartón,16.27,10.0,10.0,162.7,162.7,0.0,Compras,26,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Papel mixto |27,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Papel mixto,0.29,20.0,20.0,5.8,5.8,0.0,Compras,27,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Quintal vidrio TR|28,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Quintal vidrio TR,52.15,21.0,21.0,1095.1499999999999,1095.1499999999999,0.0,Compras,28,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Quintal vidrio AM|29,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Quintal vidrio AM,2.95,20.0,20.0,59.0,59.0,0.0,Compras,29,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Quintal vidrio sucio|30,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Quintal vidrio sucio,0.42,12.0,12.0,5.04,5.04,0.0,Compras,30,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Botella Vino y Ron Limpia|31,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Botella Vino y Ron Limpia,176.0,0.45,1.25,79.2,220.0,140.8,Compras,31,1
+Cooperativa Atitlán Recicla|ENE|LL - Tzununá|Botella Modelo Limpia|32,atitlan_recicla,2026,ENE,Lideresas,LL - Tzununá,LL,Botella Modelo Limpia,454.0,0.45,0.95,204.3,431.29999999999995,226.99999999999994,Compras,32,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|PET transparente|33,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,PET transparente,0.4,50.0,50.0,20.0,20.0,0.0,Compras,33,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|PET celeste|34,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,PET celeste,0.14,15.0,15.0,2.1,2.1,0.0,Compras,34,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|PET verde|35,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,PET verde,0.02,15.0,15.0,0.3,0.3,0.0,Compras,35,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Plástico duro (PP)|36,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Plástico duro (PP),0.37,25.0,25.0,9.25,9.25,0.0,Compras,36,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Plástico soplado (PEAD)|37,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Plástico soplado (PEAD),0.51,30.0,30.0,15.3,15.3,0.0,Compras,37,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Chatarra 2da. |38,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Chatarra 2da.,3.75,20.0,20.0,75.0,75.0,0.0,Compras,38,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Aluminio latas|39,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Aluminio latas,0.16,300.0,300.0,48.0,48.0,0.0,Compras,39,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Cartón |40,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Cartón,21.55,10.0,10.0,215.5,215.5,0.0,Compras,40,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Papel mixto |41,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Papel mixto,2.58,20.0,20.0,51.6,51.6,0.0,Compras,41,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Quintal vidrio TR|42,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio TR,44.23,21.0,21.0,928.8299999999999,928.8299999999999,0.0,Compras,42,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Quintal vidrio AM|43,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio AM,4.03,20.0,20.0,80.60000000000001,80.60000000000001,0.0,Compras,43,1
+Cooperativa Atitlán Recicla|ENE|LL - San Juan la Laguna|Quintal vidrio sucio|44,atitlan_recicla,2026,ENE,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio sucio,0.72,12.0,12.0,8.64,8.64,0.0,Compras,44,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|PET transparente|45,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,PET transparente,5.2,25.0,50.0,130.0,260.0,130.0,Compras,45,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|PET celeste|46,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,PET celeste,2.86,15.0,15.0,42.9,42.9,0.0,Compras,46,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|PET verde|47,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,PET verde,0.25,10.0,15.0,2.5,3.75,1.25,Compras,47,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Plástico duro (PP)|48,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Plástico duro (PP),1.05,25.0,25.0,26.25,26.25,0.0,Compras,48,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Plástico soplado (PEAD)|49,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Plástico soplado (PEAD),1.25,30.0,30.0,37.5,37.5,0.0,Compras,49,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Cartón |50,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Cartón,6.15,10.0,10.0,61.5,61.5,0.0,Compras,50,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Papel mixto |51,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Papel mixto,0.45,20.0,20.0,9.0,9.0,0.0,Compras,51,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Quintal vidrio TR|52,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio TR,15.45,17.0,21.0,262.65,324.45,61.80000000000001,Compras,52,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Quintal vidrio AM|53,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio AM,5.35,15.0,20.0,80.25,107.0,26.75,Compras,53,1
+Cooperativa Atitlán Recicla|ENE|LL - San Marcos la Laguna|Quintal vidrio sucio|54,atitlan_recicla,2026,ENE,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio sucio,2.1,10.0,12.0,21.0,25.200000000000003,4.200000000000003,Compras,54,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|PET transparente|55,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,PET transparente,3.89,40.0,40.0,155.6,155.6,0.0,Compras,55,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|PET celeste|56,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,PET celeste,1.07,20.0,20.0,21.400000000000002,21.400000000000002,0.0,Compras,56,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Plástico duro (PP)|57,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Plástico duro (PP),9.79,35.0,35.0,342.65,342.65,0.0,Compras,57,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Plástico soplado (PEAD)|58,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Plástico soplado (PEAD),3.59,35.0,35.0,125.64999999999999,125.64999999999999,0.0,Compras,58,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Galones de aceite |59,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Galones de aceite,0.47,20.0,20.0,9.399999999999999,9.399999999999999,0.0,Compras,59,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Chatarra 2da. |60,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Chatarra 2da.,5.59,20.0,20.0,111.8,111.8,0.0,Compras,60,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Aluminio latas|61,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Aluminio latas,0.48,370.0,400.0,177.6,192.0,14.400000000000006,Compras,61,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Cartón |62,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Cartón,31.35,10.0,10.0,313.5,313.5,0.0,Compras,62,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|cartoncillo|63,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,cartoncillo,24.16,5.0,5.0,120.8,120.8,0.0,Compras,63,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Papel mixto |64,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Papel mixto,10.38,25.0,25.0,259.5,259.5,0.0,Compras,64,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Quintal vidrio VER|65,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Quintal vidrio VER,9.35,10.0,10.0,93.5,93.5,0.0,Compras,65,1
+Cooperativa Atitlán Recicla|ENE|K - Sololá|Quintal vidrio mixto|66,atitlan_recicla,2026,ENE,Lideresas,K - Sololá,K,Quintal vidrio mixto,60.75,22.0,22.0,1336.5,1336.5,0.0,Compras,66,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|PET transparente|67,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,PET transparente,0.95,40.0,40.0,38.0,38.0,0.0,Compras,67,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|PET celeste|68,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,PET celeste,0.45,20.0,20.0,9.0,9.0,0.0,Compras,68,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|Plástico soplado (PEAD)|69,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,Plástico soplado (PEAD),0.38,35.0,35.0,13.3,13.3,0.0,Compras,69,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|Cartón |70,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,Cartón,1.78,10.0,10.0,17.8,17.8,0.0,Compras,70,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|Quintal vidrio VER|71,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,Quintal vidrio VER,11.0,10.0,10.0,110.0,110.0,0.0,Compras,71,1
+Cooperativa Atitlán Recicla|ENE|K - Santa Catarina Palopó|Quintal vidrio mixto|72,atitlan_recicla,2026,ENE,Lideresas,K - Santa Catarina Palopó,K,Quintal vidrio mixto,11.0,22.0,22.0,242.0,242.0,0.0,Compras,72,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|PET transparente|73,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,PET transparente,3.5,40.0,40.0,140.0,140.0,0.0,Compras,73,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Plástico duro (PP)|74,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Plástico duro (PP),0.37,35.0,35.0,12.95,12.95,0.0,Compras,74,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Plástico soplado (PEAD)|75,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Plástico soplado (PEAD),1.0,35.0,35.0,35.0,35.0,0.0,Compras,75,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Chatarra 2da. |76,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Chatarra 2da.,3.25,20.0,20.0,65.0,65.0,0.0,Compras,76,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Aluminio latas|77,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Aluminio latas,2.4,370.0,400.0,888.0,960.0,72.0,Compras,77,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Cartón |78,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Cartón,5.08,10.0,10.0,50.8,50.8,0.0,Compras,78,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|cartoncillo|79,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,cartoncillo,0.1,5.0,5.0,0.5,0.5,0.0,Compras,79,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Papel mixto |80,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Papel mixto,0.8,25.0,25.0,20.0,20.0,0.0,Compras,80,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Quintal vidrio VER|81,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio VER,20.0,10.0,10.0,200.0,200.0,0.0,Compras,81,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Quintal vidrio mixto|82,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio mixto,95.0,22.0,22.0,2090.0,2090.0,0.0,Compras,82,1
+Cooperativa Atitlán Recicla|ENE|ZS - Santiago Atitlán|Quintal vidrio sucio|83,atitlan_recicla,2026,ENE,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio sucio,25.0,8.0,8.0,200.0,200.0,0.0,Compras,83,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|PET transparente|84,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,PET transparente,35.45,50.0,50.0,1772.5000000000002,1772.5000000000002,0.0,Compras,84,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|PET celeste|85,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,PET celeste,2.7,20.0,20.0,54.0,54.0,0.0,Compras,85,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|PET verde|86,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,PET verde,2.2,15.0,15.0,33.0,33.0,0.0,Compras,86,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Plástico duro (PP)|87,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Plástico duro (PP),8.18,35.0,40.0,286.3,327.2,40.89999999999998,Compras,87,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Plástico soplado (PEAD)|88,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Plástico soplado (PEAD),5.8,35.0,40.0,203.0,232.0,29.0,Compras,88,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Chatarra 2da. |89,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Chatarra 2da.,27.97,20.0,20.0,559.4,559.4,0.0,Compras,89,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Aluminio latas|90,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Aluminio latas,2.55,370.0,400.0,943.4999999999999,1019.9999999999999,76.5,Compras,90,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Cartón |91,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Cartón,28.7,10.0,10.0,287.0,287.0,0.0,Compras,91,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Papel mixto |92,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Papel mixto,7.98,30.0,30.0,239.4,239.4,0.0,Compras,92,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Quintal vidrio mixto|93,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio mixto,85.0,23.0,23.0,1955.0,1955.0,0.0,Compras,93,1
+Cooperativa Atitlán Recicla|ENE|ZS - San Lucas Tolimán|Quintal vidrio sucio|94,atitlan_recicla,2026,ENE,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio sucio,53.0,8.0,8.0,424.0,424.0,0.0,Compras,94,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Clara la Laguna|PET transparente|95,atitlan_recicla,2026,ENE,Lideresas,T - Santa Clara la Laguna,T,PET transparente,0.5,40.0,40.0,20.0,20.0,0.0,Compras,95,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Clara la Laguna|PET celeste|96,atitlan_recicla,2026,ENE,Lideresas,T - Santa Clara la Laguna,T,PET celeste,0.1,20.0,20.0,2.0,2.0,0.0,Compras,96,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Clara la Laguna|PET verde|97,atitlan_recicla,2026,ENE,Lideresas,T - Santa Clara la Laguna,T,PET verde,0.1,15.0,15.0,1.5,1.5,0.0,Compras,97,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Clara la Laguna|Papel mixto |98,atitlan_recicla,2026,ENE,Lideresas,T - Santa Clara la Laguna,T,Papel mixto,1.5,25.0,25.0,37.5,37.5,0.0,Compras,98,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Clara la Laguna|Quintal vidrio TR|99,atitlan_recicla,2026,ENE,Lideresas,T - Santa Clara la Laguna,T,Quintal vidrio TR,51.24,22.0,22.0,1127.28,1127.28,0.0,Compras,99,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|PET transparente|100,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,PET transparente,45.52,40.0,40.0,1820.8000000000002,1820.8000000000002,0.0,Compras,100,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|PET celeste|101,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,PET celeste,17.05,20.0,20.0,341.0,341.0,0.0,Compras,101,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|PET verde|102,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,PET verde,6.0,15.0,15.0,90.0,90.0,0.0,Compras,102,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Plástico duro (PP)|103,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Plástico duro (PP),0.48,40.0,50.0,19.2,24.0,4.800000000000001,Compras,103,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Plástico duro (PP)|104,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Plástico duro (PP),7.0,50.0,50.0,350.0,350.0,0.0,Compras,104,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Plástico soplado (PEAD)|105,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Plástico soplado (PEAD),11.7,40.0,40.0,468.0,468.0,0.0,Compras,105,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Cartón |106,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Cartón,264.87,10.0,10.0,2648.7,2648.7,0.0,Compras,106,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Papel mixto |107,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Papel mixto,77.39,30.0,30.0,2321.7,2321.7,0.0,Compras,107,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Quintal vidrio TR|108,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Quintal vidrio TR,512.43,23.0,23.0,11785.89,11785.89,0.0,Compras,108,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Quintal vidrio AM|109,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Quintal vidrio AM,5.19,23.0,23.0,119.37,119.37,0.0,Compras,109,1
+Cooperativa Atitlán Recicla|ENE|T - Panajachel|Quintal vidrio VER|110,atitlan_recicla,2026,ENE,Lideresas,T - Panajachel,T,Quintal vidrio VER,2.41,10.0,10.0,24.1,24.1,0.0,Compras,110,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|PET transparente|111,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,PET transparente,3.63,35.0,40.0,127.05,145.2,18.14999999999999,Compras,111,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|PET verde|112,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,PET verde,0.55,15.0,15.0,8.25,8.25,0.0,Compras,112,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|PET celeste|113,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,PET celeste,0.75,15.0,20.0,11.25,15.0,3.75,Compras,113,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|Plástico soplado (PEAD)|114,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,Plástico soplado (PEAD),1.2,30.0,35.0,36.0,42.0,6.0,Compras,114,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|Cartón |115,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,Cartón,4.52,10.0,10.0,45.199999999999996,45.199999999999996,0.0,Compras,115,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|Quintal vidrio TR|116,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,Quintal vidrio TR,12.34,20.0,22.0,246.8,271.48,24.680000000000007,Compras,116,1
+Cooperativa Atitlán Recicla|ENE|T - Santa Lucía Utatlán|Quintal vidrio AM|117,atitlan_recicla,2026,ENE,Municipalidad,T - Santa Lucía Utatlán,T,Quintal vidrio AM,3.26,20.0,22.0,65.19999999999999,71.72,6.52000000000001,Compras,117,1
+Cooperativa Atitlán Recicla|ENE|T - Santa María Visitación|Quintal vidrio TR|118,atitlan_recicla,2026,ENE,Municipalidad,T - Santa María Visitación,T,Quintal vidrio TR,2.94,20.0,22.0,58.8,64.67999999999999,5.8799999999999955,Compras,118,1
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|PET transparente|119,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,PET transparente,0.64,40.0,40.0,25.6,25.6,0.0,Compras,119,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|PET celeste|120,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,PET celeste,0.09,20.0,20.0,1.7999999999999998,1.7999999999999998,0.0,Compras,120,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Plástico soplado (PEAD)|121,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Plástico soplado (PEAD),0.06,35.0,35.0,2.1,2.1,0.0,Compras,121,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Chatarra 2da. |122,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Chatarra 2da.,8.85,20.0,20.0,177.0,177.0,0.0,Compras,122,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Cartón |123,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Cartón,1.25,10.0,10.0,12.5,12.5,0.0,Compras,123,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Quintal vidrio TR|124,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Quintal vidrio TR,4.15,22.0,22.0,91.30000000000001,91.30000000000001,0.0,Compras,124,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Quintal vidrio AM|125,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Quintal vidrio AM,1.25,22.0,22.0,27.5,27.5,0.0,Compras,125,2
+Cooperativa Atitlán Recicla|FEB|LL - Jaibalito|Quintal vidrio VER|126,atitlan_recicla,2026,FEB,Lideresas,LL - Jaibalito,LL,Quintal vidrio VER,1.9,10.0,10.0,19.0,19.0,0.0,Compras,126,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|PET transparente|127,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,PET transparente,1.72,40.0,40.0,68.8,68.8,0.0,Compras,127,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|PET celeste|128,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,PET celeste,0.62,15.0,15.0,9.3,9.3,0.0,Compras,128,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|PET verde|129,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,PET verde,0.06,15.0,15.0,0.8999999999999999,0.8999999999999999,0.0,Compras,129,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Plástico duro (PP)|130,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Plástico duro (PP),0.53,25.0,25.0,13.25,13.25,0.0,Compras,130,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Plástico soplado (PEAD)|131,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Plástico soplado (PEAD),0.97,30.0,30.0,29.099999999999998,29.099999999999998,0.0,Compras,131,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Chatarra 2da. |132,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Chatarra 2da.,1.63,20.0,20.0,32.599999999999994,32.599999999999994,0.0,Compras,132,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Aluminio latas|133,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Aluminio latas,0.1,300.0,300.0,30.0,30.0,0.0,Compras,133,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Cartón |134,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Cartón,6.36,8.0,8.0,50.88,50.88,0.0,Compras,134,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Papel mixto |135,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Papel mixto,1.54,20.0,20.0,30.8,30.8,0.0,Compras,135,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Quintal vidrio TR|136,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio TR,56.07,20.0,20.0,1121.4,1121.4,0.0,Compras,136,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Quintal vidrio AM|137,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio AM,4.49,20.0,20.0,89.80000000000001,89.80000000000001,0.0,Compras,137,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Quintal vidrio VER|138,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio VER,3.82,15.0,15.0,57.3,57.3,0.0,Compras,138,2
+Cooperativa Atitlán Recicla|FEB|LL - San Juan la Laguna|Quintal vidrio mixto|139,atitlan_recicla,2026,FEB,Lideresas,LL - San Juan la Laguna,LL,Quintal vidrio mixto,1.88,10.0,10.0,18.799999999999997,18.799999999999997,0.0,Compras,139,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|PET transparente|140,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,PET transparente,0.95,40.0,40.0,38.0,38.0,0.0,Compras,140,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|PET celeste|141,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,PET celeste,0.52,20.0,20.0,10.4,10.4,0.0,Compras,141,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|PET verde|142,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,PET verde,0.13,15.0,15.0,1.9500000000000002,1.9500000000000002,0.0,Compras,142,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Plástico duro (PP)|143,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Plástico duro (PP),0.01,35.0,35.0,0.35000000000000003,0.35000000000000003,0.0,Compras,143,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Plástico soplado (PEAD)|144,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Plástico soplado (PEAD),0.79,35.0,35.0,27.650000000000002,27.650000000000002,0.0,Compras,144,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Galones de aceite |145,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Galones de aceite,0.14,20.0,20.0,2.8000000000000003,2.8000000000000003,0.0,Compras,145,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Aluminio latas|146,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Aluminio latas,0.56,350.0,350.0,196.00000000000003,196.00000000000003,0.0,Compras,146,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Cartón |147,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Cartón,3.22,10.0,10.0,32.2,32.2,0.0,Compras,147,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Papel mixto |148,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Papel mixto,0.85,25.0,25.0,21.25,21.25,0.0,Compras,148,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Quintal vidrio TR|149,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Quintal vidrio TR,25.78,22.0,22.0,567.1600000000001,567.1600000000001,0.0,Compras,149,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Quintal vidrio AM|150,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Quintal vidrio AM,1.2,22.0,22.0,26.4,26.4,0.0,Compras,150,2
+Cooperativa Atitlán Recicla|FEB|LL - Santa Cruz la Laguna|Quintal vidrio VER|151,atitlan_recicla,2026,FEB,Lideresas,LL - Santa Cruz la Laguna,LL,Quintal vidrio VER,10.47,10.0,10.0,104.7,104.7,0.0,Compras,151,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|PET transparente|152,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,PET transparente,0.87,40.0,40.0,34.8,34.8,0.0,Compras,152,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|PET celeste|153,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,PET celeste,0.25,15.0,15.0,3.75,3.75,0.0,Compras,153,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|PET verde|154,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,PET verde,0.06,15.0,15.0,0.8999999999999999,0.8999999999999999,0.0,Compras,154,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Plástico soplado (PEAD)|155,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Plástico soplado (PEAD),0.36,30.0,30.0,10.799999999999999,10.799999999999999,0.0,Compras,155,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Cartón |156,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Cartón,10.37,8.0,8.0,82.96,82.96,0.0,Compras,156,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Quintal vidrio TR|157,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Quintal vidrio TR,33.65,20.0,20.0,673.0,673.0,0.0,Compras,157,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Quintal vidrio AM|158,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Quintal vidrio AM,8.06,20.0,20.0,161.20000000000002,161.20000000000002,0.0,Compras,158,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Quintal vidrio VER|159,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Quintal vidrio VER,5.04,15.0,15.0,75.6,75.6,0.0,Compras,159,2
+Cooperativa Atitlán Recicla|FEB|LL - Tzununá|Quintal vidrio mixto|160,atitlan_recicla,2026,FEB,Lideresas,LL - Tzununá,LL,Quintal vidrio mixto,1.19,10.0,10.0,11.899999999999999,11.899999999999999,0.0,Compras,160,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|PET transparente|161,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,PET transparente,5.82,25.0,40.0,145.5,232.8,87.30000000000001,Compras,161,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|PET celeste|162,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,PET celeste,0.12,15.0,15.0,1.7999999999999998,1.7999999999999998,0.0,Compras,162,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|PET verde|163,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,PET verde,0.36,10.0,15.0,3.5999999999999996,5.3999999999999995,1.7999999999999998,Compras,163,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Plástico duro (PP)|164,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Plástico duro (PP),1.17,25.0,25.0,29.25,29.25,0.0,Compras,164,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Plástico soplado (PEAD)|165,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Plástico soplado (PEAD),0.39,30.0,30.0,11.700000000000001,11.700000000000001,0.0,Compras,165,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Cartón |166,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Cartón,27.78,8.0,8.0,222.24,222.24,0.0,Compras,166,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Quintal vidrio TR|167,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio TR,42.77,17.0,20.0,727.09,855.4000000000001,128.31000000000006,Compras,167,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Quintal vidrio AM|168,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio AM,3.05,15.0,20.0,45.75,61.0,15.25,Compras,168,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Quintal vidrio VER|169,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio VER,14.1,10.0,15.0,141.0,211.5,70.5,Compras,169,2
+Cooperativa Atitlán Recicla|FEB|LL - San Marcos la Laguna|Quintal vidrio sucio|170,atitlan_recicla,2026,FEB,Municipalidad,LL - San Marcos la Laguna,LL,Quintal vidrio sucio,2.1,10.0,10.0,21.0,21.0,0.0,Compras,170,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|PET transparente|171,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,PET transparente,4.0,40.0,40.0,160.0,160.0,0.0,Compras,171,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|PET celeste|172,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,PET celeste,0.15,20.0,20.0,3.0,3.0,0.0,Compras,172,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Plástico duro (PP)|173,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Plástico duro (PP),0.1,35.0,35.0,3.5,3.5,0.0,Compras,173,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Plástico soplado (PEAD)|174,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Plástico soplado (PEAD),0.3,35.0,35.0,10.5,10.5,0.0,Compras,174,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Chatarra 2da. |175,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Chatarra 2da.,0.35,20.0,20.0,7.0,7.0,0.0,Compras,175,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Aluminio latas|176,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Aluminio latas,2.0,370.0,400.0,740.0,800.0,60.0,Compras,176,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Cartón |177,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Cartón,10.0,10.0,10.0,100.0,100.0,0.0,Compras,177,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|cartoncillo|178,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,cartoncillo,0.15,5.0,5.0,0.75,0.75,0.0,Compras,178,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Papel mixto |179,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Papel mixto,4.4,25.0,25.0,110.00000000000001,110.00000000000001,0.0,Compras,179,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Quintal vidrio VER|180,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio VER,30.0,10.0,10.0,300.0,300.0,0.0,Compras,180,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Quintal vidrio mixto|181,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio mixto,120.0,22.0,22.0,2640.0,2640.0,0.0,Compras,181,2
+Cooperativa Atitlán Recicla|FEB|ZS - Santiago Atitlán|Quintal vidrio sucio|182,atitlan_recicla,2026,FEB,Lideresas,ZS - Santiago Atitlán,ZS,Quintal vidrio sucio,27.0,8.0,8.0,216.0,216.0,0.0,Compras,182,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|PET transparente|183,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,PET transparente,29.0,50.0,50.0,1450.0,1450.0,0.0,Compras,183,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|PET celeste|184,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,PET celeste,2.25,20.0,20.0,45.0,45.0,0.0,Compras,184,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|PET verde|185,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,PET verde,3.0,15.0,15.0,45.0,45.0,0.0,Compras,185,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Plástico duro (PP)|186,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Plástico duro (PP),2.25,35.0,40.0,78.75,90.0,11.25,Compras,186,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Plástico soplado (PEAD)|187,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Plástico soplado (PEAD),3.5,35.0,40.0,122.5,140.0,17.5,Compras,187,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Chatarra 2da. |188,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Chatarra 2da.,35.0,20.0,20.0,700.0,700.0,0.0,Compras,188,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Aluminio latas|189,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Aluminio latas,2.0,370.0,400.0,740.0,800.0,60.0,Compras,189,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Quintal vidrio VER|190,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio VER,47.0,10.0,10.0,470.0,470.0,0.0,Compras,190,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Quintal vidrio mixto|191,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio mixto,45.0,23.0,23.0,1035.0,1035.0,0.0,Compras,191,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Quintal vidrio mixto|192,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio mixto,30.0,22.0,22.0,660.0,660.0,0.0,Compras,192,2
+Cooperativa Atitlán Recicla|FEB|ZS - San Lucas Tolimán|Quintal vidrio sucio|193,atitlan_recicla,2026,FEB,Lideresas,ZS - San Lucas Tolimán,ZS,Quintal vidrio sucio,15.0,8.0,8.0,120.0,120.0,0.0,Compras,193,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|PET transparente|194,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,PET transparente,14.64,40.0,40.0,585.6,585.6,0.0,Compras,194,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|PET celeste|195,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,PET celeste,6.92,20.0,20.0,138.4,138.4,0.0,Compras,195,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|PET verde|196,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,PET verde,5.0,15.0,15.0,75.0,75.0,0.0,Compras,196,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Plástico duro (PP)|197,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Plástico duro (PP),0.0,40.0,50.0,0.0,0.0,0.0,Compras,197,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Plástico duro (PP)|198,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Plástico duro (PP),7.0,50.0,50.0,350.0,350.0,0.0,Compras,198,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Plástico soplado (PEAD)|199,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Plástico soplado (PEAD),7.78,40.0,40.0,311.2,311.2,0.0,Compras,199,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Galones de aceite |200,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Galones de aceite,0.55,20.0,25.0,11.0,13.750000000000002,2.7500000000000018,Compras,200,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Cartón |201,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Cartón,219.1,10.0,10.0,2191.0,2191.0,0.0,Compras,201,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|cartoncillo|202,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,cartoncillo,0.4,5.0,5.0,2.0,2.0,0.0,Compras,202,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Papel mixto |203,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Papel mixto,35.24,30.0,30.0,1057.2,1057.2,0.0,Compras,203,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Quintal vidrio TR|204,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Quintal vidrio TR,280.03,23.0,23.0,6440.69,6440.69,0.0,Compras,204,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Quintal vidrio AM|205,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Quintal vidrio AM,4.57,23.0,23.0,105.11000000000001,105.11000000000001,0.0,Compras,205,2
+Cooperativa Atitlán Recicla|FEB|T - Panajachel|Quintal vidrio VER|206,atitlan_recicla,2026,FEB,Lideresas,T - Panajachel,T,Quintal vidrio VER,18.68,10.0,10.0,186.8,186.8,0.0,Compras,206,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Clara la Laguna|Quintal vidrio TR|207,atitlan_recicla,2026,FEB,Lideresas,T - Santa Clara la Laguna,T,Quintal vidrio TR,42.0,22.0,22.0,924.0,924.0,0.0,Compras,207,2
+Cooperativa Atitlán Recicla|FEB|T - Santa María Visitación|PET transparente|208,atitlan_recicla,2026,FEB,Municipalidad,T - Santa María Visitación,T,PET transparente,7.3,35.0,40.0,255.5,292.0,36.5,Compras,208,2
+Cooperativa Atitlán Recicla|FEB|T - Santa María Visitación|Plástico duro (PP)|209,atitlan_recicla,2026,FEB,Municipalidad,T - Santa María Visitación,T,Plástico duro (PP),1.6,30.0,35.0,48.0,56.0,8.0,Compras,209,2
+Cooperativa Atitlán Recicla|FEB|T - Santa María Visitación|Plástico soplado (PEAD)|210,atitlan_recicla,2026,FEB,Municipalidad,T - Santa María Visitación,T,Plástico soplado (PEAD),2.0,30.0,35.0,60.0,70.0,10.0,Compras,210,2
+Cooperativa Atitlán Recicla|FEB|T - Santa María Visitación|Quintal vidrio TR|211,atitlan_recicla,2026,FEB,Municipalidad,T - Santa María Visitación,T,Quintal vidrio TR,5.0,20.0,22.0,100.0,110.0,10.0,Compras,211,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|PET transparente|212,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,PET transparente,4.34,35.0,40.0,151.9,173.6,21.69999999999999,Compras,212,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|PET verde|213,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,PET verde,0.75,15.0,15.0,11.25,11.25,0.0,Compras,213,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|Cartón |214,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,Cartón,5.56,10.0,10.0,55.599999999999994,55.599999999999994,0.0,Compras,214,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|Plástico soplado (PEAD)|215,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,Plástico soplado (PEAD),1.47,30.0,35.0,44.1,51.449999999999996,7.349999999999994,Compras,215,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|Quintal vidrio TR|216,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,Quintal vidrio TR,16.17,20.0,22.0,323.40000000000003,355.74,32.339999999999975,Compras,216,2
+Cooperativa Atitlán Recicla|FEB|T - Santa Lucía Utatlán|Quintal vidrio AM|217,atitlan_recicla,2026,FEB,Municipalidad,T - Santa Lucía Utatlán,T,Quintal vidrio AM,4.63,20.0,22.0,92.6,101.86,9.260000000000005,Compras,217,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|PET transparente|218,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,PET transparente,2.8,40.0,40.0,112.0,112.0,0.0,Compras,218,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|PET celeste|219,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,PET celeste,0.61,20.0,20.0,12.2,12.2,0.0,Compras,219,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|PET verde|220,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,PET verde,0.72,15.0,15.0,10.799999999999999,10.799999999999999,0.0,Compras,220,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Plástico duro (PP)|221,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Plástico duro (PP),4.72,35.0,35.0,165.2,165.2,0.0,Compras,221,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Plástico soplado (PEAD)|222,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Plástico soplado (PEAD),1.85,35.0,35.0,64.75,64.75,0.0,Compras,222,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Chatarra 2da. |223,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Chatarra 2da.,1.85,20.0,20.0,37.0,37.0,0.0,Compras,223,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Aluminio latas|224,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Aluminio latas,0.57,370.0,400.0,210.89999999999998,227.99999999999997,17.099999999999994,Compras,224,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Cartón |225,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Cartón,35.5,10.0,10.0,355.0,355.0,0.0,Compras,225,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|cartoncillo|226,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,cartoncillo,12.75,5.0,5.0,63.75,63.75,0.0,Compras,226,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Papel mixto |227,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Papel mixto,8.5,25.0,25.0,212.5,212.5,0.0,Compras,227,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Quintal vidrio VER|228,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Quintal vidrio VER,6.44,10.0,10.0,64.4,64.4,0.0,Compras,228,2
+Cooperativa Atitlán Recicla|FEB|K - Sololá|Quintal vidrio mixto|229,atitlan_recicla,2026,FEB,Lideresas,K - Sololá,K,Quintal vidrio mixto,27.42,22.0,22.0,603.24,603.24,0.0,Compras,229,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|PET transparente|230,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,PET transparente,0.6,40.0,40.0,24.0,24.0,0.0,Compras,230,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|PET celeste|231,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,PET celeste,0.25,20.0,20.0,5.0,5.0,0.0,Compras,231,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|PET verde|232,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,PET verde,0.06,15.0,15.0,0.8999999999999999,0.8999999999999999,0.0,Compras,232,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|Plástico duro (PP)|233,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,Plástico duro (PP),0.12,35.0,35.0,4.2,4.2,0.0,Compras,233,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|Plástico soplado (PEAD)|234,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,Plástico soplado (PEAD),0.42,35.0,35.0,14.7,14.7,0.0,Compras,234,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|Cartón |235,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,Cartón,1.62,10.0,10.0,16.200000000000003,16.200000000000003,0.0,Compras,235,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|cartoncillo|236,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,cartoncillo,0.4,5.0,5.0,2.0,2.0,0.0,Compras,236,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|Quintal vidrio VER|237,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,Quintal vidrio VER,10.0,10.0,10.0,100.0,100.0,0.0,Compras,237,2
+Cooperativa Atitlán Recicla|FEB|K - Santa Catarina Palopó|Quintal vidrio mixto|238,atitlan_recicla,2026,FEB,Lideresas,K - Santa Catarina Palopó,K,Quintal vidrio mixto,5.81,22.0,22.0,127.82,127.82,0.0,Compras,238,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|PET transparente|239,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,PET transparente,0.52,40.0,40.0,20.8,20.8,0.0,Compras,239,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Plástico duro (PP)|240,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Plástico duro (PP),0.19,35.0,35.0,6.65,6.65,0.0,Compras,240,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Plástico soplado (PEAD)|241,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Plástico soplado (PEAD),0.55,35.0,35.0,19.25,19.25,0.0,Compras,241,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Cartón |242,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Cartón,9.53,10.0,10.0,95.3,95.3,0.0,Compras,242,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Papel mixto |243,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Papel mixto,3.59,25.0,25.0,89.75,89.75,0.0,Compras,243,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Quintal vidrio VER|244,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Quintal vidrio VER,3.0,10.0,10.0,30.0,30.0,0.0,Compras,244,2
+Cooperativa Atitlán Recicla|FEB|K - San Andrés Semetabaj|Quintal vidrio mixto|245,atitlan_recicla,2026,FEB,Lideresas,K - San Andrés Semetabaj,K,Quintal vidrio mixto,19.41,22.0,22.0,427.02,427.02,0.0,Compras,245,2
