@@ -2,12 +2,248 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ADALA Dashboard</title>
-  <meta name="description" content="Dashboard institucional ADALA - Piloto Atitlán Recicla">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ADALA · Portal institucional</title>
+  <meta name="description" content="Portal institucional ADALA. Acceso al dashboard piloto de Atitlán Recicla.">
+  <style>
+    :root{
+      --bg:#f3f7fb;
+      --panel:#ffffff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#dbe6f0;
+      --brand:#0f766e;
+      --brand-2:#0ea5e9;
+      --shadow:0 18px 40px rgba(15,23,42,.08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(14,165,233,.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(15,118,110,.12), transparent 24%),
+        linear-gradient(180deg,#f9fbfd 0%,var(--bg) 100%);
+      min-height:100vh;
+    }
+    .shell{
+      max-width:1120px;
+      margin:0 auto;
+      padding:32px 20px 56px;
+    }
+    .hero{
+      background:var(--panel);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:32px;
+      padding:40px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:auto -80px -80px auto;
+      width:260px;
+      height:260px;
+      border-radius:999px;
+      background:linear-gradient(135deg, rgba(15,118,110,.12), rgba(14,165,233,.04));
+      pointer-events:none;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:#e6fffb;
+      color:var(--brand);
+      font-weight:700;
+      letter-spacing:.02em;
+      font-size:.85rem;
+    }
+    h1{
+      font-size:clamp(2rem,4vw,3.5rem);
+      line-height:1.02;
+      margin:18px 0 14px;
+      letter-spacing:-.03em;
+      max-width:760px;
+    }
+    .lead{
+      font-size:1.08rem;
+      color:var(--muted);
+      max-width:760px;
+      line-height:1.7;
+      margin:0 0 28px;
+    }
+    .cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-bottom:28px;
+    }
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      text-decoration:none;
+      font-weight:700;
+      border-radius:16px;
+      padding:14px 20px;
+      transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 12px 24px rgba(15,23,42,.10);
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--brand),var(--brand-2));
+      color:#fff;
+    }
+    .btn-secondary{
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+    .status-card{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:18px;
+    }
+    .status-card span{
+      display:block;
+      font-size:.8rem;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      color:var(--muted);
+      margin-bottom:8px;
+      font-weight:700;
+    }
+    .status-card strong{
+      display:block;
+      font-size:1.08rem;
+      margin-bottom:8px;
+    }
+    .status-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:.94rem;
+    }
+    .section{
+      margin-top:24px;
+      background:var(--panel);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:28px;
+    }
+    .section h2{
+      margin:0 0 10px;
+      font-size:1.3rem;
+    }
+    .section p{
+      color:var(--muted);
+      line-height:1.7;
+      margin:0;
+    }
+    .program-card{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:18px;
+      padding:20px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    }
+    .program-card small{
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+    .program-card h3{
+      margin:0 0 8px;
+      font-size:1.4rem;
+    }
+    .program-card p{
+      margin:0;
+      max-width:680px;
+    }
+    @media (max-width: 860px){
+      .hero{padding:28px}
+      .status-grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script src="./app.js"></script>
+  <main class="shell">
+    <section class="hero">
+      <div class="tag">ADALA · Portal institucional</div>
+      <h1>Dashboard institucional en construcción</h1>
+      <p class="lead">
+        Este portal será la entrada general de la asociación y más adelante mostrará un resumen ejecutivo del avance de todos los programas.
+        Por ahora, el piloto activo disponible es <strong>Atitlán Recicla</strong>.
+      </p>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="./index_atitlanrecicla.html">Entrar a Atitlán Recicla</a>
+        <a class="btn btn-secondary" href="./data/institucional_indicadores.csv">Ver CSV institucional actual</a>
+      </div>
+
+      <div class="status-grid">
+        <article class="status-card">
+          <span>Estado del portal</span>
+          <strong>En construcción</strong>
+          <p>La portada institucional general se completará cuando se integren los demás programas.</p>
+        </article>
+        <article class="status-card">
+          <span>Piloto activo</span>
+          <strong>Atitlán Recicla</strong>
+          <p>Ya cuenta con lectura, transformación de datos y tablero específico del programa.</p>
+        </article>
+        <article class="status-card">
+          <span>Objetivo final</span>
+          <strong>Visión institucional ADALA</strong>
+          <p>Una entrada general con acceso a tableros independientes por programa y un resumen ejecutivo común.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Qué verás en la siguiente etapa</h2>
+      <p>
+        Este sitio principal mostrará tarjetas por programa con semáforo de avance mensual, progreso acumulado anual y acceso directo a cada tablero.
+        Mientras tanto, la navegación se centra en el primer programa piloto ya operativo.
+      </p>
+
+      <div class="program-card">
+        <div>
+          <small>Programa disponible</small>
+          <h3>Atitlán Recicla</h3>
+          <p>
+            Monitoreo mensual de materiales reciclables, PET, vidrio, ingresos, participación y desempeño por zona, con comparación frente a metas mensuales y avance acumulado del año.
+          </p>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="./index_atitlanrecicla.html">Abrir dashboard</a>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
