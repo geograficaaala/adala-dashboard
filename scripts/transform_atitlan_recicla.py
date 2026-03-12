@@ -103,16 +103,61 @@ MONTHLY_METAS = {
 }
 
 INDICATOR_LABELS = {
-    "total_materiales_qq": ("materiales_generales", "Materiales reciclables recolectados", "qq"),
+    "total_materiales_qq": (
+        "materiales_generales",
+        "Materiales reciclables recolectados",
+        "qq",
+    ),
     "pet_qq": ("pet", "PET recolectado", "qq"),
     "vidrio_total_qq": ("vidrio", "Vidrio recolectado", "qq"),
-    "ingreso_bruto_total": ("ingreso_bruto_total", "Ingresos brutos totales", "GTQ"),
-    "ingreso_bruto_lideresas": ("ingreso_bruto_mujeres", "Ingresos brutos por mujeres", "GTQ"),
-    "ingreso_bruto_municipalidad": ("ingreso_bruto_municipalidades", "Ingresos brutos por municipalidades", "GTQ"),
-    "ingreso_diario_lideresa": ("ingreso_diario_lideresa", "Ingreso diario por lideresa", "GTQ/día"),
-    "pct_participacion_actividades": ("participacion_actividades", "Participación activa en actividades", "proporción"),
-    "pct_participacion_comercializacion": ("participacion_comercializacion", "Participación en comercialización", "proporción"),
+    "ingreso_bruto_total": (
+        "ingreso_bruto_total",
+        "Ingresos brutos totales",
+        "GTQ",
+    ),
+    "ingreso_bruto_lideresas": (
+        "ingreso_bruto_mujeres",
+        "Ingresos brutos por mujeres",
+        "GTQ",
+    ),
+    "ingreso_bruto_municipalidad": (
+        "ingreso_bruto_municipalidades",
+        "Ingresos brutos por municipalidades",
+        "GTQ",
+    ),
+    "ingreso_diario_lideresa": (
+        "ingreso_diario_lideresa",
+        "Ingreso diario por lideresa",
+        "GTQ/día",
+    ),
+    "pct_participacion_actividades": (
+        "participacion_actividades",
+        "Participación activa en actividades",
+        "proporción",
+    ),
+    "pct_participacion_comercializacion": (
+        "participacion_comercializacion",
+        "Participación en comercialización",
+        "proporción",
+    ),
 }
+
+MONTH_MAP = {
+    "ENE": 1,
+    "FEB": 2,
+    "MAR": 3,
+    "ABR": 4,
+    "MAY": 5,
+    "JUN": 6,
+    "JUL": 7,
+    "AGO": 8,
+    "SEP": 9,
+    "OCT": 10,
+    "NOV": 11,
+    "DIC": 12,
+}
+
+REV_MONTH_MAP = {v: k for k, v in MONTH_MAP.items()}
 
 
 def read_csv(path: Path) -> pd.DataFrame:
@@ -181,7 +226,9 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
     ] + [c for c in CDM_NUMERIC_COLS if c in cdm.columns]
 
     territorio_mes = cdm[territorio_cols].copy()
-    territorio_mes = territorio_mes.sort_values(["anio", "mes_num", "zona", "territorio"])
+    territorio_mes = territorio_mes.sort_values(
+        ["anio", "mes_num", "zona", "territorio"]
+    )
 
     agg_map = {}
     for col in AVG_COLS:
@@ -196,6 +243,7 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
     zona_group = ["programa", "anio", "mes_num", "mes", "zona"]
     zona_mes = territorio_mes.groupby(zona_group, dropna=False).agg(agg_map).reset_index()
+
     zonas_n = (
         territorio_mes.groupby(zona_group, dropna=False)["territorio"]
         .nunique()
@@ -209,7 +257,8 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
     if {"mujeres_actividades", "mujeres_activas"}.issubset(total_mes.columns):
         total_mes["pct_participacion_actividades"] = safe_div(
-            total_mes["mujeres_actividades"], total_mes["mujeres_activas"]
+            total_mes["mujeres_actividades"],
+            total_mes["mujeres_activas"],
         )
 
     if {
@@ -218,7 +267,8 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
         "mujeres_activas",
     }.issubset(total_mes.columns):
         total_mes["pct_participacion_comercializacion"] = safe_div(
-            total_mes["mujeres_comercializacion"] + total_mes["mujeres_comercializacion_no_inscritas"],
+            total_mes["mujeres_comercializacion"]
+            + total_mes["mujeres_comercializacion_no_inscritas"],
             total_mes["mujeres_activas"],
         )
 
@@ -251,23 +301,54 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
 def build_materiales_tables() -> tuple[pd.DataFrame, pd.DataFrame]:
     materiales = read_csv(RAW_DIR / "materiales_raw.csv")
-    materiales = to_numeric(materiales, ["anio", "mes"] + MATERIALES_NUMERIC_COLS)
+    materiales = to_numeric(materiales, ["anio"] + MATERIALES_NUMERIC_COLS)
 
     if "anio" in materiales.columns:
         materiales["anio"] = materiales["anio"].astype("Int64")
+
     if "mes" in materiales.columns:
-        materiales["mes"] = materiales["mes"].astype("Int64")
+        mes_raw = materiales["mes"].astype(str).str.strip().str.upper()
+    else:
+        mes_raw = pd.Series([""] * len(materiales), index=materiales.index, dtype="object")
+
+    if "record_key" in materiales.columns:
+        mes_from_key = (
+            materiales["record_key"]
+            .astype(str)
+            .str.split("|")
+            .str[1]
+            .fillna("")
+            .str.strip()
+            .str.upper()
+        )
+        mes_raw = mes_raw.mask(mes_raw.eq(""), mes_from_key)
+
+    mes_num = pd.to_numeric(mes_raw, errors="coerce")
+    mes_num = mes_num.fillna(mes_raw.map(MONTH_MAP))
+
+    materiales["mes_num"] = mes_num.astype("Int64")
+    materiales["mes"] = materiales["mes_num"].map(REV_MONTH_MAP)
 
     for col in ["recolector", "municipio_origen", "zona_codigo", "material"]:
         if col in materiales.columns:
             materiales[col] = materiales[col].astype(str).str.strip()
 
     if "record_key" in materiales.columns:
-        materiales = materiales[materiales["record_key"].astype(str).str.strip() != ""].copy()
+        materiales = materiales[
+            materiales["record_key"].astype(str).str.strip() != ""
+        ].copy()
 
     detalle = materiales.copy()
 
-    group_cols = ["programa", "anio", "mes", "zona_codigo", "municipio_origen", "material"]
+    group_cols = [
+        "programa",
+        "anio",
+        "mes_num",
+        "mes",
+        "zona_codigo",
+        "municipio_origen",
+        "material",
+    ]
     resumen_cols = [c for c in MATERIALES_NUMERIC_COLS if c in detalle.columns]
     resumen = detalle.groupby(group_cols, dropna=False)[resumen_cols].sum().reset_index()
 
