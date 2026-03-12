@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Atitlán Recicla · Dashboard</title>
+  <meta name="description" content="Dashboard operativo y de cumplimiento de metas de Atitlán Recicla.">
+  <style>
+    :root{
+      --bg:#f3f7fb;
+      --panel:#ffffff;
+      --ink:#0f172a;
+      --muted:#64748b;
+      --line:#dce6ef;
+      --brand:#0f766e;
+      --brand-2:#2563eb;
+      --ok:#15803d;
+      --warn:#ca8a04;
+      --bad:#b91c1c;
+      --ok-bg:#ecfdf5;
+      --warn-bg:#fffbeb;
+      --bad-bg:#fef2f2;
+      --shadow:0 16px 40px rgba(15,23,42,.08);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15,118,110,.10), transparent 24%),
+        linear-gradient(180deg,#f9fbfd 0%,var(--bg) 100%);
+      color:var(--ink);
+    }
+    .shell{max-width:1360px;margin:0 auto;padding:24px 18px 40px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+    .back-link{
+      text-decoration:none;color:var(--ink);font-weight:700;background:#fff;border:1px solid var(--line);
+      padding:12px 16px;border-radius:14px;box-shadow:var(--shadow)
+    }
+    .source-note{
+      color:var(--muted);font-size:.93rem;background:#fff;border:1px solid var(--line);
+      padding:12px 16px;border-radius:14px;box-shadow:var(--shadow)
+    }
+    .hero{
+      background:linear-gradient(135deg,rgba(15,118,110,.96),rgba(37,99,235,.92));
+      color:#fff;border-radius:32px;padding:30px;box-shadow:var(--shadow);margin-bottom:18px;
+    }
+    .hero-grid{
+      display:grid;grid-template-columns:1.4fr .8fr;gap:18px;align-items:end
+    }
+    .tag{
+      display:inline-flex;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.14);
+      font-size:.82rem;font-weight:700;letter-spacing:.03em
+    }
+    h1{margin:14px 0 10px;font-size:clamp(2rem,3.5vw,3.1rem);line-height:1.02;letter-spacing:-.03em}
+    .hero p{margin:0;color:rgba(255,255,255,.88);line-height:1.65;max-width:860px}
+    .hero-stats{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px
+    }
+    .mini-card{
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.16);
+      backdrop-filter:blur(4px);
+      border-radius:20px;padding:16px
+    }
+    .mini-card span{display:block;font-size:.8rem;color:rgba(255,255,255,.78);margin-bottom:6px}
+    .mini-card strong{font-size:1.08rem}
+    .controls{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px
+    }
+    .control-card,.panel,.kpi-card,.status-chip,.alert-item{
+      background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)
+    }
+    .control-card{
+      border-radius:18px;padding:14px 16px
+    }
+    .control-card label{
+      display:block;font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px
+    }
+    .control-card select{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+    .period-pill{
+      min-height:48px;display:flex;align-items:center;padding:12px 14px;border-radius:12px;background:#0f172a;color:#fff;font-weight:800
+    }
+    .section-title{
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin-bottom:14px;flex-wrap:wrap
+    }
+    .section-title h2{margin:0;font-size:1.2rem}
+    .section-title p{margin:0;color:var(--muted);line-height:1.5}
+    .kpi-grid{
+      display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px
+    }
+    .kpi-card{
+      border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:10px
+    }
+    .kpi-eyebrow{
+      font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700
+    }
+    .kpi-title{font-size:1rem;line-height:1.35;font-weight:700;min-height:44px}
+    .kpi-value{font-size:1.7rem;line-height:1.05;letter-spacing:-.03em;font-weight:800}
+    .kpi-meta{color:var(--muted);font-size:.92rem;line-height:1.5}
+    .badge{
+      display:inline-flex;align-items:center;justify-content:center;padding:7px 12px;border-radius:999px;font-weight:800;font-size:.78rem;letter-spacing:.04em;width:fit-content
+    }
+    .state-ok{background:var(--ok-bg);color:var(--ok)}
+    .state-warn{background:var(--warn-bg);color:var(--warn)}
+    .state-bad{background:var(--bad-bg);color:var(--bad)}
+    .state-neutral{background:#eff6ff;color:#1d4ed8}
+    .grid-2{
+      display:grid;grid-template-columns:1.35fr .95fr;gap:14px;margin-bottom:18px
+    }
+    .grid-2-eq{
+      display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px
+    }
+    .panel{
+      border-radius:24px;padding:18px;overflow:hidden
+    }
+    .chart-wrap{overflow-x:auto}
+    .chart-wrap svg{width:100%;min-width:760px;display:block;height:auto}
+    .legend{
+      display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin-top:12px
+    }
+    .legend i{display:inline-block;width:10px;height:10px;border-radius:999px;margin-right:8px;vertical-align:middle}
+    .legend .real{background:#0f766e}
+    .legend .meta{background:#94a3b8}
+    .legend .cum{background:#2563eb}
+    .semaforo{
+      width:100%;border-collapse:collapse;min-width:680px
+    }
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px}
+    table{width:100%;border-collapse:collapse;background:#fff}
+    th,td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap;font-size:.92rem}
+    thead th{background:#f8fafc;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:#475569}
+    tbody tr:hover{background:#f8fbff}
+    .progress-stack{display:flex;flex-direction:column;gap:14px}
+    .progress-item{padding:14px 0;border-bottom:1px solid var(--line)}
+    .progress-item:last-child{border-bottom:none}
+    .progress-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:8px}
+    .progress-head strong{font-size:.95rem}
+    .progress-head span{color:var(--muted);font-size:.9rem;text-align:right}
+    .bar{
+      height:12px;background:#eef2f7;border-radius:999px;overflow:hidden
+    }
+    .bar span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--brand-2))}
+    .zone-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .zone-card{
+      border:1px solid var(--line);border-radius:20px;padding:16px;background:linear-gradient(180deg,#fff 0%,#f8fbff 100%)
+    }
+    .zone-card h3{margin:0 0 10px;font-size:1.03rem}
+    .zone-card ul{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+    .zone-card li{display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+    .zone-card li span{color:var(--muted)}
+    .materials-list{display:grid;gap:10px}
+    .materials-row{
+      display:grid;grid-template-columns:1.1fr 1fr auto;gap:12px;align-items:center
+    }
+    .materials-row strong{font-size:.94rem}
+    .bar-mini{height:10px;background:#eef2f7;border-radius:999px;overflow:hidden}
+    .bar-mini span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#0ea5e9,#2563eb)}
+    .alerts{display:grid;gap:12px}
+    .alert-item{border-radius:18px;padding:14px 16px}
+    .alert-item strong{display:block;margin-bottom:6px}
+    .alert-item p{margin:0;color:var(--muted);line-height:1.55}
+    .empty{padding:18px;border:1px dashed var(--line);border-radius:18px;color:var(--muted);background:#f8fafc}
+    .footer-note{margin-top:18px;color:var(--muted);font-size:.92rem;text-align:right}
+    @media (max-width: 1120px){
+      .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .zone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero-grid,.grid-2,.grid-2-eq{grid-template-columns:1fr}
+    }
+    @media (max-width: 760px){
+      .controls,.kpi-grid,.zone-grid{grid-template-columns:1fr}
+      .materials-row{grid-template-columns:1fr}
+      .shell{padding:16px 14px 28px}
+      .hero{padding:22px}
+    }
+  </style>
+</head>
+<body>
+  <main class="shell" id="app">
+    <div class="empty">Cargando dashboard de Atitlán Recicla…</div>
+  </main>
+
+  <script>
+    const DATA_FILES = {
+      indicadores: "./data/institucional_indicadores.csv",
+      total: "./data/total_mes.csv",
+      zona: "./data/zona_mes.csv",
+      materiales: "./data/materiales_resumen_mes.csv",
+      territorio: "./data/territorio_mes.csv"
+    };
+
+    const MONTHS = {ENE:1,FEB:2,MAR:3,ABR:4,MAY:5,JUN:6,JUL:7,AGO:8,SEP:9,OCT:10,NOV:11,DIC:12};
+    const MONTHS_REV = Object.fromEntries(Object.entries(MONTHS).map(([k,v])=>[v,k]));
+    const KPI_PRIORITY = [
+      "materiales_generales",
+      "pet",
+      "vidrio",
+      "ingreso_bruto_total",
+      "ingreso_bruto_mujeres",
+      "ingreso_bruto_municipalidades",
+      "ingreso_diario_lideresa",
+      "participacion_actividades",
+      "participacion_comercializacion"
+    ];
+
+    document.addEventListener("DOMContentLoaded", () => boot().catch(showFatal));
+
+    async function boot(){
+      const datasets = await loadData();
+      const state = buildState(datasets);
+      render(state);
+      bindEvents(state);
+    }
+
+    async function loadData(){
+      const [indicadores,total,zona,materiales,territorio] = await Promise.all(
+        Object.values(DATA_FILES).map(fetchCsv)
+      );
+
+      const normalized = {
+        indicadores: indicadores.map(normalizeIndicador),
+        total: total.map(normalizeGeneric),
+        zona: zona.map(normalizeGeneric),
+        materiales: materiales.map(normalizeGeneric).map(ensureMes),
+        territorio: territorio.map(normalizeGeneric)
+      };
+
+      return normalized;
+    }
+
+    function buildState(data){
+      const periods = listPeriods(data.indicadores.length ? data.indicadores : data.total);
+      const latest = periods.at(-1) || null;
+
+      const availableYears = [...new Set(periods.map(p => p.anio))].sort((a,b)=>a-b);
+      const indicatorOptions = buildIndicatorOptions(data.indicadores);
+
+      return {
+        data,
+        periods,
+        latest,
+        selectedYear: latest ? latest.anio : (availableYears.at(-1) || null),
+        selectedIndicatorId: indicatorOptions.find(x => x.id === "materiales_generales")?.id || indicatorOptions[0]?.id || null,
+        availableYears,
+        indicatorOptions
+      };
+    }
+
+    function bindEvents(state){
+      const yearSelect = document.getElementById("yearSelect");
+      const indicatorSelect = document.getElementById("indicatorSelect");
+
+      yearSelect?.addEventListener("change", e => {
+        state.selectedYear = Number(e.target.value);
+        rerenderDynamic(state);
+      });
+
+      indicatorSelect?.addEventListener("change", e => {
+        state.selectedIndicatorId = e.target.value;
+        rerenderDynamic(state);
+      });
+    }
+
+    function render(state){
+      const latest = state.latest;
+      const latestRows = filterByPeriod(state.data.indicadores, latest);
+      const programa = latestRows[0]?.programa_nombre || latestRows[0]?.programa || "Atitlán Recicla";
+      const overall = computeOverallStatus(latestRows);
+      const yearSelectOptions = state.availableYears.map(y => `<option value="${y}" ${y===state.selectedYear?'selected':''}>${y}</option>`).join("");
+      const indicatorOptions = state.indicatorOptions.map(item => `<option value="${esc(item.id)}" ${item.id===state.selectedIndicatorId?'selected':''}>${esc(item.label)}</option>`).join("");
+
+      document.getElementById("app").innerHTML = `
+        <div class="topbar">
+          <a class="back-link" href="./index.html">← Volver al portal ADALA</a>
+          <div class="source-note">Fuente dinámica: CSV procesados en <strong>docs/data/</strong></div>
+        </div>
+
+        <section class="hero">
+          <div class="hero-grid">
+            <div>
+              <div class="tag">Programa piloto · dashboard específico</div>
+              <h1>${esc(programa)}</h1>
+              <p>
+                Seguimiento operativo y de cumplimiento de metas del programa. El tablero se actualiza cuando cambian los CSV procesados generados desde el flujo del Sheet.
+              </p>
+            </div>
+            <div class="hero-stats">
+              <div class="mini-card">
+                <span>Último período con datos</span>
+                <strong>${latest ? esc(latest.mes + " " + latest.anio) : "Sin datos"}</strong>
+              </div>
+              <div class="mini-card">
+                <span>Estado general del mes</span>
+                <strong>${overall.label}</strong>
+              </div>
+              <div class="mini-card">
+                <span>Cumplimiento promedio mensual</span>
+                <strong>${fmtPct(overall.avgRatio)}</strong>
+              </div>
+              <div class="mini-card">
+                <span>Indicadores evaluados</span>
+                <strong>${overall.indicatorsCount}</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="controls">
+          <article class="control-card">
+            <label>Año visible</label>
+            <select id="yearSelect">${yearSelectOptions}</select>
+          </article>
+          <article class="control-card">
+            <label>Indicador para tendencia</label>
+            <select id="indicatorSelect">${indicatorOptions}</select>
+          </article>
+          <article class="control-card">
+            <label>Período actual del tablero</label>
+            <div class="period-pill">${latest ? esc(latest.mes + " " + latest.anio) : "Sin datos"}</div>
+          </article>
+        </section>
+
+        <section>
+          <div class="section-title">
+            <div>
+              <h2>KPIs principales del mes</h2>
+              <p>Valores del último período reportado comparados con sus metas mensuales.</p>
+            </div>
+          </div>
+          <div class="kpi-grid" id="kpiGrid"></div>
+        </section>
+
+        <section class="grid-2">
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Tendencia mensual del indicador</h2>
+                <p id="chartSubtitle">Serie histórica del indicador seleccionado.</p>
+              </div>
+            </div>
+            <div class="chart-wrap" id="trendChart"></div>
+            <div class="legend">
+              <span><i class="real"></i>Valor real</span>
+              <span><i class="meta"></i>Meta mensual</span>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Progreso acumulado anual</h2>
+                <p>Comparación del acumulado real frente al acumulado esperado al corte.</p>
+              </div>
+            </div>
+            <div id="annualProgress" class="progress-stack"></div>
+          </article>
+        </section>
+
+        <section class="grid-2-eq">
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Semáforo de indicadores</h2>
+                <p>Lectura ejecutiva del mes actual y del avance acumulado del año.</p>
+              </div>
+            </div>
+            <div class="table-wrap" id="semaforoTable"></div>
+          </article>
+
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Alertas operativas</h2>
+                <p>Señales rápidas para revisión del programa en el período actual.</p>
+              </div>
+            </div>
+            <div id="alertsPanel" class="alerts"></div>
+          </article>
+        </section>
+
+        <section class="grid-2">
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Desempeño por zona</h2>
+                <p>Comparación del último mes con foco en materiales, vidrio, PET e ingresos.</p>
+              </div>
+            </div>
+            <div id="zoneCards" class="zone-grid"></div>
+          </article>
+
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Materiales principales del último período</h2>
+                <p>Resumen operativo agregado por material.</p>
+              </div>
+            </div>
+            <div id="materialsTop" class="materials-list"></div>
+          </article>
+        </section>
+
+        <section class="grid-2">
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Detalle territorial del último período</h2>
+                <p>Vista operativa por territorio para revisión técnica.</p>
+              </div>
+            </div>
+            <div class="table-wrap" id="territorioTable"></div>
+          </article>
+
+          <article class="panel">
+            <div class="section-title">
+              <div>
+                <h2>Base institucional del programa</h2>
+                <p>Tabla normalizada de indicadores para alimentar el resumen general de ADALA.</p>
+              </div>
+            </div>
+            <div class="table-wrap" id="institutionalTable"></div>
+          </article>
+        </section>
+
+        <div class="footer-note">Diseño inicial del tablero del programa · listo para GitHub Pages</div>
+      `;
+
+      rerenderDynamic(state);
+    }
+
+    function rerenderDynamic(state){
+      const latest = state.latest;
+      const latestRows = filterByPeriod(state.data.indicadores, latest);
+      renderKpis(latestRows);
+      renderTrendChart(state);
+      renderAnnualProgress(state);
+      renderSemaforo(state);
+      renderAlerts(state);
+      renderZones(state);
+      renderMaterials(state);
+      renderTerritorio(state);
+      renderInstitutional(state);
+    }
+
+    function renderKpis(latestRows){
+      const container = document.getElementById("kpiGrid");
+      const cards = KPI_PRIORITY.map(id => latestRows.find(r => r.indicador_id === id)).filter(Boolean);
+
+      if(!cards.length){
+        container.innerHTML = `<div class="empty">No hay KPIs disponibles para el período actual.</div>`;
+        return;
+      }
+
+      container.innerHTML = cards.map(row => {
+        const ratio = ratioValue(row.valor, row.meta_mensual);
+        const stateClass = getStateClass(ratio);
+        return `
+          <article class="kpi-card">
+            <div class="kpi-eyebrow">Indicador principal</div>
+            <div class="kpi-title">${esc(row.indicador_nombre)}</div>
+            <div class="kpi-value">${fmtByUnit(row.valor, row.unidad)}</div>
+            <div class="kpi-meta">
+              Meta mensual: <strong>${fmtByUnit(row.meta_mensual, row.unidad)}</strong><br>
+              Cumplimiento: <strong>${fmtPct(ratio)}</strong>
+            </div>
+            <span class="badge ${stateClass}">${getStateLabel(ratio)}</span>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function renderTrendChart(state){
+      const indicator = state.indicatorOptions.find(x => x.id === state.selectedIndicatorId);
+      const series = state.data.indicadores
+        .filter(r => r.indicador_id === state.selectedIndicatorId)
+        .filter(r => r.anio === state.selectedYear)
+        .sort(sortPeriod);
+
+      document.getElementById("chartSubtitle").textContent = indicator
+        ? `${indicator.label} · ${state.selectedYear}`
+        : "Serie histórica del indicador seleccionado.";
+
+      const panel = document.getElementById("trendChart");
+      if(!series.length){
+        panel.innerHTML = `<div class="empty">No hay datos para ese indicador en el año seleccionado.</div>`;
+        return;
+      }
+
+      const labels = series.map(r => r.mes || MONTHS_REV[r.mes_num] || "");
+      const values = series.map(r => num(r.valor));
+      const metas = series.map(r => num(r.meta_mensual));
+      panel.innerHTML = renderLineChart(labels, values, metas);
+    }
+
+    function renderAnnualProgress(state){
+      const latest = state.latest;
+      const latestRows = filterByPeriod(state.data.indicadores, latest).filter(r => isFinite(num(r.meta_mensual)));
+      const monthsDone = countMonthsDone(state.data.indicadores, latest?.anio);
+
+      const panel = document.getElementById("annualProgress");
+      if(!latestRows.length){
+        panel.innerHTML = `<div class="empty">No hay indicadores con meta para calcular acumulados.</div>`;
+        return;
+      }
+
+      panel.innerHTML = latestRows.map(row => {
+        const hist = state.data.indicadores
+          .filter(r => r.indicador_id === row.indicador_id && r.anio === latest.anio && num(r.mes_num) <= latest.mes_num)
+          .sort(sortPeriod);
+
+        const actualCum = hist.reduce((acc, r) => acc + num(r.valor), 0);
+        const expectedCum = num(row.meta_mensual) * monthsDone;
+        const ratio = ratioValue(actualCum, expectedCum);
+        const width = Math.max(0, Math.min(140, ratio * 100));
+
+        return `
+          <div class="progress-item">
+            <div class="progress-head">
+              <strong>${esc(row.indicador_nombre)}</strong>
+              <span>${fmtByUnit(actualCum, row.unidad)} / ${fmtByUnit(expectedCum, row.unidad)}</span>
+            </div>
+            <div class="bar"><span style="width:${width}%"></span></div>
+            <div class="kpi-meta" style="margin-top:8px">Avance acumulado al corte: <strong>${fmtPct(ratio)}</strong></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSemaforo(state){
+      const latest = state.latest;
+      const latestRows = filterByPeriod(state.data.indicadores, latest).filter(r => isFinite(num(r.meta_mensual)));
+      const monthsDone = countMonthsDone(state.data.indicadores, latest?.anio);
+
+      const rows = latestRows.map(row => {
+        const monthlyRatio = ratioValue(row.valor, row.meta_mensual);
+        const hist = state.data.indicadores.filter(r => r.indicador_id === row.indicador_id && r.anio === latest.anio && num(r.mes_num) <= latest.mes_num);
+        const actualCum = hist.reduce((acc, r) => acc + num(r.valor), 0);
+        const expectedCum = num(row.meta_mensual) * monthsDone;
+        const annualRatio = ratioValue(actualCum, expectedCum);
+
+        return `
+          <tr>
+            <td>${esc(row.indicador_nombre)}</td>
+            <td>${fmtByUnit(row.valor, row.unidad)}</td>
+            <td>${fmtByUnit(row.meta_mensual, row.unidad)}</td>
+            <td><span class="badge ${getStateClass(monthlyRatio)}">${fmtPct(monthlyRatio)}</span></td>
+            <td><span class="badge ${getStateClass(annualRatio)}">${fmtPct(annualRatio)}</span></td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("semaforoTable").innerHTML = `
+        <table class="semaforo">
+          <thead>
+            <tr>
+              <th>Indicador</th>
+              <th>Valor mes</th>
+              <th>Meta mes</th>
+              <th>Cumplimiento mensual</th>
+              <th>Avance acumulado</th>
+            </tr>
+          </thead>
+          <tbody>${rows || `<tr><td colspan="5">Sin datos</td></tr>`}</tbody>
+        </table>
+      `;
+    }
+
+    function renderAlerts(state){
+      const latest = state.latest;
+      const latestRows = filterByPeriod(state.data.indicadores, latest);
+      const alerts = [];
+
+      latestRows.forEach(row => {
+        const ratio = ratioValue(row.valor, row.meta_mensual);
+        if(isFinite(ratio) && ratio < 0.85){
+          alerts.push({
+            title: `${row.indicador_nombre} bajo meta mensual`,
+            text: `El valor del mes es ${fmtByUnit(row.valor, row.unidad)} frente a una meta de ${fmtByUnit(row.meta_mensual, row.unidad)}.`
+          });
+        }
+      });
+
+      const zoneRows = state.data.zona.filter(r => samePeriod(r, latest)).sort((a,b) => num(a.total_materiales_qq) - num(b.total_materiales_qq));
+      if(zoneRows.length){
+        const lowest = zoneRows[0];
+        alerts.push({
+          title: `Zona más rezagada en materiales: ${lowest.zona || "Sin zona"}`,
+          text: `Registra ${fmtNumber(num(lowest.total_materiales_qq))} qq de materiales totales en el último período.`
+        });
+      }
+
+      if(!alerts.length){
+        alerts.push({
+          title: "Sin alertas críticas",
+          text: "Los indicadores con meta del período actual no muestran brechas severas según las reglas actuales del tablero."
+        });
+      }
+
+      document.getElementById("alertsPanel").innerHTML = alerts.slice(0,6).map((a, i) => `
+        <article class="alert-item ${i===0 ? 'state-warn' : ''}">
+          <strong>${esc(a.title)}</strong>
+          <p>${esc(a.text)}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderZones(state){
+      const latest = state.latest;
+      const rows = state.data.zona
+        .filter(r => samePeriod(r, latest))
+        .sort((a,b) => num(b.total_materiales_qq) - num(a.total_materiales_qq));
+
+      const panel = document.getElementById("zoneCards");
+      if(!rows.length){
+        panel.innerHTML = `<div class="empty">No hay datos por zona para el último período.</div>`;
+        return;
+      }
+
+      panel.innerHTML = rows.map(r => `
+        <article class="zone-card">
+          <h3>${esc(r.zona || "Sin zona")}</h3>
+          <ul>
+            <li><span>Materiales</span><strong>${fmtNumber(num(r.total_materiales_qq))} qq</strong></li>
+            <li><span>PET</span><strong>${fmtNumber(num(r.pet_qq))} qq</strong></li>
+            <li><span>Vidrio</span><strong>${fmtNumber(num(r.vidrio_total_qq))} qq</strong></li>
+            <li><span>Ingreso bruto</span><strong>${fmtCurrency(num(r.ingreso_bruto_total))}</strong></li>
+            <li><span>Territorios</span><strong>${fmtInteger(num(r.territorios_reportados))}</strong></li>
+          </ul>
+        </article>
+      `).join("");
+    }
+
+    function renderMaterials(state){
+      const latest = state.latest;
+      const rows = state.data.materiales.filter(r => samePeriod(r, latest));
+      const panel = document.getElementById("materialsTop");
+
+      if(!rows.length){
+        panel.innerHTML = `<div class="empty">No hay materiales disponibles para el último período.</div>`;
+        return;
+      }
+
+      const grouped = aggregate(rows, ["material"], {
+        cantidad:"sum",
+        ingreso_total_venta:"sum",
+        ingreso_cooperativa:"sum"
+      }).sort((a,b) => num(b.cantidad) - num(a.cantidad)).slice(0,10);
+
+      const maxQty = Math.max(...grouped.map(r => num(r.cantidad)), 1);
+
+      panel.innerHTML = grouped.map(r => `
+        <div class="materials-row">
+          <div>
+            <strong>${esc(r.material || "Sin material")}</strong><br>
+            <span class="kpi-meta">Ingreso venta: ${fmtCurrency(num(r.ingreso_total_venta))}</span>
+          </div>
+          <div class="bar-mini"><span style="width:${(num(r.cantidad)/maxQty)*100}%"></span></div>
+          <div><strong>${fmtNumber(num(r.cantidad))}</strong></div>
+        </div>
+      `).join("");
+    }
+
+    function renderTerritorio(state){
+      const latest = state.latest;
+      const rows = state.data.territorio
+        .filter(r => samePeriod(r, latest))
+        .sort((a,b) => num(b.total_materiales_qq) - num(a.total_materiales_qq))
+        .slice(0,20);
+
+      const panel = document.getElementById("territorioTable");
+      if(!rows.length){
+        panel.innerHTML = `<div class="empty">No hay datos territoriales para el último período.</div>`;
+        return;
+      }
+
+      panel.innerHTML = renderTable(rows, [
+        ["zona","Zona"],
+        ["territorio","Territorio"],
+        ["total_materiales_qq","Materiales qq"],
+        ["pet_qq","PET qq"],
+        ["vidrio_total_qq","Vidrio qq"],
+        ["ingreso_bruto_total","Ingreso bruto"],
+        ["mujeres_activas","Mujeres activas"]
+      ]);
+    }
+
+    function renderInstitutional(state){
+      const rows = state.data.indicadores
+        .filter(r => r.anio === state.selectedYear)
+        .sort(sortPeriod);
+
+      const panel = document.getElementById("institutionalTable");
+      if(!rows.length){
+        panel.innerHTML = `<div class="empty">No hay indicadores institucionales para el año seleccionado.</div>`;
+        return;
+      }
+
+      panel.innerHTML = renderTable(rows, [
+        [rows[0].programa_id !== undefined ? "programa_id" : "programa", "Programa"],
+        [rows[0].programa_nombre !== undefined ? "programa_nombre" : "programa", "Nombre"],
+        ["anio","Año"],
+        ["mes_num","Mes #"],
+        ["mes","Mes"],
+        [rows[0].nivel_agregacion !== undefined ? "nivel_agregacion" : "zona", "Nivel / territorio"],
+        [rows[0].territorio !== undefined ? "territorio" : "zona", "Territorio"],
+        ["indicador_nombre","Indicador"],
+        ["valor","Valor"],
+        ["meta_mensual","Meta"],
+        ["unidad","Unidad"],
+        ["fuente","Fuente"]
+      ]);
+    }
+
+    function renderTable(rows, columns){
+      const head = columns.map(([,label]) => `<th>${esc(label)}</th>`).join("");
+      const body = rows.map(row => `
+        <tr>${columns.map(([key]) => `<td>${esc(formatCell(row[key], key))}</td>`).join("")}</tr>
+      `).join("");
+
+      return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+
+    function renderLineChart(labels, real, meta){
+      const width = 900, height = 320, padL = 42, padR = 18, padT = 20, padB = 40;
+      const all = [...real, ...meta].filter(v => isFinite(v));
+      const min = Math.min(...all, 0);
+      const max = Math.max(...all, 1);
+      const range = (max - min) || 1;
+      const innerW = width - padL - padR;
+      const innerH = height - padT - padB;
+      const x = i => padL + (labels.length===1 ? innerW/2 : (i*innerW/(labels.length-1)));
+      const y = v => padT + innerH - ((v - min)/range) * innerH;
+
+      const realPts = real.map((v,i)=> isFinite(v) ? `${x(i)},${y(v)}` : null).filter(Boolean).join(" ");
+      const metaPts = meta.map((v,i)=> isFinite(v) ? `${x(i)},${y(v)}` : null).filter(Boolean).join(" ");
+
+      const grid = Array.from({length:5}, (_,i) => {
+        const val = max - (range*i/4);
+        const yy = padT + (innerH*i/4);
+        return `
+          <g>
+            <line x1="${padL}" x2="${width-padR}" y1="${yy}" y2="${yy}" stroke="#e5edf5" stroke-width="1"/>
+            <text x="4" y="${yy+4}" fill="#64748b" font-size="11">${esc(compact(val))}</text>
+          </g>
+        `;
+      }).join("");
+
+      const xLabels = labels.map((lab,i)=>`
+        <text x="${x(i)}" y="${height-10}" text-anchor="middle" fill="#64748b" font-size="11">${esc(lab)}</text>
+      `).join("");
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Serie mensual">
+          ${grid}
+          <polyline fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round" stroke-linejoin="round" points="${metaPts}"></polyline>
+          <polyline fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" points="${realPts}"></polyline>
+          ${xLabels}
+        </svg>
+      `;
+    }
+
+    function fetchCsv(url){
+      return fetch(url, {cache:"no-store"})
+        .then(res => {
+          if(!res.ok) throw new Error(`No se pudo cargar ${url}. Verifica que exista dentro de docs/data/.`);
+          return res.text();
+        })
+        .then(parseCsv);
+    }
+
+    function parseCsv(text){
+      const rows = [];
+      let row = [], cell = "", inside = false;
+
+      for(let i=0;i<text.length;i++){
+        const ch = text[i], next = text[i+1];
+        if(ch === '"'){
+          if(inside && next === '"'){ cell += '"'; i++; }
+          else inside = !inside;
+        } else if(ch === "," && !inside){
+          row.push(cell); cell = "";
+        } else if((ch === "\n" || ch === "\r") && !inside){
+          if(ch === "\r" && next === "\n") i++;
+          row.push(cell); rows.push(row); row = []; cell = "";
+        } else {
+          cell += ch;
+        }
+      }
+      if(cell.length || row.length){ row.push(cell); rows.push(row); }
+
+      const clean = rows.filter(r => r.some(c => String(c).trim() !== ""));
+      if(!clean.length) return [];
+      const headers = clean[0].map(h => String(h).trim());
+
+      return clean.slice(1).map(r => {
+        const obj = {};
+        headers.forEach((h,idx) => obj[h] = (r[idx] ?? "").trim());
+        return obj;
+      });
+    }
+
+    function normalizeIndicador(row){
+      return {
+        ...row,
+        programa_id: row.programa_id || "",
+        programa_nombre: row.programa_nombre || row.programa || "",
+        anio: toNum(row.anio),
+        mes_num: row.mes_num ? toNum(row.mes_num) : monthNum(row.mes),
+        mes: row.mes || MONTHS_REV[toNum(row.mes_num)] || "",
+        valor: toNum(row.valor),
+        meta_mensual: toNum(row.meta_mensual)
+      };
+    }
+
+    function normalizeGeneric(row){
+      const out = {...row};
+      Object.keys(out).forEach(key => {
+        if(key === "mes_num"){
+          out[key] = toNum(out[key]);
+        } else if(key === "anio"){
+          out[key] = toNum(out[key]);
+        } else if(looksNumeric(out[key])){
+          out[key] = toNum(out[key]);
+        }
+      });
+      return out;
+    }
+
+    function ensureMes(row){
+      if(!isFinite(num(row.mes_num)) && row.mes){
+        row.mes_num = monthNum(row.mes);
+      }
+      if((!row.mes || String(row.mes).toLowerCase() === "nan") && isFinite(num(row.mes_num))){
+        row.mes = MONTHS_REV[num(row.mes_num)] || row.mes;
+      }
+      return row;
+    }
+
+    function buildIndicatorOptions(rows){
+      const map = new Map();
+      rows.forEach(r => {
+        if(r.indicador_id && r.indicador_nombre && !map.has(r.indicador_id)){
+          map.set(r.indicador_id, r.indicador_nombre);
+        }
+      });
+      return [...map.entries()].map(([id,label]) => ({id,label})).sort((a,b) => a.label.localeCompare(b.label, "es"));
+    }
+
+    function listPeriods(rows){
+      const seen = new Map();
+      rows.forEach(r => {
+        const anio = num(r.anio), mes_num = num(r.mes_num || monthNum(r.mes));
+        if(isFinite(anio) && isFinite(mes_num)){
+          const key = `${anio}-${mes_num}`;
+          if(!seen.has(key)){
+            seen.set(key, {anio, mes_num, mes: r.mes || MONTHS_REV[mes_num] || ""});
+          }
+        }
+      });
+      return [...seen.values()].sort(sortPeriod);
+    }
+
+    function filterByPeriod(rows, period){
+      if(!period) return [];
+      return rows.filter(r => samePeriod(r, period));
+    }
+
+    function samePeriod(row, period){
+      return num(row.anio) === num(period?.anio) && num(row.mes_num || monthNum(row.mes)) === num(period?.mes_num);
+    }
+
+    function countMonthsDone(rows, anio){
+      return new Set(rows.filter(r => num(r.anio) === num(anio)).map(r => `${num(r.anio)}-${num(r.mes_num)}`)).size;
+    }
+
+    function computeOverallStatus(rows){
+      const coreIds = ["materiales_generales","ingreso_bruto_total","participacion_actividades"];
+      const ratios = coreIds
+        .map(id => rows.find(r => r.indicador_id === id))
+        .filter(Boolean)
+        .map(r => ratioValue(r.valor, r.meta_mensual))
+        .filter(v => isFinite(v));
+
+      const avgRatio = ratios.length ? ratios.reduce((a,b)=>a+b,0) / ratios.length : NaN;
+      return {
+        avgRatio,
+        indicatorsCount: ratios.length,
+        label: getStateLabel(avgRatio)
+      };
+    }
+
+    function aggregate(rows, keys, aggs){
+      const map = new Map();
+      rows.forEach(row => {
+        const key = keys.map(k => row[k] ?? "").join("||");
+        if(!map.has(key)){
+          const base = {};
+          keys.forEach(k => base[k] = row[k]);
+          Object.keys(aggs).forEach(k => base[k] = 0);
+          map.set(key, base);
+        }
+        const obj = map.get(key);
+        Object.entries(aggs).forEach(([field, op]) => {
+          if(op === "sum") obj[field] += num(row[field]);
+        });
+      });
+      return [...map.values()];
+    }
+
+    function ratioValue(value, meta){
+      const v = num(value), m = num(meta);
+      if(!isFinite(v) || !isFinite(m) || m === 0) return NaN;
+      return v / m;
+    }
+
+    function getStateClass(ratio){
+      if(!isFinite(ratio)) return "state-neutral";
+      if(ratio >= 1) return "state-ok";
+      if(ratio >= 0.85) return "state-warn";
+      return "state-bad";
+    }
+
+    function getStateLabel(ratio){
+      if(!isFinite(ratio)) return "Sin referencia";
+      if(ratio >= 1) return "En meta";
+      if(ratio >= 0.85) return "En riesgo";
+      return "Bajo meta";
+    }
+
+    function formatCell(value, key){
+      if(value === undefined || value === null || value === "" || String(value).toLowerCase() === "nan") return "—";
+      if(typeof value === "number"){
+        if(key.includes("ingreso") || key.includes("gtq") || key.includes("pago") || key.includes("gasto")) return fmtCurrency(value);
+        if(key.startsWith("pct_")) return fmtPct(value);
+        return Number.isInteger(value) ? fmtInteger(value) : fmtNumber(value);
+      }
+      return String(value);
+    }
+
+    function fmtByUnit(value, unidad){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      if(unidad === "GTQ" || unidad === "GTQ/día") return fmtCurrency(v);
+      if(unidad === "proporción") return fmtPct(v);
+      if(unidad) return `${fmtNumber(v)} ${unidad}`;
+      return fmtNumber(v);
+    }
+
+    function fmtPct(value){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      return new Intl.NumberFormat("es-GT", {style:"percent", maximumFractionDigits:1}).format(v);
+    }
+
+    function fmtCurrency(value){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      return new Intl.NumberFormat("es-GT", {style:"currency", currency:"GTQ", maximumFractionDigits:2}).format(v);
+    }
+
+    function fmtNumber(value){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      return new Intl.NumberFormat("es-GT", {maximumFractionDigits:2}).format(v);
+    }
+
+    function fmtInteger(value){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      return new Intl.NumberFormat("es-GT", {maximumFractionDigits:0}).format(v);
+    }
+
+    function compact(value){
+      const v = num(value);
+      if(!isFinite(v)) return "—";
+      return new Intl.NumberFormat("es-GT", {maximumFractionDigits:1}).format(v);
+    }
+
+    function monthNum(mes){
+      const key = String(mes || "").trim().toUpperCase().slice(0,3);
+      return MONTHS[key] ?? NaN;
+    }
+
+    function looksNumeric(v){
+      if(v === null || v === undefined) return false;
+      const s = String(v).trim();
+      if(s === "") return false;
+      return !Number.isNaN(Number(s));
+    }
+
+    function toNum(v){
+      const n = Number(v);
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function num(v){
+      return Number.isFinite(v) ? v : toNum(v);
+    }
+
+    function sortPeriod(a,b){
+      if(num(a.anio) !== num(b.anio)) return num(a.anio) - num(b.anio);
+      return num(a.mes_num) - num(b.mes_num);
+    }
+
+    function esc(value){
+      return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function showFatal(error){
+      document.getElementById("app").innerHTML = `
+        <div class="topbar">
+          <a class="back-link" href="./index.html">← Volver al portal ADALA</a>
+        </div>
+        <article class="panel">
+          <div class="section-title">
+            <div>
+              <h2>No se pudo cargar el dashboard</h2>
+              <p>Revisa que los CSV existan en <strong>docs/data/</strong> y que la página esté publicada desde esa carpeta.</p>
+            </div>
+          </div>
+          <div class="empty">${esc(error?.message || String(error))}</div>
+        </article>
+      `;
+      console.error(error);
+    }
+  </script>
+</body>
+</html>
