@@ -20,7 +20,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Create folders
-        run: mkdir -p data_raw/atitlan_recicla data_processed
+        run: mkdir -p data_raw/atitlan_recicla data_processed/atitlan_recicla
 
       - name: Read sheets
         env:
@@ -29,8 +29,17 @@ jobs:
           SHEET_ID_MATERIALES_ATITLAN: ${{ secrets.SHEET_ID_MATERIALES_ATITLAN }}
         run: python scripts/test_read_sheets.py
 
-      - name: Upload CSV artifacts
+      - name: Transform Atitlán Recicla
+        run: python scripts/transform_atitlan_recicla.py
+
+      - name: Upload raw CSV artifacts
         uses: actions/upload-artifact@v6
         with:
           name: raw-csv-atitlan
           path: data_raw/atitlan_recicla/*.csv
+
+      - name: Upload processed CSV artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: processed-csv-atitlan
+          path: data_processed/atitlan_recicla/*.csv
