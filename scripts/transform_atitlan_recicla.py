@@ -170,27 +170,26 @@ def parse_number_es(value):
     if pd.isna(value):
         return pd.NA
 
-    s = str(value).strip()
+    s = str(value).strip().replace(" ", "")
 
     if s in {"", "NA", "N/A", "nan", "-"}:
         return pd.NA
 
-    s = s.replace(" ", "")
-
-    # Caso 1: formato 1.234,56
+    # 1,234.56 -> miles con coma, decimal con punto
+    # 1.234,56 -> miles con punto, decimal con coma
     if "," in s and "." in s:
-        s = s.replace(".", "").replace(",", ".")
+        if s.rfind(".") > s.rfind(","):
+            s = s.replace(",", "")
+        else:
+            s = s.replace(".", "").replace(",", ".")
 
-    # Caso 2: formato 92,55625 o 40,00
+    # Si solo hay coma, tratarla como decimal
     elif "," in s:
         s = s.replace(",", ".")
 
-    # Caso 3: formato 3.774 como miles
+    # Si solo hay punto, dejarlo como decimal
     elif "." in s:
-        parts = s.split(".")
-        if all(part.isdigit() for part in parts):
-            if len(parts) > 1 and all(len(part) == 3 for part in parts[1:]):
-                s = "".join(parts)
+        pass
 
     try:
         return float(s)
