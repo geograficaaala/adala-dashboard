@@ -166,16 +166,42 @@ def read_csv(path: Path) -> pd.DataFrame:
     return df
 
 
+def parse_number_es(value):
+    if pd.isna(value):
+        return pd.NA
+
+    s = str(value).strip()
+
+    if s in {"", "NA", "N/A", "nan", "-"}:
+        return pd.NA
+
+    s = s.replace(" ", "")
+
+    # Caso 1: formato 1.234,56
+    if "," in s and "." in s:
+        s = s.replace(".", "").replace(",", ".")
+
+    # Caso 2: formato 92,55625 o 40,00
+    elif "," in s:
+        s = s.replace(",", ".")
+
+    # Caso 3: formato 3.774 como miles
+    elif "." in s:
+        parts = s.split(".")
+        if all(part.isdigit() for part in parts):
+            if len(parts) > 1 and all(len(part) == 3 for part in parts[1:]):
+                s = "".join(parts)
+
+    try:
+        return float(s)
+    except ValueError:
+        return pd.NA
+
+
 def to_numeric(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     for col in cols:
         if col in df.columns:
-            df[col] = (
-                df[col]
-                .astype(str)
-                .str.strip()
-                .str.replace(",", "", regex=False)
-                .replace({"": pd.NA, "NA": pd.NA, "N/A": pd.NA, "nan": pd.NA})
-            )
+            df[col] = df[col].apply(parse_number_es)
             df[col] = pd.to_numeric(df[col], errors="coerce")
     return df
 
@@ -242,7 +268,11 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
             agg_map[col] = "sum"
 
     zona_group = ["programa", "anio", "mes_num", "mes", "zona"]
-    zona_mes = territorio_mes.groupby(zona_group, dropna=False).agg(agg_map).reset_index()
+    zona_mes = (
+        territorio_mes.groupby(zona_group, dropna=False)
+        .agg(agg_map)
+        .reset_index()
+    )
 
     zonas_n = (
         territorio_mes.groupby(zona_group, dropna=False)["territorio"]
@@ -252,7 +282,11 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
     zona_mes = zona_mes.merge(zonas_n, on=zona_group, how="left")
 
     total_group = ["programa", "anio", "mes_num", "mes"]
-    total_mes = territorio_mes.groupby(total_group, dropna=False).agg(agg_map).reset_index()
+    total_mes = (
+        territorio_mes.groupby(total_group, dropna=False)
+        .agg(agg_map)
+        .reset_index()
+    )
     total_mes["zona"] = "TOTAL"
 
     if {"mujeres_actividades", "mujeres_activas"}.issubset(total_mes.columns):
@@ -350,7 +384,11 @@ def build_materiales_tables() -> tuple[pd.DataFrame, pd.DataFrame]:
         "material",
     ]
     resumen_cols = [c for c in MATERIALES_NUMERIC_COLS if c in detalle.columns]
-    resumen = detalle.groupby(group_cols, dropna=False)[resumen_cols].sum().reset_index()
+    resumen = (
+        detalle.groupby(group_cols, dropna=False)[resumen_cols]
+        .sum()
+        .reset_index()
+    )
 
     return detalle, resumen
 
