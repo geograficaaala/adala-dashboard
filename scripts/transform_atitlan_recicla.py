@@ -183,10 +183,8 @@ def parse_number_es(value):
             s = s.replace(",", "")
         else:
             s = s.replace(".", "").replace(",", ".")
-
     elif "," in s:
         s = s.replace(",", ".")
-
     elif "." in s:
         pass
 
@@ -218,24 +216,10 @@ def safe_div(num: pd.Series, den: pd.Series) -> pd.Series:
     return num / den
 
 
-def normalize_programa_id(series: pd.Series) -> pd.Series:
-    return (
-        series.astype(str)
-        .str.strip()
-        .str.lower()
-        .str.replace("á", "a", regex=False)
-        .str.replace("é", "e", regex=False)
-        .str.replace("í", "i", regex=False)
-        .str.replace("ó", "o", regex=False)
-        .str.replace("ú", "u", regex=False)
-        .str.replace(" ", "_", regex=False)
-    )
-
-
-def programa_nombre_from_id(programa_id: str) -> str:
-    if programa_id == "atitlan_recicla":
-        return PROGRAMA_NOMBRE_DEFAULT
-    return programa_id.replace("_", " ").title()
+def force_programa_fields(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.copy()
+    df["programa"] = PROGRAMA_ID_DEFAULT
+    return df
 
 
 def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -258,10 +242,7 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
     if "territorio" in cdm.columns:
         cdm["territorio"] = cdm["territorio"].astype(str).str.strip()
 
-    if "programa" in cdm.columns:
-        cdm["programa"] = normalize_programa_id(cdm["programa"])
-    else:
-        cdm["programa"] = PROGRAMA_ID_DEFAULT
+    cdm = force_programa_fields(cdm)
 
     territorio_cols = [
         "record_key",
@@ -331,17 +312,14 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
     indicadores_rows = []
     for _, row in total_mes.iterrows():
-        programa_id = row.get("programa", PROGRAMA_ID_DEFAULT)
-        programa_nombre = programa_nombre_from_id(programa_id)
-
         for col, (indicador_id, indicador_nombre, unidad) in INDICATOR_LABELS.items():
             if col in total_mes.columns:
                 valor = row.get(col)
                 if pd.notna(valor):
                     indicadores_rows.append(
                         {
-                            "programa_id": programa_id,
-                            "programa_nombre": programa_nombre,
+                            "programa_id": PROGRAMA_ID_DEFAULT,
+                            "programa_nombre": PROGRAMA_NOMBRE_DEFAULT,
                             "anio": row["anio"],
                             "mes_num": row["mes_num"],
                             "mes": row["mes"],
@@ -387,10 +365,7 @@ def build_materiales_tables() -> tuple[pd.DataFrame, pd.DataFrame]:
     if "anio" in materiales.columns:
         materiales["anio"] = materiales["anio"].astype("Int64")
 
-    if "programa" in materiales.columns:
-        materiales["programa"] = normalize_programa_id(materiales["programa"])
-    else:
-        materiales["programa"] = PROGRAMA_ID_DEFAULT
+    materiales = force_programa_fields(materiales)
 
     if "mes" in materiales.columns:
         mes_raw = materiales["mes"].astype(str).str.strip().str.upper()
