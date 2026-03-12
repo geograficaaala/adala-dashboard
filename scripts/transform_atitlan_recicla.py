@@ -5,6 +5,9 @@ RAW_DIR = Path("data_raw/atitlan_recicla")
 OUT_DIR = Path("data_processed/atitlan_recicla")
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
+PROGRAMA_ID_DEFAULT = "atitlan_recicla"
+PROGRAMA_NOMBRE_DEFAULT = "Atitlán Recicla"
+
 CDM_NUMERIC_COLS = [
     "mujeres_activas",
     "mujeres_actividades",
@@ -175,19 +178,15 @@ def parse_number_es(value):
     if s in {"", "NA", "N/A", "nan", "-"}:
         return pd.NA
 
-    # 1,234.56 -> miles con coma, decimal con punto
-    # 1.234,56 -> miles con punto, decimal con coma
     if "," in s and "." in s:
         if s.rfind(".") > s.rfind(","):
             s = s.replace(",", "")
         else:
             s = s.replace(".", "").replace(",", ".")
 
-    # Si solo hay coma, tratarla como decimal
     elif "," in s:
         s = s.replace(",", ".")
 
-    # Si solo hay punto, dejarlo como decimal
     elif "." in s:
         pass
 
@@ -219,6 +218,26 @@ def safe_div(num: pd.Series, den: pd.Series) -> pd.Series:
     return num / den
 
 
+def normalize_programa_id(series: pd.Series) -> pd.Series:
+    return (
+        series.astype(str)
+        .str.strip()
+        .str.lower()
+        .str.replace("á", "a", regex=False)
+        .str.replace("é", "e", regex=False)
+        .str.replace("í", "i", regex=False)
+        .str.replace("ó", "o", regex=False)
+        .str.replace("ú", "u", regex=False)
+        .str.replace(" ", "_", regex=False)
+    )
+
+
+def programa_nombre_from_id(programa_id: str) -> str:
+    if programa_id == "atitlan_recicla":
+        return PROGRAMA_NOMBRE_DEFAULT
+    return programa_id.replace("_", " ").title()
+
+
 def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     cdm = read_csv(RAW_DIR / "cdm_raw.csv")
 
@@ -238,6 +257,11 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
         cdm["zona"] = cdm["zona"].astype(str).str.strip()
     if "territorio" in cdm.columns:
         cdm["territorio"] = cdm["territorio"].astype(str).str.strip()
+
+    if "programa" in cdm.columns:
+        cdm["programa"] = normalize_programa_id(cdm["programa"])
+    else:
+        cdm["programa"] = PROGRAMA_ID_DEFAULT
 
     territorio_cols = [
         "record_key",
@@ -307,17 +331,22 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
     indicadores_rows = []
     for _, row in total_mes.iterrows():
+        programa_id = row.get("programa", PROGRAMA_ID_DEFAULT)
+        programa_nombre = programa_nombre_from_id(programa_id)
+
         for col, (indicador_id, indicador_nombre, unidad) in INDICATOR_LABELS.items():
             if col in total_mes.columns:
                 valor = row.get(col)
                 if pd.notna(valor):
                     indicadores_rows.append(
                         {
-                            "programa": row["programa"],
+                            "programa_id": programa_id,
+                            "programa_nombre": programa_nombre,
                             "anio": row["anio"],
                             "mes_num": row["mes_num"],
                             "mes": row["mes"],
-                            "zona": "TOTAL",
+                            "nivel_agregacion": "programa",
+                            "territorio": "TOTAL",
                             "indicador_id": indicador_id,
                             "indicador_nombre": indicador_nombre,
                             "valor": valor,
@@ -329,6 +358,25 @@ def build_cdm_tables() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.Dat
 
     indicadores = pd.DataFrame(indicadores_rows)
 
+    if not indicadores.empty:
+        indicadores = indicadores[
+            [
+                "programa_id",
+                "programa_nombre",
+                "anio",
+                "mes_num",
+                "mes",
+                "nivel_agregacion",
+                "territorio",
+                "indicador_id",
+                "indicador_nombre",
+                "valor",
+                "meta_mensual",
+                "unidad",
+                "fuente",
+            ]
+        ]
+
     return territorio_mes, zona_mes, total_mes, indicadores
 
 
@@ -338,6 +386,11 @@ def build_materiales_tables() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     if "anio" in materiales.columns:
         materiales["anio"] = materiales["anio"].astype("Int64")
+
+    if "programa" in materiales.columns:
+        materiales["programa"] = normalize_programa_id(materiales["programa"])
+    else:
+        materiales["programa"] = PROGRAMA_ID_DEFAULT
 
     if "mes" in materiales.columns:
         mes_raw = materiales["mes"].astype(str).str.strip().str.upper()
