@@ -19,7 +19,12 @@ def read_range(service, spreadsheet_id: str, range_name: str):
     result = (
         service.spreadsheets()
         .values()
-        .get(spreadsheetId=spreadsheet_id, range=range_name)
+        .get(
+            spreadsheetId=spreadsheet_id,
+            range=range_name,
+            valueRenderOption="UNFORMATTED_VALUE",
+            dateTimeRenderOption="SERIAL_NUMBER",
+        )
         .execute()
     )
     return result.get("values", [])
@@ -32,11 +37,12 @@ def save_csv(rows, output_path: str):
         pd.DataFrame().to_csv(output_path, index=False)
         return
 
-    header = rows[0]
+    header = [str(c).strip() for c in rows[0]]
     data = rows[1:] if len(rows) > 1 else []
 
     if not header:
-        header = [f"col_{i+1}" for i in range(max(len(r) for r in data))]
+        max_len = max((len(r) for r in data), default=0)
+        header = [f"col_{i+1}" for i in range(max_len)]
 
     max_cols = max(len(header), max((len(r) for r in data), default=0))
     if len(header) < max_cols:
@@ -44,10 +50,13 @@ def save_csv(rows, output_path: str):
 
     normalized_data = []
     for row in data:
+        row = ["" if v is None else str(v) for v in row]
+
         if len(row) < max_cols:
             row = row + [""] * (max_cols - len(row))
         elif len(row) > max_cols:
             row = row[:max_cols]
+
         normalized_data.append(row)
 
     df = pd.DataFrame(normalized_data, columns=header)
