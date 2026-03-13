@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Educando para Conservar · ADALA</title>
+  <meta name="description" content="Dashboard del programa Educando para Conservar">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    :root{
+      --bg:#eef2ec;--surface:#f7faf7;--card:#ffffff;--text:#162316;--text-2:#344d34;--muted:#5c7a5c;
+      --line:#cddacd;--line-soft:#e2ece2;--green:#1c6b3a;--green-mid:#2d8a52;--green-soft:#d2eddc;
+      --green-pale:#eaf5ee;--accent:#1a547a;--accent-soft:#daeaf6;--gold:#7a5500;--gold-soft:#fef4cc;
+      --red:#8f1c1c;--red-soft:#fce8e8;--shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);
+      --shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);--radius:18px;--radius-sm:11px;--radius-xs:7px;
+      --font-head:'Fraunces', Georgia, serif;--font-body:'DM Sans', system-ui, sans-serif;--font-mono:'JetBrains Mono', monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:var(--font-body);background:var(--bg);
+      background-image:radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
+      background-attachment:fixed;color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased
+    }
+    .wrap{max-width:1360px;margin:0 auto;padding:28px 22px 64px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{display:inline-flex;align-items:center;gap:9px;padding:10px 20px 10px 14px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--text-2);box-shadow:var(--shadow-sm);font-weight:600;font-size:.875rem}
+    .back:hover{box-shadow:var(--shadow);border-color:var(--green-mid);color:var(--green)}
+    .back-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--green-pale);color:var(--green-mid);font-size:.85rem}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2)}
+    .tag::before{content:'●';font-size:.55em;opacity:.7}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .hero{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;margin-bottom:18px}
+    .hero-main{padding:32px 36px 28px;position:relative;overflow:hidden}
+    .hero-main::after{content:'🌿';position:absolute;right:18px;bottom:-26px;font-size:118px;opacity:.06}
+    .eyebrow{font-size:.82rem;text-transform:uppercase;letter-spacing:.11em;color:var(--green-mid);font-weight:800;margin-bottom:12px}
+    h1{font-family:var(--font-head);font-size:clamp(2.2rem,5vw,3.9rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:14px;max-width:12ch}
+    .hero-copy{font-size:1rem;color:var(--text-2);max-width:66ch}
+    .hero-sub{margin-top:18px;color:var(--muted);font-size:.92rem}
+    .hero-badges{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;color:var(--text-2);font-size:.85rem}
+    .hero-side{padding:26px;display:grid;gap:12px}
+    .mini-kpi{padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
+    .mini-kpi-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .mini-kpi-value{font-family:var(--font-head);font-size:1.85rem;line-height:1;color:var(--green)}
+    .mini-kpi-sub{margin-top:4px;font-size:.82rem;color:var(--text-2)}
+    .section-grid{display:grid;grid-template-columns:1.3fr .95fr;gap:18px;margin-bottom:18px}
+    .section-card{padding:24px 26px}
+    .section-title{font-family:var(--font-head);font-size:1.5rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:8px}
+    .section-kicker{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .prose{color:var(--text-2);text-align:justify}
+    .target-list{display:grid;gap:10px}
+    .target-item{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+    .target-item .label{font-weight:700;color:var(--text)}
+    .target-item .meta{font-size:.88rem;color:var(--muted)}
+    .target-item .value{font-family:var(--font-mono);font-weight:700;color:var(--green);font-size:.92rem;white-space:nowrap}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+    .control{display:grid;gap:6px}
+    .control label{font-size:.8rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+    select{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--text);font:inherit;min-width:220px}
+    .status{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);color:var(--text-2);font-size:.92rem}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .kpi{padding:18px;border-radius:18px;background:var(--card);border:1.5px solid var(--line-soft);box-shadow:var(--shadow-sm)}
+    .kpi .label{font-size:.77rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:8px}
+    .kpi .value{font-family:var(--font-head);font-size:2rem;line-height:1;color:var(--green)}
+    .kpi .sub{margin-top:8px;color:var(--text-2);font-size:.9rem}
+    .kpi .meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:700}
+    .chip.good{background:var(--green-soft);color:var(--green)}
+    .chip.warn{background:var(--gold-soft);color:var(--gold)}
+    .chip.bad{background:var(--red-soft);color:var(--red)}
+    .chip.neutral{background:var(--accent-soft);color:var(--accent)}
+    .progress-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .progress-card{padding:18px}
+    .metric-list{display:grid;gap:10px}
+    .metric-row{display:grid;grid-template-columns:1.6fr .7fr .7fr .7fr;gap:10px;align-items:center}
+    .metric-row .name{font-weight:700;color:var(--text)}
+    .metric-row .num{font-family:var(--font-mono);font-size:.87rem;color:var(--text-2)}
+    .bar{height:10px;border-radius:999px;background:var(--line-soft);overflow:hidden}
+    .bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--green-mid))}
+    .chart-card{padding:20px 22px}
+    .chart-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .chart-wrap{height:380px}
+    .detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:18px}
+    .detail-card{padding:20px 22px}
+    .detail-card h3{font-family:var(--font-head);font-size:1.22rem;margin-bottom:10px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line-soft);text-align:left;font-size:.88rem;vertical-align:top}
+    th{font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .empty{padding:18px;border-radius:14px;background:var(--surface);border:1px dashed var(--line);color:var(--muted)}
+    .foot{margin-top:24px;color:var(--muted);font-size:.86rem}
+    @media (max-width:1100px){.hero,.section-grid,.detail-grid,.kpi-grid,.progress-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.wrap{padding:20px 14px 40px}.hero-main,.section-card,.hero-side,.chart-card,.detail-card{padding:18px}.metric-row{grid-template-columns:1fr}.chart-wrap{height:320px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="back" href="./index.html"><span class="back-icon">←</span>Volver a la portada institucional</a>
+        <span class="tag">ADALA · Dashboard de programa</span>
+      </div>
+      <div class="topbar-right">
+        <span class="status" id="statusTop">Cargando datos...</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <article class="card hero-main">
+        <div class="eyebrow">Programa educativo ambiental</div>
+        <h1>Educando para Conservar</h1>
+        <p class="hero-copy">
+          Programa orientado a fortalecer capacidades ambientales en centros educativos de la cuenca del Lago de Atitlán, articulando formación docente, implementación pedagógica, actividades de campo y un diplomado juvenil con enfoque en liderazgo y proyectos con impacto social ambiental.
+        </p>
+        <p class="hero-sub">
+          Este dashboard usa el mismo enfoque institucional que los otros programas: resultado del mes, acumulado anual, comparación contra meta anual y contra meta esperada al corte.
+        </p>
+        <div class="hero-badges">
+          <span class="pill">121 docentes meta 2026</span>
+          <span class="pill">3,514 estudiantes EPC</span>
+          <span class="pill">138 actividades de campo</span>
+          <span class="pill">Diplomado con cortes junio / octubre</span>
+        </div>
+      </article>
+      <aside class="card hero-side">
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Último mes con datos reales</div>
+          <div class="mini-kpi-value" id="heroLatest">—</div>
+          <div class="mini-kpi-sub" id="heroLatestSub">Esperando información procesada</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Lógica de calendario</div>
+          <div class="mini-kpi-value">2026</div>
+          <div class="mini-kpi-sub">Cobertura EPC: feb–oct · Campo: mar–oct · Diplomado: junio y octubre</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Modo de análisis</div>
+          <div class="mini-kpi-value">Mensual + acumulado</div>
+          <div class="mini-kpi-sub">Compatible con la lógica institucional usada en Atitlán Recicla</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-grid">
+      <article class="card section-card">
+        <div class="section-kicker">Contexto del programa</div>
+        <h2 class="section-title">Cobertura educativa, actividades de campo y diplomado juvenil</h2>
+        <p class="prose">
+          EPC combina trabajo en centros educativos, formación docente, seguimiento pedagógico y experiencias de campo que fortalecen la educación ambiental escolar. Además, incorpora un diplomado juvenil reportado en cortes específicos de junio y octubre, por lo que no todos los indicadores siguen la misma curva de esperado mensual.
+        </p>
+      </article>
+      <aside class="card section-card">
+        <div class="section-kicker">Metas oficiales 2026</div>
+        <div class="target-list">
+          <div class="target-item"><div><div class="label">Docentes capacitados</div><div class="meta">Fase 2 en 50 centros de 13 municipios</div></div><div class="value">121</div></div>
+          <div class="target-item"><div><div class="label">Estudiantes beneficiados EPC</div><div class="meta">Participación en el programa 2026</div></div><div class="value">3,514</div></div>
+          <div class="target-item"><div><div class="label">Actividades de campo</div><div class="meta">Meta anual marzo–octubre</div></div><div class="value">138</div></div>
+          <div class="target-item"><div><div class="label">Diplomado juvenil</div><div class="meta">120 jóvenes, 12 propuestas y 4 capitales</div></div><div class="value">Jun / Oct</div></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="card section-card" style="margin-bottom:18px">
+      <div class="section-kicker">Controles</div>
+      <div class="controls">
+        <div class="control">
+          <label for="periodSelect">Mes</label>
+          <select id="periodSelect"></select>
+        </div>
+        <div class="control">
+          <label for="chartMode">Gráfica principal</label>
+          <select id="chartMode">
+            <option value="oficial">Indicadores oficiales</option>
+            <option value="diplomado">Diplomado juvenil</option>
+            <option value="campo">Subtipos de actividades de campo</option>
+          </select>
+        </div>
+        <div class="status" id="statusPeriod">Cargando...</div>
+      </div>
+    </section>
+
+    <section class="kpi-grid" id="kpiGrid"></section>
+
+    <section class="progress-grid">
+      <article class="card progress-card">
+        <div class="section-kicker">Avance acumulado</div>
+        <h2 class="section-title">Progreso del programa al corte</h2>
+        <div class="metric-list" id="progressMain"></div>
+      </article>
+      <article class="card progress-card">
+        <div class="section-kicker">Diagnóstico del período</div>
+        <h2 class="section-title">Lectura rápida del mes seleccionado</h2>
+        <div id="diagnosticBox" class="empty">Cargando diagnóstico...</div>
+      </article>
+    </section>
+
+    <section class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="section-kicker">Gráfica principal</div>
+          <h2 class="section-title" id="chartTitle">Avance acumulado vs meta anual (%)</h2>
+        </div>
+        <div class="status" id="chartHint">Las líneas muestran acumulado como % de meta anual.</div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="mainChart"></canvas>
+      </div>
+    </section>
+
+    <section class="detail-grid">
+      <article class="card detail-card">
+        <h3>Cobertura educativa del período</h3>
+        <div id="centrosWrap"></div>
+      </article>
+      <article class="card detail-card">
+        <h3>Actividades de campo del período</h3>
+        <div id="campoWrap"></div>
+      </article>
+      <article class="card detail-card">
+        <h3>Diplomado juvenil</h3>
+        <div id="diplomadoWrap"></div>
+      </article>
+      <article class="card detail-card">
+        <h3>Coordinación complementaria</h3>
+        <div id="coordWrap"></div>
+      </article>
+    </section>
+
+    <div class="foot">
+      Dashboard estático publicado desde GitHub Pages. Los datos se actualizan a partir del flujo Kobo → GitHub Actions → transformación → docs/data.
+    </div>
+  </div>
+
+  <script src="./epc.js"></script>
+</body>
+</html>
