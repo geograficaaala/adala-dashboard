@@ -1,678 +1,160 @@
-# VERSION: v2 merge-fix applied
-
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+"""Lee el export nombrado de Kobo para Fortalecimiento Municipal.
 
-"""
-Transformación de Fortalecimiento Municipal
-Lee el raw exportado desde Kobo (XLSX con repeats) y genera salidas procesadas
-para dashboard y publicación.
+Variables de entorno esperadas:
+- KOBO_FM_TOKEN
+- KOBO_FM_ASSET_UID
+- KOBO_FM_EXPORT_NAME
+Opcionales:
+- KOBO_FM_BASE_URL
+- KOBO_BASE_URL
 
-Salidas:
-- data_processed/fortalecimiento_municipal/total_mes.csv
-- data_processed/fortalecimiento_municipal/institucional_indicadores.csv
-- data_processed/fortalecimiento_municipal/capacitaciones_detalle.csv
-- data_processed/fortalecimiento_municipal/asistencias_detalle.csv
-- data_processed/fortalecimiento_municipal/estudios_detalle.csv
-- data_processed/fortalecimiento_municipal/pirds_detalle.csv
-- data_processed/fortalecimiento_municipal/reuniones_detalle.csv
+Salida:
+- data_raw/fortalecimiento_municipal/kobo_mensual_raw.xlsx
+- data_raw/fortalecimiento_municipal/kobo_export_meta.json
 """
 
 from __future__ import annotations
 
+import json
 import os
+import sys
+import time
 from pathlib import Path
-from typing import Dict, List
-
-import numpy as np
-import pandas as pd
-
-
-PROGRAM_ID = "fortalecimiento_municipal"
-RAW_DIR = Path("data_raw") / PROGRAM_ID
-PROCESSED_DIR = Path("data_processed") / PROGRAM_ID
-RAW_FILE = RAW_DIR / "kobo_mensual_raw.xlsx"
-
-MAIN_SHEET = "Fortalecimiento municipal - ..."
-SHEET_CAP = "rep_capacitacion"
-SHEET_ASIS = "rep_asistencia"
-SHEET_EST = "rep_estudio"
-SHEET_PIRDS = "rep_pirds"
-SHEET_REU = "rep_reunion"
-
-MONTH_ORDER = {
-    "ene": 1, "feb": 2, "mar": 3, "abr": 4, "may": 5, "jun": 6,
-    "jul": 7, "ago": 8, "sep": 9, "oct": 10, "nov": 11, "dic": 12
-}
-MONTH_LABEL = {
-    1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo", 6: "Junio",
-    7: "Julio", 8: "Agosto", 9: "Septiembre", 10: "Octubre", 11: "Noviembre", 12: "Diciembre"
-}
-
-META_DEFAULTS = {
-    "municipios_capacitados": 15.0,
-    "personas_capacitadas": 75.0,
-    "asistencias_tecnicas": 3.0,
-    "estudios_caracterizacion": 2.0,
-    "pirds_implementados": 5.0,
-}
+from typing import Any
+from urllib.error import HTTPError, URLError
+from urllib.request import Request, urlopen
 
 
-def safe_read_excel(path: Path, sheet_name: str) -> pd.DataFrame:
-    try:
-        return pd.read_excel(path, sheet_name=sheet_name, engine="openpyxl")
-    except ValueError:
-        return pd.DataFrame()
+ROOT = Path(__file__).resolve().parents[1]
+OUT_DIR = ROOT / "data_raw" / "fortalecimiento_municipal"
+OUT_XLSX = OUT_DIR / "kobo_mensual_raw.xlsx"
+OUT_META = OUT_DIR / "kobo_export_meta.json"
+DEFAULT_BASE_URL = "https://kf.kobotoolbox.org"
 
 
-def as_str(x) -> str:
-    if pd.isna(x):
-        return ""
-    return str(x).strip()
-
-
-def as_num(series: pd.Series) -> pd.Series:
-    return pd.to_numeric(series, errors="coerce").fillna(0)
-
-
-def pick_col(df: pd.DataFrame, candidates: List[str], default=None):
-    for c in candidates:
-        if c in df.columns:
-            return c
-    return default
-
-
-def yes_flag(series: pd.Series) -> pd.Series:
-    s = series.fillna("").astype(str).str.strip().str.lower()
-    return s.isin(["si", "sí", "1", "true", "yes"])
-
-
-def month_num_from_df(df: pd.DataFrame) -> pd.Series:
-    if "mes_num" in df.columns:
-        s = pd.to_numeric(df["mes_num"], errors="coerce")
-        if s.notna().any():
-            return s.fillna(0).astype(int)
-    if "mes_reportado" in df.columns:
-        return (
-            df["mes_reportado"]
-            .fillna("")
-            .astype(str)
-            .str.strip()
-            .str.lower()
-            .map(MONTH_ORDER)
-            .fillna(0)
-            .astype(int)
-        )
-    return pd.Series([0] * len(df), index=df.index)
-
-
-def month_label_from_num(series: pd.Series) -> pd.Series:
-    return series.map(MONTH_LABEL).fillna("")
-
-
-def split_multi(value: str) -> List[str]:
-    value = as_str(value)
+def getenv_required(name: str) -> str:
+    value = os.getenv(name, "").strip()
     if not value:
-        return []
-    return [p for p in value.split() if p]
+        raise RuntimeError(f"Falta la variable de entorno requerida: {name}")
+    return value
 
 
-def dedupe_main(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return df.copy()
+def http_get(url: str, *, headers: dict[str, str], timeout: int = 120, tries: int = 5) -> bytes:
+    delay = 2
+    last_error: Exception | None = None
 
-    out = df.copy()
-    out["anio_reportado"] = pd.to_numeric(out.get("anio_reportado"), errors="coerce").fillna(2026).astype(int)
-    out["mes_num"] = month_num_from_df(out)
-    out["periodo_clave"] = out.get("periodo_clave", "").fillna("")
-    out["_submission_time"] = pd.to_datetime(out.get("_submission_time"), errors="coerce")
-    out["_id"] = pd.to_numeric(out.get("_id"), errors="coerce").fillna(0)
+    for attempt in range(1, tries + 1):
+        request = Request(url, headers=headers, method="GET")
+        try:
+            with urlopen(request, timeout=timeout) as response:
+                return response.read()
+        except HTTPError as exc:
+            last_error = exc
+            if exc.code in {429, 500, 502, 503, 504} and attempt < tries:
+                time.sleep(delay)
+                delay *= 2
+                continue
+            body = None
+            try:
+                body = exc.read().decode("utf-8", errors="ignore")
+            except Exception:
+                pass
+            raise RuntimeError(
+                f"Error HTTP no recuperable al consultar {url}: {exc.code}. {body}"
+            ) from exc
+        except URLError as exc:
+            last_error = exc
+            if attempt < tries:
+                time.sleep(delay)
+                delay *= 2
+                continue
+            raise RuntimeError(f"Error de red al consultar {url}: {exc}") from exc
 
-    sort_cols = ["anio_reportado", "mes_num", "_submission_time", "_id"]
-    out = out.sort_values(sort_cols)
-
-    keep_mask = out["estado_reporte"].fillna("").astype(str).str.lower().ne("anulado") if "estado_reporte" in out.columns else pd.Series([True] * len(out), index=out.index)
-    out = out[keep_mask].copy()
-
-    key = out["periodo_clave"].replace("", np.nan)
-    no_key = key.isna()
-    out.loc[no_key, "periodo_clave"] = out.loc[no_key, "anio_reportado"].astype(str) + "-" + out.loc[no_key, "mes_num"].astype(str).str.zfill(2)
-
-    out = out.groupby("periodo_clave", as_index=False, sort=True).tail(1).copy()
-    out = out.sort_values(["anio_reportado", "mes_num", "_submission_time", "_id"]).reset_index(drop=True)
-    return out
-
-
-def build_main_monthly(main_df: pd.DataFrame, cap_df: pd.DataFrame, asis_df: pd.DataFrame, est_df: pd.DataFrame, pirds_df: pd.DataFrame, reu_df: pd.DataFrame) -> pd.DataFrame:
-    if main_df.empty:
-        return pd.DataFrame()
-
-    base = main_df.copy()
-    base["mes_num"] = month_num_from_df(base)
-    base["mes_label"] = month_label_from_num(base["mes_num"])
-    base["anio_reportado"] = pd.to_numeric(base.get("anio_reportado"), errors="coerce").fillna(2026).astype(int)
-    base["_id"] = pd.to_numeric(base.get("_id"), errors="coerce").fillna(0).astype(int)
-
-    # Mapeos desde repeats por submission id
-    cap_metrics = summarize_capacitaciones(cap_df)
-    asis_metrics = summarize_asistencias(asis_df)
-    est_metrics = summarize_estudios(est_df)
-    pirds_metrics = summarize_pirds(pirds_df)
-    reu_metrics = summarize_reuniones(reu_df)
-
-    def join_metric(base_df: pd.DataFrame, metric_df: pd.DataFrame) -> pd.DataFrame:
-        if metric_df.empty:
-            return base_df
-        work_base = base_df.drop(columns=[c for c in base_df.columns if c.startswith("_submission__id")], errors="ignore")
-        merged = work_base.merge(metric_df, how="left", left_on="_id", right_on="_submission__id")
-        return merged.drop(columns=["_submission__id"], errors="ignore")
-
-    out = base.copy()
-    for metric_df in [cap_metrics, asis_metrics, est_metrics, pirds_metrics, reu_metrics]:
-        out = join_metric(out, metric_df)
-
-    fill_zero_cols = [
-        "capacitaciones_mes_calc",
-        "personas_capacitadas_mes_calc",
-        "municipios_capacitados_mes_calc",
-        "municipios_capacitados_acum_base",
-        "asistencias_tecnicas_mes_calc",
-        "estudios_caracterizacion_mes_calc",
-        "pirds_implementados_mes_calc",
-        "reuniones_mes_calc",
-    ]
-    for col in fill_zero_cols:
-        if col not in out.columns:
-            out[col] = 0
-        out[col] = pd.to_numeric(out[col], errors="coerce").fillna(0)
-
-    # Metas
-    out["meta_anual_municipios_capacitados"] = pd.to_numeric(
-        out.get("meta_anual_municipios_capacitados"), errors="coerce"
-    ).fillna(META_DEFAULTS["municipios_capacitados"])
-    out["meta_anual_personas_capacitadas"] = pd.to_numeric(
-        out.get("meta_anual_personas_capacitadas"), errors="coerce"
-    ).fillna(META_DEFAULTS["personas_capacitadas"])
-    out["meta_anual_asistencias_tecnicas"] = pd.to_numeric(
-        out.get("meta_anual_asistencias_tecnicas"), errors="coerce"
-    ).fillna(META_DEFAULTS["asistencias_tecnicas"])
-    out["meta_anual_estudios_caracterizacion"] = pd.to_numeric(
-        out.get("meta_anual_estudios_caracterizacion"), errors="coerce"
-    ).fillna(META_DEFAULTS["estudios_caracterizacion"])
-    out["meta_anual_pirds_implementados"] = pd.to_numeric(
-        out.get("meta_anual_pirds_implementados"), errors="coerce"
-    ).fillna(META_DEFAULTS["pirds_implementados"])
-
-    # Mensuales oficiales
-    out["capacitaciones_mes"] = out["capacitaciones_mes_calc"]
-    out["personas_capacitadas_mes"] = out["personas_capacitadas_mes_calc"]
-    out["municipios_capacitados_mes"] = out["municipios_capacitados_mes_calc"]
-    out["asistencias_tecnicas_mes"] = out["asistencias_tecnicas_mes_calc"]
-    out["estudios_caracterizacion_mes"] = out["estudios_caracterizacion_mes_calc"]
-    out["pirds_implementados_mes"] = out["pirds_implementados_mes_calc"]
-    out["reuniones_mes"] = out["reuniones_mes_calc"]
-
-    out = out.sort_values(["anio_reportado", "mes_num"]).reset_index(drop=True)
-
-    # Acumulados
-    out["personas_capacitadas_acum"] = out.groupby("anio_reportado")["personas_capacitadas_mes"].cumsum()
-    out["asistencias_tecnicas_acum"] = out.groupby("anio_reportado")["asistencias_tecnicas_mes"].cumsum()
-    out["estudios_caracterizacion_acum"] = out.groupby("anio_reportado")["estudios_caracterizacion_mes"].cumsum()
-    out["pirds_implementados_acum"] = out.groupby("anio_reportado")["pirds_implementados_mes"].cumsum()
-
-    # Municipios acumulados: se calcula por set único hasta el mes
-    mun_accum_map = build_cumulative_unique_municipios(cap_df, out)
-    out["municipios_capacitados_acum"] = out["periodo_clave"].map(mun_accum_map).fillna(0).astype(int)
-
-    # Esperados al corte
-    out["fraccion_anual_esperada"] = out["mes_num"] / 12.0
-    out["municipios_capacitados_esperado"] = out["meta_anual_municipios_capacitados"] * out["fraccion_anual_esperada"]
-    out["personas_capacitadas_esperado"] = out["meta_anual_personas_capacitadas"] * out["fraccion_anual_esperada"]
-    out["asistencias_tecnicas_esperado"] = out["meta_anual_asistencias_tecnicas"] * out["fraccion_anual_esperada"]
-    out["estudios_caracterizacion_esperado"] = out["meta_anual_estudios_caracterizacion"] * out["fraccion_anual_esperada"]
-    out["pirds_implementados_esperado"] = out["meta_anual_pirds_implementados"] * out["fraccion_anual_esperada"]
-
-    # Porcentajes avance anual
-    out["municipios_capacitados_pct_meta"] = np.where(
-        out["meta_anual_municipios_capacitados"] > 0,
-        out["municipios_capacitados_acum"] / out["meta_anual_municipios_capacitados"] * 100.0,
-        0.0,
-    )
-    out["personas_capacitadas_pct_meta"] = np.where(
-        out["meta_anual_personas_capacitadas"] > 0,
-        out["personas_capacitadas_acum"] / out["meta_anual_personas_capacitadas"] * 100.0,
-        0.0,
-    )
-    out["asistencias_tecnicas_pct_meta"] = np.where(
-        out["meta_anual_asistencias_tecnicas"] > 0,
-        out["asistencias_tecnicas_acum"] / out["meta_anual_asistencias_tecnicas"] * 100.0,
-        0.0,
-    )
-    out["estudios_caracterizacion_pct_meta"] = np.where(
-        out["meta_anual_estudios_caracterizacion"] > 0,
-        out["estudios_caracterizacion_acum"] / out["meta_anual_estudios_caracterizacion"] * 100.0,
-        0.0,
-    )
-    out["pirds_implementados_pct_meta"] = np.where(
-        out["meta_anual_pirds_implementados"] > 0,
-        out["pirds_implementados_acum"] / out["meta_anual_pirds_implementados"] * 100.0,
-        0.0,
-    )
-
-    # Contra esperado
-    out["municipios_capacitados_pct_esperado"] = np.where(
-        out["municipios_capacitados_esperado"] > 0,
-        out["municipios_capacitados_acum"] / out["municipios_capacitados_esperado"] * 100.0,
-        0.0,
-    )
-    out["personas_capacitadas_pct_esperado"] = np.where(
-        out["personas_capacitadas_esperado"] > 0,
-        out["personas_capacitadas_acum"] / out["personas_capacitadas_esperado"] * 100.0,
-        0.0,
-    )
-    out["asistencias_tecnicas_pct_esperado"] = np.where(
-        out["asistencias_tecnicas_esperado"] > 0,
-        out["asistencias_tecnicas_acum"] / out["asistencias_tecnicas_esperado"] * 100.0,
-        0.0,
-    )
-    out["estudios_caracterizacion_pct_esperado"] = np.where(
-        out["estudios_caracterizacion_esperado"] > 0,
-        out["estudios_caracterizacion_acum"] / out["estudios_caracterizacion_esperado"] * 100.0,
-        0.0,
-    )
-    out["pirds_implementados_pct_esperado"] = np.where(
-        out["pirds_implementados_esperado"] > 0,
-        out["pirds_implementados_acum"] / out["pirds_implementados_esperado"] * 100.0,
-        0.0,
-    )
-
-    last_idx = out["mes_num"].replace(0, np.nan).last_valid_index()
-    out["es_ultimo_mes_real"] = False
-    if last_idx is not None:
-        out.loc[last_idx, "es_ultimo_mes_real"] = True
-
-    keep_cols = [
-        "programa_id",
-        "programa_nombre",
-        "anio_reportado",
-        "mes_reportado",
-        "mes_num",
-        "mes_label",
-        "periodo_clave",
-        "estado_reporte",
-        "capacitaciones_mes",
-        "municipios_capacitados_mes",
-        "personas_capacitadas_mes",
-        "asistencias_tecnicas_mes",
-        "estudios_caracterizacion_mes",
-        "pirds_implementados_mes",
-        "reuniones_mes",
-        "municipios_capacitados_acum",
-        "personas_capacitadas_acum",
-        "asistencias_tecnicas_acum",
-        "estudios_caracterizacion_acum",
-        "pirds_implementados_acum",
-        "meta_anual_municipios_capacitados",
-        "meta_anual_personas_capacitadas",
-        "meta_anual_asistencias_tecnicas",
-        "meta_anual_estudios_caracterizacion",
-        "meta_anual_pirds_implementados",
-        "municipios_capacitados_esperado",
-        "personas_capacitadas_esperado",
-        "asistencias_tecnicas_esperado",
-        "estudios_caracterizacion_esperado",
-        "pirds_implementados_esperado",
-        "municipios_capacitados_pct_meta",
-        "personas_capacitadas_pct_meta",
-        "asistencias_tecnicas_pct_meta",
-        "estudios_caracterizacion_pct_meta",
-        "pirds_implementados_pct_meta",
-        "municipios_capacitados_pct_esperado",
-        "personas_capacitadas_pct_esperado",
-        "asistencias_tecnicas_pct_esperado",
-        "estudios_caracterizacion_pct_esperado",
-        "pirds_implementados_pct_esperado",
-        "fraccion_anual_esperada",
-        "observaciones_generales",
-        "comentarios_revision",
-        "_submission_time",
-        "_id",
-        "_uuid",
-        "es_ultimo_mes_real",
-    ]
-    for c in keep_cols:
-        if c not in out.columns:
-            out[c] = np.nan
-    return out[keep_cols].copy()
+    raise RuntimeError(f"No fue posible consultar {url}: {last_error}")
 
 
-def build_cumulative_unique_municipios(cap_df: pd.DataFrame, monthly_df: pd.DataFrame) -> Dict[str, int]:
-    if cap_df.empty or monthly_df.empty:
-        return {}
-    work = cap_df.copy()
-    if "_submission__id" not in work.columns:
-        return {}
-    main_period = monthly_df[["_id", "anio_reportado", "mes_num", "periodo_clave"]].rename(columns={"_id": "_submission__id"})
-    work = work.merge(main_period, on="_submission__id", how="left")
-    work = work.sort_values(["anio_reportado", "mes_num", "_submission__id"])
-
-    cum_map: Dict[str, int] = {}
-    seen_by_year: Dict[int, set] = {}
-    for _, row in monthly_df.sort_values(["anio_reportado", "mes_num"]).iterrows():
-        year = int(row["anio_reportado"])
-        period = row["periodo_clave"]
-        upto = work[(work["anio_reportado"] == year) & (work["mes_num"] <= int(row["mes_num"]))]
-        muni = set()
-        if "municipios_capacitacion" in upto.columns:
-            for val in upto["municipios_capacitacion"].dropna().astype(str):
-                muni.update(split_multi(val))
-        cum_map[period] = len(muni)
-    return cum_map
-
-
-def summarize_capacitaciones(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "_submission__id" not in df.columns:
-        return pd.DataFrame(columns=["_submission__id"])
-    work = df.copy()
-    work["participantes_total"] = as_num(work.get("participantes_total", pd.Series(dtype=float)))
-    work["capacitacion_count"] = 1
-    muni_count = []
-    for val in work.get("municipios_capacitacion", pd.Series([""] * len(work))):
-        muni_count.append(len(split_multi(as_str(val))))
-    work["municipios_count_row"] = muni_count
-    out = work.groupby("_submission__id", as_index=False).agg(
-        capacitaciones_mes_calc=("capacitacion_count", "sum"),
-        personas_capacitadas_mes_calc=("participantes_total", "sum"),
-        municipios_capacitados_mes_calc=("municipios_count_row", "sum"),
-    )
-    return out
-
-
-def summarize_asistencias(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "_submission__id" not in df.columns:
-        return pd.DataFrame(columns=["_submission__id"])
-    work = df.copy()
-    if "nueva_asistencia_flag" in work.columns:
-        work["flag"] = as_num(work["nueva_asistencia_flag"])
-    elif "cuenta_nueva_asistencia" in work.columns:
-        work["flag"] = yes_flag(work["cuenta_nueva_asistencia"]).astype(int)
-    else:
-        work["flag"] = 0
-    out = work.groupby("_submission__id", as_index=False).agg(
-        asistencias_tecnicas_mes_calc=("flag", "sum"),
-    )
-    return out
-
-
-def summarize_estudios(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "_submission__id" not in df.columns:
-        return pd.DataFrame(columns=["_submission__id"])
-    work = df.copy()
-    if "estudio_finalizado_flag" in work.columns:
-        work["flag"] = as_num(work["estudio_finalizado_flag"])
-    elif "estudio_finalizado_mes" in work.columns:
-        work["flag"] = yes_flag(work["estudio_finalizado_mes"]).astype(int)
-    else:
-        work["flag"] = 0
-    out = work.groupby("_submission__id", as_index=False).agg(
-        estudios_caracterizacion_mes_calc=("flag", "sum"),
-    )
-    return out
-
-
-def summarize_pirds(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "_submission__id" not in df.columns:
-        return pd.DataFrame(columns=["_submission__id"])
-    work = df.copy()
-    if "pirds_implementado_flag" in work.columns:
-        work["flag"] = as_num(work["pirds_implementado_flag"])
-    elif "pirds_implementado_mes" in work.columns:
-        work["flag"] = yes_flag(work["pirds_implementado_mes"]).astype(int)
-    else:
-        work["flag"] = 0
-    out = work.groupby("_submission__id", as_index=False).agg(
-        pirds_implementados_mes_calc=("flag", "sum"),
-    )
-    return out
-
-
-def summarize_reuniones(df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty or "_submission__id" not in df.columns:
-        return pd.DataFrame(columns=["_submission__id"])
-    work = df.copy()
-    work["count"] = 1
-    out = work.groupby("_submission__id", as_index=False).agg(
-        reuniones_mes_calc=("count", "sum"),
-    )
-    return out
-
-
-def build_institucional_indicadores(total_mes: pd.DataFrame) -> pd.DataFrame:
-    if total_mes.empty:
-        return pd.DataFrame(columns=["indicador_id", "indicador_nombre", "valor_mes", "valor_acumulado", "meta_anual", "esperado_corte", "pct_meta", "pct_esperado", "periodo_clave", "mes_label"])
-
-    row = total_mes.loc[total_mes["es_ultimo_mes_real"]].copy()
-    if row.empty:
-        row = total_mes.tail(1).copy()
-    r = row.iloc[0]
-
-    items = [
-        {
-            "indicador_id": "municipios_capacitados",
-            "indicador_nombre": "Municipios capacitados",
-            "valor_mes": r["municipios_capacitados_mes"],
-            "valor_acumulado": r["municipios_capacitados_acum"],
-            "meta_anual": r["meta_anual_municipios_capacitados"],
-            "esperado_corte": r["municipios_capacitados_esperado"],
-            "pct_meta": r["municipios_capacitados_pct_meta"],
-            "pct_esperado": r["municipios_capacitados_pct_esperado"],
+def get_export_settings(base_url: str, asset_uid: str, token: str) -> list[dict[str, Any]]:
+    url = f"{base_url}/api/v2/assets/{asset_uid}/export-settings/"
+    payload = http_get(
+        url,
+        headers={
+            "Authorization": f"Token {token}",
+            "Accept": "application/json",
         },
-        {
-            "indicador_id": "personas_capacitadas",
-            "indicador_nombre": "Personas capacitadas",
-            "valor_mes": r["personas_capacitadas_mes"],
-            "valor_acumulado": r["personas_capacitadas_acum"],
-            "meta_anual": r["meta_anual_personas_capacitadas"],
-            "esperado_corte": r["personas_capacitadas_esperado"],
-            "pct_meta": r["personas_capacitadas_pct_meta"],
-            "pct_esperado": r["personas_capacitadas_pct_esperado"],
-        },
-        {
-            "indicador_id": "asistencias_tecnicas",
-            "indicador_nombre": "Asistencias técnicas",
-            "valor_mes": r["asistencias_tecnicas_mes"],
-            "valor_acumulado": r["asistencias_tecnicas_acum"],
-            "meta_anual": r["meta_anual_asistencias_tecnicas"],
-            "esperado_corte": r["asistencias_tecnicas_esperado"],
-            "pct_meta": r["asistencias_tecnicas_pct_meta"],
-            "pct_esperado": r["asistencias_tecnicas_pct_esperado"],
-        },
-        {
-            "indicador_id": "estudios_caracterizacion",
-            "indicador_nombre": "Estudios de caracterización",
-            "valor_mes": r["estudios_caracterizacion_mes"],
-            "valor_acumulado": r["estudios_caracterizacion_acum"],
-            "meta_anual": r["meta_anual_estudios_caracterizacion"],
-            "esperado_corte": r["estudios_caracterizacion_esperado"],
-            "pct_meta": r["estudios_caracterizacion_pct_meta"],
-            "pct_esperado": r["estudios_caracterizacion_pct_esperado"],
-        },
-        {
-            "indicador_id": "pirds_implementados",
-            "indicador_nombre": "PIRDES implementados",
-            "valor_mes": r["pirds_implementados_mes"],
-            "valor_acumulado": r["pirds_implementados_acum"],
-            "meta_anual": r["meta_anual_pirds_implementados"],
-            "esperado_corte": r["pirds_implementados_esperado"],
-            "pct_meta": r["pirds_implementados_pct_meta"],
-            "pct_esperado": r["pirds_implementados_pct_esperado"],
-        },
-    ]
-    out = pd.DataFrame(items)
-    out["periodo_clave"] = r["periodo_clave"]
-    out["mes_label"] = r["mes_label"]
-    out["mes_num"] = r["mes_num"]
-    out["anio_reportado"] = r["anio_reportado"]
-    out["es_ultimo_mes_real"] = True
-    return out
+    )
+    data = json.loads(payload.decode("utf-8"))
+    return data.get("results", [])
 
 
-def prep_capacitaciones_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(columns=[
-            "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_capacitacion", "municipios_capacitacion",
-            "modalidad_capacitacion", "tipo_capacitacion", "temas_capacitacion", "participantes_total",
-            "participantes_tecnicos", "participantes_operarios", "participantes_otro",
-            "instituciones_participantes", "observaciones_capacitacion"
-        ])
-    out = df.copy()
-    out = attach_period(out, main_df)
-    keep = [
-        "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_capacitacion", "municipios_capacitacion",
-        "modalidad_capacitacion", "tipo_capacitacion", "temas_capacitacion", "participantes_total",
-        "participantes_tecnicos", "participantes_operarios", "participantes_otro",
-        "instituciones_participantes", "observaciones_capacitacion"
-    ]
-    for c in keep:
-        if c not in out.columns:
-            out[c] = np.nan
-    out["participantes_total"] = as_num(out["participantes_total"])
-    out["participantes_tecnicos"] = as_num(out["participantes_tecnicos"])
-    out["participantes_operarios"] = as_num(out["participantes_operarios"])
-    out["participantes_otro"] = as_num(out["participantes_otro"])
-    return out[keep].sort_values(["anio_reportado", "mes_num", "fecha_capacitacion"]).reset_index(drop=True)
-
-
-def prep_asistencias_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(columns=[
-            "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_asistencia", "municipio_asistencia",
-            "proyecto_codigo", "nombre_corto_proyecto", "sector_asistencia", "movimiento_asistencia",
-            "etapa_proyecto", "cuenta_nueva_asistencia", "nueva_asistencia_flag", "resultado_asistencia",
-            "observaciones_asistencia"
-        ])
-    out = df.copy()
-    out = attach_period(out, main_df)
-    keep = [
-        "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_asistencia", "municipio_asistencia",
-        "proyecto_codigo", "nombre_corto_proyecto", "sector_asistencia", "movimiento_asistencia",
-        "etapa_proyecto", "cuenta_nueva_asistencia", "nueva_asistencia_flag", "resultado_asistencia",
-        "observaciones_asistencia"
-    ]
-    for c in keep:
-        if c not in out.columns:
-            out[c] = np.nan
-    out["nueva_asistencia_flag"] = as_num(out["nueva_asistencia_flag"])
-    return out[keep].sort_values(["anio_reportado", "mes_num", "fecha_asistencia"]).reset_index(drop=True)
-
-
-def prep_estudios_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(columns=[
-            "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_estudio", "municipio_estudio",
-            "sector_estudio", "estado_estudio", "estudio_finalizado_mes", "estudio_finalizado_flag",
-            "instituciones_apoyo_estudio", "observaciones_estudio"
-        ])
-    out = df.copy()
-    out = attach_period(out, main_df)
-    keep = [
-        "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_estudio", "municipio_estudio",
-        "sector_estudio", "estado_estudio", "estudio_finalizado_mes", "estudio_finalizado_flag",
-        "instituciones_apoyo_estudio", "observaciones_estudio"
-    ]
-    for c in keep:
-        if c not in out.columns:
-            out[c] = np.nan
-    out["estudio_finalizado_flag"] = as_num(out["estudio_finalizado_flag"])
-    return out[keep].sort_values(["anio_reportado", "mes_num", "fecha_estudio"]).reset_index(drop=True)
-
-
-def prep_pirds_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(columns=[
-            "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_pirds", "municipio_pirds",
-            "estado_pirds", "pirds_implementado_mes", "pirds_implementado_flag", "requiere_seguimiento_pirds",
-            "observaciones_pirds"
-        ])
-    out = df.copy()
-    out = attach_period(out, main_df)
-    keep = [
-        "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_pirds", "municipio_pirds",
-        "estado_pirds", "pirds_implementado_mes", "pirds_implementado_flag", "requiere_seguimiento_pirds",
-        "observaciones_pirds"
-    ]
-    for c in keep:
-        if c not in out.columns:
-            out[c] = np.nan
-    out["pirds_implementado_flag"] = as_num(out["pirds_implementado_flag"])
-    return out[keep].sort_values(["anio_reportado", "mes_num", "fecha_pirds"]).reset_index(drop=True)
-
-
-def prep_reuniones_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    if df.empty:
-        return pd.DataFrame(columns=[
-            "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_reunion", "tipo_reunion",
-            "municipios_reunion", "tema_reunion", "instituciones_presentes", "acuerdos_reunion"
-        ])
-    out = df.copy()
-    out = attach_period(out, main_df)
-    keep = [
-        "periodo_clave", "anio_reportado", "mes_num", "mes_label", "fecha_reunion", "tipo_reunion",
-        "municipios_reunion", "tema_reunion", "instituciones_presentes", "acuerdos_reunion"
-    ]
-    for c in keep:
-        if c not in out.columns:
-            out[c] = np.nan
-    return out[keep].sort_values(["anio_reportado", "mes_num", "fecha_reunion"]).reset_index(drop=True)
-
-
-def attach_period(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
-    key = main_df[["_id", "periodo_clave", "anio_reportado", "mes_num", "mes_label"]].rename(columns={"_id": "_submission__id"})
-    out = out.merge(key, on="_submission__id", how="left")
-    return out
-
-
-def write_csv(df: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(path, index=False, encoding="utf-8-sig")
+def pick_export(exports: list[dict[str, Any]], export_name: str) -> dict[str, Any]:
+    wanted = export_name.strip().lower()
+    for item in exports:
+        name = str(item.get("name", "")).strip().lower()
+        if name == wanted:
+            return item
+    available = [str(item.get("name", "")).strip() for item in exports]
+    raise RuntimeError(
+        "No se encontró el export nombrado "
+        f"'{export_name}'. Disponibles: {available}"
+    )
 
 
 def main() -> int:
-    if not RAW_FILE.exists():
-        raise FileNotFoundError(f"No existe el archivo raw: {RAW_FILE}")
+    token = getenv_required("KOBO_FM_TOKEN")
+    asset_uid = getenv_required("KOBO_FM_ASSET_UID")
+    export_name = getenv_required("KOBO_FM_EXPORT_NAME")
+    base_url = (
+        os.getenv("KOBO_FM_BASE_URL")
+        or os.getenv("KOBO_BASE_URL")
+        or DEFAULT_BASE_URL
+    ).rstrip("/")
 
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    main_raw = safe_read_excel(RAW_FILE, MAIN_SHEET)
-    cap_raw = safe_read_excel(RAW_FILE, SHEET_CAP)
-    asis_raw = safe_read_excel(RAW_FILE, SHEET_ASIS)
-    est_raw = safe_read_excel(RAW_FILE, SHEET_EST)
-    pirds_raw = safe_read_excel(RAW_FILE, SHEET_PIRDS)
-    reu_raw = safe_read_excel(RAW_FILE, SHEET_REU)
+    exports = get_export_settings(base_url, asset_uid, token)
+    export_item = pick_export(exports, export_name)
 
-    main_df = dedupe_main(main_raw)
-    total_mes = build_main_monthly(main_df, cap_raw, asis_raw, est_raw, pirds_raw, reu_raw)
-    institucional = build_institucional_indicadores(total_mes)
+    # Preferimos XLSX porque el formulario tiene repeticiones.
+    file_url = export_item.get("data_url_xlsx") or export_item.get("data_url") or export_item.get("data_url_csv")
+    if not file_url:
+        raise RuntimeError(
+            "El export nombrado existe, pero no trae una URL de descarga válida. "
+            "Revisa que el export se haya guardado correctamente en Kobo."
+        )
 
-    cap_det = prep_capacitaciones_detalle(cap_raw, main_df)
-    asis_det = prep_asistencias_detalle(asis_raw, main_df)
-    est_det = prep_estudios_detalle(est_raw, main_df)
-    pirds_det = prep_pirds_detalle(pirds_raw, main_df)
-    reu_det = prep_reuniones_detalle(reu_raw, main_df)
+    xlsx_bytes = http_get(
+        file_url,
+        headers={
+            "Authorization": f"Token {token}",
+            "Accept": "*/*",
+        },
+        timeout=240,
+        tries=7,
+    )
 
-    write_csv(total_mes, PROCESSED_DIR / "total_mes.csv")
-    write_csv(institucional, PROCESSED_DIR / "institucional_indicadores.csv")
-    write_csv(cap_det, PROCESSED_DIR / "capacitaciones_detalle.csv")
-    write_csv(asis_det, PROCESSED_DIR / "asistencias_detalle.csv")
-    write_csv(est_det, PROCESSED_DIR / "estudios_detalle.csv")
-    write_csv(pirds_det, PROCESSED_DIR / "pirds_detalle.csv")
-    write_csv(reu_det, PROCESSED_DIR / "reuniones_detalle.csv")
+    OUT_XLSX.write_bytes(xlsx_bytes)
 
-    print("OK: Transformación Fortalecimiento Municipal completada.")
-    print(f"Salida: {PROCESSED_DIR}")
+    meta = {
+        "programa": "fortalecimiento_municipal",
+        "asset_uid": asset_uid,
+        "export_name": export_name,
+        "base_url": base_url,
+        "download_url": file_url,
+        "saved_file": str(OUT_XLSX.relative_to(ROOT)),
+        "saved_at_unix": int(time.time()),
+        "export_item": export_item,
+    }
+    OUT_META.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    print(f"OK: raw guardado en {OUT_XLSX}")
+    print(f"OK: metadatos guardados en {OUT_META}")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except Exception as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise
