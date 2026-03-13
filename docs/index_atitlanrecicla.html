@@ -5,64 +5,58 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Atitlán Recicla · ADALA</title>
   <meta name="description" content="Dashboard del programa Atitlán Recicla">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@300;600&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════════
-       TOKENS
-    ═══════════════════════════════════════════ */
+    /* ── TOKENS ── */
     :root {
-      --bg:           #eef2ec;
-      --surface:      #f7faf7;
-      --card:         #ffffff;
-      --text:         #162316;
-      --text-2:       #344d34;
-      --muted:        #5c7a5c;
-      --line:         #cddacd;
-      --line-soft:    #e2ece2;
+      --bg:          #edf2ed;
+      --surface:     #f6faf6;
+      --card:        #ffffff;
+      --text:        #132213;
+      --text-2:      #2c472c;
+      --muted:       #516851;
+      --line:        #c5d7c5;
+      --line-soft:   #dce9dc;
 
-      --green:        #1c6b3a;
-      --green-mid:    #2d8a52;
-      --green-soft:   #d2eddc;
-      --green-pale:   #eaf5ee;
+      --green:       #195f33;
+      --green-mid:   #267a46;
+      --green-soft:  #c8e8d8;
+      --green-pale:  #e6f4ec;
 
-      --blue:         #1a547a;   /* kept for alias */
-      --blue-soft:    #daeaf6;   /* kept for alias */
-      --accent2:      #1a547a;
-      --accent2-soft: #daeaf6;
+      --blue:        #1a527a;
+      --blue-soft:   #d8eaf6;
 
-      --yellow:       #7a5500;
-      --yellow-soft:  #fef4cc;
-      --red:          #8f1c1c;
-      --red-soft:     #fce8e8;
+      --teal:        #0c7070;
+      --teal-soft:   #d0eded;
 
-      --accent:       var(--green-mid);
-      --accent-soft:  var(--green-pale);
+      --amber:       #b05208;
+      --amber-soft:  #fef0dd;
 
-      --shadow-sm:    0 1px 3px rgba(16,42,16,.07), 0 4px 16px rgba(16,42,16,.06);
-      --shadow:       0 2px 8px rgba(16,42,16,.08), 0 8px 28px rgba(16,42,16,.08);
-      --shadow-lg:    0 8px 32px rgba(16,42,16,.14), 0 2px 8px rgba(16,42,16,.06);
-      --radius:       18px;
-      --radius-sm:    11px;
-      --radius-xs:    7px;
+      --yellow:      #795200;
+      --yellow-soft: #fef3cc;
+      --red:         #881818;
+      --red-soft:    #fce6e6;
 
-      /* font stack */
-      --font-head:    'Fraunces', Georgia, serif;
-      --font-body:    'DM Sans', system-ui, sans-serif;
-      --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+      --shadow-sm: 0 1px 4px rgba(14,36,14,.06), 0 4px 16px rgba(14,36,14,.05);
+      --shadow:    0 3px 12px rgba(14,36,14,.09), 0 8px 28px rgba(14,36,14,.07);
+      --shadow-lg: 0 8px 32px rgba(14,36,14,.14);
+      --radius:    16px;
+      --radius-sm: 10px;
+      --radius-xs: 6px;
+
+      --font-head: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
-    /* ═══════════════════════════════════════════
-       RESET + BASE
-    ═══════════════════════════════════════════ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: var(--font-body);
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 90% 55% at 5% -5%,  rgba(45,138,82,.10) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
+        radial-gradient(ellipse 80% 50% at 5% -2%, rgba(38,122,70,.09) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 40% at 95% 100%, rgba(26,82,122,.07) 0%, transparent 52%);
       background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
@@ -70,811 +64,293 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ═══════════════════════════════════════════
-       VIEW SWITCHING  (completo / ejecutivo)
-    ═══════════════════════════════════════════ */
-    body.view-exec .exec-only   { display: block !important; }
-    body.view-exec .full-only   { display: none  !important; }
-    body.view-full .exec-only   { display: none  !important; }
-    body.view-full .full-only   { display: block !important; }
-
+    /* ── View switching ── */
+    body.view-exec .exec-only { display: block !important; }
+    body.view-exec .full-only { display: none  !important; }
+    body.view-full .exec-only { display: none  !important; }
+    body.view-full .full-only { display: block !important; }
     .exec-only { display: none; }
     .full-only  { display: block; }
 
-    /* ═══════════════════════════════════════════
-       LAYOUT
-    ═══════════════════════════════════════════ */
-    .wrap { max-width: 1340px; margin: 0 auto; padding: 28px 22px 64px; }
+    /* ── Layout ── */
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 26px 20px 64px; }
 
-    /* ═══════════════════════════════════════════
-       TOPBAR
-    ═══════════════════════════════════════════ */
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .topbar-left  { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .topbar-right { display: flex; align-items: center; gap: 8px;  flex-wrap: wrap; }
-
-    /* Back button — refined pill */
+    /* ── Topbar ── */
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:26px; flex-wrap:wrap; }
+    .topbar-left  { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+    .topbar-right { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
     .back {
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 10px 20px 10px 14px;
-      border-radius: 999px;
-      background: var(--card);
-      border: 1.5px solid var(--line);
-      text-decoration: none;
-      color: var(--text-2);
-      box-shadow: var(--shadow-sm);
-      font-weight: 600;
-      font-size: .875rem;
-      letter-spacing: .01em;
-      transition: box-shadow .18s, transform .14s, border-color .15s;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 18px 8px 11px; border-radius:999px;
+      background:var(--card); border:1.5px solid var(--line);
+      text-decoration:none; color:var(--text-2);
+      box-shadow:var(--shadow-sm); font-weight:600; font-size:.86rem;
+      transition:box-shadow .18s, transform .14s, border-color .15s, color .15s;
     }
-    .back:hover {
-      box-shadow: var(--shadow);
-      border-color: var(--green-mid);
-      transform: translateY(-1px);
-      color: var(--green);
+    .back:hover { box-shadow:var(--shadow); border-color:var(--green-mid); transform:translateY(-1px); color:var(--green); }
+    .back-arrow {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:22px; height:22px; border-radius:50%;
+      background:var(--green-pale); color:var(--green-mid);
+      font-size:.78rem; font-weight:700; flex-shrink:0;
     }
-    .back-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px; height: 26px;
-      border-radius: 50%;
-      background: var(--green-pale);
-      color: var(--green-mid);
-      font-size: .85rem;
-      flex-shrink: 0;
-      transition: background .15s;
-    }
-    .back:hover .back-icon { background: var(--green-soft); }
-
-    /* Dashboard mode switcher */
     .view-switcher {
-      display: inline-flex;
-      background: var(--card);
-      border: 1.5px solid var(--line);
-      border-radius: 999px;
-      padding: 4px;
-      box-shadow: var(--shadow-sm);
-      gap: 3px;
+      display:inline-flex; background:var(--card);
+      border:1.5px solid var(--line); border-radius:999px;
+      padding:4px; box-shadow:var(--shadow-sm); gap:3px;
     }
     .view-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 7px 16px;
-      border-radius: 999px;
-      border: none;
-      background: transparent;
-      font-family: var(--font-body);
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--muted);
-      cursor: pointer;
-      transition: background .15s, color .15s, box-shadow .15s;
-      letter-spacing: .02em;
+      display:inline-flex; align-items:center; gap:6px;
+      padding:7px 15px; border-radius:999px; border:none;
+      background:transparent; font-family:var(--font-body);
+      font-size:.8rem; font-weight:700; color:var(--muted);
+      cursor:pointer; transition:background .14s, color .14s;
+      letter-spacing:.02em;
     }
-    .view-btn.active {
-      background: var(--green-mid);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(45,138,82,.35);
-    }
-    .view-btn:not(.active):hover { background: var(--green-pale); color: var(--green); }
-    .view-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
+    .view-btn.active { background:var(--green-mid); color:#fff; box-shadow:0 2px 8px rgba(38,122,70,.28); }
+    .view-btn:not(.active):hover { background:var(--green-pale); color:var(--green); }
+    .view-btn svg { width:13px; height:13px; flex-shrink:0; }
     .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      background: var(--green-pale);
-      color: var(--green);
-      font-weight: 700;
-      font-size: .78rem;
-      letter-spacing: .05em;
-      text-transform: uppercase;
-      border: 1px solid rgba(45,138,82,.2);
+      display:inline-flex; align-items:center; gap:5px;
+      padding:6px 13px; border-radius:999px;
+      background:var(--green-pale); color:var(--green);
+      font-weight:700; font-size:.74rem; letter-spacing:.05em;
+      text-transform:uppercase; border:1px solid rgba(38,122,70,.18);
     }
-    .tag::before { content: '●'; font-size: .55em; opacity: .7; }
+    .tag::before { content:'●'; font-size:.48em; opacity:.6; }
 
-    /* ═══════════════════════════════════════════
-       CARDS
-    ═══════════════════════════════════════════ */
+    /* ── Card ── */
     .card {
-      background: var(--card);
-      border: 1.5px solid var(--line-soft);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow .2s, border-color .2s;
+      background:var(--card); border:1.5px solid var(--line-soft);
+      border-radius:var(--radius); box-shadow:var(--shadow-sm);
+      transition:box-shadow .2s, border-color .2s;
     }
-    .card:hover { box-shadow: var(--shadow); border-color: var(--line); }
+    .card:hover { box-shadow:var(--shadow); border-color:var(--line); }
 
-    /* ═══════════════════════════════════════════
-       HERO  (full view)
-    ═══════════════════════════════════════════ */
-    .hero {
-      display: grid;
-      grid-template-columns: 1.7fr 1fr;
-      gap: 18px;
-      margin-bottom: 20px;
-      align-items: stretch;
-    }
-
-    .hero-main {
-      padding: 32px 36px 28px;
-      position: relative;
-      overflow: hidden;
-    }
-    /* subtle watermark */
-    .hero-main::after {
-      content: '♻';
-      position: absolute;
-      right: 20px; bottom: -20px;
-      font-size: 130px;
-      opacity: .028;
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-    }
-
+    /* ── Hero ── */
+    .hero { display:grid; grid-template-columns:1.65fr 1fr; gap:16px; margin-bottom:18px; }
+    .hero-main { padding:30px 34px 26px; position:relative; overflow:hidden; }
     .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-size: .73rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--green-mid);
-      margin-bottom: 10px;
+      display:inline-flex; align-items:center; gap:7px;
+      font-size:.68rem; font-weight:700; letter-spacing:.11em;
+      text-transform:uppercase; color:var(--green-mid); margin-bottom:8px;
     }
-    .hero-eyebrow::before {
-      content: '';
-      display: inline-block;
-      width: 18px; height: 2px;
-      background: var(--green-mid);
-      border-radius: 2px;
-    }
+    .hero-eyebrow::before { content:''; display:inline-block; width:14px; height:2px; background:var(--green-mid); border-radius:2px; }
+    .hero-main h1 { font-family:var(--font-head); font-size:2.4rem; font-weight:600; line-height:1.1; color:var(--text); letter-spacing:-.02em; margin-bottom:10px; }
+    .hero-main p { color:var(--muted); max-width:620px; line-height:1.72; font-size:.92rem; }
+    .hero-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:22px; }
+    .hero-stat { padding:12px 14px; border-radius:var(--radius-sm); background:var(--surface); border:1.5px solid var(--line-soft); transition:transform .14s; cursor:default; }
+    .hero-stat:hover { transform:translateY(-2px); }
+    .hero-stat small { display:block; color:var(--muted); margin-bottom:4px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; }
+    .hero-stat strong { font-family:var(--font-mono); font-size:.96rem; font-weight:500; color:var(--text); }
+    .hero-side { padding:22px 20px; display:flex; flex-direction:column; }
+    .hero-side-label { font-size:.67rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+    .status-badge { display:inline-flex; align-items:center; gap:7px; padding:9px 14px; border-radius:var(--radius-sm); font-weight:700; font-size:.86rem; margin-bottom:14px; border:1.5px solid transparent; }
+    .status-badge::before { content:'●'; font-size:.55em; }
+    .status-green  { background:var(--green-soft);  color:var(--green);  border-color:rgba(25,95,51,.2); }
+    .status-yellow { background:var(--yellow-soft); color:var(--yellow); border-color:rgba(121,82,0,.18); }
+    .status-red    { background:var(--red-soft);    color:var(--red);    border-color:rgba(136,24,24,.18); }
+    .status-muted  { background:var(--surface);     color:var(--muted);  border-color:var(--line); }
+    .mini-list { display:grid; gap:7px; }
+    .mini-item { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:9px 12px; border-radius:var(--radius-sm); background:var(--surface); border:1.5px solid var(--line-soft); transition:background .14s; }
+    .mini-item:hover { background:var(--green-pale); }
+    .mini-item .muted { font-size:.82rem; }
+    .mini-item strong { font-family:var(--font-mono); font-size:.88rem; color:var(--green); }
 
-    .hero-main h1 {
-      font-family: var(--font-head);
-      font-size: 2.6rem;
-      font-weight: 600;
-      line-height: 1.1;
-      color: var(--text);
-      letter-spacing: -.02em;
-      margin-bottom: 12px;
-    }
-    .hero-main p {
-      color: var(--muted);
-      max-width: 640px;
-      line-height: 1.72;
-      font-size: .94rem;
-    }
+    /* ── Intro grid ── */
+    .intro-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:16px; margin-bottom:20px; }
+    .intro-copy p { margin:0 0 12px; color:var(--muted); line-height:1.8; font-size:.92rem; text-align:justify; hyphens:auto; }
+    .intro-copy p:last-child { margin-bottom:0; }
+    .intro-copy strong { color:var(--text-2); }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 11px;
-      margin-top: 24px;
-    }
+    /* ── Annual goals ── */
+    .annual-goals-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+    .goal-card { padding:12px 14px; border-radius:var(--radius-sm); background:var(--surface); border:1.5px solid var(--line-soft); transition:background .14s, transform .14s; }
+    .goal-card:hover { background:var(--green-pale); transform:translateY(-1px); }
+    .goal-card small { display:block; color:var(--muted); margin-bottom:3px; font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; }
+    .goal-card strong { display:block; font-size:.93rem; line-height:1.35; margin-bottom:3px; color:var(--text); }
+    .goal-card .goal-meta { font-size:.8rem; color:var(--muted); margin-bottom:7px; font-family:var(--font-mono); }
+    .goal-card .goal-progress { font-size:.81rem; font-weight:700; }
+    .goal-note { margin-top:12px; color:var(--muted); font-size:.78rem; line-height:1.65; padding-top:12px; border-top:1px dashed var(--line); }
 
-    .hero-stat {
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      border: 1.5px solid var(--line-soft);
-      transition: transform .14s, box-shadow .14s;
-      cursor: default;
-    }
-    .hero-stat:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
-    .hero-stat small {
-      display: block;
-      color: var(--muted);
-      margin-bottom: 5px;
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-    .hero-stat strong {
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    .hero-side { padding: 26px 24px; display: flex; flex-direction: column; }
-    .hero-side-label {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 14px;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      font-size: .88rem;
-      margin-bottom: 18px;
-      border: 1.5px solid transparent;
-    }
-    .status-badge::before { content: '●'; font-size: .6em; }
-    .status-green  { background: var(--green-soft);  color: var(--green);  border-color: rgba(28,107,58,.2);  }
-    .status-yellow { background: var(--yellow-soft); color: var(--yellow); border-color: rgba(122,85,0,.18); }
-    .status-red    { background: var(--red-soft);    color: var(--red);    border-color: rgba(143,28,28,.18); }
-    .status-muted  { background: var(--surface);     color: var(--muted);  border-color: var(--line); }
-
-    .mini-list { display: grid; gap: 8px; }
-    .mini-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 11px 14px;
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      border: 1.5px solid var(--line-soft);
-      transition: background .14s;
-    }
-    .mini-item:hover { background: var(--green-pale); }
-    .mini-item .muted { font-size: .84rem; }
-    .mini-item strong { font-family: var(--font-mono); font-size: .93rem; color: var(--green); }
-
-    /* ═══════════════════════════════════════════
-       INTRO GRID  (description + annual goals)
-    ═══════════════════════════════════════════ */
-    .intro-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
-      gap: 18px;
-      margin-bottom: 22px;
-    }
-
-    .intro-copy p {
-      margin: 0 0 14px;
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: .94rem;
-      text-align: justify;
-      hyphens: auto;
-    }
-    .intro-copy p:last-child { margin-bottom: 0; }
-    .intro-copy strong { color: var(--text-2); }
-
-    /* ═══════════════════════════════════════════
-       ANNUAL GOALS
-    ═══════════════════════════════════════════ */
-    .annual-goals-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .goal-card {
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      border: 1.5px solid var(--line-soft);
-      transition: background .14s, transform .14s;
-    }
-    .goal-card:hover { background: var(--green-pale); transform: translateY(-1px); }
-    .goal-card small {
-      display: block;
-      color: var(--muted);
-      margin-bottom: 4px;
-      font-size: .71rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-    .goal-card strong { display: block; font-size: .97rem; line-height: 1.35; margin-bottom: 5px; color: var(--text); }
-    .goal-card .goal-meta { font-size: .84rem; color: var(--muted); margin-bottom: 9px; font-family: var(--font-mono); }
-    .goal-card .goal-progress { font-size: .85rem; font-weight: 700; }
-    .goal-note {
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: .81rem;
-      line-height: 1.65;
-      padding-top: 14px;
-      border-top: 1px dashed var(--line);
-    }
-
-    /* ═══════════════════════════════════════════
-       TOOLBAR  (filters)
-    ═══════════════════════════════════════════ */
-    .toolbar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-bottom: 24px;
-    }
-
-    .filter { padding: 14px 16px; }
-    .filter label {
-      display: block;
-      font-size: .7rem;
-      color: var(--muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-      margin-bottom: 8px;
-    }
+    /* ── Toolbar ── */
+    .toolbar { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+    .filter { padding:12px 14px; }
+    .filter label { display:block; font-size:.67rem; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.09em; margin-bottom:7px; }
     .filter select, .filter .pill {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid var(--line);
-      border-radius: var(--radius-xs);
-      background: var(--surface);
-      font-size: .9rem;
-      font-family: var(--font-body);
-      color: var(--text);
-      outline: none;
-      transition: border-color .14s, box-shadow .14s;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c7a5c' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 11px center;
-      padding-right: 34px;
+      width:100%; padding:9px 12px; border:1.5px solid var(--line);
+      border-radius:var(--radius-xs); background:var(--surface);
+      font-size:.87rem; font-family:var(--font-body); color:var(--text);
+      outline:none; transition:border-color .14s, box-shadow .14s; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%23516851' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 10px center; padding-right:30px;
     }
-    .filter select:focus { border-color: var(--green-mid); box-shadow: 0 0 0 3px rgba(45,138,82,.13); }
-    .pill {
-      display: flex;
-      align-items: center;
-      font-weight: 700;
-      background-image: none;
-      color: var(--green);
-      background: var(--green-pale);
-      border-color: rgba(45,138,82,.22);
-      font-family: var(--font-mono);
-      font-size: .88rem;
-    }
+    .filter select:focus { border-color:var(--green-mid); box-shadow:0 0 0 3px rgba(38,122,70,.11); }
+    .pill { display:flex; align-items:center; font-weight:700; background-image:none; color:var(--green); background:var(--green-pale); border-color:rgba(38,122,70,.22); font-family:var(--font-mono); font-size:.84rem; }
 
-    /* ═══════════════════════════════════════════
-       SECTION HEADERS
-    ═══════════════════════════════════════════ */
-    .section { margin-bottom: 22px; }
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 12px;
-      margin: 0 0 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line-soft);
-    }
-    .section-head h2 {
-      font-family: var(--font-head);
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--text);
-      letter-spacing: -.01em;
-    }
-    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: .87rem; }
-
-    /* ═══════════════════════════════════════════
-       KPI CARDS
-    ═══════════════════════════════════════════ */
-    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-
-    .kpi {
-      padding: 20px 18px 18px;
-      position: relative;
-      overflow: hidden;
-      transition: box-shadow .18s, transform .14s;
-      border-top: 3px solid var(--line-soft);
-    }
-    .kpi:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-top-color: var(--green-mid); }
-
-    .kpi-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; margin-bottom: 12px; }
-    .kpi-label {
-      font-weight: 700;
-      font-size: .72rem;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--muted);
-      margin-bottom: 7px;
-      line-height: 1.3;
-    }
-    .kpi-value {
-      font-family: var(--font-mono);
-      font-size: 1.65rem;
-      font-weight: 500;
-      margin-bottom: 3px;
-      color: var(--text);
-      line-height: 1;
-      letter-spacing: -.02em;
-    }
-    .kpi-meta { color: var(--muted); font-size: .82rem; line-height: 1.55; }
-    .kpi-meta + .kpi-meta { margin-top: 3px; }
-
-    .chip {
-      padding: 5px 10px;
-      border-radius: var(--radius-xs);
-      font-weight: 700;
-      font-size: .72rem;
-      white-space: nowrap;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-    .chip.green  { background: var(--green-soft);  color: var(--green); }
-    .chip.yellow { background: var(--yellow-soft); color: var(--yellow); }
-    .chip.red    { background: var(--red-soft);    color: var(--red); }
-    .chip.muted  { background: var(--surface);     color: var(--muted); }
-
-    /* ═══════════════════════════════════════════
-       PROGRESS BAR
-    ═══════════════════════════════════════════ */
-    .progress {
-      height: 6px;
-      border-radius: 999px;
-      background: var(--line-soft);
-      overflow: hidden;
-      margin-top: 14px;
-    }
-    .progress > span {
-      display: block;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--green), #52cc82);
-      transition: width .7s cubic-bezier(.4,0,.2,1);
-    }
-
-    /* ═══════════════════════════════════════════
-       GRID LAYOUTS
-    ═══════════════════════════════════════════ */
-    .grid-2       { display: grid; grid-template-columns: 1.4fr 1fr;   gap: 18px; }
-    .grid-2-equal { display: grid; grid-template-columns: 1fr 1fr;      gap: 18px; }
-    .grid-3       { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
-
-    /* ═══════════════════════════════════════════
-       PANELS
-    ═══════════════════════════════════════════ */
-    .panel { padding: 22px 24px; }
-    .panel h3 {
-      font-family: var(--font-head);
-      font-size: 1.08rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-      letter-spacing: -.01em;
-    }
-    .panel p.sub { margin: 0 0 16px; color: var(--muted); font-size: .85rem; line-height: 1.5; }
-
-    /* panel accent stripe */
-    .panel-accent { border-top: 3px solid var(--green-mid); }
-
-    /* ═══════════════════════════════════════════
-       CHART
-    ═══════════════════════════════════════════ */
-    .chart-wrap {
-      overflow: auto;
-      border-radius: var(--radius-xs);
-      background: var(--surface);
-      border: 1px solid var(--line-soft);
-      padding: 6px 0 2px;
-    }
-    .chart { width: 100%; min-width: 760px; height: auto; display: block; }
-
-    .legend {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      color: var(--muted);
-      font-size: .82rem;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px solid var(--line-soft);
-    }
-    .legend span { display: flex; align-items: center; gap: 6px; }
-    .legend i {
-      display: inline-block;
-      width: 24px; height: 3px;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-
-    /* ═══════════════════════════════════════════
-       TABLES
-    ═══════════════════════════════════════════ */
-    .tbl-wrap {
-      overflow: auto;
-      border: 1.5px solid var(--line-soft);
-      border-radius: var(--radius-sm);
-    }
-    table { width: 100%; border-collapse: collapse; min-width: 680px; background: var(--card); }
-    th, td {
-      padding: 10px 13px;
-      border-bottom: 1px solid var(--line-soft);
-      text-align: left;
-      font-size: .85rem;
-      white-space: nowrap;
-    }
-    th {
-      background: var(--surface);
-      color: var(--green);
-      font-size: .7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .09em;
-      position: sticky;
-      top: 0;
-      border-bottom: 2px solid var(--line);
-    }
-    tr:hover td { background: var(--green-pale); }
-    td:first-child { font-weight: 600; color: var(--text-2); }
-    td:not(:first-child) { font-family: var(--font-mono); font-size: .83rem; color: var(--text-2); }
-
-    /* ═══════════════════════════════════════════
-       ALERTS
-    ═══════════════════════════════════════════ */
-    .alert-list { display: grid; gap: 9px; }
-    .alert {
-      padding: 12px 14px;
-      border-radius: var(--radius-sm);
-      border-left: 4px solid;
-      font-size: .87rem;
-      line-height: 1.55;
-    }
-    .alert.red    { background: var(--red-soft);    border-color: var(--red);    color: #6e1515; }
-    .alert.yellow { background: var(--yellow-soft); border-color: var(--yellow); color: #5c3f00; }
-    .alert.green  { background: var(--green-soft);  border-color: var(--green);  color: var(--green); }
-
-    /* ═══════════════════════════════════════════
-       DIAGNOSTIC
-    ═══════════════════════════════════════════ */
-    .diagnostic {
-      padding: 30px 36px;
-      line-height: 1.82;
-      font-size: .95rem;
-      border-left: 4px solid var(--green-mid);
-      background: linear-gradient(to right, var(--green-pale) 0%, var(--card) 60%);
-    }
-    .diagnostic h3 {
-      font-family: var(--font-head);
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line-soft);
-    }
-    .diagnostic p { color: var(--muted); margin-bottom: 10px; }
-    .diagnostic p:last-child { margin-bottom: 0; }
-    .diagnostic strong { color: var(--green); }
-
-    /* ═══════════════════════════════════════════
-       MISC
-    ═══════════════════════════════════════════ */
-    .muted { color: var(--muted); }
-    .empty {
-      padding: 24px;
-      border: 1.5px dashed var(--line);
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      color: var(--muted);
-      text-align: center;
-      font-size: .9rem;
-    }
-    .footer-note { margin-top: 10px; color: var(--muted); font-size: .8rem; }
-
-    /* ═══════════════════════════════════════════
-       ══ EXECUTIVE VIEW  ══
-    ═══════════════════════════════════════════ */
-    .exec-hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    /* Big status card */
-    .exec-status-card {
-      grid-column: 1 / 2;
-      padding: 28px 28px 24px;
-      background: linear-gradient(145deg, #1c6b3a, #2d8a52);
-      color: #fff;
-      border-radius: var(--radius);
-      box-shadow: 0 8px 32px rgba(28,107,58,.35);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .exec-status-card .es-label {
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      opacity: .75;
-      margin-bottom: 8px;
-    }
-    .exec-status-card .es-title {
-      font-family: var(--font-head);
-      font-size: 1.5rem;
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 18px;
-    }
-    .exec-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 16px;
-      border-radius: var(--radius-sm);
-      font-weight: 700;
-      font-size: .9rem;
-      background: rgba(255,255,255,.18);
-      border: 1.5px solid rgba(255,255,255,.28);
-      color: #fff;
-      backdrop-filter: blur(4px);
-      margin-bottom: 20px;
-    }
-    .exec-status-badge::before { content: '●'; font-size: .6em; }
-    .exec-period-info { font-size: .82rem; opacity: .7; margin-top: auto; }
-
-    /* Exec KPI trio */
-    .exec-kpi-trio {
-      grid-column: 2 / 4;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-
-    .exec-kpi {
-      padding: 20px 18px;
-      border-radius: var(--radius);
-      background: var(--card);
-      border: 1.5px solid var(--line-soft);
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      transition: transform .14s, box-shadow .18s;
-    }
-    .exec-kpi:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-    .exec-kpi-icon {
-      font-size: 1.4rem;
-      margin-bottom: 4px;
-    }
-    .exec-kpi-label {
-      font-size: .71rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--muted);
-    }
-    .exec-kpi-value {
-      font-family: var(--font-mono);
-      font-size: 1.4rem;
-      font-weight: 500;
-      color: var(--text);
-      line-height: 1;
-    }
-    .exec-kpi-pct {
-      font-size: .8rem;
-      color: var(--muted);
-    }
-    .exec-kpi-bar {
-      height: 5px;
-      border-radius: 99px;
-      background: var(--line-soft);
-      overflow: hidden;
-      margin-top: 4px;
-    }
-    .exec-kpi-bar span {
-      display: block;
-      height: 100%;
-      border-radius: 99px;
-      background: linear-gradient(90deg, var(--green), #52cc82);
-      transition: width .7s cubic-bezier(.4,0,.2,1);
-    }
-
-    /* Exec alerts row */
-    .exec-alerts-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    /* Exec summary strip */
-    .exec-summary-strip {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-bottom: 22px;
-    }
-    .exec-strip-card {
-      padding: 16px 18px;
-      border-radius: var(--radius-sm);
-      background: var(--card);
-      border: 1.5px solid var(--line-soft);
-      box-shadow: var(--shadow-sm);
-    }
-    .exec-strip-card small {
-      display: block;
-      font-size: .7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--muted);
-      margin-bottom: 5px;
-    }
-    .exec-strip-card strong {
-      font-family: var(--font-mono);
-      font-size: 1.15rem;
-      color: var(--text);
-    }
-
-    /* ═══════════════════════════════════════════
-       SECTION DIVIDER
-    ═══════════════════════════════════════════ */
+    /* ── Sections ── */
+    .section { margin-bottom:18px; }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:12px; margin:0 0 13px; padding-bottom:10px; border-bottom:1px solid var(--line-soft); }
+    .section-head h2 { font-family:var(--font-head); font-size:1.22rem; font-weight:600; color:var(--text); letter-spacing:-.01em; }
+    .section-head p { margin:3px 0 0; color:var(--muted); font-size:.84rem; }
     .section-divider {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      margin: 28px 0 20px;
-      color: var(--muted);
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
+      display:flex; align-items:center; gap:13px;
+      margin:24px 0 16px; color:var(--muted);
+      font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em;
     }
-    .section-divider::before, .section-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--line-soft);
+    .section-divider::before, .section-divider::after { content:''; flex:1; height:1px; background:var(--line-soft); }
+
+    /* ── KPIs ── */
+    .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .kpi { padding:18px 16px 16px; position:relative; overflow:hidden; transition:box-shadow .18s, transform .14s; border-top:3px solid var(--line-soft); }
+    .kpi:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); border-top-color:var(--green-mid); }
+    .kpi-top { display:flex; justify-content:space-between; gap:8px; align-items:start; margin-bottom:10px; }
+    .kpi-label { font-weight:700; font-size:.67rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:5px; line-height:1.3; }
+    .kpi-value { font-family:var(--font-mono); font-size:1.5rem; font-weight:500; margin-bottom:2px; color:var(--text); line-height:1; letter-spacing:-.02em; }
+    .kpi-meta { color:var(--muted); font-size:.79rem; line-height:1.55; }
+    .kpi-meta+.kpi-meta { margin-top:3px; }
+    .chip { padding:4px 9px; border-radius:var(--radius-xs); font-weight:700; font-size:.67rem; white-space:nowrap; letter-spacing:.04em; text-transform:uppercase; flex-shrink:0; }
+    .chip.green  { background:var(--green-soft);  color:var(--green); }
+    .chip.yellow { background:var(--yellow-soft); color:var(--yellow); }
+    .chip.red    { background:var(--red-soft);    color:var(--red); }
+    .chip.muted  { background:var(--surface);     color:var(--muted); }
+    .progress { height:5px; border-radius:999px; background:var(--line-soft); overflow:hidden; margin-top:12px; }
+    .progress>span { display:block; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--green),#48c270); transition:width .7s cubic-bezier(.4,0,.2,1); }
+
+    /* ── Grid layouts ── */
+    .grid-2       { display:grid; grid-template-columns:1.35fr 1fr; gap:16px; }
+    .grid-2-equal { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .grid-3       { display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
+
+    /* ── Panels ── */
+    .panel { padding:20px 22px; }
+    .panel h3 { font-family:var(--font-head); font-size:1.03rem; font-weight:600; color:var(--text); margin-bottom:3px; letter-spacing:-.01em; }
+    .panel p.sub { margin:0 0 14px; color:var(--muted); font-size:.82rem; line-height:1.5; }
+    .panel-accent { border-top:3px solid var(--green-mid); }
+
+    /* ── Interpretation box ── */
+    .interp {
+      margin-top:13px; padding:11px 14px;
+      background:var(--green-pale); border-left:3px solid var(--green-mid);
+      border-radius:0 var(--radius-xs) var(--radius-xs) 0;
+      font-size:.81rem; color:var(--text-2); line-height:1.62;
+    }
+    .interp strong { color:var(--green); }
+
+    /* ── Existing SVG line chart ── */
+    .chart-wrap { overflow:auto; border-radius:var(--radius-xs); background:var(--surface); border:1px solid var(--line-soft); padding:6px 0 2px; }
+    .chart { width:100%; min-width:760px; height:auto; display:block; }
+    .legend { display:flex; gap:16px; flex-wrap:wrap; color:var(--muted); font-size:.79rem; margin-top:10px; padding-top:8px; border-top:1px solid var(--line-soft); }
+    .legend span { display:flex; align-items:center; gap:5px; }
+    .legend i { display:inline-block; width:20px; height:3px; border-radius:2px; flex-shrink:0; }
+
+    /* ── NEW interactive charts ── */
+    .viz-wrap { width:100%; }
+    .viz-svg { width:100%; height:auto; display:block; overflow:visible; }
+
+    /* tooltip */
+    #vizTooltip {
+      position:fixed; z-index:9999; pointer-events:none;
+      background:rgba(19,34,19,.92); color:#fff; backdrop-filter:blur(4px);
+      padding:8px 13px; border-radius:var(--radius-sm);
+      font-size:.79rem; line-height:1.55; white-space:nowrap;
+      box-shadow:var(--shadow); opacity:0; transition:opacity .1s;
     }
 
-    /* ═══════════════════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════════════════ */
-    @media (max-width: 1100px) {
-      .hero, .grid-2, .grid-2-equal, .toolbar, .intro-grid, .annual-goals-grid,
-      .exec-hero, .exec-kpi-trio { grid-template-columns: 1fr; }
-      .exec-status-card { grid-column: auto; }
-      .exec-kpi-trio { grid-template-columns: repeat(3,1fr); }
-      .exec-summary-strip { grid-template-columns: repeat(2,1fr); }
-      .kpis { grid-template-columns: repeat(2, 1fr); }
-      .hero-grid { grid-template-columns: 1fr 1fr; }
+    /* ── Tables ── */
+    .tbl-wrap { overflow:auto; border:1.5px solid var(--line-soft); border-radius:var(--radius-sm); }
+    table { width:100%; border-collapse:collapse; min-width:600px; background:var(--card); }
+    th, td { padding:9px 12px; border-bottom:1px solid var(--line-soft); text-align:left; font-size:.83rem; white-space:nowrap; }
+    th { background:var(--surface); color:var(--green); font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; position:sticky; top:0; border-bottom:2px solid var(--line); }
+    tr:hover td { background:var(--green-pale); }
+    td:first-child { font-weight:600; color:var(--text-2); }
+    td:not(:first-child) { font-family:var(--font-mono); font-size:.8rem; color:var(--text-2); }
+
+    /* ── Alerts ── */
+    .alert-list { display:grid; gap:7px; }
+    .alert { padding:10px 13px; border-radius:var(--radius-sm); border-left:4px solid; font-size:.84rem; line-height:1.55; }
+    .alert.red    { background:var(--red-soft);    border-color:var(--red);    color:#5c1212; }
+    .alert.yellow { background:var(--yellow-soft); border-color:var(--yellow); color:#503900; }
+    .alert.green  { background:var(--green-soft);  border-color:var(--green);  color:var(--green); }
+
+    /* ── Diagnostic ── */
+    .diagnostic { padding:26px 32px; line-height:1.82; font-size:.93rem; border-left:4px solid var(--green-mid); background:linear-gradient(to right,var(--green-pale) 0%,var(--card) 55%); }
+    .diagnostic h3 { font-family:var(--font-head); font-size:1.12rem; font-weight:600; color:var(--text); margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--line-soft); }
+    .diagnostic p { color:var(--muted); margin-bottom:8px; }
+    .diagnostic p:last-child { margin-bottom:0; }
+    .diagnostic strong { color:var(--green); }
+
+    /* ── Misc ── */
+    .muted { color:var(--muted); }
+    .empty { padding:20px; border:1.5px dashed var(--line); border-radius:var(--radius-sm); background:var(--surface); color:var(--muted); text-align:center; font-size:.88rem; }
+    .footer-note { margin-top:8px; color:var(--muted); font-size:.77rem; }
+
+    /* ═══════════════════════════════
+       EXECUTIVE VIEW
+    ═══════════════════════════════ */
+    /* filter row at top */
+    .exec-toolbar { display:grid; grid-template-columns:1fr 1fr auto; gap:13px; align-items:end; margin-bottom:20px; }
+
+    /* status + kpis */
+    .exec-hero-row { display:grid; grid-template-columns:280px 1fr; gap:16px; margin-bottom:16px; }
+    .exec-status-card {
+      padding:24px 22px; background:linear-gradient(150deg,#195f33,#267a46);
+      color:#fff; border-radius:var(--radius); box-shadow:0 8px 28px rgba(25,95,51,.3);
+      display:flex; flex-direction:column; justify-content:space-between;
     }
-    @media (max-width: 680px) {
-      .kpis, .exec-kpi-trio, .exec-alerts-row, .exec-summary-strip { grid-template-columns: 1fr; }
-      .hero-grid { grid-template-columns: 1fr; }
-      .hero-main { padding: 22px 20px; }
-      .hero-main h1 { font-size: 1.9rem; }
-      .topbar { flex-direction: column; align-items: flex-start; }
+    .exec-status-card .es-label { font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; opacity:.7; margin-bottom:5px; }
+    .exec-status-card .es-title { font-family:var(--font-head); font-size:1.4rem; font-weight:600; line-height:1.2; margin-bottom:13px; }
+    .exec-status-badge { display:inline-flex; align-items:center; gap:7px; padding:8px 14px; border-radius:var(--radius-sm); font-weight:700; font-size:.85rem; background:rgba(255,255,255,.14); border:1.5px solid rgba(255,255,255,.24); color:#fff; margin-bottom:16px; }
+    .exec-status-badge::before { content:'●'; font-size:.52em; }
+    .exec-period-info { font-size:.79rem; opacity:.65; }
+
+    .exec-kpi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; }
+    .exec-kpi { padding:16px 15px; border-radius:var(--radius); background:var(--card); border:1.5px solid var(--line-soft); box-shadow:var(--shadow-sm); display:flex; flex-direction:column; gap:5px; transition:transform .14s, box-shadow .18s; }
+    .exec-kpi:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+    .exec-kpi-label { font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+    .exec-kpi-value { font-family:var(--font-mono); font-size:1.28rem; font-weight:500; color:var(--text); line-height:1; }
+    .exec-kpi-bar { height:4px; border-radius:99px; background:var(--line-soft); overflow:hidden; margin-top:3px; }
+    .exec-kpi-bar span { display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--green),#48c270); transition:width .7s cubic-bezier(.4,0,.2,1); }
+
+    /* acumulados strip */
+    .exec-strip { display:grid; grid-template-columns:repeat(4,1fr); gap:11px; margin-bottom:16px; }
+    .exec-strip-card { padding:14px 16px; border-radius:var(--radius-sm); background:var(--card); border:1.5px solid var(--line-soft); box-shadow:var(--shadow-sm); }
+    .exec-strip-card small { display:block; font-size:.66rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:4px; }
+    .exec-strip-card strong { font-family:var(--font-mono); font-size:1.08rem; color:var(--text); }
+
+    .exec-row-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+
+    /* ── Responsive ── */
+    @media(max-width:1100px){
+      .hero,.intro-grid,.grid-2,.grid-2-equal,.toolbar,.exec-hero-row,.exec-kpi-grid { grid-template-columns:1fr; }
+      .exec-kpi-grid { grid-template-columns:repeat(2,1fr); }
+      .exec-strip,.exec-row-2 { grid-template-columns:repeat(2,1fr); }
+      .exec-toolbar { grid-template-columns:1fr 1fr; }
+      .kpis { grid-template-columns:repeat(2,1fr); }
+      .hero-grid { grid-template-columns:1fr 1fr; }
+    }
+    @media(max-width:640px){
+      .kpis,.exec-kpi-grid,.exec-strip,.exec-row-2 { grid-template-columns:1fr; }
+      .hero-grid { grid-template-columns:1fr; }
+      .hero-main { padding:20px 18px; }
+      .hero-main h1 { font-size:1.8rem; }
     }
   </style>
 </head>
 <body class="view-full">
+
+<div id="vizTooltip"></div>
+
 <div class="wrap">
 
-  <!-- ── TOP BAR ── -->
+  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-left">
-      <a class="back" href="./index.html">
-        <span class="back-icon">←</span>
-        Volver al inicio ADALA
-      </a>
+      <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio ADALA</a>
       <span class="tag">Piloto operativo · 2026</span>
     </div>
     <div class="topbar-right">
-      <div class="view-switcher" role="group" aria-label="Modo de visualización">
+      <div class="view-switcher" role="group">
         <button class="view-btn active" id="btnFull" onclick="switchView('full')">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
           Dashboard completo
@@ -887,52 +363,13 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════
+  <!-- ══════════════════════════════
        EXECUTIVE VIEW
-  ══════════════════════════════════════════ -->
+  ══════════════════════════════ -->
   <div class="exec-only">
 
-    <!-- exec hero: status + 6 KPIs -->
-    <div class="exec-hero">
-      <div class="exec-status-card">
-        <div>
-          <div class="es-label">Estado del programa</div>
-          <div class="es-title">Atitlán Recicla</div>
-          <div class="exec-status-badge" id="execStatusBadge">Cargando…</div>
-        </div>
-        <div class="exec-period-info" id="execPeriodInfo">— período —</div>
-      </div>
-      <div class="exec-kpi-trio" id="execKpiTrio">
-        <!-- populated by renderExec() -->
-      </div>
-    </div>
-
-    <!-- exec summary strip -->
-    <div class="exec-summary-strip" id="execSummaryStrip">
-      <!-- populated by renderExec() -->
-    </div>
-
-    <!-- exec: alerts + zone table side by side -->
-    <div class="exec-alerts-row">
-      <div class="card panel panel-accent">
-        <h3>Alertas operativas</h3>
-        <p class="sub">Señales rápidas del período.</p>
-        <div id="execAlertPanel"></div>
-      </div>
-      <div class="card panel panel-accent">
-        <h3>Desempeño por zona</h3>
-        <p class="sub" id="execZoneSubtitle">Comparación del período.</p>
-        <div id="execZonePanel"></div>
-      </div>
-    </div>
-
-    <!-- exec diagnostic summary -->
-    <div class="section">
-      <article class="card diagnostic" id="execDiagnosticPanel"></article>
-    </div>
-
-    <!-- exec filter row (period only) -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;margin-top:-4px">
+    <!-- Filtro al inicio (con estado propio corregido) -->
+    <div class="exec-toolbar">
       <div class="card filter">
         <label for="execPeriodSelect">Período de análisis</label>
         <select id="execPeriodSelect"></select>
@@ -941,25 +378,62 @@
         <label>Última lectura válida</label>
         <div class="pill" id="execLatestPill">—</div>
       </div>
-      <div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.84rem;line-height:1.5">
-        <span style="font-size:1.4rem">ℹ</span>
-        Vista resumida para seguimiento ejecutivo. Para análisis detallado use <strong>Dashboard completo</strong>.
+      <div class="card" style="padding:11px 15px;display:flex;align-items:center;color:var(--muted);font-size:.8rem;line-height:1.5;gap:8px;white-space:nowrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--green-mid)" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Vista ejecutiva · use <strong style="margin:0 3px">Dashboard completo</strong> para detalle.
       </div>
+    </div>
+
+    <!-- Estado + 6 KPIs -->
+    <div class="exec-hero-row">
+      <div class="exec-status-card">
+        <div>
+          <div class="es-label">Estado del programa</div>
+          <div class="es-title">Atitlán Recicla</div>
+          <div class="exec-status-badge" id="execStatusBadge">Cargando…</div>
+        </div>
+        <div class="exec-period-info" id="execPeriodInfo">— período —</div>
+      </div>
+      <div class="exec-kpi-grid" id="execKpiGrid"></div>
+    </div>
+
+    <!-- Acumulados anuales -->
+    <div class="exec-strip" id="execStrip"></div>
+
+    <!-- Gráfica barras zonas + alertas -->
+    <div class="exec-row-2">
+      <div class="card panel panel-accent">
+        <h3>Materiales por zona</h3>
+        <p class="sub" id="execBarSub">Volumen de materiales recolectados en qq, por zona.</p>
+        <div class="viz-wrap" id="execBarChart"></div>
+        <div class="interp" id="execBarInterp">—</div>
+      </div>
+      <div class="card panel panel-accent">
+        <h3>Alertas operativas</h3>
+        <p class="sub">Indicadores bajo umbral de seguimiento en el período.</p>
+        <div id="execAlertPanel"></div>
+        <div class="interp" id="execAlertInterp" style="margin-top:10px">—</div>
+      </div>
+    </div>
+
+    <!-- Diagnóstico narrativo ejecutivo -->
+    <div class="section">
+      <article class="card diagnostic" id="execDiagnosticPanel"></article>
     </div>
 
   </div><!-- /exec-only -->
 
-  <!-- ══════════════════════════════════════════
-       FULL DASHBOARD VIEW
-  ══════════════════════════════════════════ -->
+  <!-- ══════════════════════════════
+       FULL DASHBOARD
+  ══════════════════════════════ -->
   <div class="full-only">
 
-    <!-- Hero -->
+    <!-- BLOQUE 1: Hero + estado rápido -->
     <section class="hero">
       <div class="card hero-main">
         <div class="hero-eyebrow">Dashboard de programa</div>
         <h1>Atitlán Recicla</h1>
-        <p>Seguimiento del avance mensual y anual del programa, combinando indicadores del CDM y detalle operativo de materiales. Por defecto, el tablero se posiciona en el <strong>último período con datos reales</strong>, pero también puedes revisar meses anteriores y filtrar por zona.</p>
+        <p>Seguimiento del avance mensual y anual del programa, combinando indicadores del CDM y detalle operativo de materiales. Por defecto, el tablero se posiciona en el <strong>último período con datos reales</strong>.</p>
         <div class="hero-grid" id="heroStats"></div>
       </div>
       <div class="card hero-side">
@@ -969,23 +443,23 @@
       </div>
     </section>
 
-    <!-- Descripción + metas anuales -->
+    <!-- BLOQUE 2: Descripción + metas anuales -->
     <section class="intro-grid">
       <article class="card panel intro-copy">
         <h3>Descripción del programa</h3>
         <p><strong>Atitlán Recicla</strong> surge en 2017 como una iniciativa de la Asociación Amigos del Lago de Atitlán y CBC, con un enfoque social y ambiental orientado al rescate del Lago de Atitlán. La ejecución ha estado a cargo de la Asociación Amigos del Lago de Atitlán, mientras que CBC y Social Capital Foundation han brindado apoyo financiero.</p>
-        <p>El programa impulsa la generación de ingresos para mujeres indígenas líderes de sus comunidades a través de la recolección, manejo y comercialización de residuos reciclables, integrando también actividades de concientización y educación ambiental. Con el tiempo, el proyecto evolucionó hasta convertirse en la primera cooperativa de mujeres recicladoras en Guatemala: <strong>Cooperativa Integral de Comercialización Atitlán Recicla, R.L.</strong></p>
+        <p>El programa impulsa la generación de ingresos para mujeres indígenas líderes de sus comunidades a través de la recolección, manejo y comercialización de residuos reciclables. Con el tiempo, el proyecto evolucionó hasta convertirse en la primera cooperativa de mujeres recicladoras en Guatemala: <strong>Cooperativa Integral de Comercialización Atitlán Recicla, R.L.</strong></p>
         <p>Actualmente el programa trabaja en 13 municipios, 4 aldeas y una comunidad, organizados por zonas de gestión. Opera con centros de acopio, grupos de mujeres y beneficiarias que sostienen el modelo de economía circular y empoderamiento comunitario.</p>
       </article>
       <article class="card panel">
         <h3>Metas anuales 2026 y avance acumulado real</h3>
         <p class="sub" id="annualGoalsSubtitle">Meta anual total del programa al período seleccionado.</p>
         <div class="annual-goals-grid" id="annualGoalsGrid"></div>
-        <div class="goal-note">Estas metas anuales se calculan con base en las <strong>metas oficiales 2026</strong> y los <strong>11 meses reportables</strong> del programa. El porcentaje mostrado compara el acumulado real del año contra la meta anual total, no contra la meta esperada al corte.</div>
+        <div class="goal-note">Metas calculadas con base en las <strong>metas oficiales 2026</strong> y los <strong>11 meses reportables</strong>. El porcentaje compara el acumulado real contra la meta anual total, no contra la meta esperada al corte.</div>
       </article>
     </section>
 
-    <!-- Filtros -->
+    <!-- BLOQUE 3: Filtros -->
     <section class="toolbar">
       <div class="card filter">
         <label for="periodSelect">Mes / período</label>
@@ -1005,7 +479,7 @@
       </div>
     </section>
 
-    <!-- KPIs principales -->
+    <!-- BLOQUE 4: KPIs principales -->
     <section class="section">
       <div class="section-head">
         <div>
@@ -1016,18 +490,19 @@
       <div class="kpis" id="kpiGrid"></div>
     </section>
 
-    <div class="section-divider">Análisis de tendencia y cumplimiento</div>
+    <div class="section-divider">Tendencia histórica y cumplimiento</div>
 
-    <!-- Tendencia + Semáforo -->
+    <!-- BLOQUE 5: Gráfica de tendencia + semáforo -->
     <section class="section grid-2">
       <article class="card panel panel-accent">
-        <h3>Tendencia mensual</h3>
+        <h3>Tendencia mensual del indicador</h3>
         <p class="sub" id="chartSubtitle">—</p>
         <div class="chart-wrap" id="trendChart"></div>
         <div class="legend">
-          <span><i style="background:#2d8a52"></i>Valor real</span>
-          <span><i style="background:#a8c4b0;border-radius:2px;height:2px;border-top:2px dashed #a8c4b0;background:none"></i>Meta / referencia</span>
+          <span><i style="background:#267a46"></i>Valor real</span>
+          <span><i style="border-top:2px dashed #a0bca8;background:none"></i>Meta mensual de referencia</span>
         </div>
+        <div class="interp" id="trendInterp">—</div>
       </article>
       <article class="card panel panel-accent">
         <h3>Semáforo de indicadores</h3>
@@ -1036,9 +511,27 @@
       </article>
     </section>
 
+    <div class="section-divider">Visualización comparativa por zona y material</div>
+
+    <!-- BLOQUE 6: Gráficas nuevas — barras horizontales por zona + donut de materiales -->
+    <section class="section grid-2">
+      <article class="card panel panel-accent">
+        <h3>Materiales recolectados por zona</h3>
+        <p class="sub" id="barZoneSub">Comparación de volumen en qq por zona geográfica.</p>
+        <div class="viz-wrap" id="zoneBarChart"></div>
+        <div class="interp" id="zoneBarInterp">—</div>
+      </article>
+      <article class="card panel panel-accent">
+        <h3>Composición de materiales</h3>
+        <p class="sub" id="donutSub">Distribución relativa por tipo de material en el período.</p>
+        <div class="viz-wrap" id="donutChart"></div>
+        <div class="interp" id="donutInterp">—</div>
+      </article>
+    </section>
+
     <div class="section-divider">Alertas y distribución territorial</div>
 
-    <!-- Alertas + Zonas -->
+    <!-- BLOQUE 7: Alertas + tabla zonas -->
     <section class="section grid-2">
       <article class="card panel">
         <h3>Alertas operativas</h3>
@@ -1054,7 +547,7 @@
 
     <div class="section-divider">Operación y territorios</div>
 
-    <!-- Materiales + Territorios -->
+    <!-- BLOQUE 8: Materiales detalle + territorios -->
     <section class="section grid-2">
       <article class="card panel">
         <h3>Materiales del período</h3>
@@ -1068,9 +561,9 @@
       </article>
     </section>
 
-    <div class="section-divider">Diagnóstico narrativo</div>
+    <div class="section-divider">Diagnóstico narrativo del período</div>
 
-    <!-- Diagnóstico -->
+    <!-- BLOQUE 9: Diagnóstico -->
     <section class="section">
       <article class="card diagnostic" id="diagnosticPanel"></article>
     </section>
@@ -1079,6 +572,7 @@
 
 </div><!-- /wrap -->
 
+<script>
 <script>
 const PATHS={
   indicadores:"./data/institucional_indicadores.csv",
@@ -1891,6 +1385,9 @@ function escapeHtml(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAl
 
 /* ═══════════════════════════════════════════════════════
    VIEW SWITCHER  — purely cosmetic, no data logic
+
+/* ═══════════════════════════════════════════════════════
+   VIEW SWITCHER — only CSS class toggle, zero data logic
 ═══════════════════════════════════════════════════════ */
 function switchView(mode){
   const body = document.body;
@@ -1899,83 +1396,441 @@ function switchView(mode){
   document.getElementById('btnFull').classList.toggle('active', mode==='full');
   document.getElementById('btnExec').classList.toggle('active', mode==='exec');
   if(mode==='exec' && currentData) renderExec();
+  if(mode==='full' && currentData) renderNewCharts(buildState(currentData));
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOOLTIP HELPERS
+═══════════════════════════════════════════════════════ */
+const tip = document.getElementById('vizTooltip');
+function showTip(e, html){
+  tip.innerHTML = html;
+  tip.style.opacity = '1';
+  moveTip(e);
+}
+function moveTip(e){
+  const x = e.clientX + 14, y = e.clientY - 10;
+  const r = tip.getBoundingClientRect();
+  tip.style.left = (x + r.width > window.innerWidth ? x - r.width - 22 : x) + 'px';
+  tip.style.top  = (y < 0 ? 4 : y) + 'px';
+}
+function hideTip(){ tip.style.opacity = '0'; }
+
+/* ═══════════════════════════════════════════════════════
+   SVG HELPERS
+═══════════════════════════════════════════════════════ */
+function svgEl(tag, attrs={}){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for(const [k,v] of Object.entries(attrs)) el.setAttribute(k, v);
+  return el;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW CHART 1: HORIZONTAL BAR — materiales por zona
+   Uses: getZonaRows, getSelectedPeriod, hasActivityAggregate,
+         safeNumber, formatNumber, periodLabel  (all from original logic)
+═══════════════════════════════════════════════════════ */
+function renderZoneBarChart(containerId, state, period, subtitleId, interpId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+
+  const rows = getZonaRows(state, period)
+    .filter(r => hasActivityAggregate(r))
+    .sort((a,b) => safeNumber(b.total_materiales_qq) - safeNumber(a.total_materiales_qq));
+
+  if(!rows.length){
+    container.innerHTML = '<div class="empty">Sin datos de zona para este período.</div>';
+    return;
+  }
+
+  const W=480, barH=34, gap=10, padL=100, padR=60, padT=16, padB=8;
+  const H = padT + rows.length*(barH+gap) - gap + padB;
+  const maxVal = Math.max(...rows.map(r => safeNumber(r.total_materiales_qq)), 1);
+
+  const COLORS = ['#267a46','#3a9e62','#52b87a','#6dd295','#90e0b0'];
+
+  const svg = svgEl('svg',{ viewBox:`0 0 ${W} ${H}`, class:'viz-svg' });
+
+  rows.forEach((row, i) => {
+    const val  = safeNumber(row.total_materiales_qq);
+    const barW = Math.max(2, (val / maxVal) * (W - padL - padR));
+    const y    = padT + i*(barH+gap);
+    const col  = COLORS[i % COLORS.length];
+
+    // label left
+    const label = svgEl('text',{ x: padL-8, y: y+barH/2+5, 'text-anchor':'end',
+      fill:'#2c472c', 'font-size':'12', 'font-weight':'600', 'font-family':'DM Sans,sans-serif' });
+    label.textContent = String(row.zona||'—').length > 14
+      ? String(row.zona||'—').slice(0,13)+'…' : (row.zona||'—');
+
+    // bar bg
+    const bg = svgEl('rect',{ x:padL, y, width: W-padL-padR, height:barH,
+      rx:6, fill:'#e6f4ec' });
+
+    // bar fill with animation
+    const bar = svgEl('rect',{ x:padL, y, width:0, height:barH, rx:6, fill:col,
+      style:'transition:width .65s cubic-bezier(.4,0,.2,1)', cursor:'pointer' });
+    setTimeout(()=>bar.setAttribute('width', barW), 60 + i*60);
+
+    // value label
+    const valLabel = svgEl('text',{ x: padL + barW + 6, y: y+barH/2+5,
+      fill:'#516851', 'font-size':'11', 'font-family':'JetBrains Mono,monospace' });
+    valLabel.textContent = '';
+    setTimeout(()=>{ valLabel.textContent = formatNumber(val)+' qq'; }, 60 + i*60);
+
+    // tooltip interaction
+    [bar, bg, label, valLabel].forEach(el => {
+      el.addEventListener('mousemove', e => {
+        const inc = formatNumber(safeNumber(row.ingreso_bruto_total));
+        showTip(e,
+          `<strong>${escapeHtml(row.zona||'—')}</strong><br>
+           Materiales: <strong>${formatNumber(val)} qq</strong><br>
+           Ingreso bruto: <strong>Q ${inc}</strong>`);
+        bar.style.opacity = '.8';
+      });
+      el.addEventListener('mouseleave', ()=>{ hideTip(); bar.style.opacity='1'; });
+    });
+
+    svg.appendChild(bg);
+    svg.appendChild(bar);
+    svg.appendChild(label);
+    svg.appendChild(valLabel);
+  });
+
+  container.innerHTML = '';
+  container.appendChild(svg);
+
+  // subtitle
+  const sub = document.getElementById(subtitleId);
+  if(sub) sub.textContent = `Comparación de zonas · ${periodLabel(period)} · en qq (quintales).`;
+
+  // interpretation
+  const interp = document.getElementById(interpId);
+  if(interp && rows.length){
+    const top = rows[0];
+    const topVal = safeNumber(top.total_materiales_qq);
+    const total  = rows.reduce((s,r)=>s+safeNumber(r.total_materiales_qq),0)||1;
+    const share  = ((topVal/total)*100).toFixed(0);
+    interp.innerHTML = `<strong>${escapeHtml(top.zona||'—')}</strong> lidera la recolección con
+      <strong>${formatNumber(topVal)} qq</strong>, representando el
+      <strong>${share}%</strong> del total de materiales del período.
+      ${rows.length>1 ? `Le sigue <strong>${escapeHtml(rows[1].zona||'—')}</strong> con <strong>${formatNumber(safeNumber(rows[1].total_materiales_qq))} qq</strong>.` : ''}`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW CHART 2: DONUT — composición de materiales
+   Uses: currentData, getSelectedPeriod, periodLabel,
+         safeNumber, formatNumber, aggregate  (original logic)
+═══════════════════════════════════════════════════════ */
+function renderDonutChart(containerId, state, period, subtitleId, interpId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+
+  // use materialesRaw or materialesResumen (same as renderMaterials original)
+  let rows = currentData.materialesRaw.length
+    ? currentData.materialesRaw.filter(r => samePeriodLoose(r, period))
+    : currentData.materialesResumen.filter(r => samePeriodLoose(r, period));
+
+  if(state.selectedZone !== '__all__')
+    rows = rows.filter(r => sameZoneMaterial(r, state.selectedZone));
+
+  const grouped = aggregate(rows, ['material'], { cantidad:'sum' })
+    .filter(r => safeNumber(r.cantidad) > 0)
+    .sort((a,b) => safeNumber(b.cantidad) - safeNumber(a.cantidad))
+    .slice(0, 7);
+
+  if(!grouped.length){
+    container.innerHTML = '<div class="empty">Sin datos de materiales para este período.</div>';
+    return;
+  }
+
+  const total = grouped.reduce((s,r) => s + safeNumber(r.cantidad), 0) || 1;
+  const COLORS_DONUT = ['#267a46','#3a9e62','#1a527a','#0c7070','#b05208','#6dd295','#90c4e0'];
+  const SIZE = 260, CX = SIZE/2, CY = SIZE/2, R = 96, r = 48;
+
+  const svg = svgEl('svg',{ viewBox:`0 0 ${SIZE} ${SIZE}`, class:'viz-svg' });
+
+  // defs for hover
+  const defs = svgEl('defs');
+  svg.appendChild(defs);
+
+  let startAngle = -Math.PI/2;
+
+  grouped.forEach((item, i) => {
+    const val   = safeNumber(item.cantidad);
+    const angle = (val / total) * Math.PI * 2;
+    const end   = startAngle + angle;
+    const large = angle > Math.PI ? 1 : 0;
+    const col   = COLORS_DONUT[i % COLORS_DONUT.length];
+
+    const x1=CX+R*Math.cos(startAngle), y1=CY+R*Math.sin(startAngle);
+    const x2=CX+R*Math.cos(end),       y2=CY+R*Math.sin(end);
+    const x3=CX+r*Math.cos(end),       y3=CY+r*Math.sin(end);
+    const x4=CX+r*Math.cos(startAngle),y4=CY+r*Math.sin(startAngle);
+
+    const path = svgEl('path',{
+      d:`M${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} L${x3},${y3} A${r},${r} 0 ${large},0 ${x4},${y4} Z`,
+      fill: col, cursor:'pointer',
+      style:'transition:opacity .15s'
+    });
+
+    const pct = ((val/total)*100).toFixed(1);
+
+    path.addEventListener('mousemove', e => {
+      showTip(e, `<strong>${escapeHtml(item.material||'—')}</strong><br>
+        ${formatNumber(val)} unid. · <strong>${pct}%</strong>`);
+      path.style.opacity='.75';
+    });
+    path.addEventListener('mouseleave', ()=>{ hideTip(); path.style.opacity='1'; });
+    svg.appendChild(path);
+
+    // mid-angle label for large slices
+    if(angle > 0.4){
+      const mid = startAngle + angle/2;
+      const lx = CX + (R+r)/2*Math.cos(mid);
+      const ly = CY + (R+r)/2*Math.sin(mid);
+      const lbl = svgEl('text',{ x:lx, y:ly+4, 'text-anchor':'middle',
+        fill:'#fff', 'font-size':'10', 'font-weight':'700',
+        'font-family':'DM Sans,sans-serif', 'pointer-events':'none' });
+      lbl.textContent = pct+'%';
+      svg.appendChild(lbl);
+    }
+
+    startAngle = end;
+  });
+
+  // center total
+  const cLabel = svgEl('text',{ x:CX, y:CY-7, 'text-anchor':'middle',
+    fill:'#2c472c', 'font-size':'12', 'font-weight':'700', 'font-family':'DM Sans,sans-serif' });
+  cLabel.textContent = formatNumber(total);
+  const cUnit = svgEl('text',{ x:CX, y:CY+10, 'text-anchor':'middle',
+    fill:'#516851', 'font-size':'10', 'font-family':'DM Sans,sans-serif' });
+  cUnit.textContent = 'unidades';
+  svg.appendChild(cLabel);
+  svg.appendChild(cUnit);
+
+  // legend below
+  const LROW_W = SIZE, ITEM_W = LROW_W / Math.min(grouped.length, 4);
+  const legendSvg = svgEl('svg',{
+    viewBox:`0 0 ${LROW_W} ${Math.ceil(grouped.length/4)*28}`,
+    class:'viz-svg', style:'margin-top:6px'
+  });
+  grouped.forEach((item, i) => {
+    const col = COLORS_DONUT[i % COLORS_DONUT.length];
+    const lx  = (i%4)*ITEM_W;
+    const ly  = Math.floor(i/4)*28;
+    const dot = svgEl('rect',{ x:lx, y:ly+5, width:10, height:10, rx:3, fill:col });
+    const txt = svgEl('text',{ x:lx+14, y:ly+14,
+      fill:'#516851', 'font-size':'10', 'font-family':'DM Sans,sans-serif' });
+    const name = String(item.material||'—');
+    txt.textContent = name.length>16 ? name.slice(0,15)+'…' : name;
+    legendSvg.appendChild(dot);
+    legendSvg.appendChild(txt);
+  });
+
+  container.innerHTML = '';
+  container.appendChild(svg);
+  container.appendChild(legendSvg);
+
+  // subtitle
+  const sub = document.getElementById(subtitleId);
+  if(sub) sub.textContent = `${grouped.length} tipos de material · ${periodLabel(period)}`;
+
+  // interpretation
+  const interp = document.getElementById(interpId);
+  if(interp && grouped.length){
+    const top  = grouped[0];
+    const topP = ((safeNumber(top.cantidad)/total)*100).toFixed(0);
+    interp.innerHTML = `El material predominante es <strong>${escapeHtml(top.material||'—')}</strong>
+      con <strong>${formatNumber(safeNumber(top.cantidad))}</strong> unidades
+      (<strong>${topP}%</strong> del total del período).
+      ${grouped.length>1 ? `Le siguen <strong>${escapeHtml(grouped[1].material||'—')}</strong> y <strong>${escapeHtml((grouped[2]||grouped[1]).material||'—')}</strong>.` : ''}`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   NEW CHART 3 (exec only): GROUPED BAR — ingresos vs meta
+   Uses only what original logic already exposes.
+═══════════════════════════════════════════════════════ */
+function renderExecBarChart(containerId, state, period, subtitleId, interpId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+
+  const rows = getZonaRows(state, period)
+    .filter(r => hasActivityAggregate(r))
+    .sort((a,b) => safeNumber(b.total_materiales_qq) - safeNumber(a.total_materiales_qq));
+
+  if(!rows.length){
+    container.innerHTML = '<div class="empty">Sin datos de zona para este período.</div>';
+    return;
+  }
+
+  const W=480, barH=28, gap=8, padL=96, padR=50, padT=12, padB=6;
+  const H = padT + rows.length*(barH+gap) - gap + padB;
+  const maxMat = Math.max(...rows.map(r=>safeNumber(r.total_materiales_qq)),1);
+  const COLORS = ['#267a46','#3a9e62','#52b87a','#6dd295','#90e0b0'];
+
+  const svg = svgEl('svg',{ viewBox:`0 0 ${W} ${H}`, class:'viz-svg' });
+
+  rows.forEach((row, i)=>{
+    const val  = safeNumber(row.total_materiales_qq);
+    const barW = Math.max(2,(val/maxMat)*(W-padL-padR));
+    const y    = padT + i*(barH+gap);
+    const col  = COLORS[i%COLORS.length];
+
+    const lbl = svgEl('text',{ x:padL-7, y:y+barH/2+5, 'text-anchor':'end',
+      fill:'#2c472c', 'font-size':'11', 'font-weight':'600','font-family':'DM Sans,sans-serif' });
+    lbl.textContent = String(row.zona||'—').length>13 ? String(row.zona).slice(0,12)+'…' : (row.zona||'—');
+
+    const bg  = svgEl('rect',{ x:padL, y, width:W-padL-padR, height:barH, rx:5, fill:'#e6f4ec' });
+    const bar = svgEl('rect',{ x:padL, y, width:0, height:barH, rx:5, fill:col,
+      style:'transition:width .6s cubic-bezier(.4,0,.2,1)', cursor:'pointer' });
+    setTimeout(()=>bar.setAttribute('width',barW), 50+i*50);
+
+    const valLbl = svgEl('text',{ x:padL+barW+5, y:y+barH/2+4,
+      fill:'#516851','font-size':'10','font-family':'JetBrains Mono,monospace' });
+    setTimeout(()=>{ valLbl.textContent = formatNumber(val)+' qq'; }, 50+i*50);
+
+    [bar,bg,lbl,valLbl].forEach(el=>{
+      el.addEventListener('mousemove', e=>{
+        showTip(e,`<strong>${escapeHtml(row.zona||'—')}</strong><br>Materiales: <strong>${formatNumber(val)} qq</strong><br>Ingreso: <strong>Q ${formatNumber(safeNumber(row.ingreso_bruto_total))}</strong>`);
+        bar.style.opacity='.75';
+      });
+      el.addEventListener('mouseleave',()=>{ hideTip(); bar.style.opacity='1'; });
+    });
+
+    svg.appendChild(bg); svg.appendChild(bar);
+    svg.appendChild(lbl); svg.appendChild(valLbl);
+  });
+
+  container.innerHTML='';
+  container.appendChild(svg);
+
+  const sub=document.getElementById(subtitleId);
+  if(sub) sub.textContent=`Materiales en qq por zona · ${periodLabel(period)}`;
+
+  const interp=document.getElementById(interpId);
+  if(interp&&rows.length){
+    const top=rows[0];
+    const total=rows.reduce((s,r)=>s+safeNumber(r.total_materiales_qq),0)||1;
+    interp.innerHTML=`<strong>${escapeHtml(top.zona||'—')}</strong> concentra el <strong>${((safeNumber(top.total_materiales_qq)/total)*100).toFixed(0)}%</strong> del volumen total de materiales en este período.`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   renderNewCharts — called after original render() finishes
+   and on period/zone change via the existing bindControls hook
+═══════════════════════════════════════════════════════ */
+function renderNewCharts(state){
+  const period = getSelectedPeriod(state);
+  if(!period) return;
+  renderZoneBarChart('zoneBarChart', state, period, 'barZoneSub', 'zoneBarInterp');
+  renderDonutChart  ('donutChart',   state, period, 'donutSub',   'donutInterp');
+
+  // interpretation for existing trend chart
+  const trendInterpEl = document.getElementById('trendInterp');
+  if(trendInterpEl){
+    const metrics = getMetricsForSelection(state, period);
+    const selId   = state.selectedIndicatorId || 'materiales_generales';
+    const m       = metrics[selId];
+    if(m){
+      const pctTxt  = formatPercent(m.monthlyPct);
+      const cls     = m.monthlyPct>=1?'favorable':m.monthlyPct>=0.85?'cercano a':'por debajo de';
+      trendInterpEl.innerHTML = `El período más reciente muestra <strong>${formatByUnit(m.valor,m.unit)}</strong>,
+        <strong>${pctTxt}</strong> de la meta mensual — resultado <strong>${cls} la meta</strong>.
+        El avance acumulado anual es de <strong>${formatPercent(m.annualPct)}</strong>.`;
+    }
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
    EXECUTIVE DASHBOARD RENDER
-   Uses the same currentData and helper functions already
-   defined above — no new data logic, just different display.
+   Bug fix: keeps own selectedPeriodKey state, does NOT
+   call buildState() on every filter change (which reset the period).
 ═══════════════════════════════════════════════════════ */
+let execSelectedPeriodKey = null;  // own state — not tied to full dashboard
+
 function renderExec(){
   if(!currentData) return;
 
-  /* Re-use buildState to get the same state object */
-  const state = buildState(currentData);
+  // Build base state for reference (periods list, helpers)
+  const baseState = buildState(currentData);
 
-  /* Sync exec period selector with available periods */
-  const execPeriodSel = document.getElementById('execPeriodSelect');
-  if(execPeriodSel){
-    execPeriodSel.innerHTML = state.periods.map(p=>`<option value="${periodKey(p)}">${escapeHtml(periodLabel(p))}</option>`).join('');
-    execPeriodSel.value = state.selectedPeriodKey;
-    execPeriodSel.onchange = ()=>{
-      state.selectedPeriodKey = execPeriodSel.value;
+  // First time: pick latest period
+  if(!execSelectedPeriodKey)
+    execSelectedPeriodKey = baseState.selectedPeriodKey;
+
+  // Sync period selector
+  const sel = document.getElementById('execPeriodSelect');
+  if(sel){
+    // Only rebuild options when they don't match (avoid reset on re-render)
+    if(sel.options.length === 0){
+      sel.innerHTML = baseState.periods
+        .map(p=>`<option value="${periodKey(p)}">${escapeHtml(periodLabel(p))}</option>`)
+        .join('');
+    }
+    sel.value = execSelectedPeriodKey;
+    sel.onchange = ()=>{
+      execSelectedPeriodKey = sel.value;
       renderExec();
     };
   }
-  const execPill = document.getElementById('execLatestPill');
-  if(execPill) execPill.textContent = periodLabel(state.latestValid);
 
-  const period = getSelectedPeriod(state);
-  const metrics = getMetricsForSelection(state, period);
+  const pill = document.getElementById('execLatestPill');
+  if(pill) pill.textContent = periodLabel(baseState.latestValid);
 
-  /* ── Status card ── */
-  const statusEl = document.getElementById('execStatusBadge');
-  const periodInfoEl = document.getElementById('execPeriodInfo');
-  const status = buildProgramStatus(state, period);
-  if(statusEl) statusEl.textContent = status.label;
+  // Build a state with exec's own period selection
+  const execState = { ...baseState, selectedPeriodKey: execSelectedPeriodKey };
+  const period  = getSelectedPeriod(execState);
+  const metrics = getMetricsForSelection(execState, period);
+  const status  = buildProgramStatus(execState, period);
+
+  // Status card
+  const statusEl    = document.getElementById('execStatusBadge');
+  const periodInfoEl= document.getElementById('execPeriodInfo');
+  if(statusEl)     statusEl.textContent     = status.label;
   if(periodInfoEl) periodInfoEl.textContent = `Período: ${periodLabel(period)}`;
 
-  /* ── Exec KPI trio: materiales, ingresos, mujeres ── */
-  const EXEC_KPI_DEFS = [
-    { id:'materiales_generales', icon:'♻',  label:'Materiales totales' },
-    { id:'ingreso_bruto_total',  icon:'Q',  label:'Ingreso bruto' },
-    { id:'pet',                  icon:'🧴', label:'PET recolectado' },
-    { id:'vidrio',               icon:'🍾', label:'Vidrio recolectado' },
-    { id:'ingreso_diario_lideresa', icon:'👩', label:'Ingreso diario lideresa' },
-    { id:'participacion_actividades', icon:'📊', label:'Participación actividades' },
+  // 6 KPI cards
+  const EXEC_KPIS = [
+    { id:'materiales_generales', label:'Materiales totales' },
+    { id:'ingreso_bruto_total',  label:'Ingreso bruto' },
+    { id:'pet',                  label:'PET recolectado' },
+    { id:'vidrio',               label:'Vidrio recolectado' },
+    { id:'ingreso_diario_lideresa',    label:'Ingreso diario lideresa' },
+    { id:'participacion_actividades',  label:'Participación actividades' },
   ];
-  const trioEl = document.getElementById('execKpiTrio');
-  if(trioEl){
-    trioEl.innerHTML = EXEC_KPI_DEFS.map(def=>{
+  const kpiGrid = document.getElementById('execKpiGrid');
+  if(kpiGrid){
+    kpiGrid.innerHTML = EXEC_KPIS.map(def=>{
       const m = metrics[def.id];
       if(!m) return '';
-      const pct = m.monthlyPct || 0;
+      const pct  = m.monthlyPct || 0;
       const barW = Math.max(0, Math.min(pct*100, 100)).toFixed(1);
-      const chipCls = semaforoClass(pct);
+      const cls  = semaforoClass(pct);
       return `<div class="exec-kpi">
-        <div class="exec-kpi-icon">${def.icon}</div>
         <div class="exec-kpi-label">${escapeHtml(def.label)}</div>
         <div class="exec-kpi-value">${escapeHtml(formatByUnit(m.valor, m.unit))}</div>
-        <div class="exec-kpi-pct"><span class="chip ${chipCls}">${escapeHtml(formatPercent(pct))} de meta</span></div>
+        <div><span class="chip ${cls}">${escapeHtml(formatPercent(pct))} de meta</span></div>
         <div class="exec-kpi-bar"><span style="width:${barW}%"></span></div>
       </div>`;
     }).join('');
   }
 
-  /* ── Summary strip: acumulados ── */
-  const STRIP_DEFS = [
+  // Acumulados strip
+  const STRIP = [
     { id:'materiales_generales', label:'Materiales acumulados' },
     { id:'ingreso_bruto_total',  label:'Ingresos acumulados' },
-    { id:'ingreso_bruto_mujeres', label:'Ingresos mujeres acum.' },
+    { id:'ingreso_bruto_mujeres',label:'Ingresos mujeres acum.' },
     { id:'vidrio',               label:'Vidrio acumulado' },
   ];
-  const stripEl = document.getElementById('execSummaryStrip');
-  if(stripEl){
-    stripEl.innerHTML = STRIP_DEFS.map(def=>{
-      const m = metrics[def.id];
+  const strip = document.getElementById('execStrip');
+  if(strip){
+    strip.innerHTML = STRIP.map(def=>{
       const cfg = METRIC_CONFIG[def.id];
-      if(!m || !cfg) return '';
-      const accum = sumMetricSeries(state, def.id, period.anio, '__all__', period.mes_num);
+      if(!cfg) return '';
+      const accum = sumMetricSeries(execState, def.id, period.anio, '__all__', period.mes_num);
       return `<div class="exec-strip-card">
         <small>${escapeHtml(def.label)}</small>
         <strong>${escapeHtml(formatByUnit(accum, cfg.unit))}</strong>
@@ -1983,42 +1838,54 @@ function renderExec(){
     }).join('');
   }
 
-  /* ── Exec alerts ── */
-  const execAlerts = document.getElementById('execAlertPanel');
-  if(execAlerts){
+  // Executive bar chart (materiales por zona)
+  renderExecBarChart('execBarChart', execState, period, 'execBarSub', 'execBarInterp');
+
+  // Alerts
+  const alertEl = document.getElementById('execAlertPanel');
+  if(alertEl){
     const alerts=[];
     ['materiales_generales','pet','vidrio','ingreso_bruto_total','participacion_actividades'].forEach(id=>{
-      const m=metrics[id];
-      if(!m) return;
-      if(m.monthlyPct < 0.85) alerts.push({type:'red',text:`${m.label}: ${formatPercent(m.monthlyPct)} de la meta mensual.`});
-      else if(m.monthlyPct < 1) alerts.push({type:'yellow',text:`${m.label}: ${formatPercent(m.monthlyPct)} — cerca de la meta.`});
+      const m=metrics[id]; if(!m) return;
+      if(m.monthlyPct<0.85) alerts.push({type:'red',text:`${m.label}: ${formatPercent(m.monthlyPct)} de la meta mensual.`});
+      else if(m.monthlyPct<1) alerts.push({type:'yellow',text:`${m.label}: ${formatPercent(m.monthlyPct)} — cerca de la meta.`});
     });
     if(!alerts.length) alerts.push({type:'green',text:'Sin alertas críticas en el período seleccionado.'});
-    execAlerts.innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${escapeHtml(a.text)}</div>`).join('')}</div>`;
+    alertEl.innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${escapeHtml(a.text)}</div>`).join('')}</div>`;
+    // alert interpretation
+    const ai=document.getElementById('execAlertInterp');
+    if(ai){
+      const reds=alerts.filter(a=>a.type==='red');
+      ai.innerHTML=reds.length
+        ? `Se detectan <strong>${reds.length}</strong> indicador${reds.length>1?'es':''} por debajo del umbral crítico del 85% de su meta mensual. Se recomienda revisión operativa.`
+        : `Todos los indicadores monitoreados superan el umbral del 85% de la meta mensual. El programa opera dentro de los rangos esperados.`;
+    }
   }
 
-  /* ── Exec zone table ── */
-  const execZoneEl = document.getElementById('execZonePanel');
-  const execZoneSub = document.getElementById('execZoneSubtitle');
-  if(execZoneEl){
-    if(execZoneSub) execZoneSub.textContent = `Comparación de zonas · ${periodLabel(period)}`;
-    const zrows = getZonaRows(state,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
-    execZoneEl.innerHTML = zrows.length
-      ? renderTable(zrows,['zona','total_materiales_qq','ingreso_bruto_total'],{zona:'Zona',total_materiales_qq:'Materiales qq',ingreso_bruto_total:'Ingreso bruto'})
-      : `<div class="empty">Sin datos de zona para el período.</div>`;
-  }
-
-  /* ── Exec diagnostic (same content, already rendered) ── */
-  const execDiag = document.getElementById('execDiagnosticPanel');
-  if(execDiag){
+  // Diagnostic
+  const diagEl = document.getElementById('execDiagnosticPanel');
+  if(diagEl){
     const mat=metrics.materiales_generales, inc=metrics.ingreso_bruto_total;
-    execDiag.innerHTML = `<h3 style="margin-top:0">Resumen ejecutivo · ${escapeHtml(periodLabel(period))}</h3>
-      <p>El programa registró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables, alcanzando el <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> de la meta mensual. El ingreso bruto total fue <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong> (<strong>${escapeHtml(formatPercent(inc?.monthlyPct))}</strong> de meta).</p>
-      <p>Avance acumulado anual en materiales: <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> respecto a la meta anual esperada al corte.</p>`;
+    const zones=getZonaRows(execState,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    const topZone = zones[0]?.zona || '—';
+    diagEl.innerHTML=`<h3 style="margin-top:0">Resumen ejecutivo · ${escapeHtml(periodLabel(period))}</h3>
+      <p>En este período el programa registró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables, alcanzando el <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> de la meta mensual. El ingreso bruto total fue <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong> (${escapeHtml(formatPercent(inc?.monthlyPct))} de meta).</p>
+      <p>La zona con mayor volumen de materiales fue <strong>${escapeHtml(topZone)}</strong>. El avance acumulado anual en materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> respecto a la meta anual esperada al corte.</p>`;
   }
 }
 
-/* Initialize body class */
+/* ── Hook into the existing render() to also render new charts ── */
+const _origRender = render;  // capture original render (defined above in logic block)
+function render(state){
+  _origRender(state);
+  renderNewCharts(state);
+}
+
+/* ── Also re-render new charts on period/zone change ──
+   The original bindControls attaches onchange to selects and calls render().
+   We override render so new charts update automatically. ── */
+
+/* Initialize */
 document.body.classList.add('view-full');
 </script>
 </body>
