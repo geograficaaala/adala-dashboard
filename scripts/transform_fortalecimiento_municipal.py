@@ -1,3 +1,4 @@
+# VERSION: v2 merge-fix applied
 
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
@@ -162,7 +163,9 @@ def build_main_monthly(main_df: pd.DataFrame, cap_df: pd.DataFrame, asis_df: pd.
     def join_metric(base_df: pd.DataFrame, metric_df: pd.DataFrame) -> pd.DataFrame:
         if metric_df.empty:
             return base_df
-        return base_df.merge(metric_df, how="left", left_on="_id", right_on="_submission__id")
+        work_base = base_df.drop(columns=[c for c in base_df.columns if c.startswith("_submission__id")], errors="ignore")
+        merged = work_base.merge(metric_df, how="left", left_on="_id", right_on="_submission__id")
+        return merged.drop(columns=["_submission__id"], errors="ignore")
 
     out = base.copy()
     for metric_df in [cap_metrics, asis_metrics, est_metrics, pirds_metrics, reu_metrics]:
@@ -625,7 +628,14 @@ def prep_reuniones_detalle(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFr
 
 def attach_period(df: pd.DataFrame, main_df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
-    key = main_df[["_id", "periodo_clave", "anio_reportado", "mes_num", "mes_label"]].rename(columns={"_id": "_submission__id"})
+    key = main_df.copy()
+    if "mes_num" not in key.columns:
+        key["mes_num"] = month_num_from_df(key)
+    if "mes_label" not in key.columns:
+        key["mes_label"] = month_label_from_num(key["mes_num"])
+    if "periodo_clave" not in key.columns:
+        key["periodo_clave"] = key["anio_reportado"].astype(str) + "-" + key["mes_num"].astype(str).str.zfill(2)
+    key = key[["_id", "periodo_clave", "anio_reportado", "mes_num", "mes_label"]].rename(columns={"_id": "_submission__id"})
     out = out.merge(key, on="_submission__id", how="left")
     return out
 
