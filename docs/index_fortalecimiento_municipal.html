@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fortalecimiento Municipal · ADALA</title>
+  <meta name="description" content="Dashboard del programa Fortalecimiento Municipal">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg:#eef2ec;
+      --surface:#f7faf7;
+      --card:#ffffff;
+      --text:#162316;
+      --text-2:#344d34;
+      --muted:#5c7a5c;
+      --line:#cddacd;
+      --line-soft:#e2ece2;
+      --green:#1c6b3a;
+      --green-mid:#2d8a52;
+      --green-soft:#d2eddc;
+      --green-pale:#eaf5ee;
+      --accent:#1a547a;
+      --accent-soft:#daeaf6;
+      --gold:#7a5500;
+      --gold-soft:#fef4cc;
+      --red:#8f1c1c;
+      --red-soft:#fce8e8;
+      --shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);
+      --shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);
+      --radius:18px;
+      --radius-sm:11px;
+      --radius-xs:7px;
+      --font-head:'Fraunces', Georgia, serif;
+      --font-body:'DM Sans', system-ui, sans-serif;
+      --font-mono:'JetBrains Mono', 'Courier New', monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:var(--font-body);
+      background:var(--bg);
+      background-image:
+        radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
+      background-attachment:fixed;
+      color:var(--text);
+      min-height:100vh;
+      line-height:1.55;
+      -webkit-font-smoothing:antialiased;
+    }
+    .wrap{max-width:1340px;margin:0 auto;padding:28px 22px 64px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{display:inline-flex;align-items:center;gap:9px;padding:10px 20px 10px 14px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--text-2);box-shadow:var(--shadow-sm);font-weight:600;font-size:.875rem;letter-spacing:.01em;transition:box-shadow .18s,transform .14s,border-color .15s}
+    .back:hover{box-shadow:var(--shadow);border-color:var(--green-mid);transform:translateY(-1px);color:var(--green)}
+    .back-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--green-pale);color:var(--green-mid);font-size:.85rem;flex-shrink:0}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2)}
+    .tag::before{content:'●';font-size:.55em;opacity:.7}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm);transition:box-shadow .2s,border-color .2s}
+    .card:hover{box-shadow:var(--shadow);border-color:var(--line)}
+    .hero{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;margin-bottom:18px;align-items:stretch}
+    .hero-main{padding:32px 36px 28px;position:relative;overflow:hidden}
+    .hero-main::after{content:'🏛️';position:absolute;right:18px;bottom:-24px;font-size:7rem;opacity:.08;line-height:1;transform:rotate(-8deg)}
+    .hero-meta{padding:26px;display:grid;gap:12px}
+    .eyebrow{font-size:.82rem;text-transform:uppercase;letter-spacing:.11em;color:var(--green-mid);font-weight:800;margin-bottom:12px}
+    h1{font-family:var(--font-head);font-size:clamp(2.1rem,5vw,3.55rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:14px;max-width:11ch}
+    .hero-copy{font-size:1rem;color:var(--text-2);max-width:62ch}
+    .hero-sub{margin-top:18px;color:var(--muted);font-size:.92rem}
+    .hero-badges{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;color:var(--text-2);font-size:.85rem}
+    .mini-kpi{padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
+    .mini-kpi-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .mini-kpi-value{font-family:var(--font-head);font-size:1.85rem;line-height:1;color:var(--green)}
+    .mini-kpi-sub{margin-top:4px;font-size:.82rem;color:var(--text-2)}
+    .section-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:18px;margin-bottom:18px}
+    .section-card{padding:24px 26px}
+    .section-title{font-family:var(--font-head);font-size:1.5rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:8px}
+    .section-copy{color:var(--text-2);font-size:.96rem}
+    .justified{margin-top:14px;text-align:justify;color:var(--text-2)}
+    .meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+    .meta-chip{padding:14px 16px;border-radius:14px;background:var(--surface);border:1px solid var(--line-soft)}
+    .meta-chip-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:4px}
+    .meta-chip-value{font-family:var(--font-mono);font-size:1.12rem;color:var(--text)}
+    .controls{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:0 0 18px}
+    .select-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    label.control-label{font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+    select{appearance:none;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:12px 42px 12px 14px;font:inherit;font-weight:600;color:var(--text);box-shadow:var(--shadow-sm);background-image:linear-gradient(45deg,transparent 50%,var(--green-mid) 50%),linear-gradient(135deg,var(--green-mid) 50%,transparent 50%);background-position:calc(100% - 20px) calc(1em + 1px),calc(100% - 15px) calc(1em + 1px);background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+    .status-box{display:inline-flex;align-items:center;gap:10px;padding:11px 14px;border-radius:999px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm);font-weight:700;color:var(--text-2)}
+    .status-dot{width:10px;height:10px;border-radius:50%;background:var(--green-mid);box-shadow:0 0 0 5px rgba(45,138,82,.12)}
+    .kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .kpi-card{padding:20px 18px;display:grid;gap:10px}
+    .kpi-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}
+    .kpi-value{font-family:var(--font-head);font-size:2rem;line-height:.98;color:var(--text)}
+    .kpi-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+    .kpi-meta-item{padding:9px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft)}
+    .kpi-meta-item span{display:block}
+    .kpi-meta-item .small{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;font-weight:800}
+    .kpi-meta-item .strong{font-size:.95rem;font-weight:700;color:var(--text)}
+    .kpi-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;font-size:.78rem;font-weight:800;width:max-content}
+    .status-good{background:var(--green-soft);color:var(--green)}
+    .status-watch{background:var(--gold-soft);color:var(--gold)}
+    .status-alert{background:var(--red-soft);color:var(--red)}
+    .mid-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-bottom:18px}
+    .panel{padding:24px 26px}
+    .panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+    .panel-title{font-family:var(--font-head);font-size:1.45rem;letter-spacing:-.02em}
+    .panel-sub{color:var(--muted);font-size:.9rem}
+    .chart-wrap{position:relative;min-height:360px}
+    .progress-list{display:grid;gap:12px}
+    .progress-item{padding:14px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
+    .progress-top{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px;align-items:flex-end}
+    .progress-name{font-weight:800;color:var(--text)}
+    .progress-num{font-family:var(--font-mono);font-weight:700;color:var(--text-2);font-size:.92rem}
+    .bar{height:12px;background:#e7eee7;border-radius:999px;overflow:hidden;position:relative}
+    .bar > span{display:block;height:100%;border-radius:999px}
+    .bar-meta{display:flex;justify-content:space-between;gap:10px;margin-top:7px;font-size:.82rem;color:var(--muted)}
+    .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+    .diag-list{display:grid;gap:10px;margin-top:16px}
+    .diag-item{padding:14px 16px;border-radius:14px;border:1px solid var(--line-soft);background:var(--surface)}
+    .diag-item strong{display:block;font-size:.94rem;margin-bottom:3px}
+    .diag-item span{color:var(--text-2);font-size:.9rem}
+    .detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px}
+    .detail-card{padding:22px 24px}
+    .detail-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .detail-title{font-family:var(--font-head);font-size:1.28rem}
+    .detail-count{font-family:var(--font-mono);font-weight:700;color:var(--text-2)}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:10px 8px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top;font-size:.9rem}
+    th{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800}
+    td{color:var(--text-2)}
+    .empty{padding:22px;border-radius:16px;background:var(--surface);border:1px dashed var(--line);color:var(--muted)}
+    .footer-note{margin-top:10px;color:var(--muted);font-size:.84rem}
+    @media (max-width:1180px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero,.section-grid,.mid-grid,.diag-grid,.detail-grid{grid-template-columns:1fr}}
+    @media (max-width:780px){.wrap{padding:22px 16px 56px}.hero-main,.hero-meta,.section-card,.panel,.detail-card{padding:20px}.kpi-grid{grid-template-columns:1fr 1fr}.meta-grid,.kpi-meta{grid-template-columns:1fr}.chart-wrap{min-height:300px}}
+    @media (max-width:560px){.kpi-grid{grid-template-columns:1fr}.topbar{align-items:flex-start}.progress-top,.controls,.detail-top,.panel-header{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="back" href="./index.html"><span class="back-icon">←</span> Volver a la portada institucional</a>
+        <span class="tag">Programa piloto institucional</span>
+      </div>
+      <div class="topbar-right">
+        <div class="status-box"><span class="status-dot"></span><span id="statusLabel">Cargando datos</span></div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <article class="card hero-main">
+        <div class="eyebrow">ADALA · Dashboard de programa</div>
+        <h1>Fortalecimiento Municipal</h1>
+        <p class="hero-copy">Seguimiento mensual del trabajo técnico municipal en agua, saneamiento y gestión integral de residuos, con lógica de avance anual comparable al dashboard de Atitlán Recicla.</p>
+        <p class="hero-sub">El tablero prioriza municipios capacitados, personas capacitadas, asistencias técnicas, estudios de caracterización y PIRDES implementados.</p>
+        <div class="hero-badges">
+          <span class="pill">15 municipios meta</span>
+          <span class="pill">75 personas meta</span>
+          <span class="pill">3 asistencias técnicas</span>
+          <span class="pill">2 estudios</span>
+          <span class="pill">5 PIRDES</span>
+        </div>
+      </article>
+      <aside class="card hero-meta">
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Último mes con datos reales</div>
+          <div class="mini-kpi-value" id="latestPeriodBox">—</div>
+          <div class="mini-kpi-sub">El tablero usa el último período válido publicado.</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Mes seleccionado</div>
+          <div class="mini-kpi-value" id="currentPeriod">—</div>
+          <div class="mini-kpi-sub">Corte visual para KPIs, progreso y detalle operativo.</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Actualización</div>
+          <div class="mini-kpi-value" id="lastUpdate">—</div>
+          <div class="mini-kpi-sub">Último envío Kobo consolidado en GitHub Pages.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-grid">
+      <article class="card section-card">
+        <div class="section-title">Qué observa este programa</div>
+        <p class="section-copy">Fortalecimiento Municipal acompaña capacidades técnicas y gestión municipal en saneamiento, agua y residuos sólidos, priorizando resultados que pueden consolidarse mes a mes y compararse contra metas anuales.</p>
+        <p class="justified">En esta primera versión se prioriza la trazabilidad de actividades que sí alimentan el avance oficial del programa: municipios alcanzados por procesos de capacitación, personas capacitadas reportadas, nuevas asistencias técnicas a proyectos priorizados, estudios de caracterización finalizados y municipios que alcanzan implementación de PIRDES. El resto de actividades puede seguir capturándose sin contaminar el núcleo institucional.</p>
+      </article>
+      <article class="card section-card">
+        <div class="section-title">Corte ejecutivo del período</div>
+        <div class="meta-grid">
+          <div class="meta-chip">
+            <div class="meta-chip-label">Período más reciente</div>
+            <div class="meta-chip-value" id="latestPeriod">—</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Período visible</div>
+            <div class="meta-chip-value" id="selectedPeriodBox">—</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Capacitaciones del mes</div>
+            <div class="meta-chip-value" id="coverageStat">—</div>
+          </div>
+          <div class="meta-chip">
+            <div class="meta-chip-label">Foco principal</div>
+            <div class="meta-chip-value">Gestión municipal y asistencia técnica</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="controls">
+      <div class="select-wrap">
+        <label class="control-label" for="monthSelect">Período</label>
+        <select id="monthSelect"></select>
+      </div>
+      <div class="footer-note">Los indicadores se comparan contra meta anual y contra meta esperada al corte del mes seleccionado.</div>
+    </section>
+
+    <section class="kpi-grid" id="kpiSection"></section>
+
+    <section class="mid-grid">
+      <article class="card panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Avance acumulado contra meta anual (%)</div>
+            <div class="panel-sub">Líneas normalizadas para comparar indicadores que tienen escalas distintas.</div>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="mainChart"></canvas></div>
+      </article>
+      <article class="card panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">Estado de avance</div>
+            <div class="panel-sub">Acumulado, meta anual y esperado al corte para el período seleccionado.</div>
+          </div>
+        </div>
+        <div class="progress-list" id="progressList"></div>
+      </article>
+    </section>
+
+    <section class="diag-grid">
+      <article class="card panel">
+        <div class="panel-title">Diagnóstico del período</div>
+        <div class="diag-list" id="diagnosticList"></div>
+      </article>
+      <article class="card panel">
+        <div class="panel-title">Lectura rápida del mes</div>
+        <div class="diag-list" id="snapshotList"></div>
+      </article>
+    </section>
+
+    <section class="detail-grid" id="detailTables"></section>
+  </div>
+
+  <script src="./fortalecimiento_municipal.js"></script>
+</body>
+</html>
