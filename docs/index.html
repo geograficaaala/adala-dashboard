@@ -3,97 +3,539 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ADALA · Portada institucional</title>
-  <meta name="description" content="Portada institucional de dashboards de ADALA">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>ADALA · Resumen institucional</title>
+  <meta name="description" content="Dashboard resumen institucional de ADALA">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
     :root{
-      --bg:#eef2ec;--surface:#f7faf7;--card:#ffffff;--text:#162316;--text-2:#355035;--muted:#5c7a5c;
-      --line:#d6e2d6;--green:#1c6b3a;--green-mid:#2d8a52;--green-pale:#eaf5ee;--accent:#1a547a;--accent-soft:#daeaf6;
-      --shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);--shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);
-      --radius:20px;--font-head:'Fraunces', Georgia, serif;--font-body:'DM Sans', system-ui, sans-serif;
+      --bg:#eef2ec;--surface:#f7faf7;--card:#ffffff;--text:#162316;--text-2:#344d34;--muted:#5c7a5c;
+      --line:#cddacd;--line-soft:#e2ece2;--green:#1c6b3a;--green-mid:#2d8a52;--green-soft:#d2eddc;
+      --green-pale:#eaf5ee;--accent:#1a547a;--accent-soft:#daeaf6;--gold:#7a5500;--gold-soft:#fef4cc;
+      --red:#8f1c1c;--red-soft:#fce8e8;--shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);
+      --shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);--radius:18px;--radius-sm:11px;--radius-xs:7px;
+      --font-head:'Fraunces', Georgia, serif;--font-body:'DM Sans', system-ui, sans-serif;--font-mono:'JetBrains Mono', monospace;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;background-image:radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%)}
-    .wrap{max-width:1280px;margin:0 auto;padding:28px 22px 64px}
-    .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:18px;margin-bottom:18px}
-    .card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
-    .hero-main{padding:34px 36px;position:relative;overflow:hidden}
-    .hero-main::after{content:'◌';position:absolute;right:14px;bottom:-48px;font-size:12rem;opacity:.05}
-    .tag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2);margin-bottom:14px}
-    .tag::before{content:'●';font-size:.6em}
-    h1{font-family:var(--font-head);font-size:clamp(2.2rem,5vw,4rem);line-height:1;letter-spacing:-.03em;margin-bottom:14px;max-width:12ch}
-    .lead{max-width:68ch;color:var(--text-2)}
-    .hero-side{padding:28px;display:grid;gap:12px}
-    .mini{padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
-    .mini .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:6px}
-    .mini .value{font-family:var(--font-head);font-size:1.8rem;line-height:1;color:var(--green)}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .program{padding:22px 24px;display:grid;gap:12px}
-    .program h2{font-family:var(--font-head);font-size:1.6rem;line-height:1.04}
-    .program p{color:var(--text-2)}
-    .meta{display:flex;gap:8px;flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.82rem;color:var(--text-2);font-weight:700}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:var(--green);color:#fff;text-decoration:none;font-weight:700}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;
+      background-image:
+        radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Ccircle cx='42' cy='42' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
+      background-attachment:fixed;
+    }
+    .wrap{max-width:1380px;margin:0 auto;padding:28px 22px 64px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2)}
+    .tag::before{content:'●';font-size:.55em;opacity:.7}
+    .status{padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm);font-size:.9rem;color:var(--text-2)}
+    .hero{display:grid;grid-template-columns:1.55fr .95fr;gap:18px;margin-bottom:18px}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .hero-main{padding:34px 36px 30px;position:relative;overflow:hidden}
+    .hero-main::after{content:'◌';position:absolute;right:8px;bottom:-48px;font-size:12rem;opacity:.05}
+    .eyebrow{font-size:.82rem;text-transform:uppercase;letter-spacing:.11em;color:var(--green-mid);font-weight:800;margin-bottom:12px}
+    h1{font-family:var(--font-head);font-size:clamp(2.25rem,5vw,4.2rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:14px;max-width:14ch}
+    .hero-copy{font-size:1rem;color:var(--text-2);max-width:70ch}
+    .hero-sub{margin-top:18px;color:var(--muted);font-size:.92rem}
+    .hero-badges{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;color:var(--text-2);font-size:.85rem}
+    .hero-side{padding:26px;display:grid;gap:12px}
+    .mini-kpi{padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
+    .mini-kpi-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .mini-kpi-value{font-family:var(--font-head);font-size:1.95rem;line-height:1;color:var(--green)}
+    .mini-kpi-sub{margin-top:4px;font-size:.82rem;color:var(--text-2)}
+    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .summary-card{padding:18px}
+    .summary-label{font-size:.77rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:8px}
+    .summary-value{font-family:var(--font-head);font-size:2rem;line-height:1;color:var(--green)}
+    .summary-sub{margin-top:8px;color:var(--text-2);font-size:.9rem}
+    .section-grid{display:grid;grid-template-columns:1.2fr .9fr;gap:18px;margin-bottom:18px}
+    .section-card{padding:22px 24px}
+    .section-title{font-family:var(--font-head);font-size:1.5rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:8px}
+    .section-kicker{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .prose{color:var(--text-2);text-align:justify}
+    .chart-card{padding:20px 22px}
+    .chart-wrap{height:360px}
+    .program-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .program-card{padding:22px 24px;display:grid;gap:14px}
+    .program-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .program-title{font-family:var(--font-head);font-size:1.65rem;line-height:1.05}
+    .program-meta{color:var(--muted);font-size:.88rem}
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:700}
+    .chip.good{background:var(--green-soft);color:var(--green)}
+    .chip.warn{background:var(--gold-soft);color:var(--gold)}
+    .chip.bad{background:var(--red-soft);color:var(--red)}
+    .chip.neutral{background:var(--accent-soft);color:var(--accent)}
+    .metric-list{display:grid;gap:10px}
+    .metric-row{display:grid;grid-template-columns:1.7fr .85fr .85fr .85fr;gap:8px;align-items:center}
+    .metric-row .name{font-weight:700;color:var(--text)}
+    .metric-row .num{font-family:var(--font-mono);font-size:.86rem;color:var(--text-2)}
+    .bar{height:10px;border-radius:999px;background:var(--line-soft);overflow:hidden}
+    .bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--green-mid))}
+    .program-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .program-badges{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:999px;background:var(--green);color:#fff;text-decoration:none;font-weight:700}
     .btn.secondary{background:#fff;color:var(--green);border:1.5px solid var(--line)}
-    @media (max-width:900px){.hero,.grid{grid-template-columns:1fr}}
+    .small{font-size:.84rem;color:var(--text-2)}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px 8px;border-bottom:1px solid var(--line-soft);text-align:left;font-size:.88rem;vertical-align:top}
+    .table th{font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .empty{padding:16px;border-radius:14px;background:var(--surface);border:1px dashed var(--line);color:var(--muted)}
+    .foot{margin-top:24px;color:var(--muted);font-size:.86rem}
+    @media (max-width:1160px){.hero,.section-grid,.program-grid,.summary-grid{grid-template-columns:1fr}}
+    @media (max-width:720px){.wrap{padding:20px 14px 40px}.hero-main,.hero-side,.section-card,.chart-card,.program-card{padding:18px}.metric-row{grid-template-columns:1fr}.chart-wrap{height:320px}}
   </style>
 </head>
 <body>
   <div class="wrap">
+    <div class="topbar">
+      <span class="tag">ADALA · Resumen institucional</span>
+      <span class="status" id="statusTop">Cargando panorama institucional...</span>
+    </div>
+
     <section class="hero">
       <article class="card hero-main">
-        <span class="tag">ADALA · Tablero institucional</span>
-        <h1>Programas institucionales</h1>
-        <p class="lead">
-          Esta portada concentra el acceso a dashboards específicos por programa. Cada programa conserva su propia lógica operativa y de medición, pero todos alimentan una capa institucional común de seguimiento.
+        <div class="eyebrow">Capa ejecutiva multi-programa</div>
+        <h1>Resumen institucional de programas</h1>
+        <p class="hero-copy">
+          Este tablero presenta una vista ejecutiva de los programas institucionales de ADALA. No intenta sumar indicadores incompatibles entre sí; en cambio, compara el estado de cada programa contra sus propias metas, identifica alertas y permite entrar al dashboard específico de cada uno.
         </p>
+        <p class="hero-sub">
+          Arquitectura vigente: fuente del programa → lectura → transformación → salida del programa → dashboard del programa + resumen institucional.
+        </p>
+        <div class="hero-badges">
+          <span class="pill">4 programas publicados</span>
+          <span class="pill">GitHub Pages</span>
+          <span class="pill">Sheets + Kobo</span>
+          <span class="pill">Actualización automática</span>
+        </div>
       </article>
       <aside class="card hero-side">
-        <div class="mini"><div class="label">Publicación</div><div class="value">GitHub Pages</div></div>
-        <div class="mini"><div class="label">Arquitectura</div><div class="value">Multi-programa</div></div>
-        <div class="mini"><div class="label">Fuente</div><div class="value">Sheets + Kobo</div></div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Programas activos</div>
+          <div class="mini-kpi-value" id="kpiPrograms">4</div>
+          <div class="mini-kpi-sub">Piloto institucional + tres programas Kobo</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Último corte institucional</div>
+          <div class="mini-kpi-value" id="kpiLatest">—</div>
+          <div class="mini-kpi-sub" id="kpiLatestSub">Comparado a partir del último mes con datos de cada programa</div>
+        </div>
+        <div class="mini-kpi">
+          <div class="mini-kpi-label">Semáforo al corte</div>
+          <div class="mini-kpi-value" id="kpiHealth">—</div>
+          <div class="mini-kpi-sub" id="kpiHealthSub">Promedio de indicadores contra esperado por programa</div>
+        </div>
       </aside>
     </section>
 
-    <section class="grid">
-      <article class="card program">
-        <h2>Atitlán Recicla</h2>
-        <p>Piloto institucional que consolidó la lógica de lectura, transformación y publicación con resumen mensual y acumulado anual.</p>
-        <div class="meta"><span class="pill">Google Sheets</span><span class="pill">Piloto funcional</span></div>
-        <div class="actions">
-          <a class="btn" href="./index_atitlanrecicla.html">Abrir dashboard</a>
-        </div>
+    <section class="summary-grid">
+      <article class="card summary-card">
+        <div class="summary-label">Dashboards publicados</div>
+        <div class="summary-value">4</div>
+        <div class="summary-sub">Atitlán Recicla, Conservando Atitlán, Fortalecimiento Municipal y EPC</div>
       </article>
-
-      <article class="card program">
-        <h2>Conservando Atitlán</h2>
-        <p>Seguimiento de jornadas, aceite recolectado, agua protegida y producción de jabones, con capa operativa y comercial complementaria.</p>
-        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Dashboard publicado</span></div>
-        <div class="actions">
-          <a class="btn" href="./index_conservando_atitlan.html">Abrir dashboard</a>
-        </div>
+      <article class="card summary-card">
+        <div class="summary-label">Fuentes integradas</div>
+        <div class="summary-value" id="kpiSources">—</div>
+        <div class="summary-sub">Piloto con Google Sheets y programas nuevos con Kobo</div>
       </article>
-
-      <article class="card program">
-        <h2>Fortalecimiento Municipal</h2>
-        <p>Monitoreo de capacitaciones, asistencias técnicas, estudios de caracterización y avance de PIRDES con lógica mensual y acumulada.</p>
-        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Dashboard publicado</span></div>
-        <div class="actions">
-          <a class="btn" href="./index_fortalecimiento_municipal.html">Abrir dashboard</a>
-        </div>
+      <article class="card summary-card">
+        <div class="summary-label">Programas en seguimiento</div>
+        <div class="summary-value" id="kpiOnTrack">—</div>
+        <div class="summary-sub">Con promedio al menos 80% del esperado al corte</div>
       </article>
+      <article class="card summary-card">
+        <div class="summary-label">Programas con alerta</div>
+        <div class="summary-value" id="kpiAlert">—</div>
+        <div class="summary-sub">Con promedio por debajo de 80% del esperado</div>
+      </article>
+    </section>
 
-      <article class="card program">
-        <h2>Educando para Conservar</h2>
-        <p>Seguimiento de cobertura educativa, actividades de campo y diplomado juvenil, incluyendo reglas especiales de calendario y cortes oficiales.</p>
-        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Nuevo dashboard</span></div>
-        <div class="actions">
-          <a class="btn" href="./index_epc.html">Abrir dashboard</a>
+    <section class="section-grid">
+      <article class="card section-card">
+        <div class="section-kicker">Lectura institucional</div>
+        <h2 class="section-title">Qué se compara aquí</h2>
+        <p class="prose">
+          El resumen institucional compara el desempeño de cada programa frente a sus metas y su esperado al corte. Como los programas no comparten unidades operativas ni resultados equivalentes, el análisis se apoya en porcentajes de avance y no en la suma bruta de litros, personas, jornadas o actividades entre programas.
+        </p>
+      </article>
+      <article class="card chart-card">
+        <div class="section-kicker">Comparación ejecutiva</div>
+        <h2 class="section-title">Promedio de avance vs esperado por programa</h2>
+        <div class="chart-wrap">
+          <canvas id="programChart"></canvas>
         </div>
       </article>
     </section>
+
+    <section class="program-grid" id="programGrid"></section>
+
+    <section class="card section-card" style="margin-top:18px">
+      <div class="section-kicker">Matriz institucional de corte</div>
+      <h2 class="section-title">Estado resumido por programa</h2>
+      <div id="matrixWrap" class="empty">Cargando matriz...</div>
+    </section>
+
+    <div class="foot">
+      Este dashboard vive en <code>docs/index.html</code> y enlaza a los tableros específicos de cada programa. Cada tarjeta usa el último mes con datos reales disponible en la publicación.
+    </div>
   </div>
+
+<script>
+const PROGRAMS = [
+  {
+    id: 'atitlan_recicla',
+    name: 'Atitlán Recicla',
+    source: 'Google Sheets',
+    dashboard: './index_atitlanrecicla.html',
+    totalUrl: './data/total_mes.csv',
+    indUrl: './data/institucional_indicadores.csv',
+    loader: loadAtitlan
+  },
+  {
+    id: 'conservando_atitlan',
+    name: 'Conservando Atitlán',
+    source: 'Kobo',
+    dashboard: './index_conservando_atitlan.html',
+    totalUrl: './data/conservando_atitlan/total_mes.csv',
+    indUrl: './data/conservando_atitlan/institucional_indicadores.csv',
+    loader: loadConservando
+  },
+  {
+    id: 'fortalecimiento_municipal',
+    name: 'Fortalecimiento Municipal',
+    source: 'Kobo',
+    dashboard: './index_fortalecimiento_municipal.html',
+    totalUrl: './data/fortalecimiento_municipal/total_mes.csv',
+    indUrl: './data/fortalecimiento_municipal/institucional_indicadores.csv',
+    loader: loadFM
+  },
+  {
+    id: 'educando_para_conservar',
+    name: 'Educando para Conservar',
+    source: 'Kobo',
+    dashboard: './index_epc.html',
+    totalUrl: './data/educando_para_conservar/total_mes.csv',
+    indUrl: './data/educando_para_conservar/institucional_indicadores.csv',
+    loader: loadEPC
+  }
+];
+
+const fmt = (n, d=0) => new Intl.NumberFormat('es-GT', {maximumFractionDigits:d, minimumFractionDigits:d}).format(Number(n||0));
+const fmtPct = (n) => `${fmt(n,1)}%`;
+const safe = (v) => (v===undefined || v===null || v==='') ? '—' : String(v);
+
+function parseCsv(url){
+  return new Promise((resolve, reject) => {
+    Papa.parse(url, { download:true, header:true, skipEmptyLines:'greedy',
+      complete: res => resolve(res.data || []), error: reject });
+  });
+}
+function cast(rows){
+  return rows.map(r => {
+    const o = {...r};
+    for (const k of Object.keys(o)) {
+      if (o[k] === '') continue;
+      const num = Number(String(o[k]).replace(/,/g,''));
+      if (!Number.isNaN(num) && String(o[k]).trim() !== '') o[k] = num;
+    }
+    return o;
+  });
+}
+function statusClass(score){
+  if (score >= 100) return ['good','Adelantado / al día'];
+  if (score >= 80) return ['warn','En seguimiento'];
+  return ['bad','Requiere atención'];
+}
+function avg(arr){
+  const nums = arr.map(Number).filter(v => !Number.isNaN(v) && Number.isFinite(v));
+  return nums.length ? nums.reduce((a,b)=>a+b,0)/nums.length : 0;
+}
+function sortByMonth(rows){
+  return rows.sort((a,b) => (Number(a.mes_num||0) - Number(b.mes_num||0)));
+}
+
+async function loadAtitlan(cfg){
+  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
+  const total = sortByMonth(cast(totalRaw).filter(r => !r.zona || String(r.zona).toUpperCase() === 'TOTAL'));
+  const inds = cast(indRaw);
+  const latest = total[total.length - 1] || {};
+  const latestMonth = Number(latest.mes_num || Math.max(...inds.map(r => Number(r.mes_num || 0))));
+  const latestIndicators = inds.filter(r => Number(r.mes_num) === latestMonth && String(r.nivel_agregacion||'').toLowerCase() === 'programa');
+  const score = avg(latestIndicators.filter(r => Number(r.meta_mensual)>0).map(r => (Number(r.valor||0)/Number(r.meta_mensual||1))*100));
+  const keyMetrics = [
+    { label:'Materiales recolectados', mes: latest.total_materiales_qq, acum:null, meta:null, unit:'qq', pct: null },
+    { label:'Ingreso neto territorio', mes: latest.ingreso_neto_total_territorio, acum:null, meta:null, unit:'GTQ', pct: null },
+    { label:'Mujeres activas', mes: latest.mujeres_activas, acum:null, meta:null, unit:'promedio', pct: null },
+    { label:'Participación en actividades', mes: Number(latest.pct_participacion_actividades||0)*100, acum:null, meta:100, unit:'%', pct:Number(latest.pct_participacion_actividades||0)*100 }
+  ];
+  return {
+    ...cfg,
+    latestLabel: `${safe(latest.mes)} ${safe(latest.anio)}`.trim(),
+    periodKey: `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}`,
+    score: score || 0,
+    scoreLabel: 'Cumplimiento promedio vs metas mensuales',
+    metrics: keyMetrics,
+    sourceSummary: 'Google Sheets',
+    summaryLine: 'Piloto institucional con indicadores operativos y metas mensuales.',
+    matrix: { periodo: `${safe(latest.mes)} ${safe(latest.anio)}`, score: score || 0, source: 'Sheets' }
+  };
+}
+
+async function loadConservando(cfg){
+  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
+  const total = sortByMonth(cast(totalRaw));
+  const inds = cast(indRaw);
+  const latest = total.find(r => String(r.es_ultimo_mes_con_datos).toLowerCase() === 'true') || total[total.length-1] || {};
+  const latestPeriod = latest.periodo_clave;
+  const latestIndicators = inds.filter(r => r.periodo_clave === latestPeriod || String(r.es_ultimo_mes_con_datos).toLowerCase() === 'true');
+  const score = avg(latestIndicators.map(r => Number(r.pct_vs_esperado||0)));
+  const keyMetrics = [
+    { label:'Jornadas', mes: latest.jornadas_mes, acum: latest.jornadas_acum, meta: latest.meta_anual_jornadas, unit:'jornadas', pct: latest.pct_avance_anual_jornadas },
+    { label:'Aceite recolectado', mes: latest.aceite_litros_mes, acum: latest.aceite_litros_acum, meta: latest.meta_anual_aceite, unit:'litros', pct: latest.pct_avance_anual_aceite },
+    { label:'Agua protegida', mes: latest.agua_protegida_mes, acum: latest.agua_protegida_acum, meta: latest.meta_anual_agua, unit:'litros', pct: latest.pct_avance_anual_agua },
+    { label:'Jabones producidos', mes: latest.jabones_producidos_mes, acum: latest.jabones_producidos_acum, meta: latest.meta_anual_jabones, unit:'unidades', pct: latest.pct_avance_anual_jabones }
+  ];
+  return {
+    ...cfg,
+    latestLabel: `${safe(latest.mes)} ${safe(latest.anio)}`.trim(),
+    periodKey: latestPeriod,
+    score: score || 0,
+    scoreLabel: 'Promedio oficial vs esperado',
+    metrics: keyMetrics,
+    sourceSummary: 'Kobo mensual único',
+    summaryLine: 'Jornadas, aceite, agua protegida y jabones producidos.',
+    matrix: { periodo: `${safe(latest.mes)} ${safe(latest.anio)}`, score: score || 0, source: 'Kobo' }
+  };
+}
+
+async function loadFM(cfg){
+  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
+  const total = sortByMonth(cast(totalRaw));
+  const inds = cast(indRaw);
+  const latest = total.find(r => String(r.es_ultimo_mes_real).toLowerCase() === 'true') || total[total.length-1] || {};
+  const score = avg(inds.map(r => Number(r.pct_esperado||0)));
+  const m = {};
+  inds.forEach(r => m[r.indicador_id] = r);
+  const keyMetrics = [
+    { label:'Municipios capacitados', mes: m.municipios_capacitados?.valor_mes, acum: m.municipios_capacitados?.valor_acumulado, meta: m.municipios_capacitados?.meta_anual, unit:'municipios', pct: m.municipios_capacitados?.pct_meta },
+    { label:'Personas capacitadas', mes: m.personas_capacitadas?.valor_mes, acum: m.personas_capacitadas?.valor_acumulado, meta: m.personas_capacitadas?.meta_anual, unit:'personas', pct: m.personas_capacitadas?.pct_meta },
+    { label:'Asistencias técnicas', mes: m.asistencias_tecnicas?.valor_mes, acum: m.asistencias_tecnicas?.valor_acumulado, meta: m.asistencias_tecnicas?.meta_anual, unit:'asistencias', pct: m.asistencias_tecnicas?.pct_meta },
+    { label:'PIRDES implementados', mes: m.pirds_implementados?.valor_mes, acum: m.pirds_implementados?.valor_acumulado, meta: m.pirds_implementados?.meta_anual, unit:'PIRDES', pct: m.pirds_implementados?.pct_meta }
+  ];
+  return {
+    ...cfg,
+    latestLabel: `${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`.trim(),
+    periodKey: latest.periodo_clave,
+    score: score || 0,
+    scoreLabel: 'Promedio oficial vs esperado',
+    metrics: keyMetrics,
+    sourceSummary: 'Kobo mensual único',
+    summaryLine: 'Capacitaciones, asistencias técnicas, estudios y PIRDES.',
+    matrix: { periodo: `${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`, score: score || 0, source: 'Kobo' }
+  };
+}
+
+async function loadEPC(cfg){
+  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
+  const total = sortByMonth(cast(totalRaw));
+  const inds = cast(indRaw);
+  const latest = total.find(r => String(r.is_latest_data_month).toLowerCase() === 'true') || total[total.length-1] || {};
+  const score = avg(inds.map(r => Number(r.pct_vs_esperado||0)));
+  const m = {};
+  inds.forEach(r => m[r.indicator_id] = r);
+  const keyMetrics = [
+    { label:'Docentes capacitados', mes: m.docentes_capacitados?.valor_mes, acum: m.docentes_capacitados?.valor_acumulado, meta: m.docentes_capacitados?.meta_anual, unit:'personas', pct: m.docentes_capacitados?.pct_meta_anual },
+    { label:'Centros alcanzados', mes: m.centros_cobertura?.valor_mes, acum: m.centros_cobertura?.valor_acumulado, meta: m.centros_cobertura?.meta_anual, unit:'centros', pct: m.centros_cobertura?.pct_meta_anual },
+    { label:'Estudiantes EPC', mes: m.estudiantes_epc?.valor_mes, acum: m.estudiantes_epc?.valor_acumulado, meta: m.estudiantes_epc?.meta_anual, unit:'estudiantes', pct: m.estudiantes_epc?.pct_meta_anual },
+    { label:'Actividades de campo', mes: m.actividades_campo?.valor_mes, acum: m.actividades_campo?.valor_acumulado, meta: m.actividades_campo?.meta_anual, unit:'actividades', pct: m.actividades_campo?.pct_meta_anual }
+  ];
+  return {
+    ...cfg,
+    latestLabel: `${safe(latest.mes_label)} 2026`,
+    periodKey: latest.periodo_clave,
+    score: score || 0,
+    scoreLabel: 'Promedio oficial vs esperado',
+    metrics: keyMetrics,
+    sourceSummary: 'Kobo mensual único',
+    summaryLine: 'Cobertura educativa, actividades de campo y diplomado juvenil.',
+    matrix: { periodo: `${safe(latest.mes_label)} 2026`, score: score || 0, source: 'Kobo' }
+  };
+}
+
+function metricRow(m){
+  const hasPct = m.pct !== null && m.pct !== undefined && !Number.isNaN(Number(m.pct));
+  return `
+    <div class="metric-row">
+      <div class="name">${m.label}</div>
+      <div class="num">${m.acum !== null && m.acum !== undefined ? `${fmt(m.acum)} / ${fmt(m.meta||0)}` : `${fmt(m.mes, m.unit === '%' ? 1 : 0)} ${m.unit||''}`}</div>
+      <div class="num">${hasPct ? fmtPct(m.pct) : '—'}</div>
+      <div class="bar">${hasPct ? `<span style="width:${Math.min(Number(m.pct||0),140)}%"></span>` : ''}</div>
+    </div>
+  `;
+}
+
+function programCard(p){
+  const [chipClass, chipText] = statusClass(p.score);
+  return `
+    <article class="card program-card">
+      <div class="program-head">
+        <div>
+          <div class="program-title">${p.name}</div>
+          <div class="program-meta">Último corte: ${safe(p.latestLabel)} · Fuente: ${p.sourceSummary}</div>
+        </div>
+        <span class="chip ${chipClass}">${chipText}</span>
+      </div>
+      <div class="small">${p.summaryLine}</div>
+      <div class="metric-list">
+        ${p.metrics.map(metricRow).join('')}
+      </div>
+      <div class="program-footer">
+        <div class="program-badges">
+          <span class="chip neutral">${p.scoreLabel}: ${fmtPct(p.score)}</span>
+          <span class="chip neutral">Periodo: ${safe(p.periodKey)}</span>
+        </div>
+        <a class="btn" href="${p.dashboard}">Abrir dashboard</a>
+      </div>
+    </article>
+  `;
+}
+
+function renderSummary(programs){
+  const latestLabels = programs.map(p => p.latestLabel).filter(Boolean);
+  const avgScore = avg(programs.map(p => p.score));
+  const onTrack = programs.filter(p => p.score >= 80).length;
+  const alert = programs.filter(p => p.score < 80).length;
+  const sources = new Set(programs.map(p => p.source)).size;
+  const [chipClass, chipText] = statusClass(avgScore);
+
+  document.getElementById('statusTop').textContent = `Programas cargados: ${programs.length} · Promedio institucional vs esperado: ${fmtPct(avgScore)}`;
+  document.getElementById('kpiLatest').textContent = latestLabels.filter(Boolean).length ? '2026' : '—';
+  document.getElementById('kpiLatestSub').textContent = latestLabels.join(' · ');
+  document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
+  document.getElementById('kpiHealthSub').textContent = chipText;
+  document.getElementById('kpiSources').textContent = String(sources);
+  document.getElementById('kpiOnTrack').textContent = String(onTrack);
+  document.getElementById('kpiAlert').textContent = String(alert);
+
+  document.getElementById('programGrid').innerHTML = programs.map(programCard).join('');
+  renderMatrix(programs);
+  renderChart(programs);
+}
+
+function renderMatrix(programs){
+  const html = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Programa</th>
+          <th>Fuente</th>
+          <th>Último corte</th>
+          <th>Promedio vs esperado</th>
+          <th>Estado</th>
+          <th>Dashboard</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${programs.map(p => {
+          const [chipClass, chipText] = statusClass(p.score);
+          return `
+            <tr>
+              <td><strong>${p.name}</strong></td>
+              <td>${p.sourceSummary}</td>
+              <td>${safe(p.latestLabel)}</td>
+              <td>${fmtPct(p.score)}</td>
+              <td><span class="chip ${chipClass}">${chipText}</span></td>
+              <td><a class="btn secondary" href="${p.dashboard}">Abrir</a></td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+  document.getElementById('matrixWrap').innerHTML = html;
+}
+
+let chartRef = null;
+function renderChart(programs){
+  const ctx = document.getElementById('programChart');
+  if (chartRef) chartRef.destroy();
+  chartRef = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: programs.map(p => p.name),
+      datasets: [
+        {
+          label: 'Promedio de avance vs esperado',
+          data: programs.map(p => Number(p.score || 0)),
+          borderWidth: 1,
+          borderRadius: 8
+        },
+        {
+          type: 'line',
+          label: 'Referencia esperado',
+          data: programs.map(() => 100),
+          borderDash: [6,6],
+          pointRadius: 0,
+          tension: 0
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          suggestedMax: 120,
+          ticks: { callback: v => `${v}%` },
+          grid: { color: 'rgba(52,77,52,.08)' }
+        },
+        x: { grid: { display:false } }
+      },
+      plugins: {
+        legend: { position: 'bottom' },
+        tooltip: {
+          callbacks: {
+            label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y,1)}%`
+          }
+        }
+      }
+    }
+  });
+}
+
+async function init(){
+  try{
+    const programs = [];
+    for (const cfg of PROGRAMS) {
+      try {
+        programs.push(await cfg.loader(cfg));
+      } catch (err) {
+        console.error('Error loading program', cfg.id, err);
+        programs.push({
+          ...cfg,
+          latestLabel:'Sin datos',
+          periodKey:'—',
+          score:0,
+          scoreLabel:'Sin información',
+          metrics:[],
+          sourceSummary:cfg.source,
+          summaryLine:'No se pudieron cargar los CSV publicados de este programa.'
+        });
+      }
+    }
+    renderSummary(programs);
+  } catch (err) {
+    console.error(err);
+    document.getElementById('statusTop').textContent = 'Error al cargar el resumen institucional.';
+  }
+}
+
+init();
+</script>
 </body>
 </html>
