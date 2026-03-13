@@ -1,0 +1,4 @@
+﻿periodo_clave,anio_reportado,mes_num,mes_label,fecha_capacitacion,municipios_capacitacion,modalidad_capacitacion,tipo_capacitacion,temas_capacitacion,participantes_total,participantes_tecnicos,participantes_operarios,participantes_otro,instituciones_participantes,observaciones_capacitacion
+2026-feb,2026,2,Febrero,2026-03-14,panajachel,presencial,asesoria_grupal,cumplimiento_legal,12,23,32,23,12.0,
+2026-mar,2026,3,Marzo,2026-03-13,panajachel,virtual,capacitacion,recoleccion_digital,34,21,34,21,23.0,
+2026-jul,2026,7,Julio,2026-03-04,san_antonio_palopo,virtual,socializacion,recoleccion_digital,32,21,23,56,,
