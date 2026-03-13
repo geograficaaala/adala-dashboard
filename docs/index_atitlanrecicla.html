@@ -680,7 +680,7 @@ function render(state){
   renderMaterials(state);
   renderTerritory(state);
   renderDiagnostic(state);
-  renderNewCharts(state);
+  try { renderNewCharts(state); } catch(e){ console.warn('renderNewCharts:', e); }
 }
 
 function bindControls(state){
@@ -1403,19 +1403,19 @@ function switchView(mode){
 /* ═══════════════════════════════════════════════════════
    TOOLTIP HELPERS
 ═══════════════════════════════════════════════════════ */
-const tip = document.getElementById('vizTooltip');
+function getTip(){ return document.getElementById('vizTooltip'); }
 function showTip(e, html){
-  tip.innerHTML = html;
-  tip.style.opacity = '1';
-  moveTip(e);
+  const tip = getTip(); if(!tip) return;
+  tip.innerHTML = html; tip.style.opacity = '1'; moveTip(e, tip);
 }
-function moveTip(e){
+function moveTip(e, tip){
+  tip = tip || getTip(); if(!tip) return;
   const x = e.clientX + 14, y = e.clientY - 10;
   const r = tip.getBoundingClientRect();
   tip.style.left = (x + r.width > window.innerWidth ? x - r.width - 22 : x) + 'px';
   tip.style.top  = (y < 0 ? 4 : y) + 'px';
 }
-function hideTip(){ tip.style.opacity = '0'; }
+function hideTip(){ const tip = getTip(); if(tip) tip.style.opacity = '0'; }
 
 /* ═══════════════════════════════════════════════════════
    SVG HELPERS
@@ -1724,10 +1724,11 @@ function renderExecBarChart(containerId, state, period, subtitleId, interpId){
    and on period/zone change via the existing bindControls hook
 ═══════════════════════════════════════════════════════ */
 function renderNewCharts(state){
+  if(!state || !currentData) return;
   const period = getSelectedPeriod(state);
   if(!period) return;
-  renderZoneBarChart('zoneBarChart', state, period, 'barZoneSub', 'zoneBarInterp');
-  renderDonutChart  ('donutChart',   state, period, 'donutSub',   'donutInterp');
+  try { renderZoneBarChart('zoneBarChart', state, period, 'barZoneSub', 'zoneBarInterp'); } catch(e){ console.warn('zoneBar:', e); }
+  try { renderDonutChart  ('donutChart',   state, period, 'donutSub',   'donutInterp');   } catch(e){ console.warn('donut:', e); }
 
   // interpretation for existing trend chart
   const trendInterpEl = document.getElementById('trendInterp');
