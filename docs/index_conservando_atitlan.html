@@ -5,189 +5,195 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Conservando Atitlán · ADALA</title>
   <meta name="description" content="Dashboard del programa Conservando Atitlán">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
-    :root{
+    :root {
       --bg:#eef2ec;
       --surface:#f7faf7;
       --card:#ffffff;
       --text:#162316;
-      --text-2:#314731;
-      --muted:#637863;
-      --line:#d7e2d7;
-      --line-soft:#e7eee7;
-      --green:#1e6b3f;
-      --green-2:#2d8a52;
-      --green-soft:#e9f5ee;
-      --blue:#1b587e;
-      --blue-soft:#e8f2f9;
-      --amber:#8b6100;
-      --amber-soft:#fff5d1;
-      --red:#9b2f2f;
-      --red-soft:#fdeaea;
-      --shadow:0 10px 30px rgba(24,48,24,.08),0 2px 10px rgba(24,48,24,.04);
-      --shadow-sm:0 2px 10px rgba(24,48,24,.05);
-      --radius:20px;
-      --radius-sm:14px;
+      --text-2:#344d34;
+      --muted:#5c7a5c;
+      --line:#cddacd;
+      --line-soft:#e2ece2;
+      --green:#1c6b3a;
+      --green-mid:#2d8a52;
+      --green-soft:#d2eddc;
+      --green-pale:#eaf5ee;
+      --accent2:#1a547a;
+      --accent2-soft:#daeaf6;
+      --yellow:#7a5500;
+      --yellow-soft:#fef4cc;
+      --red:#8f1c1c;
+      --red-soft:#fce8e8;
+      --shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);
+      --shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);
+      --shadow-lg:0 8px 32px rgba(16,42,16,.14),0 2px 8px rgba(16,42,16,.06);
+      --radius:18px;
+      --radius-sm:11px;
+      --radius-xs:7px;
       --font-head:'Fraunces', Georgia, serif;
       --font-body:'DM Sans', system-ui, sans-serif;
+      --font-mono:'JetBrains Mono', 'Courier New', monospace;
     }
-
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
       font-family:var(--font-body);
-      background:
-        radial-gradient(circle at top left, rgba(45,138,82,.10), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(27,88,126,.08), transparent 30%),
-        var(--bg);
+      background:var(--bg);
+      background-image:
+        radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='40' cy='40' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
+      background-attachment:fixed;
       color:var(--text);
       min-height:100vh;
+      line-height:1.55;
+      -webkit-font-smoothing:antialiased;
     }
-
-    .wrap{max-width:1360px;margin:0 auto;padding:24px 20px 56px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .back{
-      display:inline-flex;align-items:center;gap:10px;text-decoration:none;
-      background:var(--card);color:var(--text-2);padding:10px 16px;border-radius:999px;
-      border:1px solid var(--line);box-shadow:var(--shadow-sm);font-weight:700;font-size:.92rem;
-    }
-    .back:hover{border-color:#bfd0bf}
-    .tag{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 14px;border-radius:999px;background:var(--green-soft);color:var(--green);
-      font-weight:800;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;
-      border:1px solid rgba(30,107,63,.12)
-    }
-    .tag::before{content:'●';font-size:.55em;opacity:.8}
-
-    .hero{display:grid;grid-template-columns:1.8fr 1fr;gap:18px;margin-bottom:18px}
-    .card{
-      background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);
-      box-shadow:var(--shadow)
-    }
-    .hero-main{padding:30px 32px;position:relative;overflow:hidden}
-    .hero-main::after{content:'🫧';position:absolute;right:18px;bottom:-12px;font-size:120px;opacity:.05;pointer-events:none}
-    .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--green-2);margin-bottom:12px}
-    h1{font-family:var(--font-head);font-size:clamp(2rem,3vw,3.2rem);line-height:1.02;margin:0 0 10px}
-    .hero-main p{margin:0;color:var(--text-2);max-width:72ch}
-    .hero-main .meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;font-weight:700;font-size:.86rem;border:1px solid var(--line);background:var(--surface)}
-    .pill strong{color:var(--green)}
-
-    .hero-side{padding:24px 24px 20px}
-    .hero-side h2,.story h2{font-size:1rem;margin:0 0 14px}
+    .wrap{max-width:1340px;margin:0 auto;padding:28px 22px 64px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px;flex-wrap:wrap}
+    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{display:inline-flex;align-items:center;gap:9px;padding:10px 20px 10px 14px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--text-2);box-shadow:var(--shadow-sm);font-weight:600;font-size:.875rem;letter-spacing:.01em;transition:box-shadow .18s,transform .14s,border-color .15s}
+    .back:hover{box-shadow:var(--shadow);border-color:var(--green-mid);transform:translateY(-1px);color:var(--green)}
+    .back-icon{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--green-pale);color:var(--green-mid);font-size:.85rem;flex-shrink:0}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2)}
+    .tag::before{content:'●';font-size:.55em;opacity:.7}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm);transition:box-shadow .2s,border-color .2s}
+    .card:hover{box-shadow:var(--shadow);border-color:var(--line)}
+    .hero{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;margin-bottom:18px;align-items:stretch}
+    .hero-main{padding:32px 36px 28px;position:relative;overflow:hidden}
+    .hero-main::after{content:'🫧';position:absolute;right:18px;bottom:-26px;font-size:120px;opacity:.05;line-height:1;pointer-events:none;user-select:none}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.73rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green-mid);margin-bottom:10px}
+    .hero-title{font-family:var(--font-head);font-size:clamp(2.2rem,4vw,4rem);line-height:.98;letter-spacing:-.03em;margin-bottom:12px;max-width:14ch}
+    .hero-subtitle{max-width:72ch;color:var(--text-2);font-size:1rem}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+    .hero-stat{background:linear-gradient(180deg,#fff,var(--surface));border:1px solid var(--line-soft);border-radius:16px;padding:14px 15px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+    .hero-stat .label{font-size:.76rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px}
+    .hero-stat .value{font-weight:800;color:var(--green);font-size:1.05rem}
+    .hero-stat .sub{font-size:.82rem;color:var(--text-2);margin-top:4px}
+    .hero-side{padding:26px}
+    .section-kicker{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+    .section-title{font-family:var(--font-head);font-size:1.38rem;line-height:1.1;margin-bottom:12px}
     .target-list{display:grid;gap:10px}
-    .target-item{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .target-item span{font-size:.9rem;color:var(--text-2)}
-    .target-item strong{font-size:1rem;color:var(--green)}
-
-    .story-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}
-    .story{padding:22px}
-    .story p{margin:0 0 12px;color:var(--text-2);text-align:justify;line-height:1.7}
-    .story p:last-child{margin-bottom:0}
-    .story .mini-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-    .story .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
-    .story .stat .label{font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
-    .story .stat .value{font-size:1.2rem;font-weight:800;color:var(--green)}
-    .story .stat .sub{font-size:.88rem;color:var(--text-2)}
-
-    .toolbar{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:14px;margin-bottom:18px}
-    .field{padding:16px 18px}
-    .field label{display:block;font-size:.82rem;font-weight:700;color:var(--muted);margin-bottom:8px}
-    .field select,.field .valuebox{
-      width:100%;border:1px solid var(--line);border-radius:12px;background:var(--surface);
-      font:inherit;padding:12px 14px;color:var(--text);min-height:48px
-    }
+    .target-item{padding:13px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .target-item span{font-size:.91rem;color:var(--text-2);line-height:1.35}
+    .target-item strong{font-size:1rem;color:var(--green);font-family:var(--font-mono)}
+    .story-grid{display:grid;grid-template-columns:1.18fr .82fr;gap:18px;margin-bottom:18px}
+    .story-card,.summary-card{padding:24px 26px}
+    .story-copy{color:var(--text-2);text-align:justify;font-size:.98rem;line-height:1.72}
+    .story-copy p+ p{margin-top:12px}
+    .summary-card .mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+    .mini-stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .mini-stat .label{font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .mini-stat .value{font-size:1.25rem;font-weight:800;color:var(--text)}
+    .mini-stat .sub{font-size:.88rem;color:var(--text-2);margin-top:3px}
+    .controls{display:grid;grid-template-columns:1.2fr 1fr .9fr;gap:14px;margin-bottom:18px}
+    .control{padding:16px 18px}
+    .control label{display:block;font-size:.8rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .control select,.valuebox{width:100%;border:1px solid var(--line);border-radius:12px;background:var(--surface);font:inherit;padding:12px 14px;color:var(--text);min-height:48px}
     .valuebox{display:flex;align-items:center;font-weight:700}
-
     .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
-    .kpi{padding:18px}
-    .kpi .label{font-size:.84rem;font-weight:700;color:var(--muted);margin-bottom:10px}
-    .kpi .value{font-size:clamp(1.8rem,2vw,2.5rem);font-weight:800;line-height:1;color:var(--text)}
-    .kpi .sub{margin-top:10px;color:var(--text-2);font-size:.92rem}
-    .badge{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:.74rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
-    .ok{background:var(--green-soft);color:var(--green)}
-    .mid{background:var(--amber-soft);color:var(--amber)}
-    .bad{background:var(--red-soft);color:var(--red)}
-
+    .kpi-card{padding:18px 18px 16px}
+    .kpi-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.84rem;color:var(--muted);font-weight:700;margin-bottom:12px}
+    .kpi-value{font-size:clamp(1.8rem,2vw,2.6rem);line-height:1;font-weight:800;letter-spacing:-.02em}
+    .kpi-sub{margin-top:12px;color:var(--text-2);font-size:.92rem}
+    .kpi-meta{margin-top:10px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 10px;font-size:.8rem;color:var(--muted)}
+    .kpi-meta strong{display:block;color:var(--text);font-size:.9rem;margin-top:2px;font-family:var(--font-mono)}
+    .badge{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .badge.ok{background:var(--green-pale);color:var(--green)}
+    .badge.mid{background:var(--yellow-soft);color:var(--yellow)}
+    .badge.bad{background:var(--red-soft);color:var(--red)}
     .panel-grid{display:grid;grid-template-columns:1.55fr 1fr;gap:18px;margin-bottom:18px}
-    .panel{padding:22px}
-    .panel h2{margin:0;font-size:1.05rem}
+    .panel{padding:22px 22px 20px}
     .panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
-    .panel-head p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
-    .chart-wrap{height:380px}
-
-    .progress-list{display:grid;gap:14px}
+    .panel-title{font-size:1.08rem;font-weight:800}
+    .panel-subtitle{margin-top:5px;color:var(--muted);font-size:.92rem;max-width:62ch}
+    .chart-wrap{height:390px}
+    .progress-list{display:grid;gap:12px}
     .progress-card{padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
-    .progress-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:8px}
+    .progress-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}
     .progress-title{font-weight:800}
-    .progress-meta{font-size:.84rem;color:var(--muted)}
-    .bar{height:10px;border-radius:999px;background:#edf2ed;overflow:hidden;margin:10px 0}
-    .bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green-2),var(--green))}
-    .progress-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:.82rem;color:var(--text-2)}
-    .progress-stats strong{display:block;color:var(--text);font-size:.92rem;margin-top:2px}
-
-    .diagnostic{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
-    .mini{padding:18px}
-    .mini h3{margin:0 0 10px;font-size:.92rem}
-    .mini p{margin:0;color:var(--text-2);font-size:.94rem}
-    .mini strong{font-size:1.35rem;display:block;margin-bottom:6px}
-
+    .progress-sub{font-size:.82rem;color:var(--muted);margin-top:2px}
+    .bar{height:10px;border-radius:999px;background:#edf2ed;overflow:hidden;margin:10px 0 9px}
+    .bar>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green-mid),var(--green))}
+    .progress-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;font-size:.8rem;color:var(--muted)}
+    .progress-stats strong{display:block;color:var(--text);font-size:.92rem;margin-top:2px;font-family:var(--font-mono)}
+    .diagnostic-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .diagnostic-card{padding:18px}
+    .diagnostic-kicker{font-size:.78rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+    .diagnostic-value{font-size:1.45rem;font-weight:800;line-height:1.1;margin-bottom:8px}
+    .diagnostic-copy{font-size:.92rem;color:var(--text-2)}
     .table-panel{padding:22px;margin-bottom:18px}
-    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}
-    table{width:100%;border-collapse:collapse;background:#fff;min-width:760px}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff}
+    table{width:100%;border-collapse:collapse;min-width:780px}
     th,td{padding:12px 14px;border-bottom:1px solid var(--line-soft);text-align:left;font-size:.92rem;vertical-align:top}
     th{background:var(--surface);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
     tr:last-child td{border-bottom:none}
     .empty{padding:22px;text-align:center;color:var(--muted)}
-    .muted{color:var(--muted)}
-    .mono{font-variant-numeric:tabular-nums}
     .footer-note{color:var(--muted);font-size:.86rem;margin-top:8px}
-
+    .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+    .muted{color:var(--muted)}
     @media (max-width:1120px){
-      .hero,.panel-grid,.diagnostic,.story-grid{grid-template-columns:1fr}
+      .hero,.story-grid,.panel-grid,.diagnostic-grid{grid-template-columns:1fr}
       .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .toolbar{grid-template-columns:1fr 1fr}
+      .controls{grid-template-columns:1fr 1fr}
+      .hero-meta{grid-template-columns:1fr}
     }
     @media (max-width:720px){
       .wrap{padding:18px 14px 40px}
-      .kpi-grid,.toolbar,.diagnostic,.story .mini-stats{grid-template-columns:1fr}
-      .hero-main,.hero-side,.story,.panel,.table-panel{padding:18px}
-      .progress-stats{grid-template-columns:1fr}
+      .kpi-grid,.controls,.diagnostic-grid,.summary-card .mini-grid{grid-template-columns:1fr}
+      .hero-main,.hero-side,.story-card,.summary-card,.panel,.table-panel{padding:18px}
+      .progress-stats,.kpi-meta{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="topbar">
-      <a class="back" href="./index.html">← Volver a portada</a>
-      <div class="tag">Programa · ADALA</div>
+      <div class="topbar-left">
+        <a class="back" href="./index.html"><span class="back-icon">←</span>Volver a portada</a>
+      </div>
+      <div class="topbar-right">
+        <div class="tag">Programa · ADALA</div>
+      </div>
     </div>
 
     <section class="hero">
       <article class="card hero-main">
-        <div class="eyebrow">Dashboard del programa</div>
-        <h1>Conservando Atitlán</h1>
-        <p>
-          Seguimiento mensual del programa con foco en jornadas de recolección,
-          aceite usado recuperado, agua protegida y jabones producidos.
-          El tablero usa el <strong>último mes con datos reales</strong> y presenta el avance del mes,
-          el acumulado anual, la meta anual y el desempeño esperado al corte.
+        <div class="hero-eyebrow">Dashboard del programa</div>
+        <h1 class="hero-title">Conservando Atitlán</h1>
+        <p class="hero-subtitle">
+          Seguimiento del programa para jornadas de recolección, aceite usado recuperado,
+          agua protegida y jabones producidos. El tablero usa el <strong>último mes con datos reales</strong>
+          y compara el avance acumulado contra la meta anual y el ritmo esperado al corte.
         </p>
-        <div class="meta">
-          <div class="pill">Mes visible: <strong id="currentPeriod">—</strong></div>
-          <div class="pill">Último mes con datos: <strong id="latestPeriod">—</strong></div>
-          <div class="pill">Estado: <strong id="statusLabel">Cargando…</strong></div>
+        <div class="hero-meta">
+          <div class="hero-stat">
+            <div class="label">Período visible</div>
+            <div class="value" id="currentPeriod">—</div>
+            <div class="sub">Mes seleccionado para análisis</div>
+          </div>
+          <div class="hero-stat">
+            <div class="label">Último mes con datos</div>
+            <div class="value" id="latestPeriod">—</div>
+            <div class="sub">Regla homogénea con Atitlán Recicla</div>
+          </div>
+          <div class="hero-stat">
+            <div class="label">Estado</div>
+            <div class="value" id="statusLabel">Cargando…</div>
+            <div class="sub">Última actualización: <span id="lastUpdate">—</span></div>
+          </div>
         </div>
       </article>
+
       <aside class="card hero-side">
-        <h2>Metas oficiales 2026</h2>
+        <div class="section-kicker">Metas oficiales 2026</div>
+        <h2 class="section-title">Avance anual del programa</h2>
         <div class="target-list">
-          <div class="target-item"><span>Jornadas de recolección</span><strong>12</strong></div>
-          <div class="target-item"><span>Litros de aceite usado recolectados</span><strong>80,000</strong></div>
+          <div class="target-item"><span>Jornadas de recolección a inmuebles de municipios priorizados</span><strong>12</strong></div>
+          <div class="target-item"><span>Litros de aceite usado de cocina recolectados</span><strong>80,000</strong></div>
           <div class="target-item"><span>Litros de agua protegidos</span><strong>80,000,000</strong></div>
           <div class="target-item"><span>Jabones producidos</span><strong>65,040</strong></div>
         </div>
@@ -195,65 +201,79 @@
     </section>
 
     <section class="story-grid">
-      <article class="card story">
-        <h2>Sobre el programa</h2>
-        <p>
-          Desde febrero de 2019, <strong>Conservando Atitlán</strong> ha evitado que alrededor de
-          <strong>40,000 litros de aceite usado de cocina</strong> lleguen directa o indirectamente al lago,
-          protegiendo aproximadamente <strong>40 millones de litros de agua</strong>. La lógica ambiental del programa
-          es simple y poderosa: <strong>1 litro de aceite usado puede contaminar 1,000 litros de agua</strong>.
-        </p>
-        <p>
-          El programa trabaja con negocios y actores locales en municipios priorizados como Sololá,
-          Panajachel, Santa Catarina Palopó, Santiago Atitlán, San Pedro La Laguna, Santa Lucía Utatlán,
-          San Andrés y San Juan La Laguna, promoviendo una cultura ambiental alrededor del manejo de desechos especiales.
-        </p>
+      <article class="card story-card">
+        <div class="section-kicker">Descripción del programa</div>
+        <h2 class="section-title">Manejo especial de aceites usados y protección del lago</h2>
+        <div class="story-copy">
+          <p>
+            Desde febrero de 2019, <strong>Conservando Atitlán</strong> ha evitado que alrededor de
+            <strong>40,000 litros de aceite usado de cocina</strong> lleguen directa o indirectamente al lago,
+            resguardando aproximadamente <strong>40,000,000 litros de agua</strong>. La lógica ambiental del programa
+            parte de una regla clara: <strong>1 litro de aceite usado puede contaminar 1,000 litros de agua</strong>.
+          </p>
+          <p>
+            El programa impulsa una cultura ambiental para el manejo de desechos especiales en la cuenca y trabaja con
+            negocios de municipios como Sololá, Panajachel, Santa Catarina Palopó, Santiago Atitlán, San Pedro La Laguna,
+            Santa Lucía Utatlán, San Andrés y San Juan La Laguna, articulando recolección, aprovechamiento productivo
+            y sensibilización ambiental.
+          </p>
+        </div>
       </article>
-      <aside class="card story">
-        <h2>Claves del enfoque</h2>
-        <div class="mini-stats">
-          <div class="stat">
+
+      <aside class="card summary-card">
+        <div class="section-kicker">Lectura rápida</div>
+        <h2 class="section-title">Qué resume este tablero</h2>
+        <div class="mini-grid">
+          <div class="mini-stat">
             <div class="label">Impacto ambiental</div>
-            <div class="value">1,000 L</div>
-            <div class="sub">de agua protegida por cada litro de aceite recuperado.</div>
+            <div class="value">Aceite → Agua</div>
+            <div class="sub">Conversión directa para medir protección hídrica.</div>
           </div>
-          <div class="stat">
-            <div class="label">Cobertura</div>
-            <div class="value">8 municipios</div>
-            <div class="sub">atendidos en la cuenca con aliados y negocios participantes.</div>
-          </div>
-          <div class="stat">
-            <div class="label">Resultado</div>
+          <div class="mini-stat">
+            <div class="label">Resultado productivo</div>
             <div class="value">Jabones</div>
-            <div class="sub">la recuperación se convierte en valor ambiental y productivo.</div>
+            <div class="sub">Producción oficial basada en hotel + tocador.</div>
+          </div>
+          <div class="mini-stat">
+            <div class="label">Cobertura</div>
+            <div class="value" id="coverageStat">—</div>
+            <div class="sub">Municipios e inmuebles atendidos en el período.</div>
+          </div>
+          <div class="mini-stat">
+            <div class="label">Comparación</div>
+            <div class="value">Mes vs año</div>
+            <div class="sub">Mismo enfoque de avance usado en Atitlán Recicla.</div>
           </div>
         </div>
       </aside>
     </section>
 
-    <section class="toolbar">
-      <div class="card field">
-        <label for="monthSelect">Mes</label>
+    <section class="controls">
+      <article class="card control">
+        <label for="monthSelect">Período de análisis</label>
         <select id="monthSelect"></select>
-      </div>
-      <div class="card field">
-        <label for="chartModeSelect">Gráfica comparativa</label>
-        <select id="chartModeSelect"></select>
-      </div>
-      <div class="card field">
-        <label>Última actualización</label>
-        <div id="lastUpdate" class="valuebox">—</div>
-      </div>
+      </article>
+      <article class="card control">
+        <label>Último mes con datos reales</label>
+        <div class="valuebox" id="latestPeriodBox">—</div>
+      </article>
+      <article class="card control">
+        <label>Programa</label>
+        <div class="valuebox">Conservando Atitlán</div>
+      </article>
     </section>
 
-    <section id="kpis" class="kpi-grid"></section>
+    <section id="kpiSection" class="kpi-grid"></section>
 
     <section class="panel-grid">
       <article class="card panel">
         <div class="panel-head">
           <div>
-            <h2>Comparativo de avance</h2>
-            <p id="trendSubtitle">Comparación de indicadores en una sola gráfica para mantener lectura homogénea del programa.</p>
+            <div class="panel-title">Avance acumulado vs meta anual (%)</div>
+            <div class="panel-subtitle">
+              Comparación homogénea de los cuatro indicadores oficiales en una sola gráfica,
+              con línea de ritmo esperado al corte para evitar comparaciones engañosas entre escalas distintas.
+            </div>
           </div>
         </div>
         <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
@@ -262,58 +282,28 @@
       <article class="card panel">
         <div class="panel-head">
           <div>
-            <h2>Avance acumulado</h2>
-            <p>Comparación con meta anual y meta esperada al corte, igual que en Atitlán Recicla.</p>
+            <div class="panel-title">Avance por indicador</div>
+            <div class="panel-subtitle">Corte del período seleccionado.</div>
           </div>
         </div>
         <div id="progressList" class="progress-list"></div>
       </article>
     </section>
 
-    <section id="diagnosticRow" class="diagnostic"></section>
+    <section id="diagnosticSection" class="diagnostic-grid"></section>
 
     <section class="card table-panel">
       <div class="panel-head">
         <div>
-          <h2>Detalle de jornadas</h2>
-          <p>Sin mostrar responsables; solo información operativa útil para lectura pública.</p>
+          <div class="panel-title">Detalle operativo del período</div>
+          <div class="panel-subtitle">Resumen del mes seleccionado sin mostrar responsables operativos.</div>
         </div>
       </div>
-      <div id="jornadasTable" class="table-wrap"></div>
-    </section>
-
-    <section class="card table-panel">
-      <div class="panel-head">
-        <div>
-          <h2>Producción del período</h2>
-          <p>Lotes y resultados productivos del mes seleccionado.</p>
-        </div>
-      </div>
-      <div id="produccionTable" class="table-wrap"></div>
-    </section>
-
-    <section class="card table-panel">
-      <div class="panel-head">
-        <div>
-          <h2>Ventas del período</h2>
-          <p>Indicador operativo del programa. No forma parte del avance institucional oficial.</p>
-        </div>
-      </div>
-      <div id="ventasTable" class="table-wrap"></div>
-    </section>
-
-    <section class="card table-panel">
-      <div class="panel-head">
-        <div>
-          <h2>Actividades complementarias</h2>
-          <p>Publicaciones, pruebas, sensibilización y otras acciones complementarias del programa.</p>
-        </div>
-      </div>
-      <div id="actividadesTable" class="table-wrap"></div>
-      <div class="footer-note">Fuente de datos: KoBoToolbox → GitHub Actions → transformación ADALA.</div>
+      <div id="detailTables"></div>
+      <div class="footer-note">Los valores publicados provienen del flujo Kobo → GitHub Actions → transformación → GitHub Pages.</div>
     </section>
   </div>
 
-  <script src="./conservando_atitlan.js"></script>
+  <script src="./conservando_atitlan.js?v=3"></script>
 </body>
 </html>
