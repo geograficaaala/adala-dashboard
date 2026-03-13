@@ -1,0 +1,19 @@
+﻿programa_id,programa_nombre,periodo_clave,mes_num,mes_label,is_latest_data_month,indicator_id,indicator_label,unidad,meta_anual,valor_mes,valor_acumulado,esperado_acumulado,pct_meta_anual,pct_vs_esperado
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,docentes_capacitados,Docentes capacitados,personas,121.0,21.0,21.0,13.444444444444443,17.355371900826448,156.19834710743802
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,centros_cobertura,Centros educativos alcanzados,centros,50.0,1.0,1.0,5.555555555555555,2.0,18.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,estudiantes_epc,Estudiantes beneficiados EPC,estudiantes,3514.0,34.0,34.0,390.4444444444444,0.9675583380762665,8.7080250426864
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,estudiantes_campo,Estudiantes en actividades de campo,estudiantes,3514.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,actividades_campo,Actividades de campo ejecutadas,actividades,138.0,1.0,1.0,0.0,0.7246376811594203,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,jovenes_formados,Jóvenes formados,jóvenes,120.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,propuestas_juveniles,Propuestas juveniles,propuestas,12.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,capitales_semilla,Capitales semilla,capitales,4.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,campana_reforestacion,Campañas de reforestación,actividades,25.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,monitoreo_reforestacion,Monitoreos de áreas reforestadas,actividades,8.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,manejo_tul,Jornadas de manejo y conservación de tul,actividades,10.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,feria_ambiental,Ferias ambientales,actividades,15.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,huerto_escolar,Huertos escolares,actividades,8.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,gira_educativa,Giras educativas,actividades,25.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,mural_pedagogico,Murales pedagógicos,actividades,4.0,1.0,1.0,0.0,25.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,centro_acopio_escolar,Centros de acopio escolar,actividades,8.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,campana_limpieza_escolar,Campañas de limpieza escolar,actividades,25.0,0.0,0.0,0.0,0.0,0.0
+educando_para_conservar,Educando para Conservar,2026-feb,2,Febrero,True,proyecto_gestion_ambiental,Proyectos de gestión ambiental escolar,actividades,2.0,0.0,0.0,0.0,0.0,0.0
