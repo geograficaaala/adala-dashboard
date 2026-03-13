@@ -63,30 +63,36 @@
     }
     .tag::before{content:'●';font-size:.55em;opacity:.8}
 
-    .hero{
-      display:grid;grid-template-columns:1.8fr 1fr;gap:18px;margin-bottom:18px
-    }
+    .hero{display:grid;grid-template-columns:1.8fr 1fr;gap:18px;margin-bottom:18px}
     .card{
       background:var(--card);border:1px solid var(--line-soft);border-radius:var(--radius);
       box-shadow:var(--shadow)
     }
     .hero-main{padding:30px 32px;position:relative;overflow:hidden}
-    .hero-main::after{
-      content:'🫧';position:absolute;right:18px;bottom:-12px;font-size:120px;opacity:.05;pointer-events:none
-    }
+    .hero-main::after{content:'🫧';position:absolute;right:18px;bottom:-12px;font-size:120px;opacity:.05;pointer-events:none}
     .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--green-2);margin-bottom:12px}
     h1{font-family:var(--font-head);font-size:clamp(2rem,3vw,3.2rem);line-height:1.02;margin:0 0 10px}
-    .hero-main p{margin:0;color:var(--text-2);max-width:70ch}
+    .hero-main p{margin:0;color:var(--text-2);max-width:72ch}
     .hero-main .meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
     .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;font-weight:700;font-size:.86rem;border:1px solid var(--line);background:var(--surface)}
     .pill strong{color:var(--green)}
 
     .hero-side{padding:24px 24px 20px}
-    .hero-side h2{font-size:1rem;margin:0 0 14px}
+    .hero-side h2,.story h2{font-size:1rem;margin:0 0 14px}
     .target-list{display:grid;gap:10px}
     .target-item{padding:12px 14px;border-radius:14px;background:var(--surface);border:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
     .target-item span{font-size:.9rem;color:var(--text-2)}
     .target-item strong{font-size:1rem;color:var(--green)}
+
+    .story-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}
+    .story{padding:22px}
+    .story p{margin:0 0 12px;color:var(--text-2);text-align:justify;line-height:1.7}
+    .story p:last-child{margin-bottom:0}
+    .story .mini-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .story .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+    .story .stat .label{font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+    .story .stat .value{font-size:1.2rem;font-weight:800;color:var(--green)}
+    .story .stat .sub{font-size:.88rem;color:var(--text-2)}
 
     .toolbar{display:grid;grid-template-columns:repeat(3,minmax(180px,1fr));gap:14px;margin-bottom:18px}
     .field{padding:16px 18px}
@@ -112,7 +118,7 @@
     .panel h2{margin:0;font-size:1.05rem}
     .panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}
     .panel-head p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
-    .chart-wrap{height:360px}
+    .chart-wrap{height:380px}
 
     .progress-list{display:grid;gap:14px}
     .progress-card{padding:14px;border-radius:14px;background:var(--surface);border:1px solid var(--line)}
@@ -142,14 +148,14 @@
     .footer-note{color:var(--muted);font-size:.86rem;margin-top:8px}
 
     @media (max-width:1120px){
-      .hero,.panel-grid,.diagnostic{grid-template-columns:1fr}
+      .hero,.panel-grid,.diagnostic,.story-grid{grid-template-columns:1fr}
       .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .toolbar{grid-template-columns:1fr 1fr}
     }
     @media (max-width:720px){
       .wrap{padding:18px 14px 40px}
-      .kpi-grid,.toolbar,.diagnostic{grid-template-columns:1fr}
-      .hero-main,.hero-side,.panel,.table-panel{padding:18px}
+      .kpi-grid,.toolbar,.diagnostic,.story .mini-stats{grid-template-columns:1fr}
+      .hero-main,.hero-side,.story,.panel,.table-panel{padding:18px}
       .progress-stats{grid-template-columns:1fr}
     }
   </style>
@@ -158,7 +164,7 @@
   <div class="wrap">
     <div class="topbar">
       <a class="back" href="./index.html">← Volver a portada</a>
-      <div class="tag">Programa piloto 2 · ADALA</div>
+      <div class="tag">Programa · ADALA</div>
     </div>
 
     <section class="hero">
@@ -168,8 +174,8 @@
         <p>
           Seguimiento mensual del programa con foco en jornadas de recolección,
           aceite usado recuperado, agua protegida y jabones producidos.
-          El tablero usa el <strong>último mes con datos reales</strong> y compara el avance acumulado
-          contra la meta anual y contra la meta esperada al corte.
+          El tablero usa el <strong>último mes con datos reales</strong> y presenta el avance del mes,
+          el acumulado anual, la meta anual y el desempeño esperado al corte.
         </p>
         <div class="meta">
           <div class="pill">Mes visible: <strong id="currentPeriod">—</strong></div>
@@ -188,14 +194,51 @@
       </aside>
     </section>
 
+    <section class="story-grid">
+      <article class="card story">
+        <h2>Sobre el programa</h2>
+        <p>
+          Desde febrero de 2019, <strong>Conservando Atitlán</strong> ha evitado que alrededor de
+          <strong>40,000 litros de aceite usado de cocina</strong> lleguen directa o indirectamente al lago,
+          protegiendo aproximadamente <strong>40 millones de litros de agua</strong>. La lógica ambiental del programa
+          es simple y poderosa: <strong>1 litro de aceite usado puede contaminar 1,000 litros de agua</strong>.
+        </p>
+        <p>
+          El programa trabaja con negocios y actores locales en municipios priorizados como Sololá,
+          Panajachel, Santa Catarina Palopó, Santiago Atitlán, San Pedro La Laguna, Santa Lucía Utatlán,
+          San Andrés y San Juan La Laguna, promoviendo una cultura ambiental alrededor del manejo de desechos especiales.
+        </p>
+      </article>
+      <aside class="card story">
+        <h2>Claves del enfoque</h2>
+        <div class="mini-stats">
+          <div class="stat">
+            <div class="label">Impacto ambiental</div>
+            <div class="value">1,000 L</div>
+            <div class="sub">de agua protegida por cada litro de aceite recuperado.</div>
+          </div>
+          <div class="stat">
+            <div class="label">Cobertura</div>
+            <div class="value">8 municipios</div>
+            <div class="sub">atendidos en la cuenca con aliados y negocios participantes.</div>
+          </div>
+          <div class="stat">
+            <div class="label">Resultado</div>
+            <div class="value">Jabones</div>
+            <div class="sub">la recuperación se convierte en valor ambiental y productivo.</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
     <section class="toolbar">
       <div class="card field">
         <label for="monthSelect">Mes</label>
         <select id="monthSelect"></select>
       </div>
       <div class="card field">
-        <label for="trendSelect">Indicador para tendencia</label>
-        <select id="trendSelect"></select>
+        <label for="chartModeSelect">Gráfica comparativa</label>
+        <select id="chartModeSelect"></select>
       </div>
       <div class="card field">
         <label>Última actualización</label>
@@ -209,8 +252,8 @@
       <article class="card panel">
         <div class="panel-head">
           <div>
-            <h2>Evolución mensual</h2>
-            <p id="trendSubtitle">Serie histórica del programa.</p>
+            <h2>Comparativo de avance</h2>
+            <p id="trendSubtitle">Comparación de indicadores en una sola gráfica para mantener lectura homogénea del programa.</p>
           </div>
         </div>
         <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
@@ -220,7 +263,7 @@
         <div class="panel-head">
           <div>
             <h2>Avance acumulado</h2>
-            <p>Comparación con meta anual y meta esperada al corte.</p>
+            <p>Comparación con meta anual y meta esperada al corte, igual que en Atitlán Recicla.</p>
           </div>
         </div>
         <div id="progressList" class="progress-list"></div>
@@ -263,11 +306,11 @@
       <div class="panel-head">
         <div>
           <h2>Actividades complementarias</h2>
-          <p>Publicaciones, sensibilización u otras acciones complementarias.</p>
+          <p>Publicaciones, pruebas, sensibilización y otras acciones complementarias del programa.</p>
         </div>
       </div>
       <div id="actividadesTable" class="table-wrap"></div>
-      <div class="footer-note">Fuente: datos procesados del programa Conservando Atitlán publicados en GitHub Pages.</div>
+      <div class="footer-note">Fuente de datos: KoBoToolbox → GitHub Actions → transformación ADALA.</div>
     </section>
   </div>
 
