@@ -163,6 +163,30 @@
     .exec-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
     @media(max-width:1100px){.hero,.intro-grid,.grid-2,.grid-2-equal,.toolbar,.exec-hero-row,.exec-kpi-grid{grid-template-columns:1fr}.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}.exec-strip,.exec-row-2{grid-template-columns:repeat(2,1fr)}.exec-toolbar{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(2,1fr)}.hero-grid{grid-template-columns:1fr 1fr}}
     @media(max-width:640px){.kpis,.exec-kpi-grid,.exec-strip,.exec-row-2{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr}.hero-main{padding:20px 18px}.hero-main h1{font-size:1.8rem}}
+
+    /* ── MODAL ── */
+    .modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(10,26,10,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .22s}
+    .modal-overlay.open{opacity:1;pointer-events:auto}
+    .modal-box{background:var(--card);border-radius:var(--radius);box-shadow:0 24px 80px rgba(10,26,10,.28);width:100%;max-width:860px;max-height:90vh;display:flex;flex-direction:column;transform:translateY(18px) scale(.97);transition:transform .22s cubic-bezier(.4,0,.2,1)}
+    .modal-overlay.open .modal-box{transform:none}
+    .modal-head{display:flex;justify-content:space-between;align-items:center;padding:20px 26px 16px;border-bottom:1.5px solid var(--line-soft)}
+    .modal-head h2{font-family:var(--font-head);font-size:1.18rem;font-weight:600;color:var(--text)}
+    .modal-close{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:none;background:var(--surface);color:var(--muted);font-size:1.1rem;cursor:pointer;transition:background .14s,color .14s}
+    .modal-close:hover{background:var(--red-soft);color:var(--red)}
+    .modal-body{overflow-y:auto;padding:24px 26px;flex:1}
+    /* ── INTERP GRID ── */
+    .interp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .interp-block{display:flex;gap:12px;padding:14px 15px;border-radius:var(--radius-sm);border-left:4px solid;background:var(--surface)}
+    .interp-icon{font-size:1.4rem;flex-shrink:0;line-height:1}
+    .interp-title{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+    .interp-body{font-size:.82rem;color:var(--muted);line-height:1.6}
+    .interp-body strong{color:var(--text-2)}
+    /* ── CLICKABLE CARD HINT ── */
+    .panel[style*="cursor"]:hover::after,.card.panel[style*="cursor"]:hover::after{content:'';display:block}
+    article[style*="cursor:pointer"]{position:relative}
+    article[style*="cursor:pointer"]::after{content:'Ver análisis detallado →';position:absolute;bottom:10px;right:14px;font-size:.72rem;font-weight:700;color:var(--green-mid);opacity:0;transition:opacity .18s;pointer-events:none;letter-spacing:.02em}
+    article[style*="cursor:pointer"]:hover::after{opacity:1}
+    @media(max-width:700px){.modal-box{max-width:100%;max-height:100vh;border-radius:0}.interp-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body class="view-full">
@@ -1126,7 +1150,9 @@ function shortLabel(s){ s=String(s); return s.length>10 ? s.slice(0,10)+"…" : 
 function escapeHtml(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 
 
-/* ── VIEW SWITCHER ── */
+/* ═══════════════════════════════════════════════
+   VIEW SWITCHER
+═══════════════════════════════════════════════ */
 function switchView(mode){
   document.body.classList.remove('view-full','view-exec');
   document.body.classList.add('view-'+mode);
@@ -1135,63 +1161,766 @@ function switchView(mode){
   if(mode==='exec' && currentData) renderExec();
 }
 
-/* ── TOOLTIP ── */
+/* ═══════════════════════════════════════════════
+   TOOLTIP
+═══════════════════════════════════════════════ */
 function showTip(e,html){
   var t=document.getElementById('vizTooltip'); if(!t) return;
   t.innerHTML=html; t.style.opacity='1';
-  var x=e.clientX+14, y=e.clientY-10;
+  var x=e.clientX+16, y=e.clientY-12;
   var r=t.getBoundingClientRect();
-  t.style.left=(x+r.width>window.innerWidth?x-r.width-22:x)+'px';
+  t.style.left=(x+r.width>window.innerWidth?x-r.width-28:x)+'px';
   t.style.top=(y<0?4:y)+'px';
 }
 function hideTip(){ var t=document.getElementById('vizTooltip'); if(t) t.style.opacity='0'; }
 
-/* ── SVG HELPER ── */
+/* ═══════════════════════════════════════════════
+   SVG HELPER
+═══════════════════════════════════════════════ */
 function svgEl(tag,attrs){
   var el=document.createElementNS('http://www.w3.org/2000/svg',tag);
   if(attrs) Object.keys(attrs).forEach(function(k){ el.setAttribute(k,attrs[k]); });
   return el;
 }
 
-/* ── ZONE BAR CHART ── */
+/* ═══════════════════════════════════════════════
+   MODAL SYSTEM
+═══════════════════════════════════════════════ */
+function openModal(title, renderFn){
+  var m=document.getElementById('panelModal');
+  document.getElementById('modalTitle').textContent=title;
+  var body=document.getElementById('modalBody');
+  body.innerHTML='';
+  renderFn(body);
+  m.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('panelModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
+
+/* ═══════════════════════════════════════════════
+   INTERPRETATION ENGINE
+═══════════════════════════════════════════════ */
+function buildInterp(sections){
+  /* sections = [{icon, color, title, body}] */
+  return '<div class="interp-grid">'+sections.map(function(s){
+    return '<div class="interp-block" style="border-left-color:'+s.color+'">'+
+      '<div class="interp-icon">'+s.icon+'</div>'+
+      '<div class="interp-content"><div class="interp-title" style="color:'+s.color+'">'+s.title+'</div>'+
+      '<div class="interp-body">'+s.body+'</div></div></div>';
+  }).join('')+'</div>';
+}
+
+/* ═══════════════════════════════════════════════
+   PROFESSIONAL BAR CHART (horizontal, full width)
+═══════════════════════════════════════════════ */
+function renderProBarChart(container, rows, valKey, labelKey, opts){
+  opts = opts||{};
+  var colorFn = opts.colorFn || function(r,i){ return ['#195f33','#267a46','#3a9e62','#1a527a','#0c7070','#b05208'][i%6]; };
+  var unit = opts.unit||'';
+  var W=560, barH=36, gap=11, padL=130, padR=80, padT=20, padB=20;
+  var maxVal = Math.max.apply(null, rows.map(function(r){ return safeNumber(r[valKey])||0; }))||1;
+  var H = padT + rows.length*(barH+gap) - gap + padB;
+  var svg = svgEl('svg',{viewBox:'0 0 '+W+' '+H, style:'width:100%;height:auto;display:block;overflow:visible'});
+
+  /* grid lines */
+  [0.25,0.5,0.75,1].forEach(function(f){
+    var x=padL+f*(W-padL-padR);
+    var gl=svgEl('line',{x1:x,y1:padT-8,x2:x,y2:H-padB+4,stroke:'#dce9dc','stroke-width':'1','stroke-dasharray':'4 4'});
+    svg.appendChild(gl);
+    var gt=svgEl('text',{x:x,y:padT-12,'text-anchor':'middle',fill:'#8faa8f','font-size':'9','font-family':'JetBrains Mono,monospace'});
+    gt.textContent=compact(maxVal*f)+(unit?' '+unit:'');
+    svg.appendChild(gt);
+  });
+
+  rows.forEach(function(row,i){
+    var val=safeNumber(row[valKey])||0;
+    var barW=Math.max(2,(val/maxVal)*(W-padL-padR));
+    var y=padT+i*(barH+gap);
+    var col=colorFn(row,i);
+
+    /* label */
+    var lbl=svgEl('text',{x:padL-10,y:y+barH/2+5,'text-anchor':'end',fill:'#2c472c',
+      'font-size':'12.5','font-weight':'600','font-family':'DM Sans,sans-serif'});
+    var nm=String(row[labelKey]||'—');
+    lbl.textContent=nm.length>15?nm.slice(0,14)+'…':nm;
+
+    /* bg track */
+    var bg=svgEl('rect',{x:padL,y:y+4,width:W-padL-padR,height:barH-8,rx:'6',fill:'#edf2ed'});
+
+    /* bar */
+    var bar=svgEl('rect',{x:padL,y:y+4,width:'0',height:barH-8,rx:'6',fill:col,
+      style:'transition:width .8s cubic-bezier(.4,0,.2,1)',cursor:'pointer'});
+    setTimeout(function(b,w){ b.setAttribute('width',w); },60+i*80, bar, barW);
+
+    /* value label */
+    var valLbl=svgEl('text',{x:padL+barW+8,y:y+barH/2+5,fill:'#516851',
+      'font-size':'11.5','font-weight':'600','font-family':'JetBrains Mono,monospace'});
+    setTimeout(function(el,v){ el.textContent=formatNumber(v)+(unit?' '+unit:''); },60+i*80, valLbl, val);
+
+    /* hover */
+    var tipHtml = opts.tipFn ? opts.tipFn(row,val) :
+      '<strong>'+escapeHtml(String(row[labelKey]||'—'))+'</strong><br>'+formatNumber(val)+(unit?' '+unit:'');
+    [bg,bar,lbl,valLbl].forEach(function(el){
+      el.addEventListener('mousemove',function(e){ showTip(e,tipHtml); bar.setAttribute('opacity','.82'); });
+      el.addEventListener('mouseleave',function(){ hideTip(); bar.setAttribute('opacity','1'); });
+    });
+
+    svg.appendChild(bg); svg.appendChild(bar); svg.appendChild(lbl); svg.appendChild(valLbl);
+  });
+  container.appendChild(svg);
+}
+
+/* ═══════════════════════════════════════════════
+   PROFESSIONAL GROUPED BAR (for KPI vs meta)
+═══════════════════════════════════════════════ */
+function renderGroupedBar(container, items){
+  /* items = [{label, value, meta, unit, pct}] */
+  var W=560, bW=26, gap=18, groupGap=36, padL=145, padT=28, padB=36, padR=20;
+  var maxVal=Math.max.apply(null,items.map(function(i){return Math.max(safeNumber(i.value),safeNumber(i.meta))||1;}))||1;
+  var H=240;
+  var availH=H-padT-padB;
+  var groupW=bW*2+gap;
+  var totalW=padL+items.length*(groupW+groupGap)-groupGap+padR;
+  var svg=svgEl('svg',{viewBox:'0 0 '+totalW+' '+H,style:'width:100%;height:auto;display:block;overflow:visible'});
+
+  /* horizontal grid */
+  [0,0.25,0.5,0.75,1].forEach(function(f){
+    var y=padT+availH*(1-f);
+    var gl=svgEl('line',{x1:padL,y1:y,x2:totalW-padR,y2:y,stroke:'#dce9dc','stroke-width':f===0?'1.5':'1','stroke-dasharray':f===0?'none':'4 3'});
+    svg.appendChild(gl);
+    var gt=svgEl('text',{x:padL-8,y:y+4,'text-anchor':'end',fill:'#8faa8f','font-size':'9','font-family':'JetBrains Mono,monospace'});
+    gt.textContent=compact(maxVal*f);
+    svg.appendChild(gt);
+  });
+
+  items.forEach(function(item,i){
+    var x0=padL+i*(groupW+groupGap);
+    var vH=Math.max(2,(safeNumber(item.value)/maxVal)*availH);
+    var mH=Math.max(2,(safeNumber(item.meta)/maxVal)*availH);
+    var colV=item.pct>=1?'#195f33':item.pct>=0.85?'#b05208':'#881818';
+
+    /* meta bar (ghost) */
+    var mbar=svgEl('rect',{x:x0,y:padT+availH-mH,width:bW,height:mH,rx:'4',fill:'#c8e8d8',opacity:'.7'});
+    /* value bar */
+    var vbar=svgEl('rect',{x:x0+bW+gap,y:padT+availH,width:bW,height:'0',rx:'4',fill:colV,
+      style:'transition:height .8s cubic-bezier(.4,0,.2,1),y .8s cubic-bezier(.4,0,.2,1)',cursor:'pointer'});
+    setTimeout(function(b,yy,hh){ b.setAttribute('y',yy); b.setAttribute('height',hh); },80+i*60,vbar,padT+availH-vH,vH);
+
+    var tipH='<strong>'+escapeHtml(item.label)+'</strong><br>'+
+      'Real: <strong>'+formatByUnit(item.value,item.unit)+'</strong><br>'+
+      'Meta: '+formatByUnit(item.meta,item.unit)+'<br>'+
+      'Cumpl.: <strong>'+formatPercent(item.pct)+'</strong>';
+    [mbar,vbar].forEach(function(b){
+      b.addEventListener('mousemove',function(e){ showTip(e,tipH); });
+      b.addEventListener('mouseleave',hideTip);
+    });
+
+    /* x label */
+    var xLbl=svgEl('text',{x:x0+groupW/2,y:H-padB+14,'text-anchor':'middle',fill:'#516851',
+      'font-size':'10','font-weight':'600','font-family':'DM Sans,sans-serif'});
+    var nm=item.label||''; xLbl.textContent=nm.length>10?nm.slice(0,9)+'…':nm;
+
+    /* pct chip */
+    var chipCol=item.pct>=1?'#195f33':item.pct>=0.85?'#b05208':'#881818';
+    var chip=svgEl('text',{x:x0+groupW/2,y:padT+availH-Math.max(vH,mH)-6,'text-anchor':'middle',
+      fill:chipCol,'font-size':'9.5','font-weight':'700','font-family':'DM Sans,sans-serif'});
+    chip.textContent=formatPercent(item.pct);
+
+    svg.appendChild(mbar); svg.appendChild(vbar); svg.appendChild(xLbl); svg.appendChild(chip);
+  });
+
+  /* legend */
+  var leg=document.createElement('div');
+  leg.style.cssText='display:flex;gap:18px;margin-top:8px;font-size:.78rem;color:#516851;justify-content:center';
+  leg.innerHTML='<span style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:14px;height:10px;background:#c8e8d8;border-radius:3px"></span>Meta mensual</span>'+
+    '<span style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:14px;height:10px;background:#195f33;border-radius:3px"></span>Real del período</span>';
+  container.appendChild(svg);
+  container.appendChild(leg);
+}
+
+/* ═══════════════════════════════════════════════
+   SCATTER / BUBBLE CHART (territorios)
+═══════════════════════════════════════════════ */
+function renderBubbleChart(container, rows, xKey, yKey, rKey, labelKey){
+  var W=540, H=300, padL=55, padR=20, padT=20, padB=40;
+  var xs=rows.map(function(r){return safeNumber(r[xKey]);}),
+      ys=rows.map(function(r){return safeNumber(r[yKey]);}),
+      rs=rows.map(function(r){return safeNumber(r[rKey]);});
+  var maxX=Math.max.apply(null,xs)||1, maxY=Math.max.apply(null,ys)||1, maxR=Math.max.apply(null,rs)||1;
+  var X=function(v){return padL+v/maxX*(W-padL-padR);};
+  var Y=function(v){return H-padB-v/maxY*(H-padT-padB);};
+  var R=function(v){return 5+v/maxR*18;};
+  var svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,style:'width:100%;height:auto;display:block;overflow:visible'});
+
+  /* axes */
+  svg.appendChild(svgEl('line',{x1:padL,y1:H-padB,x2:W-padR,y2:H-padB,stroke:'#c5d7c5','stroke-width':'1.5'}));
+  svg.appendChild(svgEl('line',{x1:padL,y1:padT,x2:padL,y2:H-padB,stroke:'#c5d7c5','stroke-width':'1.5'}));
+
+  /* axis labels */
+  var xL=svgEl('text',{x:W/2,y:H,'text-anchor':'middle',fill:'#8faa8f','font-size':'10','font-family':'DM Sans,sans-serif'});
+  xL.textContent='Materiales (qq)'; svg.appendChild(xL);
+  var yL=svgEl('text',{x:12,y:H/2,'text-anchor':'middle',fill:'#8faa8f','font-size':'10','font-family':'DM Sans,sans-serif',transform:'rotate(-90,12,'+H/2+')'});
+  yL.textContent='Ingreso (Q)'; svg.appendChild(yL);
+
+  /* grid */
+  [0.25,0.5,0.75,1].forEach(function(f){
+    var xg=X(maxX*f), yg=Y(maxY*f);
+    svg.appendChild(svgEl('line',{x1:xg,y1:padT,x2:xg,y2:H-padB,stroke:'#dce9dc','stroke-width':'1','stroke-dasharray':'3 3'}));
+    svg.appendChild(svgEl('line',{x1:padL,y1:yg,x2:W-padR,y2:yg,stroke:'#dce9dc','stroke-width':'1','stroke-dasharray':'3 3'}));
+  });
+
+  var COLORS=['#195f33','#267a46','#3a9e62','#1a527a','#0c7070','#b05208','#6dd295','#48c270'];
+  rows.forEach(function(row,i){
+    var cx=X(safeNumber(row[xKey])), cy=Y(safeNumber(row[yKey])), cr=R(safeNumber(row[rKey]));
+    var col=COLORS[i%COLORS.length];
+    var circle=svgEl('circle',{cx:cx,cy:cy,r:'0',fill:col,opacity:'.82',cursor:'pointer',
+      style:'transition:r .6s cubic-bezier(.4,0,.2,1) '+(i*40)+'ms'});
+    setTimeout(function(c,rr){ c.setAttribute('r',rr); },80+i*40,circle,cr);
+    var tip='<strong>'+escapeHtml(String(row[labelKey]||'—'))+'</strong><br>'+
+      'Materiales: <strong>'+formatNumber(safeNumber(row[xKey]))+' qq</strong><br>'+
+      'Ingreso: <strong>Q '+formatNumber(safeNumber(row[yKey]))+'</strong><br>'+
+      'Territorios: '+safeNumber(row[rKey]);
+    circle.addEventListener('mousemove',function(e){ showTip(e,tip); circle.setAttribute('opacity','1'); });
+    circle.addEventListener('mouseleave',function(){ hideTip(); circle.setAttribute('opacity','.82'); });
+    svg.appendChild(circle);
+  });
+  container.appendChild(svg);
+}
+
+/* ═══════════════════════════════════════════════
+   DONUT (professional, no legend)
+═══════════════════════════════════════════════ */
+function renderProDonut(container, slices, opts){
+  /* slices = [{label, value, pct}], opts={unit,title} */
+  opts=opts||{};
+  var SIZE=300, CX=SIZE/2, CY=SIZE/2, R=110, ri=58;
+  var COLORS=['#195f33','#267a46','#3a9e62','#1a527a','#0c7070','#b05208','#6dd295'];
+  var total=slices.reduce(function(s,x){return s+safeNumber(x.value);},0)||1;
+  var svg=svgEl('svg',{viewBox:'0 0 '+SIZE+' '+SIZE,style:'width:100%;max-width:300px;height:auto;display:block;margin:0 auto;overflow:visible'});
+
+  /* drop shadow filter */
+  var defs=svgEl('defs',{});
+  var filt=svgEl('filter',{id:'dshadow',x:'-20%',y:'-20%',width:'140%',height:'140%'});
+  var fe=svgEl('feDropShadow',{dx:'0',dy:'2','stdDeviation':'4','flood-color':'rgba(19,34,19,.18)'});
+  filt.appendChild(fe); defs.appendChild(filt); svg.appendChild(defs);
+
+  var start=-Math.PI/2;
+  slices.forEach(function(item,i){
+    var val=safeNumber(item.value);
+    var angle=(val/total)*Math.PI*2;
+    var end=start+angle;
+    var large=angle>Math.PI?1:0;
+    var col=COLORS[i%COLORS.length];
+    var x1=CX+R*Math.cos(start),y1=CY+R*Math.sin(start);
+    var x2=CX+R*Math.cos(end),y2=CY+R*Math.sin(end);
+    var x3=CX+ri*Math.cos(end),y3=CY+ri*Math.sin(end);
+    var x4=CX+ri*Math.cos(start),y4=CY+ri*Math.sin(start);
+    var path=svgEl('path',{
+      d:'M'+x1+','+y1+' A'+R+','+R+' 0 '+large+',1 '+x2+','+y2+' L'+x3+','+y3+' A'+ri+','+ri+' 0 '+large+',0 '+x4+','+y4+' Z',
+      fill:col,stroke:'#fff','stroke-width':'2.5',cursor:'pointer',
+      style:'transition:transform .18s;transform-origin:'+CX+'px '+CY+'px',filter:'url(#dshadow)'});
+    var pct=((val/total)*100).toFixed(1);
+    var tipHtml='<strong>'+escapeHtml(item.label||'—')+'</strong><br>'+
+      formatNumber(val)+(opts.unit?' '+opts.unit:'')+'<br><strong>'+pct+'%</strong> del total';
+    path.addEventListener('mousemove',function(e){ showTip(e,tipHtml); path.style.transform='scale(1.04)'; });
+    path.addEventListener('mouseleave',function(){ hideTip(); path.style.transform='scale(1)'; });
+    svg.appendChild(path);
+
+    /* label lines for large segments */
+    if(angle>0.45){
+      var mid=start+angle/2;
+      var lx=CX+(R+ri)/2*Math.cos(mid), ly=CY+(R+ri)/2*Math.sin(mid);
+      var lt=svgEl('text',{x:lx,y:ly+4,'text-anchor':'middle',fill:'#fff',
+        'font-size':'11','font-weight':'700','font-family':'DM Sans,sans-serif','pointer-events':'none'});
+      lt.textContent=pct+'%'; svg.appendChild(lt);
+    }
+    start=end;
+  });
+
+  /* center */
+  var cLbl=svgEl('text',{x:CX,y:CY-8,'text-anchor':'middle',fill:'#132213',
+    'font-size':'14','font-weight':'700','font-family':'DM Sans,sans-serif'});
+  cLbl.textContent=opts.centerVal||formatNumber(total);
+  var cSub=svgEl('text',{x:CX,y:CY+10,'text-anchor':'middle',fill:'#516851',
+    'font-size':'10','font-family':'DM Sans,sans-serif'});
+  cSub.textContent=opts.centerSub||'total';
+  svg.appendChild(cLbl); svg.appendChild(cSub);
+  container.appendChild(svg);
+}
+
+/* ═══════════════════════════════════════════════
+   SPARKLINE TREND (mini line for modals)
+═══════════════════════════════════════════════ */
+function renderSparkline(container, points, refPoints, xLabels){
+  var W=540, H=160, padL=45, padR=20, padT=16, padB=32;
+  var allV=points.concat(refPoints||[]).filter(Number.isFinite);
+  var minV=Math.min.apply(null,allV), maxV=Math.max.apply(null,allV.concat([minV+1]));
+  var range=maxV-minV||1;
+  var n=points.length;
+  var X=function(i){return padL+i*(W-padL-padR)/(Math.max(n-1,1));};
+  var Y=function(v){return H-padB-((v-minV)/range)*(H-padT-padB);};
+  var svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,style:'width:100%;height:auto;display:block;overflow:visible'});
+
+  /* grid */
+  [0,0.5,1].forEach(function(f){
+    var y=padT+(1-f)*(H-padT-padB);
+    svg.appendChild(svgEl('line',{x1:padL,y1:y,x2:W-padR,y2:y,stroke:'#dce9dc','stroke-width':f===0?'1.5':'1','stroke-dasharray':f===0?'none':'4 3'}));
+    var v=minV+f*range;
+    var gt=svgEl('text',{x:padL-6,y:y+4,'text-anchor':'end',fill:'#8faa8f','font-size':'9','font-family':'JetBrains Mono,monospace'});
+    gt.textContent=compact(v); svg.appendChild(gt);
+  });
+
+  /* ref line */
+  if(refPoints&&refPoints.length){
+    var refPts=refPoints.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+    svg.appendChild(svgEl('polyline',{fill:'none',stroke:'#a8c4b0','stroke-width':'2','stroke-dasharray':'7 5',points:refPts}));
+  }
+
+  /* area */
+  var ptStr=points.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+  var areaPts=X(0)+','+Y(points[0])+' '+ptStr+' '+X(n-1)+','+(H-padB)+' '+X(0)+','+(H-padB);
+  var defs=svgEl('defs',{});
+  var grad=svgEl('linearGradient',{id:'sparkGrad',x1:'0',y1:'0',x2:'0',y2:'1'});
+  var s1=svgEl('stop',{offset:'0%','stop-color':'#195f33','stop-opacity':'0.22'});
+  var s2=svgEl('stop',{offset:'100%','stop-color':'#195f33','stop-opacity':'0'});
+  grad.appendChild(s1); grad.appendChild(s2); defs.appendChild(grad); svg.appendChild(defs);
+  svg.appendChild(svgEl('polygon',{points:areaPts,fill:'url(#sparkGrad)'}));
+  svg.appendChild(svgEl('polyline',{fill:'none',stroke:'#195f33','stroke-width':'3','stroke-linejoin':'round','stroke-linecap':'round',points:ptStr}));
+
+  /* dots */
+  points.forEach(function(v,i){
+    var cx=X(i), cy=Y(v);
+    var dot=svgEl('circle',{cx:cx,cy:cy,r:'4.5',fill:'#fff',stroke:'#195f33','stroke-width':'2.5',cursor:'pointer'});
+    var lbl=xLabels&&xLabels[i]?xLabels[i]:('M'+i);
+    dot.addEventListener('mousemove',function(e){ showTip(e,'<strong>'+lbl+'</strong><br>'+formatNumber(v)); });
+    dot.addEventListener('mouseleave',hideTip);
+    svg.appendChild(dot);
+    /* x label */
+    var xl=svgEl('text',{x:cx,y:H-padB+14,'text-anchor':'middle',fill:'#8faa8f','font-size':'9','font-family':'DM Sans,sans-serif'});
+    xl.textContent=lbl; svg.appendChild(xl);
+  });
+  container.appendChild(svg);
+}
+
+/* ═══════════════════════════════════════════════
+   PANEL CLICK HANDLERS
+═══════════════════════════════════════════════ */
+var _panelState=null;
+function _st(){ return _panelState; }
+
+function setupPanelClicks(state){
+  _panelState=state;
+
+  /* ── KPI cards ── */
+  var kpiGrid=document.getElementById('kpiGrid');
+  if(kpiGrid){
+    kpiGrid.querySelectorAll('.kpi').forEach(function(card){
+      card.style.cursor='pointer';
+      /* find id from the label text */
+      card.addEventListener('click',function(){
+        var labelEl=card.querySelector('.kpi-label'); if(!labelEl) return;
+        var label=labelEl.textContent;
+        var id=null;
+        Object.entries(METRIC_CONFIG).forEach(function(pair){
+          if(pair[1].label===label) id=pair[0];
+        });
+        if(!id) return;
+        openModal('Detalle: '+label, function(body){ renderKpiModal(body, id, state); });
+      });
+    });
+  }
+
+  /* ── Zone panel ── */
+  var zp=document.getElementById('zonePanel');
+  if(zp){
+    zp.closest('article').style.cursor='pointer';
+    zp.closest('article').addEventListener('click',function(){
+      openModal('Desempeño por zona', function(body){ renderZoneModal(body, state); });
+    });
+  }
+
+  /* ── Semaforo ── */
+  var sm=document.getElementById('semaforoTable');
+  if(sm){
+    sm.closest('article').style.cursor='pointer';
+    sm.closest('article').addEventListener('click',function(){
+      openModal('Semáforo de indicadores', function(body){ renderSemaforoModal(body, state); });
+    });
+  }
+
+  /* ── Materials ── */
+  var mp=document.getElementById('materialsPanel');
+  if(mp){
+    mp.closest('article').style.cursor='pointer';
+    mp.closest('article').addEventListener('click',function(){
+      openModal('Composición de materiales', function(body){ renderMaterialsModal(body, state); });
+    });
+  }
+
+  /* ── Territory ── */
+  var tp=document.getElementById('territoryPanel');
+  if(tp){
+    tp.closest('article').style.cursor='pointer';
+    tp.closest('article').addEventListener('click',function(){
+      openModal('Análisis territorial', function(body){ renderTerritoryModal(body, state); });
+    });
+  }
+
+  /* ── Alerts ── */
+  var ap=document.getElementById('alertPanel');
+  if(ap){
+    ap.closest('article').style.cursor='pointer';
+    ap.closest('article').addEventListener('click',function(){
+      openModal('Alertas operativas', function(body){ renderAlertsModal(body, state); });
+    });
+  }
+}
+
+/* ── KPI modal ── */
+function renderKpiModal(body, metricId, state){
+  var period=getSelectedPeriod(state);
+  var metrics=getMetricsForSelection(state,period);
+  var m=metrics[metricId]; if(!m) return;
+  var cfg=METRIC_CONFIG[metricId];
+
+  /* trend data for full year */
+  var trendRows=getTrendRows(state, period.anio, metricId);
+  var vals=trendRows.map(function(r){return safeNumber(r.valor);});
+  var refs=trendRows.map(function(r){return safeNumber(r.referencia);});
+  var lbls=trendRows.map(function(r){return (r.mes||'?').slice(0,3);});
+
+  var wrap=document.createElement('div');
+  wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start';
+
+  /* left: sparkline */
+  var left=document.createElement('div');
+  var ltitle=document.createElement('div');
+  ltitle.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:10px';
+  ltitle.textContent='Tendencia '+period.anio+' · '+cfg.label;
+  left.appendChild(ltitle);
+  renderSparkline(left, vals, refs, lbls);
+  var leg=document.createElement('div');
+  leg.style.cssText='display:flex;gap:16px;margin-top:8px;font-size:.76rem;color:#516851';
+  leg.innerHTML='<span style="display:flex;align-items:center;gap:5px"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="#195f33" stroke-width="2.5" stroke-linecap="round"/></svg>Real</span>'+
+    '<span style="display:flex;align-items:center;gap:5px"><svg width="20" height="4"><line x1="0" y1="2" x2="20" y2="2" stroke="#a8c4b0" stroke-width="2" stroke-dasharray="5 4"/></svg>Meta mensual</span>';
+  left.appendChild(leg);
+
+  /* right: grouped bar (real vs meta, all KPIs for context) */
+  var right=document.createElement('div');
+  var rtitle=document.createElement('div');
+  rtitle.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:10px';
+  rtitle.textContent='Real vs Meta mensual — período actual';
+  right.appendChild(rtitle);
+  var items=[{label:cfg.label,value:m.valor,meta:m.meta,unit:m.unit,pct:m.monthlyPct}];
+  /* add related KPIs for context */
+  ['materiales_generales','ingreso_bruto_total','pet','vidrio'].filter(function(id){return id!==metricId;}).forEach(function(id){
+    var mx=metrics[id]; if(!mx) return;
+    items.push({label:METRIC_CONFIG[id]&&METRIC_CONFIG[id].label||id,value:mx.valor,meta:mx.meta,unit:mx.unit,pct:mx.monthlyPct});
+  });
+  renderGroupedBar(right, items.slice(0,4));
+
+  wrap.appendChild(left); wrap.appendChild(right);
+  body.appendChild(wrap);
+
+  /* interpretation */
+  var st=m.monthlyPct>=1?'green':m.monthlyPct>=0.85?'yellow':'red';
+  var sections=[
+    {icon:'📊',color:st==='green'?'#195f33':st==='yellow'?'#795200':'#881818',
+     title:st==='green'?'Objetivo cumplido':st==='yellow'?'En seguimiento':'Por debajo de la meta',
+     body:'El período registró <strong>'+formatByUnit(m.valor,m.unit)+'</strong> contra una meta de <strong>'+formatByUnit(m.meta,m.unit)+'</strong>, cumpliendo el <strong>'+formatPercent(m.monthlyPct)+'</strong>. Avance acumulado anual: <strong>'+formatPercent(m.annualPct)+'</strong>.'},
+    {icon:'📈',color:'#1a527a',
+     title:'Lectura de tendencia',
+     body:vals.length>=2?(vals[vals.length-1]>vals[vals.length-2]?'La tendencia del último mes es <strong>ascendente</strong> respecto al mes anterior.':'La tendencia del último mes es <strong>descendente</strong> respecto al mes anterior. Revisar causas operativas.'):'Datos insuficientes para tendencia.'},
+    {icon:'⚡',color:'#0c7070',
+     title:'Acciones prioritarias',
+     body:m.monthlyPct>=1?'Mantener el ritmo operativo actual y documentar las prácticas que generaron este resultado para replicarlas en otras zonas.':m.monthlyPct>=0.85?'Monitorear de cerca en las próximas 2 semanas. Identificar rutas o grupos con menor desempeño para refuerzo focalizado.':'Activar plan de recuperación inmediata: identificar zonas con mayor brecha, reforzar recolección y revisar metas intermedias.'}
+  ];
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ── Zone modal ── */
+function renderZoneModal(body, state){
+  var period=getSelectedPeriod(state);
+  var rows=getZonaRows(state,period).filter(function(r){return hasActivityAggregate(r);}).sort(function(a,b){return safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq);});
+  if(!rows.length){ body.innerHTML='<div class="empty">Sin datos de zona.</div>'; return; }
+
+  var total=rows.reduce(function(s,r){return s+safeNumber(r.total_materiales_qq);},0)||1;
+  var totalInc=rows.reduce(function(s,r){return s+safeNumber(r.ingreso_bruto_total);},0)||1;
+
+  var title=document.createElement('div');
+  title.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:12px';
+  title.textContent='Materiales (qq) por zona · '+periodLabel(period);
+  body.appendChild(title);
+
+  renderProBarChart(body, rows, 'total_materiales_qq', 'zona', {
+    unit:'qq',
+    colorFn:function(r,i){ var pct=safeNumber(r.total_materiales_qq)/total; return pct>0.35?'#195f33':pct>0.20?'#267a46':pct>0.10?'#3a9e62':'#1a527a'; },
+    tipFn:function(r,v){ return '<strong>'+escapeHtml(r.zona||'—')+'</strong><br>Materiales: <strong>'+formatNumber(v)+' qq</strong><br>Ingreso: <strong>Q '+formatNumber(safeNumber(r.ingreso_bruto_total))+'</strong><br>Territorios: '+safeNumber(r.territorios_reportados)+'<br>Participación: <strong>'+Math.round(v/total*100)+'%</strong>'; }
+  });
+
+  /* bubble: materiales vs ingreso (size = territorios) */
+  var btitle=document.createElement('div');
+  btitle.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin:20px 0 10px';
+  btitle.textContent='Dispersión: materiales vs ingreso (tamaño = territorios reportados)';
+  body.appendChild(btitle);
+  renderBubbleChart(body, rows, 'total_materiales_qq','ingreso_bruto_total','territorios_reportados','zona');
+
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  var top=rows[0], bottom=rows[rows.length-1];
+  var gap=safeNumber(top.total_materiales_qq)-safeNumber(bottom.total_materiales_qq);
+  var sections=[
+    {icon:'🏆',color:'#195f33',title:'Zona líder',
+     body:'<strong>'+escapeHtml(top.zona||'—')+'</strong> aporta <strong>'+formatNumber(safeNumber(top.total_materiales_qq))+' qq</strong> ('+Math.round(safeNumber(top.total_materiales_qq)/total*100)+'% del total) con un ingreso de <strong>Q '+formatNumber(safeNumber(top.ingreso_bruto_total))+'</strong>.'},
+    {icon:'⚠️',color:'#b05208',title:'Brecha entre zonas',
+     body:'La diferencia entre la zona de mayor y menor volumen es <strong>'+formatNumber(gap)+' qq</strong>. '+escapeHtml(bottom.zona||'—')+' reporta el menor aporte ('+Math.round(safeNumber(bottom.total_materiales_qq)/total*100)+'%). Revisar capacidad operativa y rutas de recolección.'},
+    {icon:'⚡',color:'#0c7070',title:'Acciones prioritarias',
+     body:'1) Analizar las prácticas de la zona líder para replicarlas. 2) Asignar apoyo técnico a zonas con menos del 15% de participación. 3) Verificar que todos los territorios estén activos en el período.'}
+  ];
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ── Semaforo modal ── */
+function renderSemaforoModal(body, state){
+  var period=getSelectedPeriod(state);
+  var metrics=getMetricsForSelection(state,period);
+  var items=KPI_IDS.map(function(id){
+    var m=metrics[id]; if(!m) return null;
+    return {label:m.label,value:m.valor,meta:m.meta,unit:m.unit,pct:m.monthlyPct};
+  }).filter(Boolean);
+
+  var title=document.createElement('div');
+  title.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:12px';
+  title.textContent='Real vs Meta mensual · todos los indicadores · '+periodLabel(period);
+  body.appendChild(title);
+  renderGroupedBar(body, items);
+
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  var green=items.filter(function(i){return i.pct>=1;});
+  var yellow=items.filter(function(i){return i.pct>=0.85&&i.pct<1;});
+  var red=items.filter(function(i){return i.pct<0.85;});
+  var sections=[
+    {icon:'🟢',color:'#195f33',title:green.length+' indicador(es) en verde',
+     body:green.length?green.map(function(i){return '<strong>'+i.label+'</strong> ('+formatPercent(i.pct)+')';}).join(', ')+' cumplen o superan la meta mensual.':'Ningún indicador alcanza la meta este período.'},
+    {icon:'🟡',color:'#795200',title:yellow.length+' indicador(es) en seguimiento',
+     body:yellow.length?yellow.map(function(i){return '<strong>'+i.label+'</strong> ('+formatPercent(i.pct)+')';}).join(', ')+' están cerca de la meta pero no la alcanzan.':'Sin indicadores en zona amarilla.'},
+    {icon:'🔴',color:'#881818',title:red.length+' indicador(es) en rojo',
+     body:red.length?red.map(function(i){return '<strong>'+i.label+'</strong> ('+formatPercent(i.pct)+')';}).join(', ')+' requieren atención inmediata. Priorizar estos en la próxima reunión operativa.':'Sin alertas críticas.'},
+    {icon:'⚡',color:'#0c7070',title:'Acciones prioritarias',
+     body:red.length?'Reunión operativa urgente enfocada en: '+red.map(function(i){return i.label;}).join(', ')+'. Establecer metas diarias de recuperación.':yellow.length?'Monitoreo semanal de indicadores en amarillo. Activar refuerzo de rutas.':'Mantener ritmo operativo. Documentar buenas prácticas para escalar.'}
+  ];
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ── Materials modal ── */
+function renderMaterialsModal(body, state){
+  var period=getSelectedPeriod(state);
+  var rows=currentData.materialesRaw.length
+    ?currentData.materialesRaw.filter(function(r){return samePeriodLoose(r,period);})
+    :currentData.materialesResumen.filter(function(r){return samePeriodLoose(r,period);});
+  if(state.selectedZone!=='__all__') rows=rows.filter(function(r){return sameZoneMaterial(r,state.selectedZone);});
+  var grouped=aggregate(rows,['material'],{cantidad:'sum',ingreso_total_venta:'sum'}).filter(function(r){return safeNumber(r.cantidad)>0;}).sort(function(a,b){return safeNumber(b.cantidad)-safeNumber(a.cantidad);}).slice(0,8);
+  if(!grouped.length){ body.innerHTML='<div class="empty">Sin datos.</div>'; return; }
+  var total=grouped.reduce(function(s,r){return s+safeNumber(r.cantidad);},0)||1;
+
+  var wrap=document.createElement('div');
+  wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start';
+
+  /* donut */
+  var left=document.createElement('div');
+  var lt=document.createElement('div');
+  lt.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:10px';
+  lt.textContent='Distribución por tipo · '+periodLabel(period);
+  left.appendChild(lt);
+  renderProDonut(left, grouped.map(function(r){return {label:r.material,value:safeNumber(r.cantidad)};}),
+    {centerVal:formatNumber(total),centerSub:'unidades'});
+
+  /* horizontal bar */
+  var right=document.createElement('div');
+  var rt=document.createElement('div');
+  rt.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:10px';
+  rt.textContent='Volumen por material';
+  right.appendChild(rt);
+  renderProBarChart(right, grouped, 'cantidad','material',{
+    tipFn:function(r,v){ return '<strong>'+escapeHtml(r.material||'—')+'</strong><br>'+formatNumber(v)+' uds · <strong>'+Math.round(v/total*100)+'%</strong><br>Ingreso: Q '+formatNumber(safeNumber(r.ingreso_total_venta)); }
+  });
+
+  wrap.appendChild(left); wrap.appendChild(right);
+  body.appendChild(wrap);
+
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  var top=grouped[0], topPct=Math.round(safeNumber(top.cantidad)/total*100);
+  var hhi=grouped.reduce(function(s,r){var p=safeNumber(r.cantidad)/total;return s+p*p;},0);
+  var sections=[
+    {icon:'🏅',color:'#195f33',title:'Material predominante',
+     body:'<strong>'+escapeHtml(top.material||'—')+'</strong> representa el <strong>'+topPct+'%</strong> del volumen total con <strong>'+formatNumber(safeNumber(top.cantidad))+' unidades</strong>. Este nivel de concentración '+(topPct>50?'es alto: considerar diversificar fuentes de recolección.':'es saludable.')},
+    {icon:'📦',color:'#1a527a',title:'Diversidad de materiales',
+     body:'El programa reporta <strong>'+grouped.length+' tipos de material</strong>. Índice de concentración HHI: <strong>'+hhi.toFixed(2)+'</strong> '+(hhi>0.4?'(alta concentración — diversificar)':hhi>0.25?'(concentración moderada)':'(buena diversidad).')+'. Materiales de alto valor a priorizar: PET y vidrio.'},
+    {icon:'⚡',color:'#0c7070',title:'Acciones prioritarias',
+     body:topPct>60?'Diversificar la cartera de materiales para reducir dependencia de un solo tipo. Explorar acuerdos con nuevos compradores de materiales secundarios.':'Fortalecer recolección de materiales de alto valor unitario (PET, vidrio). Revisar precios de venta con compradores actuales.'}
+  ];
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ── Territory modal ── */
+function renderTerritoryModal(body, state){
+  var period=getSelectedPeriod(state);
+  var rows=getTerritoryRows(state,period).filter(function(r){return hasActivityAggregate(r);}).sort(function(a,b){return safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq);}).slice(0,12);
+  if(!rows.length){ body.innerHTML='<div class="empty">Sin datos territoriales.</div>'; return; }
+  var total=rows.reduce(function(s,r){return s+safeNumber(r.total_materiales_qq);},0)||1;
+
+  var title=document.createElement('div');
+  title.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:12px';
+  title.textContent='Materiales por territorio · '+periodLabel(period)+' (top 12)';
+  body.appendChild(title);
+  renderProBarChart(body, rows, 'total_materiales_qq','territorio',{
+    unit:'qq',
+    colorFn:function(r,i){
+      var zona=String(r.zona||'').toLowerCase();
+      if(zona.includes('tzolojya')) return '#195f33';
+      if(zona.includes('sur')) return '#267a46';
+      if(zona.includes('laguna')) return '#1a527a';
+      return '#0c7070';
+    },
+    tipFn:function(r,v){ return '<strong>'+escapeHtml(r.territorio||'—')+'</strong><br>Zona: '+escapeHtml(r.zona||'—')+'<br>Materiales: <strong>'+formatNumber(v)+' qq</strong><br>Ingreso: Q '+formatNumber(safeNumber(r.ingreso_bruto_total))+'<br>Part.: <strong>'+Math.round(v/total*100)+'%</strong>'; }
+  });
+
+  /* scatter */
+  var st=document.createElement('div');
+  st.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin:20px 0 10px';
+  st.textContent='Dispersión: materiales vs ingreso por territorio';
+  body.appendChild(st);
+  renderBubbleChart(body, rows,'total_materiales_qq','ingreso_bruto_total','pet_qq','territorio');
+
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  var top=rows[0], lowCount=rows.filter(function(r){return safeNumber(r.total_materiales_qq)<total/rows.length*0.5;}).length;
+  var sections=[
+    {icon:'📍',color:'#195f33',title:'Territorio líder',
+     body:'<strong>'+escapeHtml(top.territorio||'—')+'</strong> ('+escapeHtml(top.zona||'—')+') lidera con <strong>'+formatNumber(safeNumber(top.total_materiales_qq))+' qq</strong> e ingreso de <strong>Q '+formatNumber(safeNumber(top.ingreso_bruto_total))+'</strong>.'},
+    {icon:'⚠️',color:'#b05208',title:'Territorios sub-representados',
+     body:'<strong>'+lowCount+' territorios</strong> tienen menos de la mitad del promedio. Verificar si tienen rutas activas, lideresas asignadas y acceso a centros de acopio.'},
+    {icon:'⚡',color:'#0c7070',title:'Acciones prioritarias',
+     body:'1) Visita de campo a los 3 territorios con menor desempeño. 2) Asegurar que cada territorio tenga al menos una lideresa activa. 3) Comparar ingreso/qq entre territorios para detectar problemas de precio o material.'}
+  ];
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ── Alerts modal ── */
+function renderAlertsModal(body, state){
+  var period=getSelectedPeriod(state);
+  var metrics=getMetricsForSelection(state,period);
+  var rows=KPI_IDS.map(function(id){
+    var m=metrics[id]; if(!m) return null;
+    return {id:id,label:m.label,pct:m.monthlyPct,valor:m.valor,meta:m.meta,unit:m.unit};
+  }).filter(Boolean).sort(function(a,b){return a.pct-b.pct;});
+
+  var title=document.createElement('div');
+  title.style.cssText='font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#516851;margin-bottom:12px';
+  title.textContent='Nivel de cumplimiento por indicador · '+periodLabel(period);
+  body.appendChild(title);
+
+  /* horizontal lollipop / bar colored by status */
+  renderProBarChart(body, rows, 'pct','label',{
+    colorFn:function(r){ return r.pct>=1?'#195f33':r.pct>=0.85?'#b05208':'#881818'; },
+    tipFn:function(r,v){ return '<strong>'+escapeHtml(r.label)+'</strong><br>Real: <strong>'+formatByUnit(r.valor,r.unit)+'</strong><br>Meta: '+formatByUnit(r.meta,r.unit)+'<br>Cumplimiento: <strong>'+formatPercent(v)+'</strong>'; }
+  });
+
+  body.appendChild(document.createElement('hr')).style.cssText='border:none;border-top:1px solid #dce9dc;margin:20px 0';
+  var critical=rows.filter(function(r){return r.pct<0.85;});
+  var watchlist=rows.filter(function(r){return r.pct>=0.85&&r.pct<1;});
+  var ok=rows.filter(function(r){return r.pct>=1;});
+  var sections=[
+    {icon:'🚨',color:'#881818',title:'Crítico — acción inmediata',
+     body:critical.length?critical.map(function(r){return '<strong>'+r.label+'</strong>: '+formatPercent(r.pct)+' — brecha de '+formatByUnit(r.meta-r.valor,r.unit)+' para alcanzar meta.';}).join('<br>'):'Sin indicadores críticos este período.'},
+    {icon:'👁️',color:'#795200',title:'Vigilancia activa',
+     body:watchlist.length?watchlist.map(function(r){return '<strong>'+r.label+'</strong>: '+formatPercent(r.pct)+' — a '+formatByUnit(r.meta-r.valor,r.unit)+' de la meta.';}).join('<br>'):'Sin indicadores en zona de vigilancia.'},
+    {icon:'✅',color:'#195f33',title:'Objetivos cumplidos',
+     body:ok.length?ok.map(function(r){return '<strong>'+r.label+'</strong>: '+formatPercent(r.pct);}).join(', '):'Ningún indicador alcanza la meta aún.'},
+    {icon:'⚡',color:'#0c7070',title:'Plan de acción sugerido',
+     body:critical.length?'Prioridad 1: recuperar <strong>'+critical[0].label+'</strong>. Convocar equipo operativo esta semana y establecer seguimiento diario hasta cerrar la brecha.':ok.length===rows.length?'Todos los indicadores en verde. Explorar metas más ambiciosas para el siguiente período.':'Mantener seguimiento semanal de indicadores en amarillo.'}
+  ];
+  body.insertAdjacentHTML('beforeend', buildInterp(sections));
+}
+
+/* ═══════════════════════════════════════════════
+   IMPROVED EXISTING CHARTS
+═══════════════════════════════════════════════ */
 function renderZoneBarChart(containerId,state,period,subtitleId,interpId){
   var container=document.getElementById(containerId); if(!container) return;
   var rows=getZonaRows(state,period).filter(function(r){return hasActivityAggregate(r);}).sort(function(a,b){return safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq);});
   if(!rows.length){ container.innerHTML='<div class="empty">Sin datos de zona para este período.</div>'; return; }
-  var W=480,barH=32,gap=9,padL=100,padR=55,padT=12,padB=8;
+  var total=rows.reduce(function(s,r){return s+safeNumber(r.total_materiales_qq);},0)||1;
+  var W=480,barH=34,gap=10,padL=110,padR=70,padT=14,padB=8;
   var H=padT+rows.length*(barH+gap)-gap+padB;
   var maxVal=Math.max.apply(null,rows.map(function(r){return safeNumber(r.total_materiales_qq);})); if(maxVal<1) maxVal=1;
-  var COLORS=['#267a46','#3a9e62','#1a527a','#0c7070','#b05208'];
-  var svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,'class':'viz-svg'});
+  var COLORS=['#195f33','#267a46','#3a9e62','#1a527a','#0c7070'];
+  var svg=svgEl('svg',{viewBox:'0 0 '+W+' '+H,style:'width:100%;height:auto;display:block;overflow:visible'});
+
+  /* subtle grid */
+  [0.25,0.5,0.75,1].forEach(function(f){
+    var x=padL+f*(W-padL-padR);
+    svg.appendChild(svgEl('line',{x1:x,y1:padT-6,x2:x,y2:H-padB+2,stroke:'#dce9dc','stroke-width':'1','stroke-dasharray':'3 3'}));
+  });
+
   rows.forEach(function(row,i){
     var val=safeNumber(row.total_materiales_qq);
-    var barW=Math.max(2,(val/maxVal)*(W-padL-padR));
+    var barW=Math.max(3,(val/maxVal)*(W-padL-padR));
     var y=padT+i*(barH+gap);
     var col=COLORS[i%COLORS.length];
-    var lbl=svgEl('text',{x:padL-7,y:y+barH/2+5,'text-anchor':'end',fill:'#2c472c','font-size':'12','font-weight':'600','font-family':'DM Sans,sans-serif'});
-    lbl.textContent=String(row.zona||'—').length>13?String(row.zona).slice(0,12)+'…':(row.zona||'—');
-    var bg=svgEl('rect',{x:padL,y:y,width:W-padL-padR,height:barH,rx:'5',fill:'#e6f4ec'});
-    var bar=svgEl('rect',{x:padL,y:y,width:'0',height:barH,rx:'5',fill:col,style:'transition:width .65s cubic-bezier(.4,0,.2,1)',cursor:'pointer'});
-    setTimeout(function(b,w){ b.setAttribute('width',w); },80+i*70,bar,barW);
-    var valLbl=svgEl('text',{x:padL+barW+5,y:y+barH/2+4,fill:'#516851','font-size':'11','font-family':'JetBrains Mono,monospace'});
-    setTimeout(function(el,v){ el.textContent=formatNumber(v)+' qq'; },80+i*70,valLbl,val);
+    var pct=Math.round(val/total*100);
+
+    var lbl=svgEl('text',{x:padL-8,y:y+barH/2+5,'text-anchor':'end',fill:'#2c472c',
+      'font-size':'12','font-weight':'700','font-family':'DM Sans,sans-serif'});
+    lbl.textContent=row.zona||'—';
+
+    var bg=svgEl('rect',{x:padL,y:y+3,width:W-padL-padR,height:barH-6,rx:'7',fill:'#edf2ed'});
+    var bar=svgEl('rect',{x:padL,y:y+3,width:'0',height:barH-6,rx:'7',fill:col,
+      style:'transition:width .75s cubic-bezier(.4,0,.2,1)',cursor:'pointer'});
+    setTimeout(function(b,w){ b.setAttribute('width',w); },60+i*80,bar,barW);
+
+    /* pct badge inside bar */
+    var badge=svgEl('text',{x:padL+barW-10,y:y+barH/2+4,'text-anchor':'end',fill:'rgba(255,255,255,.85)',
+      'font-size':'10','font-weight':'700','font-family':'DM Sans,sans-serif','pointer-events':'none'});
+    setTimeout(function(el,w,p){
+      if(w>50) el.textContent=p+'%';
+      el.setAttribute('x',padL+w-10);
+    },80+i*80,badge,barW,pct);
+
+    var valLbl=svgEl('text',{x:padL+barW+8,y:y+barH/2+4,fill:'#516851',
+      'font-size':'11','font-weight':'700','font-family':'JetBrains Mono,monospace'});
+    setTimeout(function(el,v,w){
+      el.textContent=formatNumber(v)+' qq';
+      el.setAttribute('x',padL+w+8);
+    },80+i*80,valLbl,val,barW);
+
     var inc=formatNumber(safeNumber(row.ingreso_bruto_total));
-    [bg,bar,lbl,valLbl].forEach(function(el){
-      el.addEventListener('mousemove',function(e){ showTip(e,'<strong>'+escapeHtml(row.zona||'—')+'</strong><br>Materiales: <strong>'+formatNumber(val)+' qq</strong><br>Ingreso: <strong>Q '+inc+'</strong>'); bar.style.opacity='.75'; });
-      el.addEventListener('mouseleave',function(){ hideTip(); bar.style.opacity='1'; });
+    var tipHtml='<strong>'+escapeHtml(row.zona||'—')+'</strong><br>'+
+      'Materiales: <strong>'+formatNumber(val)+' qq</strong> ('+pct+'%)<br>'+
+      'Ingreso: <strong>Q '+inc+'</strong>';
+    [bg,bar,lbl,valLbl,badge].forEach(function(el){
+      el.addEventListener('mousemove',function(e){ showTip(e,tipHtml); bar.setAttribute('opacity','.82'); });
+      el.addEventListener('mouseleave',function(){ hideTip(); bar.setAttribute('opacity','1'); });
     });
-    svg.appendChild(bg); svg.appendChild(bar); svg.appendChild(lbl); svg.appendChild(valLbl);
+    svg.appendChild(bg); svg.appendChild(bar); svg.appendChild(badge);
+    svg.appendChild(lbl); svg.appendChild(valLbl);
   });
   container.innerHTML=''; container.appendChild(svg);
-  var sub=document.getElementById(subtitleId); if(sub) sub.textContent='Comparación de zonas · '+periodLabel(period)+' · en qq.';
+  var sub=document.getElementById(subtitleId); if(sub) sub.textContent=periodLabel(period)+' · '+rows.length+' zonas · en qq · haz clic en la tarjeta para más detalle';
   var interp=document.getElementById(interpId);
   if(interp&&rows.length){
-    var top=rows[0]; var total=rows.reduce(function(s,r){return s+safeNumber(r.total_materiales_qq);},0)||1;
-    interp.innerHTML='<strong>'+escapeHtml(top.zona||'—')+'</strong> lidera con <strong>'+formatNumber(safeNumber(top.total_materiales_qq))+' qq</strong> ('+Math.round(safeNumber(top.total_materiales_qq)/total*100)+'% del total).'+(rows.length>1?' Le sigue <strong>'+escapeHtml(rows[1].zona||'—')+'</strong> con <strong>'+formatNumber(safeNumber(rows[1].total_materiales_qq))+' qq</strong>.':'');
+    var top=rows[0];
+    interp.innerHTML='<strong>'+escapeHtml(top.zona||'—')+'</strong> lidera con '+
+      '<strong>'+formatNumber(safeNumber(top.total_materiales_qq))+' qq</strong> ('+
+      Math.round(safeNumber(top.total_materiales_qq)/total*100)+'% del total) · '+
+      'Ingreso: <strong>Q '+formatNumber(safeNumber(top.ingreso_bruto_total))+'</strong>'+
+      (rows.length>1?' · Le sigue <strong>'+escapeHtml(rows[1].zona||'—')+'</strong>':'');
   }
 }
 
-/* ── DONUT CHART ── */
 function renderDonutChart(containerId,state,period,subtitleId,interpId){
   var container=document.getElementById(containerId); if(!container) return;
   var rows=currentData.materialesRaw.length
@@ -1201,65 +1930,57 @@ function renderDonutChart(containerId,state,period,subtitleId,interpId){
   var grouped=aggregate(rows,['material'],{cantidad:'sum'}).filter(function(r){return safeNumber(r.cantidad)>0;}).sort(function(a,b){return safeNumber(b.cantidad)-safeNumber(a.cantidad);}).slice(0,7);
   if(!grouped.length){ container.innerHTML='<div class="empty">Sin datos de materiales para este período.</div>'; return; }
   var total=grouped.reduce(function(s,r){return s+safeNumber(r.cantidad);},0)||1;
-  var COLORS=['#267a46','#3a9e62','#1a527a','#0c7070','#b05208','#6dd295','#90c4e0'];
-  var SIZE=260,CX=SIZE/2,CY=SIZE/2,R=96,ri=48;
-  var svg=svgEl('svg',{viewBox:'0 0 '+SIZE+' '+SIZE,'class':'viz-svg'});
-  var start=-Math.PI/2;
-  grouped.forEach(function(item,i){
-    var val=safeNumber(item.cantidad);
-    var angle=(val/total)*Math.PI*2;
-    var end=start+angle;
-    var large=angle>Math.PI?1:0;
-    var col=COLORS[i%COLORS.length];
-    var x1=CX+R*Math.cos(start),y1=CY+R*Math.sin(start);
-    var x2=CX+R*Math.cos(end),y2=CY+R*Math.sin(end);
-    var x3=CX+ri*Math.cos(end),y3=CY+ri*Math.sin(end);
-    var x4=CX+ri*Math.cos(start),y4=CY+ri*Math.sin(start);
-    var path=svgEl('path',{d:'M'+x1+','+y1+' A'+R+','+R+' 0 '+large+',1 '+x2+','+y2+' L'+x3+','+y3+' A'+ri+','+ri+' 0 '+large+',0 '+x4+','+y4+' Z',fill:col,cursor:'pointer',style:'transition:opacity .15s'});
-    var pct=((val/total)*100).toFixed(1);
-    path.addEventListener('mousemove',function(e){ showTip(e,'<strong>'+escapeHtml(item.material||'—')+'</strong><br>'+formatNumber(val)+' · <strong>'+pct+'%</strong>'); path.style.opacity='.75'; });
-    path.addEventListener('mouseleave',function(){ hideTip(); path.style.opacity='1'; });
-    svg.appendChild(path);
-    if(angle>0.38){
-      var mid=start+angle/2;
-      var lx=CX+(R+ri)/2*Math.cos(mid),ly=CY+(R+ri)/2*Math.sin(mid);
-      var lbl=svgEl('text',{x:lx,y:ly+4,'text-anchor':'middle',fill:'#fff','font-size':'10','font-weight':'700','font-family':'DM Sans,sans-serif','pointer-events':'none'});
-      lbl.textContent=pct+'%'; svg.appendChild(lbl);
-    }
-    start=end;
+
+  var wrap=document.createElement('div');
+  wrap.style.cssText='display:flex;gap:16px;align-items:center;flex-wrap:wrap';
+
+  /* donut */
+  var donutWrap=document.createElement('div');
+  donutWrap.style.cssText='flex:0 0 200px';
+  renderProDonut(donutWrap, grouped.map(function(r){return {label:r.material,value:safeNumber(r.cantidad)};}),
+    {centerVal:formatNumber(total),centerSub:'uds'});
+  donutWrap.querySelector('svg').style.maxWidth='200px';
+
+  /* mini ranking list (no legend, just text) */
+  var rankWrap=document.createElement('div');
+  rankWrap.style.cssText='flex:1;min-width:140px';
+  var COLORS=['#195f33','#267a46','#3a9e62','#1a527a','#0c7070','#b05208','#6dd295'];
+  grouped.forEach(function(r,i){
+    var pct=Math.round(safeNumber(r.cantidad)/total*100);
+    var row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid #edf2ed;font-size:.8rem';
+    row.innerHTML='<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:'+COLORS[i%7]+';flex-shrink:0"></span>'+
+      '<span style="flex:1;color:#2c472c;font-weight:600">'+escapeHtml(String(r.material||'—').length>16?String(r.material).slice(0,15)+'…':(r.material||'—'))+'</span>'+
+      '<span style="font-family:JetBrains Mono,monospace;color:#516851;font-size:.76rem">'+pct+'%</span>';
+    rankWrap.appendChild(row);
   });
-  var cLbl=svgEl('text',{x:CX,y:CY-7,'text-anchor':'middle',fill:'#2c472c','font-size':'12','font-weight':'700','font-family':'DM Sans,sans-serif'});
-  cLbl.textContent=formatNumber(total);
-  var cUnit=svgEl('text',{x:CX,y:CY+10,'text-anchor':'middle',fill:'#516851','font-size':'10','font-family':'DM Sans,sans-serif'});
-  cUnit.textContent='unidades';
-  svg.appendChild(cLbl); svg.appendChild(cUnit);
-  var LW=SIZE,IW=LW/Math.min(grouped.length,4);
-  var legSvg=svgEl('svg',{viewBox:'0 0 '+LW+' '+(Math.ceil(grouped.length/4)*26),'class':'viz-svg',style:'margin-top:4px'});
-  grouped.forEach(function(item,i){
-    var col=COLORS[i%COLORS.length],lx=(i%4)*IW,ly=Math.floor(i/4)*26;
-    var dot=svgEl('rect',{x:lx,y:ly+4,width:'10',height:'10',rx:'2',fill:col});
-    var txt=svgEl('text',{x:lx+14,y:ly+13,fill:'#516851','font-size':'10','font-family':'DM Sans,sans-serif'});
-    var nm=String(item.material||'—'); txt.textContent=nm.length>15?nm.slice(0,14)+'…':nm;
-    legSvg.appendChild(dot); legSvg.appendChild(txt);
-  });
-  container.innerHTML=''; container.appendChild(svg); container.appendChild(legSvg);
-  var sub=document.getElementById(subtitleId); if(sub) sub.textContent=grouped.length+' tipos de material · '+periodLabel(period);
+
+  wrap.appendChild(donutWrap); wrap.appendChild(rankWrap);
+  container.innerHTML=''; container.appendChild(wrap);
+
+  var sub=document.getElementById(subtitleId); if(sub) sub.textContent=grouped.length+' materiales · '+periodLabel(period)+' · haz clic en la tarjeta para detalle';
   var interp=document.getElementById(interpId);
   if(interp&&grouped.length){
     var top=grouped[0],topP=Math.round(safeNumber(top.cantidad)/total*100);
-    interp.innerHTML='Material predominante: <strong>'+escapeHtml(top.material||'—')+'</strong> con <strong>'+formatNumber(safeNumber(top.cantidad))+'</strong> unidades (<strong>'+topP+'%</strong> del total).'+(grouped.length>1?' Le siguen <strong>'+escapeHtml(grouped[1].material||'—')+'</strong>'+(grouped[2]?' y <strong>'+escapeHtml(grouped[2].material||'—')+'</strong>':'')+'.':'');
+    interp.innerHTML='Material dominante: <strong>'+escapeHtml(top.material||'—')+'</strong> con el <strong>'+topP+'%</strong> del volumen. '+
+      (grouped.length>1?'Le sigue <strong>'+escapeHtml(grouped[1].material||'—')+'</strong> ('+Math.round(safeNumber(grouped[1].cantidad)/total*100)+'%)':'');
   }
 }
 
-/* ── NEW CHARTS (called from render) ── */
+/* ═══════════════════════════════════════════════
+   NEW CHARTS (called from render)
+═══════════════════════════════════════════════ */
 function renderNewCharts(state){
   if(!state||!currentData) return;
   var period=getSelectedPeriod(state); if(!period) return;
   try{ renderZoneBarChart('zoneBarChart',state,period,'barZoneSub','zoneBarInterp'); }catch(e){ console.warn(e); }
   try{ renderDonutChart('donutChart',state,period,'donutSub','donutInterp'); }catch(e){ console.warn(e); }
+  try{ setupPanelClicks(state); }catch(e){ console.warn(e); }
 }
 
-/* ── EXECUTIVE RENDER ── */
+/* ═══════════════════════════════════════════════
+   EXECUTIVE RENDER
+═══════════════════════════════════════════════ */
 var execSelectedPeriodKey=null;
 function renderExec(){
   if(!currentData) return;
@@ -1276,7 +1997,7 @@ function renderExec(){
   var period=getSelectedPeriod(execState);
   var metrics=getMetricsForSelection(execState,period);
   var status=buildProgramStatus(execState,period);
-  var sEl=document.getElementById('execStatusBadge'); if(sEl) sEl.textContent=status.label;
+  var sEl=document.getElementById('execStatusBadge'); if(sEl){ sEl.textContent=status.label; sEl.className='exec-status-badge '+status.className; }
   var pEl=document.getElementById('execPeriodInfo'); if(pEl) pEl.textContent='Período: '+periodLabel(period);
   var KPIS=[{id:'materiales_generales',label:'Materiales totales'},{id:'ingreso_bruto_total',label:'Ingreso bruto'},{id:'pet',label:'PET recolectado'},{id:'vidrio',label:'Vidrio recolectado'},{id:'ingreso_diario_lideresa',label:'Ingreso diario lideresa'},{id:'participacion_actividades',label:'Participación actividades'}];
   var kg=document.getElementById('execKpiGrid');
@@ -1292,6 +2013,7 @@ function renderExec(){
 }
 
 document.body.classList.add('view-full');
+
 </script>
 </body>
 </html>
