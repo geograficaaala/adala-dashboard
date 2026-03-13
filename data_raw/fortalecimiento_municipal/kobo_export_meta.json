@@ -1,0 +1,29 @@
+{
+  "programa": "fortalecimiento_municipal",
+  "asset_uid": "a7vpHtifkTFVU77DCsKPnQ",
+  "export_name": "EXPORT_FORTALECIMIENTO_MUNICIPAL",
+  "base_url": "https://kf.kobotoolbox.org",
+  "download_url": "https://kf.kobotoolbox.org/api/v2/assets/a7vpHtifkTFVU77DCsKPnQ/export-settings/esBpheFE3RYDNpaiowu9c2R/data.xlsx",
+  "saved_file": "data_raw/fortalecimiento_municipal/kobo_mensual_raw.xlsx",
+  "saved_at_unix": 1773385287,
+  "export_item": {
+    "uid": "esBpheFE3RYDNpaiowu9c2R",
+    "url": "https://kf.kobotoolbox.org/api/v2/assets/a7vpHtifkTFVU77DCsKPnQ/export-settings/esBpheFE3RYDNpaiowu9c2R/",
+    "data_url_csv": "https://kf.kobotoolbox.org/api/v2/assets/a7vpHtifkTFVU77DCsKPnQ/export-settings/esBpheFE3RYDNpaiowu9c2R/data.csv",
+    "data_url_xlsx": "https://kf.kobotoolbox.org/api/v2/assets/a7vpHtifkTFVU77DCsKPnQ/export-settings/esBpheFE3RYDNpaiowu9c2R/data.xlsx",
+    "name": "EXPORT_FORTALECIMIENTO_MUNICIPAL",
+    "date_modified": "2026-03-13T06:48:07.471008Z",
+    "export_settings": {
+      "lang": "es",
+      "type": "xls",
+      "query": {},
+      "fields": [],
+      "group_sep": "/",
+      "multiple_select": "both",
+      "include_media_url": false,
+      "xls_types_as_text": false,
+      "hierarchy_in_labels": false,
+      "fields_from_all_versions": true
+    }
+  }
+}
