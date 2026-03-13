@@ -6,26 +6,82 @@
   <title>Atitlán Recicla · ADALA</title>
   <meta name="description" content="Dashboard del programa Atitlán Recicla">
   <style>
-    :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;--blue:#1d4ed8;--blue-soft:#dbeafe;--green:#15803d;--green-soft:#dcfce7;--yellow:#a16207;--yellow-soft:#fef3c7;--red:#b91c1c;--red-soft:#fee2e2;--shadow:0 14px 34px rgba(15,23,42,.08);--radius:20px}
-    *{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f8fbff,#f5f7fb);color:var(--text)}
-    .wrap{max-width:1300px;margin:0 auto;padding:24px 18px 40px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+    :root{
+      --bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;
+      --blue:#1d4ed8;--blue-soft:#dbeafe;--green:#15803d;--green-soft:#dcfce7;
+      --yellow:#a16207;--yellow-soft:#fef3c7;--red:#b91c1c;--red-soft:#fee2e2;
+      --shadow:0 14px 34px rgba(15,23,42,.08);--radius:20px
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f8fbff,#f5f7fb);color:var(--text)}
+    .wrap{max-width:1300px;margin:0 auto;padding:24px 18px 40px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
     .back{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:#fff;border:1px solid var(--line);text-decoration:none;color:var(--text);box-shadow:var(--shadow);font-weight:700}
     .tag{display:inline-flex;padding:8px 12px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-weight:700;font-size:.82rem}
-    .hero{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .hero-main{padding:24px}.hero-main h1{margin:10px 0 8px;font-size:2rem}.hero-main p{margin:0;color:var(--muted);max-width:720px;line-height:1.5}
-    .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}.hero-stat{padding:14px 16px;border-radius:16px;background:#f8fafc;border:1px solid var(--line)}.hero-stat small{display:block;color:var(--muted);margin-bottom:6px}.hero-stat strong{font-size:1.05rem}
-    .hero-side{padding:22px}.hero-side h2{margin:0 0 12px;font-size:1.05rem}.status-badge{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;font-weight:800;margin-bottom:14px}.status-green{background:var(--green-soft);color:var(--green)}.status-yellow{background:var(--yellow-soft);color:var(--yellow)}.status-red{background:var(--red-soft);color:var(--red)}.status-muted{background:#eef2f7;color:#475569}
-    .mini-list{display:grid;gap:10px}.mini-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line)}
-    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}.filter{padding:14px 16px}.filter label{display:block;font-size:.82rem;color:var(--muted);font-weight:700;margin-bottom:8px}.filter select,.filter .pill{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:.95rem}.pill{display:flex;align-items:center;font-weight:700}
-    .section{margin-bottom:18px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 12px}.section-head h2{margin:0;font-size:1.18rem}.section-head p{margin:4px 0 0;color:var(--muted)}
-    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.kpi{padding:18px}.kpi-top{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:14px}.kpi-label{font-weight:700}.kpi-value{font-size:1.6rem;font-weight:800;margin-bottom:4px}.kpi-meta{color:var(--muted);font-size:.92rem}
-    .chip{padding:7px 10px;border-radius:999px;font-weight:800;font-size:.8rem;white-space:nowrap}.chip.green{background:var(--green-soft);color:var(--green)}.chip.yellow{background:var(--yellow-soft);color:var(--yellow)}.chip.red{background:var(--red-soft);color:var(--red)}.chip.muted{background:#eef2f7;color:#475569}
-    .progress{height:10px;border-radius:999px;background:#eef2f7;overflow:hidden;margin-top:12px}.progress>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),#60a5fa)}
-    .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.panel{padding:18px}.panel h3{margin:0 0 4px;font-size:1.02rem}.panel p.sub{margin:0 0 14px;color:var(--muted);font-size:.92rem}
-    .chart-wrap{overflow:auto}.chart{width:100%;min-width:760px;height:auto;display:block}.legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin-top:10px}.legend i{display:inline-block;width:10px;height:10px;border-radius:99px;margin-right:7px}
-    .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}table{width:100%;border-collapse:collapse;min-width:760px;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:.92rem;white-space:nowrap}th{background:#f8fafc;color:#334155;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}tr:hover td{background:#f8fbff}
-    .alert-list{display:grid;gap:10px}.alert{padding:12px 14px;border-radius:14px;border:1px solid var(--line)}.alert.red{background:var(--red-soft);border-color:#fecaca}.alert.yellow{background:var(--yellow-soft);border-color:#fde68a}.alert.green{background:var(--green-soft);border-color:#bbf7d0}.muted{color:var(--muted)}.empty{padding:18px;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc;color:var(--muted)}.footer-note{margin-top:10px;color:var(--muted);font-size:.84rem}
-    @media (max-width:1000px){.hero,.grid-2,.toolbar,.kpis{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr 1fr}}
+    .hero{display:grid;grid-template-columns:1.6fr .9fr;gap:18px;margin-bottom:18px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .hero-main{padding:24px}
+    .hero-main h1{margin:10px 0 8px;font-size:2rem}
+    .hero-main p{margin:0;color:var(--muted);max-width:720px;line-height:1.5}
+    .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+    .hero-stat{padding:14px 16px;border-radius:16px;background:#f8fafc;border:1px solid var(--line)}
+    .hero-stat small{display:block;color:var(--muted);margin-bottom:6px}
+    .hero-stat strong{font-size:1.05rem}
+    .hero-side{padding:22px}
+    .hero-side h2{margin:0 0 12px;font-size:1.05rem}
+    .status-badge{display:inline-flex;align-items:center;padding:10px 14px;border-radius:999px;font-weight:800;margin-bottom:14px}
+    .status-green{background:var(--green-soft);color:var(--green)}
+    .status-yellow{background:var(--yellow-soft);color:var(--yellow)}
+    .status-red{background:var(--red-soft);color:var(--red)}
+    .status-muted{background:#eef2f7;color:#475569}
+    .mini-list{display:grid;gap:10px}
+    .mini-item{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:14px;background:#f8fafc;border:1px solid var(--line)}
+    .toolbar{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .filter{padding:14px 16px}
+    .filter label{display:block;font-size:.82rem;color:var(--muted);font-weight:700;margin-bottom:8px}
+    .filter select,.filter .pill{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:.95rem}
+    .pill{display:flex;align-items:center;font-weight:700}
+    .section{margin-bottom:18px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 12px}
+    .section-head h2{margin:0;font-size:1.18rem}
+    .section-head p{margin:4px 0 0;color:var(--muted)}
+    .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .kpi{padding:18px}
+    .kpi-top{display:flex;justify-content:space-between;gap:12px;align-items:start;margin-bottom:14px}
+    .kpi-label{font-weight:700}
+    .kpi-value{font-size:1.6rem;font-weight:800;margin-bottom:4px}
+    .kpi-meta{color:var(--muted);font-size:.92rem}
+    .chip{padding:7px 10px;border-radius:999px;font-weight:800;font-size:.8rem;white-space:nowrap}
+    .chip.green{background:var(--green-soft);color:var(--green)}
+    .chip.yellow{background:var(--yellow-soft);color:var(--yellow)}
+    .chip.red{background:var(--red-soft);color:var(--red)}
+    .chip.muted{background:#eef2f7;color:#475569}
+    .progress{height:10px;border-radius:999px;background:#eef2f7;overflow:hidden;margin-top:12px}
+    .progress>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),#60a5fa)}
+    .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}
+    .panel{padding:18px}
+    .panel h3{margin:0 0 4px;font-size:1.02rem}
+    .panel p.sub{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+    .chart-wrap{overflow:auto}
+    .chart{width:100%;min-width:760px;height:auto;display:block}
+    .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem;margin-top:10px}
+    .legend i{display:inline-block;width:10px;height:10px;border-radius:99px;margin-right:7px}
+    .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}
+    table{width:100%;border-collapse:collapse;min-width:760px;background:#fff}
+    th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;font-size:.92rem;white-space:nowrap}
+    th{background:#f8fafc;color:#334155;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0}
+    tr:hover td{background:#f8fbff}
+    .alert-list{display:grid;gap:10px}
+    .alert{padding:12px 14px;border-radius:14px;border:1px solid var(--line)}
+    .alert.red{background:var(--red-soft);border-color:#fecaca}
+    .alert.yellow{background:var(--yellow-soft);border-color:#fde68a}
+    .alert.green{background:var(--green-soft);border-color:#bbf7d0}
+    .muted{color:var(--muted)}
+    .empty{padding:18px;border:1px dashed #cbd5e1;border-radius:16px;background:#f8fafc;color:var(--muted)}
+    .footer-note{margin-top:10px;color:var(--muted);font-size:.84rem}
+    .diagnostic{padding:18px 20px;line-height:1.7;font-size:1rem}
+    .diagnostic strong{color:#0f172a}
+    @media (max-width:1100px){.hero,.grid-2,.toolbar,.kpis{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
@@ -34,94 +90,858 @@
     <a class="back" href="./index.html">← Volver al inicio ADALA</a>
     <span class="tag">Piloto operativo · 2026</span>
   </div>
+
   <section class="hero">
     <div class="card hero-main">
       <span class="tag">Dashboard de programa</span>
       <h1>Atitlán Recicla</h1>
-      <p>Seguimiento del avance mensual y anual del programa, combinando indicadores del CDM y detalle operativo de materiales. Este tablero usa el <strong>último período con datos reales</strong>, no el último mes vacío del calendario.</p>
+      <p>Seguimiento del avance mensual y anual del programa, combinando indicadores del CDM y detalle operativo de materiales. Por defecto, el tablero se posiciona en el <strong>último período con datos reales</strong>, pero también puedes revisar meses anteriores y filtrar por zona.</p>
       <div class="hero-grid" id="heroStats"></div>
     </div>
     <div class="card hero-side">
-      <h2>Estado general del programa</h2>
+      <h2>Estado del período seleccionado</h2>
       <div id="programStatus"></div>
       <div class="mini-list" id="programQuick"></div>
     </div>
   </section>
+
   <section class="toolbar">
-    <div class="card filter"><label for="yearSelect">Año</label><select id="yearSelect"></select></div>
-    <div class="card filter"><label for="indicatorSelect">Indicador para tendencia</label><select id="indicatorSelect"></select></div>
-    <div class="card filter"><label>Último período válido detectado</label><div class="pill" id="latestPeriodPill">—</div></div>
+    <div class="card filter">
+      <label for="periodSelect">Mes / período</label>
+      <select id="periodSelect"></select>
+    </div>
+    <div class="card filter">
+      <label for="zoneSelect">Zona</label>
+      <select id="zoneSelect"></select>
+    </div>
+    <div class="card filter">
+      <label for="indicatorSelect">Indicador para tendencia</label>
+      <select id="indicatorSelect"></select>
+    </div>
+    <div class="card filter">
+      <label>Último período válido detectado</label>
+      <div class="pill" id="latestPeriodPill">—</div>
+    </div>
   </section>
-  <section class="section"><div class="section-head"><div><h2>KPIs principales del mes</h2><p>Meta mensual, resultado real y avance anual acumulado.</p></div></div><div class="kpis" id="kpiGrid"></div></section>
-  <section class="section grid-2">
-    <article class="card panel"><h3>Tendencia mensual</h3><p class="sub" id="chartSubtitle">—</p><div class="chart-wrap" id="trendChart"></div><div class="legend"><span><i style="background:#2563eb"></i>Valor real</span><span><i style="background:#94a3b8"></i>Meta mensual</span></div></article>
-    <article class="card panel"><h3>Semáforo de indicadores</h3><p class="sub">Cumplimiento del mes y avance anual acumulado.</p><div id="semaforoTable"></div></article>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <h2>KPIs principales</h2>
+        <p id="kpiSubtitle">Lectura del período seleccionado.</p>
+      </div>
+    </div>
+    <div class="kpis" id="kpiGrid"></div>
   </section>
+
   <section class="section grid-2">
-    <article class="card panel"><h3>Alertas operativas</h3><p class="sub">Señales rápidas para seguimiento interno.</p><div id="alertPanel"></div></article>
-    <article class="card panel"><h3>Desempeño por zona</h3><p class="sub">Último período válido.</p><div id="zonePanel"></div></article>
+    <article class="card panel">
+      <h3>Tendencia mensual</h3>
+      <p class="sub" id="chartSubtitle">—</p>
+      <div class="chart-wrap" id="trendChart"></div>
+      <div class="legend">
+        <span><i style="background:#2563eb"></i>Valor real</span>
+        <span><i style="background:#94a3b8"></i>Meta / referencia</span>
+      </div>
+    </article>
+    <article class="card panel">
+      <h3>Semáforo de indicadores</h3>
+      <p class="sub" id="semaforoSubtitle">Cumplimiento del mes y avance acumulado.</p>
+      <div id="semaforoTable"></div>
+    </article>
   </section>
+
   <section class="section grid-2">
-    <article class="card panel"><h3>Materiales del último período</h3><p class="sub">Resumen de materiales por cantidad.</p><div id="materialsPanel"></div></article>
-    <article class="card panel"><h3>Detalle territorial del último período</h3><p class="sub">Territorios con resultado reportado.</p><div id="territoryPanel"></div></article>
+    <article class="card panel">
+      <h3>Alertas operativas</h3>
+      <p class="sub">Señales rápidas para seguimiento interno.</p>
+      <div id="alertPanel"></div>
+    </article>
+    <article class="card panel">
+      <h3 id="zonePanelTitle">Desempeño por zona</h3>
+      <p class="sub" id="zonePanelSubtitle">Período seleccionado.</p>
+      <div id="zonePanel"></div>
+    </article>
+  </section>
+
+  <section class="section grid-2">
+    <article class="card panel">
+      <h3>Materiales del período</h3>
+      <p class="sub" id="materialsSubtitle">Resumen por cantidad.</p>
+      <div id="materialsPanel"></div>
+    </article>
+    <article class="card panel">
+      <h3 id="territoryTitle">Detalle territorial</h3>
+      <p class="sub" id="territorySubtitle">Territorios con resultado reportado.</p>
+      <div id="territoryPanel"></div>
+    </article>
+  </section>
+
+  <section class="section">
+    <article class="card diagnostic" id="diagnosticPanel"></article>
   </section>
 </div>
+
 <script>
-const PATHS={indicadores:"./data/institucional_indicadores.csv",totalMes:"./data/total_mes.csv",zonaMes:"./data/zona_mes.csv",territorioMes:"./data/territorio_mes.csv",materialesResumen:"./data/materiales_resumen_mes.csv",materialesRaw:"./data/materiales_raw.csv"};
-const KPI_IDS=["materiales_generales","pet","vidrio","ingreso_bruto_total","ingreso_bruto_mujeres","participacion_actividades"];
-const KPI_LABEL_OVERRIDES={materiales_generales:"Materiales reciclables",pet:"PET recolectado",vidrio:"Vidrio recolectado",ingreso_bruto_total:"Ingreso bruto total",ingreso_bruto_mujeres:"Ingreso bruto mujeres",ingreso_bruto_municipalidades:"Ingreso bruto municipalidades",ingreso_diario_lideresa:"Ingreso diario lideresa",participacion_actividades:"Participación en actividades",participacion_comercializacion:"Participación en comercialización"};
+const PATHS={
+  indicadores:"./data/institucional_indicadores.csv",
+  totalMes:"./data/total_mes.csv",
+  zonaMes:"./data/zona_mes.csv",
+  territorioMes:"./data/territorio_mes.csv",
+  materialesResumen:"./data/materiales_resumen_mes.csv",
+  materialesRaw:"./data/materiales_raw.csv"
+};
+
+const KPI_IDS=[
+  "materiales_generales",
+  "pet",
+  "vidrio",
+  "ingreso_bruto_total",
+  "ingreso_bruto_mujeres",
+  "ingreso_diario_lideresa",
+  "participacion_actividades",
+  "participacion_comercializacion"
+];
+
+const METRIC_CONFIG={
+  materiales_generales:{label:"Materiales reciclables",unit:"qq",column:"total_materiales_qq",meta:1630},
+  pet:{label:"PET recolectado",unit:"qq",column:"pet_qq",meta:153},
+  vidrio:{label:"Vidrio recolectado",unit:"qq",column:"vidrio_total_qq",meta:1018},
+  ingreso_bruto_total:{label:"Ingreso bruto total",unit:"GTQ",column:"ingreso_bruto_total",meta:40727},
+  ingreso_bruto_mujeres:{label:"Ingreso bruto mujeres",unit:"GTQ",column:"ingreso_bruto_lideresas",meta:36655},
+  ingreso_bruto_municipalidades:{label:"Ingreso bruto municipalidades",unit:"GTQ",column:"ingreso_bruto_municipalidad",meta:4073},
+  ingreso_diario_lideresa:{label:"Ingreso diario lideresa",unit:"GTQ/día",column:"ingreso_diario_lideresa",meta:135},
+  participacion_actividades:{label:"Participación en actividades",unit:"proporción",meta:0.75},
+  participacion_comercializacion:{label:"Participación en comercialización",unit:"proporción",meta:0.60}
+};
+
 let currentData=null;
-document.addEventListener("DOMContentLoaded",bootstrap);
-async function bootstrap(){try{const data=await loadAll();currentData=data;const state=buildState(data);render(state)}catch(err){console.error(err);document.body.innerHTML=`<div class="wrap"><div class="card panel"><h3>No se pudo cargar el dashboard</h3><p class="sub">Revisa que los CSV estén en <strong>docs/data/</strong>.</p><div class="empty">${escapeHtml(err.message||String(err))}</div></div></div>`;}}
-async function loadAll(){const [indicadores,totalMes,zonaMes,territorioMes,materialesResumen,materialesRaw]=await Promise.all([fetchCsv(PATHS.indicadores,true),fetchCsv(PATHS.totalMes,true),fetchCsv(PATHS.zonaMes,true),fetchCsv(PATHS.territorioMes,true),fetchCsv(PATHS.materialesResumen,false),fetchCsv(PATHS.materialesRaw,false)]);return{indicadores:indicadores.map(normalizeIndicadorRow),totalMes:totalMes.map(normalizeGenericRow),zonaMes:zonaMes.map(normalizeGenericRow),territorioMes:territorioMes.map(normalizeGenericRow),materialesResumen:materialesResumen.map(normalizeGenericRow),materialesRaw:materialesRaw.map(normalizeGenericRow)}}
-function buildState(data){const years=[...new Set(data.indicadores.map(r=>r.anio).filter(Number.isFinite))].sort((a,b)=>a-b);const latestValid=detectLatestValidPeriod(data);return{data,years,selectedYear:latestValid?.anio??years[0]??null,selectedIndicatorId:"materiales_generales",latestValid}}
-function render(state){bindControls(state);renderHero(state);renderKpis(state);renderTrend(state);renderSemaforo(state);renderAlerts(state);renderZones(state);renderMaterials(state);renderTerritory(state)}
-function bindControls(state){const yearSelect=document.getElementById("yearSelect");const indicatorSelect=document.getElementById("indicatorSelect");const options=buildIndicatorOptions(state.data.indicadores);yearSelect.innerHTML=state.years.map(y=>`<option value="${y}">${y}</option>`).join("");if(state.selectedYear!=null)yearSelect.value=String(state.selectedYear);indicatorSelect.innerHTML=options.map(o=>`<option value="${escapeHtml(o.id)}">${escapeHtml(o.name)}</option>`).join("");if(options.some(x=>x.id===state.selectedIndicatorId))indicatorSelect.value=state.selectedIndicatorId;document.getElementById("latestPeriodPill").textContent=periodLabel(state.latestValid);yearSelect.onchange=()=>{state.selectedYear=Number(yearSelect.value);renderTrend(state);renderSemaforo(state)};indicatorSelect.onchange=()=>{state.selectedIndicatorId=indicatorSelect.value;renderTrend(state)}}
-function renderHero(state){const latest=state.latestValid;const inds=getIndicatorRows(state,latest);const zonas=getZonaRows(state,latest);document.getElementById("heroStats").innerHTML=[statCard("Último período válido",periodLabel(latest)),statCard("Indicadores con datos",String(inds.filter(r=>safeNumber(r.valor)>0).length)),statCard("Zonas con reporte",String(zonas.filter(r=>safeNumber(r.total_materiales_qq)>0||safeNumber(r.ingreso_bruto_total)>0).length)),statCard("Materiales totales del mes",formatByUnit(findIndicator(inds,"materiales_generales")?.valor,"qq"))].join("");const status=buildProgramStatus(inds);document.getElementById("programStatus").innerHTML=`<div class="status-badge ${status.className}">${status.label}</div>`;document.getElementById("programQuick").innerHTML=[miniItem("PET del mes",formatByUnit(findIndicator(inds,"pet")?.valor,"qq")),miniItem("Vidrio del mes",formatByUnit(findIndicator(inds,"vidrio")?.valor,"qq")),miniItem("Ingreso bruto",formatByUnit(findIndicator(inds,"ingreso_bruto_total")?.valor,"GTQ")),miniItem("Avance anual materiales",formatPercent(progressYear(findIndicator(inds,"materiales_generales"),latest)))].join("")}
-function renderKpis(state){const latest=state.latestValid;const inds=getIndicatorRows(state,latest);const grid=document.getElementById("kpiGrid");grid.innerHTML="";KPI_IDS.forEach(id=>{const row=findIndicator(inds,id);if(!row)return;const monthlyPct=progressMonthly(row);const annualPct=progressYear(row,latest);const status=semaforoClass(monthlyPct);const card=document.createElement("article");card.className="card kpi";card.innerHTML=`<div class="kpi-top"><div><div class="kpi-label">${escapeHtml(row.indicador_nombre||KPI_LABEL_OVERRIDES[id]||id)}</div><div class="kpi-value">${escapeHtml(formatByUnit(row.valor,row.unidad))}</div><div class="kpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta_mensual,row.unidad))}</div></div><span class="chip ${status}">${escapeHtml(semaforoText(monthlyPct))}</span></div><div class="kpi-meta">Cumplimiento mensual: <strong>${escapeHtml(formatPercent(monthlyPct))}</strong></div><div class="kpi-meta">Avance anual acumulado: <strong>${escapeHtml(formatPercent(annualPct))}</strong></div><div class="progress"><span style="width:${Math.max(0,Math.min(monthlyPct*100,100))}%"></span></div>`;grid.appendChild(card)});if(!grid.children.length)grid.innerHTML=`<div class="empty">No se encontraron KPIs para el período seleccionado.</div>`}
-function renderTrend(state){const rows=state.data.indicadores.filter(r=>r.anio===state.selectedYear&&normalizeIndicatorId(r.indicador_id)===normalizeIndicatorId(state.selectedIndicatorId)).sort(sortPeriod).filter(r=>Number.isFinite(r.mes_num));document.getElementById("chartSubtitle").textContent=rows[0]?.indicador_nombre||KPI_LABEL_OVERRIDES[state.selectedIndicatorId]||state.selectedIndicatorId;const panel=document.getElementById("trendChart");if(!rows.length){panel.innerHTML=`<div class="empty">No hay serie disponible para este indicador.</div>`;return}const labels=rows.map(r=>`${r.mes} ${r.anio}`),values=rows.map(r=>safeNumber(r.valor)),metas=rows.map(r=>safeNumber(r.meta_mensual));panel.innerHTML=renderLineChart(labels,values,metas)}
-function renderSemaforo(state){const latest=state.latestValid;const rows=getIndicatorRows(state,latest).filter(r=>KPI_IDS.includes(normalizeIndicatorId(r.indicador_id)));if(!rows.length){document.getElementById("semaforoTable").innerHTML=`<div class="empty">No hay indicadores para el semáforo.</div>`;return}const enriched=rows.map(r=>({indicador:r.indicador_nombre||KPI_LABEL_OVERRIDES[r.indicador_id]||r.indicador_id,mensual:progressMonthly(r),anual:progressYear(r,latest),estado:semaforoText(progressMonthly(r))}));document.getElementById("semaforoTable").innerHTML=renderTable(enriched,["indicador","mensual","anual","estado"],{indicador:"Indicador",mensual:"Avance mes",anual:"Avance anual",estado:"Estado"},(value,key)=>key==="mensual"||key==="anual"?formatPercent(value):value)}
-function renderAlerts(state){const latest=state.latestValid;const inds=getIndicatorRows(state,latest);const zoneRows=getZonaRows(state,latest);const alerts=[];inds.forEach(r=>{const pct=progressMonthly(r),id=normalizeIndicatorId(r.indicador_id);if(["materiales_generales","pet","vidrio","ingreso_bruto_total","participacion_actividades"].includes(id)){if(pct<0.85)alerts.push({type:"red",text:`${r.indicador_nombre} está bajo meta mensual (${formatPercent(pct)}).`});else if(pct<1)alerts.push({type:"yellow",text:`${r.indicador_nombre} está cerca de la meta (${formatPercent(pct)}).`})}});zoneRows.filter(r=>safeNumber(r.total_materiales_qq)<=0&&safeNumber(r.ingreso_bruto_total)<=0).forEach(z=>alerts.push({type:"yellow",text:`${z.zona||"Zona sin nombre"} no muestra avance en el último período válido.`}));if(!alerts.length)alerts.push({type:"green",text:"No se detectan alertas críticas en el último período válido."});document.getElementById("alertPanel").innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${escapeHtml(a.text)}</div>`).join("")}</div>`}
-function renderZones(state){const rows=getZonaRows(state,state.latestValid).filter(r=>safeNumber(r.total_materiales_qq)>0||safeNumber(r.ingreso_bruto_total)>0).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));if(!rows.length){document.getElementById("zonePanel").innerHTML=`<div class="empty">No hay datos por zona en el último período válido.</div>`;return}document.getElementById("zonePanel").innerHTML=renderTable(rows,["zona","territorios_reportados","total_materiales_qq","pet_qq","vidrio_total_qq","ingreso_bruto_total"],{zona:"Zona",territorios_reportados:"Territorios",total_materiales_qq:"Materiales qq",pet_qq:"PET qq",vidrio_total_qq:"Vidrio qq",ingreso_bruto_total:"Ingreso bruto"})}
-function renderMaterials(state){const latest=state.latestValid;let rows=[];if(state.data.materialesRaw.length)rows=state.data.materialesRaw.filter(r=>samePeriodLoose(r,latest));else if(state.data.materialesResumen.length)rows=state.data.materialesResumen.filter(r=>samePeriodLoose(r,latest));if(!rows.length&&state.data.materialesRaw.length)rows=state.data.materialesRaw;if(!rows.length&&state.data.materialesResumen.length)rows=state.data.materialesResumen;if(!rows.length){document.getElementById("materialsPanel").innerHTML=`<div class="empty">No se encontraron datos de materiales.</div>`;return}const grouped=aggregate(rows,["material"],{cantidad:"sum",ingreso_total_venta:"sum",ingreso_cooperativa:"sum"}).sort((a,b)=>safeNumber(b.cantidad)-safeNumber(a.cantidad)).slice(0,12);document.getElementById("materialsPanel").innerHTML=renderTable(grouped,["material","cantidad","ingreso_total_venta","ingreso_cooperativa"],{material:"Material",cantidad:"Cantidad",ingreso_total_venta:"Ingreso venta",ingreso_cooperativa:"Ingreso coop."})+`<div class="footer-note">Si el archivo de materiales no trae mes limpio, el tablero usa el mejor corte disponible.</div>`}
-function renderTerritory(state){const rows=getTerritoryRows(state,state.latestValid).filter(r=>safeNumber(r.total_materiales_qq)>0||safeNumber(r.ingreso_bruto_total)>0||safeNumber(r.pet_qq)>0).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq)).slice(0,15);if(!rows.length){document.getElementById("territoryPanel").innerHTML=`<div class="empty">No hay territorios con resultados en el último período válido.</div>`;return}document.getElementById("territoryPanel").innerHTML=renderTable(rows,["zona","territorio","total_materiales_qq","pet_qq","vidrio_total_qq","ingreso_bruto_total"],{zona:"Zona",territorio:"Territorio",total_materiales_qq:"Materiales qq",pet_qq:"PET qq",vidrio_total_qq:"Vidrio qq",ingreso_bruto_total:"Ingreso bruto"})}
-function detectLatestValidPeriod(data){const candidates=new Map();(data.totalMes||[]).forEach(r=>{const key=`${r.anio}|${r.mes_num}`;const score=safeNumber(r.total_materiales_qq)+safeNumber(r.pet_qq)+safeNumber(r.vidrio_total_qq)+safeNumber(r.ingreso_bruto_total);if(Number.isFinite(r.anio)&&Number.isFinite(r.mes_num))candidates.set(key,{anio:r.anio,mes_num:r.mes_num,mes:r.mes||monthName(r.mes_num),score})});(data.indicadores||[]).forEach(r=>{if(!Number.isFinite(r.anio)||!Number.isFinite(r.mes_num))return;const id=normalizeIndicatorId(r.indicador_id);if(!["materiales_generales","pet","vidrio","ingreso_bruto_total","ingreso_bruto_mujeres","participacion_actividades"].includes(id))return;const key=`${r.anio}|${r.mes_num}`;const e=candidates.get(key)||{anio:r.anio,mes_num:r.mes_num,mes:r.mes||monthName(r.mes_num),score:0};e.score+=Math.abs(safeNumber(r.valor));candidates.set(key,e)});const valid=[...candidates.values()].filter(x=>x.score>0);return valid.length?valid.sort(sortPeriod).at(-1):([...candidates.values()].sort(sortPeriod).at(-1)||null)}
-function getIndicatorRows(state,period){return state.data.indicadores.filter(r=>r.anio===period?.anio&&r.mes_num===period?.mes_num).filter(r=>safeNumber(r.valor)>0||safeNumber(r.meta_mensual)>0)}
-function getZonaRows(state,period){return state.data.zonaMes.filter(r=>r.anio===period?.anio&&r.mes_num===period?.mes_num)}
-function getTerritoryRows(state,period){return state.data.territorioMes.filter(r=>r.anio===period?.anio&&r.mes_num===period?.mes_num)}
-function buildProgramStatus(rows){const target=rows.filter(r=>KPI_IDS.includes(normalizeIndicatorId(r.indicador_id)));if(!target.length)return{label:"Sin datos suficientes",className:"status-muted"};const avg=target.reduce((a,r)=>a+progressMonthly(r),0)/target.length;if(avg>=1)return{label:"Buen avance del mes",className:"status-green"};if(avg>=0.85)return{label:"Avance intermedio / en seguimiento",className:"status-yellow"};return{label:"Bajo meta mensual / requiere atención",className:"status-red"}}
-function progressMonthly(row){const meta=safeNumber(row?.meta_mensual),valor=safeNumber(row?.valor);return meta?valor/meta:0}
-function progressYear(row,latest){if(!row||!latest||!currentData)return 0;const id=normalizeIndicatorId(row.indicador_id);const same=currentData.indicadores.filter(r=>r.anio===latest.anio&&normalizeIndicatorId(r.indicador_id)===id&&r.mes_num<=latest.mes_num);const actual=same.reduce((a,r)=>a+safeNumber(r.valor),0);const annual=safeNumber(row.meta_mensual)*11;return annual?actual/annual:0}
-function statCard(label,value){return `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(value)}</strong></div>`}
-function miniItem(label,value){return `<div class="mini-item"><span class="muted">${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`}
-function findIndicator(rows,id){return rows.find(r=>normalizeIndicatorId(r.indicador_id)===normalizeIndicatorId(id))}
-function semaforoClass(pct){if(pct>=1)return"green";if(pct>=0.85)return"yellow";if(pct>0)return"red";return"muted"}
-function semaforoText(pct){if(pct>=1)return"Verde";if(pct>=0.85)return"Amarillo";if(pct>0)return"Rojo";return"Sin dato"}
-function periodLabel(p){return p?`${p.mes||monthName(p.mes_num)} ${p.anio||""}`.trim():"Sin período"}
-function monthName(n){return({1:"ENE",2:"FEB",3:"MAR",4:"ABR",5:"MAY",6:"JUN",7:"JUL",8:"AGO",9:"SEP",10:"OCT",11:"NOV",12:"DIC"}[n]||"—")}
-function buildIndicatorOptions(rows){return uniqueBy(rows.filter(r=>r.indicador_id).map(r=>({id:normalizeIndicatorId(r.indicador_id),name:r.indicador_nombre||KPI_LABEL_OVERRIDES[r.indicador_id]||r.indicador_id})),x=>x.id).sort((a,b)=>a.name.localeCompare(b.name,"es"))}
-function renderLineChart(labels,values,metas){const width=900,height=320,pad=36;const all=[...values,...metas].filter(Number.isFinite);const min=Math.min(...all,0),max=Math.max(...all,1),range=max-min||1;const X=i=>pad+i*(width-pad*2)/Math.max(labels.length-1,1),Y=v=>height-pad-((v-min)/range)*(height-pad*2);const pts1=values.map((v,i)=>`${X(i)},${Y(v)}`).join(" "),pts2=metas.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");const yTicks=Array.from({length:5},(_,i)=>{const v=min+((4-i)/4)*range;const y=pad+i*(height-pad*2)/4;return `<g><line x1="${pad}" x2="${width-pad}" y1="${y}" y2="${y}" stroke="#e5edf7"/><text x="6" y="${y+4}" fill="#64748b" font-size="11">${escapeHtml(compact(v))}</text></g>`}).join("");const xLabels=labels.map((l,i)=>`<text x="${X(i)}" y="${height-10}" text-anchor="middle" fill="#64748b" font-size="11">${escapeHtml(shortLabel(l))}</text>`).join("");return `<svg viewBox="0 0 ${width} ${height}" class="chart"><polyline fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="7 6" points="${pts2}"></polyline><polyline fill="none" stroke="#2563eb" stroke-width="4" points="${pts1}"></polyline>${yTicks}${xLabels}</svg>`}
-function renderTable(rows,cols,labels={},formatter=null){const head=cols.map(c=>`<th>${escapeHtml(labels[c]||c)}</th>`).join("");const body=rows.map(r=>`<tr>${cols.map(c=>`<td>${escapeHtml(formatter?formatter(r[c],c,r):formatCell(r[c],c))}</td>`).join("")}</tr>`).join("");return `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`}
-function formatCell(value,key){if(value==null||value===""||(typeof value==="number"&&!Number.isFinite(value)))return"—";if(typeof value==="number"){if(String(key).includes("ingreso")||String(key).includes("gtq"))return formatCurrency(value);if(String(key).includes("pct")||String(key).includes("participacion"))return formatPercent(value);return formatNumber(value)}return String(value)}
-function formatByUnit(value,unit){const n=safeNumber(value);if(!Number.isFinite(n)||n===0&&value==null)return"—";if(unit==="GTQ"||unit==="GTQ/día")return formatCurrency(n);if(unit==="proporción")return formatPercent(n);return `${formatNumber(n)}${unit?" "+unit:""}`.trim()}
-function samePeriodLoose(row,period){if(!period)return false;const anioOk=!Number.isFinite(row.anio)||row.anio===period.anio;const mesNum=Number(row.mes_num);if(Number.isFinite(mesNum))return anioOk&&mesNum===period.mes_num;const mesTxt=String(row.mes||"").trim().toUpperCase();return anioOk&&mesTxt===String(period.mes||monthName(period.mes_num)).toUpperCase()}
-function aggregate(rows,groupKeys,ops){const map=new Map();rows.forEach(r=>{const key=groupKeys.map(k=>String(r[k]||"")).join("||");if(!map.has(key)){const base={};groupKeys.forEach(k=>base[k]=r[k]||"");Object.keys(ops).forEach(k=>base[k]=0);map.set(key,base)}const item=map.get(key);Object.entries(ops).forEach(([k,op])=>{if(op==="sum")item[k]+=safeNumber(r[k])})});return [...map.values()]}
-async function fetchCsv(path,required=true){try{const res=await fetch(path+`?v=${Date.now()}`,{cache:"no-store"});if(!res.ok){if(required)throw new Error(`No se pudo cargar ${path}`);return[]}const text=await res.text();return parseCsv(text)}catch(err){if(required)throw err;return[]}}
-function parseCsv(text){const rows=[];let row=[],val="",q=false;for(let i=0;i<text.length;i++){const ch=text[i],next=text[i+1];if(ch=='"'){if(q&&next=='"'){val+='"';i++}else q=!q}else if(ch===","&&!q){row.push(val);val=""}else if((ch==="\n"||ch==="\r")&&!q){if(ch==="\r"&&next==="\n")i++;row.push(val);rows.push(row);row=[];val=""}else val+=ch}if(val.length||row.length){row.push(val);rows.push(row)}const clean=rows.filter(r=>r.some(c=>String(c).trim()!==""));if(!clean.length)return[];const headers=clean[0].map(h=>String(h).trim());return clean.slice(1).map(cells=>{const out={};headers.forEach((h,i)=>out[h]=cells[i]??"");return out})}
-function normalizeIndicadorRow(r){const out={...r};out.anio=toNum(r.anio);out.mes_num=toNum(r.mes_num);out.valor=toNum(r.valor);out.meta_mensual=toNum(r.meta_mensual);out.indicador_id=normalizeIndicatorId(r.indicador_id||"");out.programa=r.programa_nombre||r.programa||"Atitlán Recicla";out.mes=(r.mes||monthName(out.mes_num)).toString().toUpperCase();return out}
-function normalizeGenericRow(r){const out={...r};Object.keys(out).forEach(k=>{if(looksNumeric(out[k]))out[k]=toNum(out[k])});if(out.mes)out.mes=String(out.mes).trim().toUpperCase();return out}
-function normalizeIndicatorId(id){return String(id||"").trim().toLowerCase()}
-function uniqueBy(arr,fn){const seen=new Set();return arr.filter(x=>{const k=fn(x);if(seen.has(k))return false;seen.add(k);return true})}
-function sortPeriod(a,b){if(a.anio!==b.anio)return safeNumber(a.anio)-safeNumber(b.anio);return safeNumber(a.mes_num)-safeNumber(b.mes_num)}
-function safeNumber(v){return Number.isFinite(v)?v:(Number.isFinite(Number(v))?Number(v):0)}
-function toNum(v){const n=Number(v);return Number.isFinite(n)?n:NaN}
-function looksNumeric(v){return String(v??"").trim()!==""&&!Number.isNaN(Number(v))}
-function formatNumber(v){return new Intl.NumberFormat("es-GT",{maximumFractionDigits:2}).format(v)}
-function compact(v){return new Intl.NumberFormat("es-GT",{maximumFractionDigits:1}).format(v)}
-function formatCurrency(v){return new Intl.NumberFormat("es-GT",{style:"currency",currency:"GTQ",maximumFractionDigits:2}).format(v)}
-function formatPercent(v){return new Intl.NumberFormat("es-GT",{style:"percent",maximumFractionDigits:1}).format(Number.isFinite(v)?v:0)}
-function shortLabel(s){s=String(s);return s.length>10?s.slice(0,10)+"…":s}
-function escapeHtml(s){return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+
+document.addEventListener("DOMContentLoaded", bootstrap);
+
+async function bootstrap(){
+  try{
+    const data=await loadAll();
+    currentData=data;
+    const state=buildState(data);
+    render(state);
+  }catch(err){
+    console.error(err);
+    document.body.innerHTML=`<div class="wrap"><div class="card panel"><h3>No se pudo cargar el dashboard</h3><p class="sub">Revisa que los CSV estén en <strong>docs/data/</strong>.</p><div class="empty">${escapeHtml(err.message||String(err))}</div></div></div>`;
+  }
+}
+
+async function loadAll(){
+  const [indicadores,totalMes,zonaMes,territorioMes,materialesResumen,materialesRaw]=await Promise.all([
+    fetchCsv(PATHS.indicadores,true),
+    fetchCsv(PATHS.totalMes,true),
+    fetchCsv(PATHS.zonaMes,true),
+    fetchCsv(PATHS.territorioMes,true),
+    fetchCsv(PATHS.materialesResumen,false),
+    fetchCsv(PATHS.materialesRaw,false)
+  ]);
+  return {
+    indicadores: indicadores.map(normalizeIndicadorRow),
+    totalMes: totalMes.map(normalizeGenericRow),
+    zonaMes: zonaMes.map(normalizeGenericRow),
+    territorioMes: territorioMes.map(normalizeGenericRow),
+    materialesResumen: materialesResumen.map(normalizeGenericRow),
+    materialesRaw: materialesRaw.map(normalizeGenericRow)
+  };
+}
+
+function buildState(data){
+  const periods = detectValidPeriods(data);
+  const latestValid = periods.at(-1) || null;
+  const zones = ["__all__", ...uniqueBy(data.zonaMes.map(r=>String(r.zona||"").trim()).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,"es"))];
+  const indicators = buildIndicatorOptions();
+  return {
+    data,
+    periods,
+    zones,
+    indicators,
+    selectedPeriodKey: latestValid ? periodKey(latestValid) : "",
+    selectedZone: "__all__",
+    selectedIndicatorId: "materiales_generales",
+    latestValid
+  };
+}
+
+function render(state){
+  bindControls(state);
+  renderHero(state);
+  renderKpis(state);
+  renderTrend(state);
+  renderSemaforo(state);
+  renderAlerts(state);
+  renderZones(state);
+  renderMaterials(state);
+  renderTerritory(state);
+  renderDiagnostic(state);
+}
+
+function bindControls(state){
+  const periodSelect=document.getElementById("periodSelect");
+  const zoneSelect=document.getElementById("zoneSelect");
+  const indicatorSelect=document.getElementById("indicatorSelect");
+
+  periodSelect.innerHTML = state.periods.map(p=>`<option value="${periodKey(p)}">${escapeHtml(periodLabel(p))}</option>`).join("");
+  if(state.selectedPeriodKey) periodSelect.value = state.selectedPeriodKey;
+
+  zoneSelect.innerHTML = state.zones.map(z=>`<option value="${escapeHtml(z)}">${escapeHtml(z==="__all__"?"Todas las zonas":z)}</option>`).join("");
+  zoneSelect.value = state.selectedZone;
+
+  indicatorSelect.innerHTML = state.indicators.map(i=>`<option value="${escapeHtml(i.id)}">${escapeHtml(i.name)}</option>`).join("");
+  if(state.selectedIndicatorId) indicatorSelect.value = state.selectedIndicatorId;
+
+  document.getElementById("latestPeriodPill").textContent = periodLabel(state.latestValid);
+
+  periodSelect.onchange = ()=>{
+    state.selectedPeriodKey = periodSelect.value;
+    render(state);
+  };
+  zoneSelect.onchange = ()=>{
+    state.selectedZone = zoneSelect.value;
+    render(state);
+  };
+  indicatorSelect.onchange = ()=>{
+    state.selectedIndicatorId = indicatorSelect.value;
+    render(state);
+  };
+}
+
+function renderHero(state){
+  const period=getSelectedPeriod(state);
+  const zoneLabel=getZoneLabel(state.selectedZone);
+  const metrics = getMetricsForSelection(state, period);
+  const zoneRows = getZonaRows(state, period);
+  const heroZoneCount = state.selectedZone==="__all__"
+    ? zoneRows.filter(r=>hasActivityAggregate(r)).length
+    : getTerritoryRows(state, period).filter(r=>sameZone(r, state.selectedZone) && hasActivityAggregate(r)).length;
+
+  document.getElementById("heroStats").innerHTML = [
+    statCard("Período activo", periodLabel(period)),
+    statCard("Vista", zoneLabel),
+    statCard(state.selectedZone==="__all__"?"Zonas con reporte":"Territorios con reporte", String(heroZoneCount)),
+    statCard("Materiales del período", formatByUnit(metrics.materiales_generales?.valor, "qq"))
+  ].join("");
+
+  const status=buildProgramStatus(state, period);
+  document.getElementById("programStatus").innerHTML=`<div class="status-badge ${status.className}">${status.label}</div>`;
+  document.getElementById("programQuick").innerHTML=[
+    miniItem("PET del período", formatByUnit(metrics.pet?.valor,"qq")),
+    miniItem("Vidrio del período", formatByUnit(metrics.vidrio?.valor,"qq")),
+    miniItem("Ingreso bruto", formatByUnit(metrics.ingreso_bruto_total?.valor,"GTQ")),
+    miniItem(state.selectedZone==="__all__" ? "Avance anual materiales" : "Aporte zonal del mes", state.selectedZone==="__all__" ? formatPercent(metrics.materiales_generales?.annualPct) : formatPercent(metrics.materiales_generales?.sharePct))
+  ].join("");
+}
+
+function renderKpis(state){
+  const period=getSelectedPeriod(state);
+  const metrics=getMetricsForSelection(state, period);
+  const grid=document.getElementById("kpiGrid");
+  const subtitle=document.getElementById("kpiSubtitle");
+  subtitle.textContent = state.selectedZone==="__all__"
+    ? `Meta mensual y avance acumulado para ${periodLabel(period)}.`
+    : `Lectura específica de ${getZoneLabel(state.selectedZone)} para ${periodLabel(period)}.`;
+
+  grid.innerHTML="";
+  KPI_IDS.forEach(id=>{
+    const row=metrics[id];
+    if(!row) return;
+    const card=document.createElement("article");
+    card.className="card kpi";
+
+    let chipClass="muted", chipText="Sin dato", line1="—", line2="—", progressWidth=0;
+    if(state.selectedZone==="__all__"){
+      chipClass=semaforoClass(row.monthlyPct);
+      chipText=semaforoText(row.monthlyPct);
+      line1=`Cumplimiento mensual: <strong>${escapeHtml(formatPercent(row.monthlyPct))}</strong>`;
+      line2=`Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong>`;
+      progressWidth=Math.max(0,Math.min((row.monthlyPct||0)*100,100));
+    }else{
+      chipClass=shareClass(row.sharePct);
+      chipText=shareText(row.sharePct);
+      line1=`Aporte de la zona al total del mes: <strong>${escapeHtml(formatPercent(row.sharePct))}</strong>`;
+      line2=`Aporte de la zona al acumulado anual: <strong>${escapeHtml(formatPercent(row.annualSharePct))}</strong>`;
+      progressWidth=Math.max(0,Math.min((row.sharePct||0)*100,100));
+    }
+
+    card.innerHTML=`
+      <div class="kpi-top">
+        <div>
+          <div class="kpi-label">${escapeHtml(row.label)}</div>
+          <div class="kpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
+          <div class="kpi-meta">${state.selectedZone==="__all__" ? `Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}` : `Referencia programa: ${escapeHtml(formatByUnit(row.meta,row.unit))}`}</div>
+        </div>
+        <span class="chip ${chipClass}">${escapeHtml(chipText)}</span>
+      </div>
+      <div class="kpi-meta">${line1}</div>
+      <div class="kpi-meta">${line2}</div>
+      <div class="progress"><span style="width:${progressWidth}%"></span></div>
+    `;
+    grid.appendChild(card);
+  });
+  if(!grid.children.length) grid.innerHTML=`<div class="empty">No se encontraron KPIs para el período seleccionado.</div>`;
+}
+
+function renderTrend(state){
+  const period=getSelectedPeriod(state);
+  const year=period?.anio;
+  const metricId=state.selectedIndicatorId;
+  const rows=getTrendRows(state, year, metricId);
+  document.getElementById("chartSubtitle").textContent = `${metricLabel(metricId)} · ${getZoneLabel(state.selectedZone)} · ${year||"—"}`;
+
+  const panel=document.getElementById("trendChart");
+  if(!rows.length){
+    panel.innerHTML=`<div class="empty">No hay serie disponible para esta combinación de mes, zona e indicador.</div>`;
+    return;
+  }
+  const labels=rows.map(r=>`${r.mes} ${r.anio}`);
+  const values=rows.map(r=>safeNumber(r.valor));
+  const refs=rows.map(r=>safeNumber(r.referencia));
+  panel.innerHTML=renderLineChart(labels, values, refs);
+}
+
+function renderSemaforo(state){
+  const period=getSelectedPeriod(state);
+  const metrics=getMetricsForSelection(state, period);
+  const panel=document.getElementById("semaforoTable");
+  const subtitle=document.getElementById("semaforoSubtitle");
+
+  if(state.selectedZone==="__all__"){
+    subtitle.textContent="Cumplimiento del mes y avance acumulado del programa.";
+    const rows=KPI_IDS.map(id=>metrics[id]).filter(Boolean).map(m=>({
+      indicador:m.label,
+      mensual:m.monthlyPct,
+      anual:m.annualPct,
+      estado:semaforoText(m.monthlyPct)
+    }));
+    if(!rows.length){
+      panel.innerHTML=`<div class="empty">No hay indicadores para el semáforo.</div>`;
+      return;
+    }
+    panel.innerHTML=renderTable(rows,["indicador","mensual","anual","estado"],{indicador:"Indicador",mensual:"Avance mes",anual:"Avance anual",estado:"Estado"},(value,key)=>["mensual","anual"].includes(key)?formatPercent(value):value);
+  }else{
+    subtitle.textContent="Aporte de la zona al total del programa en el período seleccionado.";
+    const rows=KPI_IDS.map(id=>metrics[id]).filter(Boolean).map(m=>({
+      indicador:m.label,
+      aporte_mes:m.sharePct,
+      aporte_anual:m.annualSharePct,
+      estado:shareText(m.sharePct)
+    }));
+    if(!rows.length){
+      panel.innerHTML=`<div class="empty">No hay indicadores zonales para esta vista.</div>`;
+      return;
+    }
+    panel.innerHTML=renderTable(rows,["indicador","aporte_mes","aporte_anual","estado"],{indicador:"Indicador",aporte_mes:"Aporte mes",aporte_anual:"Aporte anual",estado:"Lectura"},(value,key)=>["aporte_mes","aporte_anual"].includes(key)?formatPercent(value):value);
+  }
+}
+
+function renderAlerts(state){
+  const period=getSelectedPeriod(state);
+  const metrics=getMetricsForSelection(state, period);
+  const alerts=[];
+
+  if(state.selectedZone==="__all__"){
+    ["materiales_generales","pet","vidrio","ingreso_bruto_total","participacion_actividades"].forEach(id=>{
+      const m=metrics[id];
+      if(!m) return;
+      if(m.monthlyPct < 0.85) alerts.push({type:"red",text:`${m.label} está bajo la meta mensual (${formatPercent(m.monthlyPct)}).`});
+      else if(m.monthlyPct < 1) alerts.push({type:"yellow",text:`${m.label} está cerca de la meta (${formatPercent(m.monthlyPct)}).`});
+    });
+    getZonaRows(state,period).filter(r=>!hasActivityAggregate(r)).forEach(z=>{
+      alerts.push({type:"yellow",text:`${z.zona||"Zona sin nombre"} no muestra avance en ${periodLabel(period)}.`});
+    });
+  }else{
+    ["materiales_generales","pet","vidrio","ingreso_bruto_total"].forEach(id=>{
+      const m=metrics[id];
+      if(!m) return;
+      if(m.sharePct < 0.1) alerts.push({type:"red",text:`${m.label} tiene un aporte muy bajo en ${getZoneLabel(state.selectedZone)} (${formatPercent(m.sharePct)} del total mensual).`});
+      else if(m.sharePct < 0.2) alerts.push({type:"yellow",text:`${m.label} muestra un aporte intermedio en ${getZoneLabel(state.selectedZone)} (${formatPercent(m.sharePct)} del total mensual).`});
+    });
+    const territories=getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone));
+    if(territories.filter(r=>hasActivityAggregate(r)).length===0){
+      alerts.push({type:"red",text:`No se detectan territorios con actividad real en ${getZoneLabel(state.selectedZone)} para ${periodLabel(period)}.`});
+    }
+  }
+
+  if(!alerts.length) alerts.push({type:"green",text:"No se detectan alertas críticas para la selección actual."});
+  document.getElementById("alertPanel").innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${escapeHtml(a.text)}</div>`).join("")}</div>`;
+}
+
+function renderZones(state){
+  const period=getSelectedPeriod(state);
+  const panel=document.getElementById("zonePanel");
+  const title=document.getElementById("zonePanelTitle");
+  const subtitle=document.getElementById("zonePanelSubtitle");
+
+  if(state.selectedZone==="__all__"){
+    title.textContent="Desempeño por zona";
+    subtitle.textContent=`Comparación de zonas en ${periodLabel(period)}.`;
+    const rows=getZonaRows(state,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    if(!rows.length){
+      panel.innerHTML=`<div class="empty">No hay datos por zona en el período seleccionado.</div>`;
+      return;
+    }
+    panel.innerHTML=renderTable(rows,["zona","territorios_reportados","total_materiales_qq","pet_qq","vidrio_total_qq","ingreso_bruto_total"],{zona:"Zona",territorios_reportados:"Territorios",total_materiales_qq:"Materiales qq",pet_qq:"PET qq",vidrio_total_qq:"Vidrio qq",ingreso_bruto_total:"Ingreso bruto"});
+  }else{
+    title.textContent="Territorios de la zona";
+    subtitle.textContent=`Detalle de ${getZoneLabel(state.selectedZone)} en ${periodLabel(period)}.`;
+    const rows=getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone) && hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    if(!rows.length){
+      panel.innerHTML=`<div class="empty">No hay territorios con resultados para esta zona en el período seleccionado.</div>`;
+      return;
+    }
+    panel.innerHTML=renderTable(rows,["territorio","total_materiales_qq","pet_qq","vidrio_total_qq","ingreso_bruto_total"],{territorio:"Territorio",total_materiales_qq:"Materiales qq",pet_qq:"PET qq",vidrio_total_qq:"Vidrio qq",ingreso_bruto_total:"Ingreso bruto"});
+  }
+}
+
+function renderMaterials(state){
+  const period=getSelectedPeriod(state);
+  const subtitle=document.getElementById("materialsSubtitle");
+  let rows=[];
+
+  if(currentData.materialesRaw.length) rows=currentData.materialesRaw.filter(r=>samePeriodLoose(r,period));
+  else rows=currentData.materialesResumen.filter(r=>samePeriodLoose(r,period));
+
+  if(state.selectedZone!=="__all__") rows=rows.filter(r=>sameZoneMaterial(r,state.selectedZone));
+
+  subtitle.textContent=`${getZoneLabel(state.selectedZone)} · ${periodLabel(period)}.`;
+
+  if(!rows.length){
+    document.getElementById("materialsPanel").innerHTML=`<div class="empty">No se encontraron materiales para esta selección.</div>`;
+    return;
+  }
+
+  const grouped=aggregate(rows,["material"],{cantidad:"sum",ingreso_total_venta:"sum",ingreso_cooperativa:"sum"}).sort((a,b)=>safeNumber(b.cantidad)-safeNumber(a.cantidad)).slice(0,12);
+  document.getElementById("materialsPanel").innerHTML=renderTable(grouped,["material","cantidad","ingreso_total_venta","ingreso_cooperativa"],{material:"Material",cantidad:"Cantidad",ingreso_total_venta:"Ingreso venta",ingreso_cooperativa:"Ingreso coop."}) + `<div class="footer-note">Esta tabla responde al período y zona seleccionados.</div>`;
+}
+
+function renderTerritory(state){
+  const period=getSelectedPeriod(state);
+  const title=document.getElementById("territoryTitle");
+  const subtitle=document.getElementById("territorySubtitle");
+  let rows=getTerritoryRows(state,period);
+
+  if(state.selectedZone!=="__all__"){
+    rows=rows.filter(r=>sameZone(r,state.selectedZone));
+    title.textContent="Detalle territorial de la zona";
+    subtitle.textContent=`Territorios de ${getZoneLabel(state.selectedZone)} con actividad reportada.`;
+  }else{
+    title.textContent="Detalle territorial del período";
+    subtitle.textContent="Territorios con resultado reportado.";
+  }
+
+  rows=rows.filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq)).slice(0,15);
+
+  if(!rows.length){
+    document.getElementById("territoryPanel").innerHTML=`<div class="empty">No hay detalle territorial para la selección actual.</div>`;
+    return;
+  }
+
+  document.getElementById("territoryPanel").innerHTML=renderTable(rows,["zona","territorio","total_materiales_qq","pet_qq","vidrio_total_qq","ingreso_bruto_total"],{zona:"Zona",territorio:"Territorio",total_materiales_qq:"Materiales qq",pet_qq:"PET qq",vidrio_total_qq:"Vidrio qq",ingreso_bruto_total:"Ingreso bruto"});
+}
+
+function renderDiagnostic(state){
+  const period=getSelectedPeriod(state);
+  const metrics=getMetricsForSelection(state,period);
+  const zoneLabel=getZoneLabel(state.selectedZone);
+  const mat=metrics.materiales_generales, inc=metrics.ingreso_bruto_total, pet=metrics.pet, vid=metrics.vidrio;
+
+  let strongestZoneText="";
+  if(state.selectedZone==="__all__"){
+    const zones=getZonaRows(state,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    if(zones.length){
+      strongestZoneText=`La zona con mayor volumen de materiales fue <strong>${escapeHtml(zones[0].zona)}</strong> con <strong>${escapeHtml(formatByUnit(zones[0].total_materiales_qq,"qq"))}</strong>.`;
+    }
+  }else{
+    const territories=getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone) && hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    if(territories.length){
+      strongestZoneText=`Dentro de ${escapeHtml(zoneLabel)}, el territorio con mayor volumen reportado fue <strong>${escapeHtml(territories[0].territorio)}</strong> con <strong>${escapeHtml(formatByUnit(territories[0].total_materiales_qq,"qq"))}</strong>.`;
+    }
+  }
+
+  const monthlyText = state.selectedZone==="__all__"
+    ? `En <strong>${escapeHtml(periodLabel(period))}</strong>, el programa mostró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables, equivalente a <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> de la meta mensual. El ingreso bruto total del período fue <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>, mientras que PET y vidrio registraron <strong>${escapeHtml(formatByUnit(pet?.valor,pet?.unit))}</strong> y <strong>${escapeHtml(formatByUnit(vid?.valor,vid?.unit))}</strong>, respectivamente.`
+    : `En <strong>${escapeHtml(periodLabel(period))}</strong>, la vista filtrada para <strong>${escapeHtml(zoneLabel)}</strong> registró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables y un ingreso bruto de <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>. Esa zona aportó <strong>${escapeHtml(formatPercent(mat?.sharePct))}</strong> del volumen total de materiales del programa y <strong>${escapeHtml(formatPercent(inc?.sharePct))}</strong> del ingreso bruto mensual.`;
+
+  const annualText = state.selectedZone==="__all__"
+    ? `Al corte del período seleccionado, el avance anual acumulado del indicador de materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> respecto de la meta anual esperada al mismo punto del año.`
+    : `Al corte del período seleccionado, la participación acumulada de <strong>${escapeHtml(zoneLabel)}</strong> dentro del total anual del programa para materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualSharePct))}</strong>.`;
+
+  const riskText = state.selectedZone==="__all__"
+    ? diagnosisRiskText(metrics)
+    : zoneRiskText(metrics, zoneLabel);
+
+  document.getElementById("diagnosticPanel").innerHTML = `
+    <h3 style="margin-top:0">Diagnóstico del período</h3>
+    <p>${monthlyText}</p>
+    <p>${annualText}</p>
+    <p>${strongestZoneText || "No se detectó un patrón territorial suficientemente fuerte para resumirlo."}</p>
+    <p>${riskText}</p>
+  `;
+}
+
+function diagnosisRiskText(metrics){
+  const weak = Object.values(metrics).filter(Boolean).filter(m=>m.monthlyPct < 0.85).map(m=>m.label);
+  if(!weak.length) return `La lectura general del mes es favorable: no se observan indicadores clave por debajo del umbral crítico del 85% de su meta mensual.`;
+  if(weak.length===1) return `El principal punto de atención del mes es <strong>${escapeHtml(weak[0])}</strong>, que quedó por debajo del umbral de seguimiento.`;
+  return `Los principales puntos de atención del mes son <strong>${escapeHtml(weak.slice(0,3).join(", "))}</strong>, que se ubicaron por debajo del umbral de seguimiento mensual.`;
+}
+
+function zoneRiskText(metrics, zoneLabel){
+  const low = Object.values(metrics).filter(Boolean).filter(m=>m.sharePct < 0.1).map(m=>m.label);
+  if(!low.length) return `La zona <strong>${escapeHtml(zoneLabel)}</strong> muestra una contribución consistente dentro del programa para el período seleccionado.`;
+  if(low.length===1) return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, el indicador con menor peso relativo fue <strong>${escapeHtml(low[0])}</strong>.`;
+  return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, los indicadores con menor peso relativo fueron <strong>${escapeHtml(low.slice(0,3).join(", "))}</strong>.`;
+}
+
+function getMetricsForSelection(state, period){
+  const result={};
+  const totalRow = getTotalRow(period);
+  const zoneRow = state.selectedZone==="__all__" ? totalRow : getZoneRow(period, state.selectedZone);
+
+  KPI_IDS.forEach(id=>{
+    const config = METRIC_CONFIG[id];
+    if(!config) return;
+    const totalMetric = metricFromRow(totalRow, id);
+    const activeMetric = metricFromRow(zoneRow, id);
+
+    if(!activeMetric && !totalMetric) return;
+
+    const value = activeMetric?.valor ?? 0;
+    const meta = config.meta ?? activeMetric?.meta ?? totalMetric?.meta ?? 0;
+    const monthlyPct = meta ? value / meta : 0;
+
+    const annualActual = sumMetricSeries(state, id, period.anio, state.selectedZone, period.mes_num);
+    const annualExpected = meta ? meta * period.mes_num : 0;
+    const annualPct = annualExpected ? annualActual / annualExpected : 0;
+
+    const totalValue = totalMetric?.valor ?? 0;
+    const sharePct = totalValue ? value / totalValue : (state.selectedZone==="__all__" ? 1 : 0);
+
+    const annualProgramActual = sumMetricSeries(state, id, period.anio, "__all__", period.mes_num);
+    const annualSharePct = annualProgramActual ? annualActual / annualProgramActual : (state.selectedZone==="__all__" ? 1 : 0);
+
+    result[id]={
+      id,
+      label: config.label,
+      unit: config.unit,
+      valor: value,
+      meta,
+      monthlyPct,
+      annualPct,
+      sharePct,
+      annualSharePct
+    };
+  });
+
+  return result;
+}
+
+function metricFromRow(row, metricId){
+  if(!row) return null;
+  const cfg = METRIC_CONFIG[metricId];
+  if(!cfg) return null;
+  let valor = 0;
+
+  if(metricId==="participacion_actividades"){
+    const act=safeNumber(row.mujeres_actividades), active=safeNumber(row.mujeres_activas);
+    valor = active ? act/active : safeNumber(row.pct_participacion_actividades);
+  }else if(metricId==="participacion_comercializacion"){
+    const com=safeNumber(row.mujeres_comercializacion)+safeNumber(row.mujeres_comercializacion_no_inscritas), active=safeNumber(row.mujeres_activas);
+    valor = active ? com/active : safeNumber(row.pct_participacion_comercializacion);
+  }else{
+    valor = safeNumber(row[cfg.column]);
+  }
+
+  return {valor, meta:cfg.meta, unit:cfg.unit};
+}
+
+function getTrendRows(state, year, metricId){
+  const sourceRows = state.selectedZone==="__all__"
+    ? currentData.totalMes.filter(r=>r.anio===year)
+    : currentData.zonaMes.filter(r=>r.anio===year && sameZone(r,state.selectedZone));
+
+  return sourceRows
+    .map(r=>{
+      const m = metricFromRow(r, metricId);
+      return {
+        anio:r.anio,
+        mes_num:r.mes_num,
+        mes:r.mes||monthName(r.mes_num),
+        valor:m?.valor ?? 0,
+        referencia:METRIC_CONFIG[metricId]?.meta ?? 0
+      };
+    })
+    .filter(r=>Number.isFinite(r.mes_num))
+    .sort(sortPeriod);
+}
+
+function detectValidPeriods(data){
+  const map=new Map();
+  (data.totalMes||[]).forEach(r=>{
+    if(!Number.isFinite(r.anio)||!Number.isFinite(r.mes_num)) return;
+    const score = safeNumber(r.total_materiales_qq)+safeNumber(r.pet_qq)+safeNumber(r.vidrio_total_qq)+safeNumber(r.ingreso_bruto_total);
+    const key=`${r.anio}|${r.mes_num}`;
+    map.set(key,{anio:r.anio,mes_num:r.mes_num,mes:r.mes||monthName(r.mes_num),score});
+  });
+  const valid=[...map.values()].filter(x=>x.score>0).sort(sortPeriod);
+  return valid.length ? valid : [...map.values()].sort(sortPeriod);
+}
+
+function getSelectedPeriod(state){
+  return state.periods.find(p=>periodKey(p)===state.selectedPeriodKey) || state.latestValid || null;
+}
+
+function getTotalRow(period){
+  return currentData.totalMes.find(r=>r.anio===period?.anio && r.mes_num===period?.mes_num);
+}
+
+function getZoneRow(period, zone){
+  return currentData.zonaMes.find(r=>r.anio===period?.anio && r.mes_num===period?.mes_num && sameZone(r,zone));
+}
+
+function getZonaRows(state,period){
+  return currentData.zonaMes.filter(r=>r.anio===period?.anio && r.mes_num===period?.mes_num);
+}
+
+function getTerritoryRows(state,period){
+  return currentData.territorioMes.filter(r=>r.anio===period?.anio && r.mes_num===period?.mes_num);
+}
+
+function sumMetricSeries(state, metricId, year, zone, upToMonth){
+  const rows = zone==="__all__"
+    ? currentData.totalMes.filter(r=>r.anio===year && r.mes_num<=upToMonth)
+    : currentData.zonaMes.filter(r=>r.anio===year && r.mes_num<=upToMonth && sameZone(r,zone));
+  return rows.reduce((acc,r)=>acc + safeNumber(metricFromRow(r,metricId)?.valor), 0);
+}
+
+function buildProgramStatus(state, period){
+  const metrics = getMetricsForSelection(state, period);
+  const target = ["materiales_generales","pet","vidrio","ingreso_bruto_total"].map(id=>metrics[id]).filter(Boolean);
+  if(!target.length) return {label:"Sin datos suficientes",className:"status-muted"};
+
+  if(state.selectedZone==="__all__"){
+    const avg = target.reduce((a,r)=>a+(r.monthlyPct||0),0)/target.length;
+    if(avg>=1) return {label:"Buen avance del mes",className:"status-green"};
+    if(avg>=0.85) return {label:"Avance intermedio / en seguimiento",className:"status-yellow"};
+    return {label:"Bajo meta mensual / requiere atención",className:"status-red"};
+  }
+
+  const avgShare = target.reduce((a,r)=>a+(r.sharePct||0),0)/target.length;
+  if(avgShare>=0.25) return {label:"Zona con aporte fuerte al período",className:"status-green"};
+  if(avgShare>=0.10) return {label:"Zona con aporte intermedio",className:"status-yellow"};
+  return {label:"Zona con aporte bajo en el período",className:"status-red"};
+}
+
+function buildIndicatorOptions(){
+  return Object.entries(METRIC_CONFIG)
+    .filter(([id])=>KPI_IDS.includes(id))
+    .map(([id,cfg])=>({id,name:cfg.label}))
+    .sort((a,b)=>a.name.localeCompare(b.name,"es"));
+}
+
+function hasActivityAggregate(r){
+  return safeNumber(r.total_materiales_qq)>0 || safeNumber(r.ingreso_bruto_total)>0 || safeNumber(r.pet_qq)>0 || safeNumber(r.vidrio_total_qq)>0;
+}
+
+function sameZone(row, zone){
+  return String(row?.zona||"").trim().toLowerCase() === String(zone||"").trim().toLowerCase();
+}
+
+function sameZoneMaterial(row, zone){
+  const z = String(zone||"").trim().toLowerCase();
+  const code = String(row?.zona_codigo||row?.zona||"").trim().toLowerCase();
+  if(code===z) return true;
+  const map = {
+    "kaqchiquel":["k","kaqchiquel"],
+    "las lagunas":["l","las lagunas","lagunas"],
+    "zona sur":["s","sur","zona sur"],
+    "tzolojya":["t","tzolojya"]
+  };
+  return (map[z] || [z]).includes(code);
+}
+
+function shareClass(pct){
+  if(pct>=0.25) return "green";
+  if(pct>=0.10) return "yellow";
+  if(pct>0) return "red";
+  return "muted";
+}
+function shareText(pct){
+  if(pct>=0.25) return "Aporte alto";
+  if(pct>=0.10) return "Aporte medio";
+  if(pct>0) return "Aporte bajo";
+  return "Sin aporte";
+}
+
+function periodKey(p){ return `${p?.anio}|${p?.mes_num}`; }
+function periodLabel(p){ return p ? `${p.mes||monthName(p.mes_num)} ${p.anio||""}`.trim() : "Sin período"; }
+function getZoneLabel(zone){ return zone==="__all__" ? "Todas las zonas" : zone; }
+function metricLabel(id){ return METRIC_CONFIG[id]?.label || id; }
+
+function statCard(label,value){ return `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(value)}</strong></div>`; }
+function miniItem(label,value){ return `<div class="mini-item"><span class="muted">${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`; }
+
+function semaforoClass(pct){ if(pct>=1) return "green"; if(pct>=0.85) return "yellow"; if(pct>0) return "red"; return "muted"; }
+function semaforoText(pct){ if(pct>=1) return "Verde"; if(pct>=0.85) return "Amarillo"; if(pct>0) return "Rojo"; return "Sin dato"; }
+
+function monthName(n){ return ({1:"ENE",2:"FEB",3:"MAR",4:"ABR",5:"MAY",6:"JUN",7:"JUL",8:"AGO",9:"SEP",10:"OCT",11:"NOV",12:"DIC"}[n] || "—"); }
+
+function renderLineChart(labels,values,refs){
+  const width=900,height=320,pad=36;
+  const all=[...values,...refs].filter(Number.isFinite);
+  const min=Math.min(...all,0),max=Math.max(...all,1),range=max-min||1;
+  const X=i=>pad+i*(width-pad*2)/Math.max(labels.length-1,1);
+  const Y=v=>height-pad-((v-min)/range)*(height-pad*2);
+  const pts1=values.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  const pts2=refs.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  const yTicks=Array.from({length:5},(_,i)=>{
+    const v=min+((4-i)/4)*range;
+    const y=pad+i*(height-pad*2)/4;
+    return `<g><line x1="${pad}" x2="${width-pad}" y1="${y}" y2="${y}" stroke="#e5edf7"/><text x="6" y="${y+4}" fill="#64748b" font-size="11">${escapeHtml(compact(v))}</text></g>`;
+  }).join("");
+  const xLabels=labels.map((l,i)=>`<text x="${X(i)}" y="${height-10}" text-anchor="middle" fill="#64748b" font-size="11">${escapeHtml(shortLabel(l))}</text>`).join("");
+  return `<svg viewBox="0 0 ${width} ${height}" class="chart"><polyline fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="7 6" points="${pts2}"></polyline><polyline fill="none" stroke="#2563eb" stroke-width="4" points="${pts1}"></polyline>${yTicks}${xLabels}</svg>`;
+}
+
+function renderTable(rows,cols,labels={},formatter=null){
+  const head=cols.map(c=>`<th>${escapeHtml(labels[c]||c)}</th>`).join("");
+  const body=rows.map(r=>`<tr>${cols.map(c=>`<td>${escapeHtml(formatter?formatter(r[c],c,r):formatCell(r[c],c))}</td>`).join("")}</tr>`).join("");
+  return `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
+
+function formatCell(value,key){
+  if(value==null || value==="" || (typeof value==="number" && !Number.isFinite(value))) return "—";
+  if(typeof value==="number"){
+    if(String(key).includes("ingreso") || String(key).includes("gtq")) return formatCurrency(value);
+    if(String(key).includes("pct") || String(key).includes("participacion") || String(key).includes("aporte") || String(key).includes("mensual") || String(key).includes("anual")) return formatPercent(value);
+    return formatNumber(value);
+  }
+  return String(value);
+}
+
+function formatByUnit(value,unit){
+  const n = safeNumber(value);
+  if(!Number.isFinite(n)) return "—";
+  if(unit==="GTQ" || unit==="GTQ/día") return formatCurrency(n);
+  if(unit==="proporción") return formatPercent(n);
+  return `${formatNumber(n)}${unit ? " "+unit : ""}`.trim();
+}
+
+function samePeriodLoose(row, period){
+  if(!period) return false;
+  const anioOk = !Number.isFinite(row.anio) || row.anio===period.anio;
+  const mesNum = Number(row.mes_num);
+  if(Number.isFinite(mesNum)) return anioOk && mesNum===period.mes_num;
+  const mesTxt = String(row.mes||"").trim().toUpperCase();
+  return anioOk && mesTxt===String(period.mes||monthName(period.mes_num)).toUpperCase();
+}
+
+function aggregate(rows, groupKeys, ops){
+  const map=new Map();
+  rows.forEach(r=>{
+    const key=groupKeys.map(k=>String(r[k]||"")).join("||");
+    if(!map.has(key)){
+      const base={};
+      groupKeys.forEach(k=>base[k]=r[k]||"");
+      Object.keys(ops).forEach(k=>base[k]=0);
+      map.set(key,base);
+    }
+    const item=map.get(key);
+    Object.entries(ops).forEach(([k,op])=>{
+      if(op==="sum") item[k]+=safeNumber(r[k]);
+    });
+  });
+  return [...map.values()];
+}
+
+async function fetchCsv(path, required=true){
+  try{
+    const res = await fetch(path + `?v=${Date.now()}`, {cache:"no-store"});
+    if(!res.ok){
+      if(required) throw new Error(`No se pudo cargar ${path}`);
+      return [];
+    }
+    const text = await res.text();
+    return parseCsv(text);
+  }catch(err){
+    if(required) throw err;
+    return [];
+  }
+}
+
+function parseCsv(text){
+  const rows=[]; let row=[], val="", q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i], next=text[i+1];
+    if(ch === '"'){
+      if(q && next === '"'){ val += '"'; i++; }
+      else q = !q;
+    }else if(ch === "," && !q){
+      row.push(val); val="";
+    }else if((ch === "\n" || ch === "\r") && !q){
+      if(ch === "\r" && next === "\n") i++;
+      row.push(val); rows.push(row); row=[]; val="";
+    }else{
+      val += ch;
+    }
+  }
+  if(val.length || row.length){ row.push(val); rows.push(row); }
+  const clean=rows.filter(r=>r.some(c=>String(c).trim()!==""));
+  if(!clean.length) return [];
+  const headers=clean[0].map(h=>String(h).trim());
+  return clean.slice(1).map(cells=>{
+    const out={};
+    headers.forEach((h,i)=>out[h]=cells[i] ?? "");
+    return out;
+  });
+}
+
+function normalizeIndicadorRow(r){
+  const out={...r};
+  out.anio=toNum(r.anio);
+  out.mes_num=toNum(r.mes_num);
+  out.valor=toNum(r.valor);
+  out.meta_mensual=toNum(r.meta_mensual);
+  out.indicador_id=String(r.indicador_id||"").trim().toLowerCase();
+  out.mes=String(r.mes||monthName(out.mes_num)).trim().toUpperCase();
+  return out;
+}
+
+function normalizeGenericRow(r){
+  const out={...r};
+  Object.keys(out).forEach(k=>{ if(looksNumeric(out[k])) out[k]=toNum(out[k]); });
+  if(out.mes) out.mes=String(out.mes).trim().toUpperCase();
+  return out;
+}
+
+function uniqueBy(arr, fn){
+  const seen=new Set();
+  return arr.filter(x=>{
+    const k=fn(x);
+    if(seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+}
+
+function sortPeriod(a,b){
+  if(a.anio!==b.anio) return safeNumber(a.anio)-safeNumber(b.anio);
+  return safeNumber(a.mes_num)-safeNumber(b.mes_num);
+}
+
+function safeNumber(v){ return Number.isFinite(v) ? v : (Number.isFinite(Number(v)) ? Number(v) : 0); }
+function toNum(v){ const n=Number(v); return Number.isFinite(n) ? n : NaN; }
+function looksNumeric(v){ return String(v ?? "").trim() !== "" && !Number.isNaN(Number(v)); }
+function formatNumber(v){ return new Intl.NumberFormat("es-GT",{maximumFractionDigits:2}).format(v); }
+function compact(v){ return new Intl.NumberFormat("es-GT",{maximumFractionDigits:1}).format(v); }
+function formatCurrency(v){ return new Intl.NumberFormat("es-GT",{style:"currency",currency:"GTQ",maximumFractionDigits:2}).format(v); }
+function formatPercent(v){ return new Intl.NumberFormat("es-GT",{style:"percent",maximumFractionDigits:1}).format(Number.isFinite(v)?v:0); }
+function shortLabel(s){ s=String(s); return s.length>10 ? s.slice(0,10)+"…" : s; }
+function escapeHtml(s){ return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;"); }
 </script>
 </body>
 </html>
