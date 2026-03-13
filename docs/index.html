@@ -1,320 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADALA | Tablero institucional</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ADALA · Portada institucional</title>
+  <meta name="description" content="Portada institucional de dashboards de ADALA">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #f4f7f5;
-      --card: #ffffff;
-      --text: #163126;
-      --muted: #5f746a;
-      --line: #d9e5de;
-      --brand: #1f6b4f;
-      --brand-2: #2b8a63;
-      --brand-soft: #eaf5ef;
-      --shadow: 0 10px 28px rgba(0,0,0,.06);
-      --radius: 18px;
+    :root{
+      --bg:#eef2ec;--surface:#f7faf7;--card:#ffffff;--text:#162316;--text-2:#355035;--muted:#5c7a5c;
+      --line:#d6e2d6;--green:#1c6b3a;--green-mid:#2d8a52;--green-pale:#eaf5ee;--accent:#1a547a;--accent-soft:#daeaf6;
+      --shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);--shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);
+      --radius:20px;--font-head:'Fraunces', Georgia, serif;--font-body:'DM Sans', system-ui, sans-serif;
     }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
-    }
-
-    .wrap {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 28px 18px 56px;
-    }
-
-    .hero {
-      background: linear-gradient(135deg, #174a36 0%, #1f6b4f 48%, #2f8560 100%);
-      color: #fff;
-      border-radius: 24px;
-      padding: 34px 30px;
-      box-shadow: var(--shadow);
-      margin-bottom: 24px;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      font-size: 12px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      background: rgba(255,255,255,.16);
-      border: 1px solid rgba(255,255,255,.18);
-      padding: 7px 10px;
-      border-radius: 999px;
-      margin-bottom: 14px;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 4vw, 46px);
-      line-height: 1.08;
-    }
-
-    .hero p {
-      max-width: 820px;
-      margin: 0;
-      color: rgba(255,255,255,.92);
-      font-size: 16px;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin: 22px 0 30px;
-    }
-
-    .mini {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .mini .label {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    .mini .value {
-      font-size: 30px;
-      font-weight: 800;
-      color: var(--brand);
-    }
-
-    .section-title {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 8px 0 14px;
-    }
-
-    .section-title h2 {
-      margin: 0;
-      font-size: 26px;
-    }
-
-    .section-title p {
-      margin: 0;
-      color: var(--muted);
-      max-width: 680px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      min-height: 320px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--brand-soft);
-      color: var(--brand);
-      border: 1px solid #cfe4d8;
-      border-radius: 999px;
-      padding: 7px 12px;
-      font-size: 12px;
-      font-weight: 700;
-      width: fit-content;
-    }
-
-    .card h3 {
-      margin: 0;
-      font-size: 24px;
-      line-height: 1.15;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      text-align: justify;
-    }
-
-    .card ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text);
-    }
-
-    .card li {
-      margin-bottom: 8px;
-      font-size: 14px;
-    }
-
-    .actions {
-      margin-top: auto;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      text-decoration: none;
-      border-radius: 12px;
-      padding: 11px 15px;
-      font-weight: 700;
-      transition: transform .12s ease, opacity .12s ease;
-      display: inline-block;
-    }
-
-    .btn:hover { transform: translateY(-1px); }
-
-    .btn-primary {
-      background: var(--brand);
-      color: #fff;
-    }
-
-    .btn-secondary {
-      background: #f3f7f5;
-      color: var(--brand);
-      border: 1px solid var(--line);
-    }
-
-    .note {
-      margin-top: 24px;
-      background: #fff;
-      border: 1px dashed #bfd4c7;
-      border-radius: 16px;
-      padding: 16px 18px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    footer {
-      margin-top: 24px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    @media (max-width: 920px) {
-      .summary, .grid { grid-template-columns: 1fr; }
-      .hero { padding: 26px 22px; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;background-image:radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%)}
+    .wrap{max-width:1280px;margin:0 auto;padding:28px 22px 64px}
+    .hero{display:grid;grid-template-columns:1.4fr .9fr;gap:18px;margin-bottom:18px}
+    .card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .hero-main{padding:34px 36px;position:relative;overflow:hidden}
+    .hero-main::after{content:'◌';position:absolute;right:14px;bottom:-48px;font-size:12rem;opacity:.05}
+    .tag{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2);margin-bottom:14px}
+    .tag::before{content:'●';font-size:.6em}
+    h1{font-family:var(--font-head);font-size:clamp(2.2rem,5vw,4rem);line-height:1;letter-spacing:-.03em;margin-bottom:14px;max-width:12ch}
+    .lead{max-width:68ch;color:var(--text-2)}
+    .hero-side{padding:28px;display:grid;gap:12px}
+    .mini{padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+    .mini .label{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .mini .value{font-family:var(--font-head);font-size:1.8rem;line-height:1;color:var(--green)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .program{padding:22px 24px;display:grid;gap:12px}
+    .program h2{font-family:var(--font-head);font-size:1.6rem;line-height:1.04}
+    .program p{color:var(--text-2)}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:.82rem;color:var(--text-2);font-weight:700}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 16px;border-radius:999px;background:var(--green);color:#fff;text-decoration:none;font-weight:700}
+    .btn.secondary{background:#fff;color:var(--green);border:1.5px solid var(--line)}
+    @media (max-width:900px){.hero,.grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <section class="hero">
-      <span class="eyebrow">ADALA · Asociación Amigos del Lago de Atitlán</span>
-      <h1>Tablero institucional de programas</h1>
-      <p>
-        Esta portada institucional concentra el acceso a los tableros específicos de los programas.
-        Cada programa mantiene su propia lógica operativa, su propia fuente de datos y su propia
-        estructura de indicadores, pero todos alimentan una visión institucional común de avance.
-      </p>
+      <article class="card hero-main">
+        <span class="tag">ADALA · Tablero institucional</span>
+        <h1>Programas institucionales</h1>
+        <p class="lead">
+          Esta portada concentra el acceso a dashboards específicos por programa. Cada programa conserva su propia lógica operativa y de medición, pero todos alimentan una capa institucional común de seguimiento.
+        </p>
+      </article>
+      <aside class="card hero-side">
+        <div class="mini"><div class="label">Publicación</div><div class="value">GitHub Pages</div></div>
+        <div class="mini"><div class="label">Arquitectura</div><div class="value">Multi-programa</div></div>
+        <div class="mini"><div class="label">Fuente</div><div class="value">Sheets + Kobo</div></div>
+      </aside>
     </section>
-
-    <section class="summary">
-      <article class="mini">
-        <div class="label">Programas activos en el sitio</div>
-        <div class="value">3</div>
-      </article>
-      <article class="mini">
-        <div class="label">Publicación</div>
-        <div class="value" style="font-size:22px">GitHub Pages</div>
-      </article>
-      <article class="mini">
-        <div class="label">Arquitectura</div>
-        <div class="value" style="font-size:22px">Fuente → Transformación → Dashboard</div>
-      </article>
-    </section>
-
-    <div class="section-title">
-      <div>
-        <h2>Programas disponibles</h2>
-        <p>Accede al tablero específico de cada programa para revisar indicadores mensuales, acumulados anuales, metas y detalle operativo.</p>
-      </div>
-    </div>
 
     <section class="grid">
-      <article class="card">
-        <span class="badge">Piloto institucional</span>
-        <h3>Atitlán Recicla</h3>
-        <p>
-          Programa piloto que permitió validar la arquitectura institucional de lectura, transformación,
-          publicación y visualización. Mide jornadas, materiales, metas anuales y desempeño territorial.
-        </p>
-        <ul>
-          <li>Dashboard mensual con avance contra meta anual.</li>
-          <li>Detalle de materiales y desempeño por zona.</li>
-          <li>Piloto base para la lógica institucional multi-programa.</li>
-        </ul>
+      <article class="card program">
+        <h2>Atitlán Recicla</h2>
+        <p>Piloto institucional que consolidó la lógica de lectura, transformación y publicación con resumen mensual y acumulado anual.</p>
+        <div class="meta"><span class="pill">Google Sheets</span><span class="pill">Piloto funcional</span></div>
         <div class="actions">
-          <a class="btn btn-primary" href="index_atitlanrecicla.html">Abrir dashboard</a>
+          <a class="btn" href="./index_atitlanrecicla.html">Abrir dashboard</a>
         </div>
       </article>
 
-      <article class="card">
-        <span class="badge">Programa activo</span>
-        <h3>Conservando Atitlán</h3>
-        <p>
-          Programa orientado a la recolección de aceite usado de cocina, protección hídrica y producción de jabones.
-          El tablero resume jornadas, litros recolectados, agua protegida y producción, además de ventas y actividad operativa.
-        </p>
-        <ul>
-          <li>Avance mensual y acumulado frente a metas 2026.</li>
-          <li>Indicadores de recolección, impacto ambiental y producción.</li>
-          <li>Detalle operativo de jornadas, lotes, ventas y actividades complementarias.</li>
-        </ul>
+      <article class="card program">
+        <h2>Conservando Atitlán</h2>
+        <p>Seguimiento de jornadas, aceite recolectado, agua protegida y producción de jabones, con capa operativa y comercial complementaria.</p>
+        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Dashboard publicado</span></div>
         <div class="actions">
-          <a class="btn btn-primary" href="index_conservando_atitlan.html">Abrir dashboard</a>
+          <a class="btn" href="./index_conservando_atitlan.html">Abrir dashboard</a>
         </div>
       </article>
 
-      <article class="card">
-        <span class="badge">Programa activo</span>
-        <h3>Fortalecimiento Municipal</h3>
-        <p>
-          Programa enfocado en capacitación municipal, asistencia técnica a proyectos priorizados de agua y saneamiento,
-          estudios de caracterización y avance en PIRDES. Su tablero muestra progreso mensual y acumulado respecto a metas anuales.
-        </p>
-        <ul>
-          <li>Seguimiento a municipios y personas capacitadas.</li>
-          <li>Control de asistencias técnicas, estudios y PIRDES implementados.</li>
-          <li>Detalle operativo por capacitaciones, asistencias, estudios y reuniones técnicas.</li>
-        </ul>
+      <article class="card program">
+        <h2>Fortalecimiento Municipal</h2>
+        <p>Monitoreo de capacitaciones, asistencias técnicas, estudios de caracterización y avance de PIRDES con lógica mensual y acumulada.</p>
+        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Dashboard publicado</span></div>
         <div class="actions">
-          <a class="btn btn-primary" href="index_fortalecimiento_municipal.html">Abrir dashboard</a>
+          <a class="btn" href="./index_fortalecimiento_municipal.html">Abrir dashboard</a>
+        </div>
+      </article>
+
+      <article class="card program">
+        <h2>Educando para Conservar</h2>
+        <p>Seguimiento de cobertura educativa, actividades de campo y diplomado juvenil, incluyendo reglas especiales de calendario y cortes oficiales.</p>
+        <div class="meta"><span class="pill">Kobo mensual único</span><span class="pill">Nuevo dashboard</span></div>
+        <div class="actions">
+          <a class="btn" href="./index_epc.html">Abrir dashboard</a>
         </div>
       </article>
     </section>
-
-    <div class="note">
-      La portada institucional presenta un resumen ejecutivo y los accesos a cada programa. El detalle completo,
-      la lógica operativa y la visualización específica se consultan dentro de cada dashboard individual.
-    </div>
-
-    <footer>
-      ADALA · Sitio institucional de seguimiento programático
-    </footer>
   </div>
 </body>
 </html>
