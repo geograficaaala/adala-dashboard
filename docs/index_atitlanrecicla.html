@@ -81,7 +81,18 @@
     .footer-note{margin-top:10px;color:var(--muted);font-size:.84rem}
     .diagnostic{padding:18px 20px;line-height:1.7;font-size:1rem}
     .diagnostic strong{color:#0f172a}
-    @media (max-width:1100px){.hero,.grid-2,.toolbar,.kpis{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr 1fr}}
+
+    .intro-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-bottom:18px}
+    .intro-copy p{margin:0 0 12px;color:var(--muted);line-height:1.7}
+    .intro-copy p:last-child{margin-bottom:0}
+    .annual-goals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .goal-card{padding:14px 16px;border-radius:16px;background:#f8fafc;border:1px solid var(--line)}
+    .goal-card small{display:block;color:var(--muted);margin-bottom:6px}
+    .goal-card strong{display:block;font-size:1.02rem;line-height:1.3;margin-bottom:6px}
+    .goal-card .goal-meta{font-size:.9rem;color:var(--muted);margin-bottom:10px}
+    .goal-card .goal-progress{font-size:.92rem;font-weight:700}
+    .goal-note{margin-top:12px;color:var(--muted);font-size:.85rem;line-height:1.5}
+    @media (max-width:1100px){.hero,.grid-2,.toolbar,.kpis,.intro-grid,.annual-goals-grid{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr 1fr}}
   </style>
 </head>
 <body>
@@ -103,6 +114,22 @@
       <div id="programStatus"></div>
       <div class="mini-list" id="programQuick"></div>
     </div>
+  </section>
+
+
+  <section class="intro-grid">
+    <article class="card panel intro-copy">
+      <h3>Descripción del programa</h3>
+      <p><strong>Atitlán Recicla</strong> surge en 2017 como una iniciativa de la Asociación Amigos del Lago de Atitlán y CBC, con un enfoque social y ambiental orientado al rescate del Lago de Atitlán. La ejecución ha estado a cargo de la Asociación Amigos del Lago de Atitlán, mientras que CBC y Social Capital Foundation han brindado apoyo financiero.</p>
+      <p>El programa impulsa la generación de ingresos para mujeres indígenas líderes de sus comunidades a través de la recolección, manejo y comercialización de residuos reciclables, integrando también actividades de concientización y educación ambiental. Con el tiempo, el proyecto evolucionó hasta convertirse en la primera cooperativa de mujeres recicladoras en Guatemala: <strong>Cooperativa Integral de Comercialización Atitlán Recicla, R.L.</strong></p>
+      <p>Actualmente el programa trabaja en 13 municipios, 4 aldeas y una comunidad, organizados por zonas de gestión. Opera con centros de acopio, grupos de mujeres y beneficiarias que sostienen el modelo de economía circular y empoderamiento comunitario.</p>
+    </article>
+    <article class="card panel">
+      <h3>Metas anuales 2026 y avance acumulado real</h3>
+      <p class="sub" id="annualGoalsSubtitle">Meta anual total del programa al período seleccionado.</p>
+      <div class="annual-goals-grid" id="annualGoalsGrid"></div>
+      <div class="goal-note">Estas metas anuales se calculan con base en las <strong>metas oficiales 2026</strong> y los <strong>11 meses reportables</strong> del programa. El porcentaje mostrado compara el acumulado real del año contra la meta anual total, no contra la meta esperada al corte.</div>
+    </article>
   </section>
 
   <section class="toolbar">
@@ -203,6 +230,16 @@ const KPI_IDS=[
   "participacion_comercializacion"
 ];
 
+
+const ANNUAL_GOAL_IDS=[
+  "materiales_generales",
+  "pet",
+  "vidrio",
+  "ingreso_bruto_total",
+  "ingreso_bruto_mujeres",
+  "ingreso_bruto_municipalidades"
+];
+
 const METRIC_CONFIG={
   materiales_generales:{label:"Materiales reciclables",unit:"qq",column:"total_materiales_qq",meta:1630},
   pet:{label:"PET recolectado",unit:"qq",column:"pet_qq",meta:153},
@@ -270,6 +307,7 @@ function buildState(data){
 function render(state){
   bindControls(state);
   renderHero(state);
+  renderAnnualGoals(state);
   renderKpis(state);
   renderTrend(state);
   renderSemaforo(state);
@@ -335,6 +373,42 @@ function renderHero(state){
     miniItem(state.selectedZone==="__all__" ? "Avance acumulado materiales" : "Aporte zonal del mes", state.selectedZone==="__all__" ? formatPercent(metrics.materiales_generales?.annualPct) : formatPercent(metrics.materiales_generales?.sharePct))
   ].join("");
 }
+
+
+function renderAnnualGoals(state){
+  const period=getSelectedPeriod(state);
+  const grid=document.getElementById("annualGoalsGrid");
+  const subtitle=document.getElementById("annualGoalsSubtitle");
+  subtitle.textContent = `Acumulado real del programa frente a la meta anual total, con corte en ${periodLabel(period)}.`;
+  grid.innerHTML = "";
+
+  ANNUAL_GOAL_IDS.forEach(id=>{
+    const cfg = METRIC_CONFIG[id];
+    if(!cfg) return;
+    const annualGoal = safeNumber(cfg.meta) * 11;
+    const accumulated = sumMetricSeries(state, id, period.anio, "__all__", period.mes_num);
+    const pct = annualGoal ? accumulated / annualGoal : 0;
+    const cls = semaforoClassAnnual(pct);
+
+    const card = document.createElement("div");
+    card.className = "goal-card";
+    card.innerHTML = `
+      <small>${escapeHtml(cfg.label)}</small>
+      <strong>Meta anual: ${escapeHtml(formatByUnit(annualGoal, cfg.unit))}</strong>
+      <div class="goal-meta">Acumulado real: ${escapeHtml(formatByUnit(accumulated, cfg.unit))}</div>
+      <div class="goal-progress">
+        <span class="chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</span>
+      </div>
+      <div class="progress"><span style="width:${Math.max(0,Math.min(pct*100,100))}%"></span></div>
+    `;
+    grid.appendChild(card);
+  });
+
+  if(!grid.children.length){
+    grid.innerHTML = `<div class="empty">No fue posible calcular las metas anuales del programa.</div>`;
+  }
+}
+
 
 function renderKpis(state){
   const period=getSelectedPeriod(state);
@@ -785,6 +859,7 @@ function metricLabel(id){ return METRIC_CONFIG[id]?.label || id; }
 function statCard(label,value){ return `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(value)}</strong></div>`; }
 function miniItem(label,value){ return `<div class="mini-item"><span class="muted">${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`; }
 
+function semaforoClassAnnual(pct){ if(pct>=1) return "green"; if(pct>=0.75) return "yellow"; if(pct>0) return "red"; return "muted"; }
 function semaforoClass(pct){ if(pct>=1) return "green"; if(pct>=0.85) return "yellow"; if(pct>0) return "red"; return "muted"; }
 function semaforoText(pct){ if(pct>=1) return "Verde"; if(pct>=0.85) return "Amarillo"; if(pct>0) return "Rojo"; return "Sin dato"; }
 
