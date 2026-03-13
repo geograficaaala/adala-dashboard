@@ -131,24 +131,28 @@ function renderAll() {
 function renderKpis(current) {
   const cards = [
     {
+      kpiId: 'jornadas',
       label: 'Jornadas del mes',
       value: formatNumber(current.jornadas_mes),
-      sub: `${formatNumber(current.jornadas_acum)} acumuladas de ${formatNumber(current.meta_anual_jornadas)}`,
+      sub: `${formatNumber(current.jornadas_acum)} acumuladas · meta anual: ${formatNumber(current.meta_anual_jornadas)}`,
       pct: current.pct_vs_esperado_jornadas,
     },
     {
+      kpiId: 'aceite_litros',
       label: 'Aceite recolectado',
       value: `${formatNumber(current.aceite_litros_mes)} L`,
       sub: `${formatNumber(current.aceite_litros_acum)} L acumulados`,
       pct: current.pct_vs_esperado_aceite,
     },
     {
+      kpiId: 'agua_protegida_litros',
       label: 'Agua protegida',
       value: `${formatNumber(current.agua_protegida_mes)} L`,
       sub: `${formatNumber(current.agua_protegida_acum)} L acumulados`,
       pct: current.pct_vs_esperado_agua,
     },
     {
+      kpiId: 'jabones_producidos',
       label: 'Jabones producidos',
       value: formatNumber(current.jabones_producidos_mes),
       sub: `${formatNumber(current.jabones_producidos_acum)} acumulados`,
@@ -157,13 +161,21 @@ function renderKpis(current) {
   ];
 
   document.getElementById('kpis').innerHTML = cards.map((card) => {
-    const tone = statusClass(card.pct);
+    const pct = toNumber(card.pct);
+    const cls = pct >= 1 ? 'green' : pct >= 0.75 ? 'yellow' : 'red';
+    const lbl = pct >= 1 ? 'En línea' : pct >= 0.75 ? 'En seguimiento' : 'Rezago';
+    const barW = Math.max(0, Math.min(100, pct * 100)).toFixed(1);
     return `
-      <article class="card kpi">
-        <div class="label">${escapeHtml(card.label)}</div>
-        <div class="value mono">${escapeHtml(card.value)}</div>
-        <div class="sub">${escapeHtml(card.sub)}</div>
-        <div style="margin-top:12px"><span class="badge ${tone.className}">${escapeHtml(tone.label)}</span></div>
+      <article class="card kpi" data-kpi="${escapeHtml(card.kpiId)}" style="cursor:pointer">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-label">${escapeHtml(card.label)}</div>
+            <div class="kpi-value">${escapeHtml(card.value)}</div>
+          </div>
+          <span class="chip ${cls}">${escapeHtml(lbl)}</span>
+        </div>
+        <div class="kpi-sub">${escapeHtml(card.sub)}</div>
+        <div class="progress"><span style="width:${barW}%"></span></div>
       </article>
     `;
   }).join('');
@@ -175,22 +187,24 @@ function renderProgress(current) {
     .sort((a, b) => indicatorOrder(a.indicador_id) - indicatorOrder(b.indicador_id));
 
   document.getElementById('progressList').innerHTML = rows.map((row) => {
-    const tone = statusClass(row.pct_vs_esperado);
+    const pct = toNumber(row.pct_vs_esperado);
+    const cls = pct >= 1 ? 'green' : pct >= 0.75 ? 'yellow' : 'red';
+    const lbl = pct >= 1 ? 'En línea' : pct >= 0.75 ? 'En seguimiento' : 'Rezago';
     const barWidth = Math.max(0, Math.min(100, (row.pct_avance_anual || 0) * 100));
     return `
-      <div class="progress-card">
+      <div class="progress-card" data-kpi="${escapeHtml(row.indicador_id)}" data-name="${escapeHtml(row.indicador_nombre)}">
         <div class="progress-top">
           <div>
             <div class="progress-title">${escapeHtml(row.indicador_nombre)}</div>
             <div class="progress-meta">${escapeHtml(formatUnit(row.valor_mes, row.unidad))} en el mes · ${escapeHtml(formatUnit(row.valor_acumulado, row.unidad))} acumulados</div>
           </div>
-          <span class="badge ${tone.className}">${escapeHtml(tone.label)}</span>
+          <span class="chip ${cls}">${escapeHtml(lbl)}</span>
         </div>
         <div class="bar"><span style="width:${barWidth}%"></span></div>
         <div class="progress-stats">
-          <div><span class="muted">Meta anual</span><strong>${escapeHtml(formatUnit(row.meta_anual, row.unidad))}</strong></div>
-          <div><span class="muted">Esperado al corte</span><strong>${escapeHtml(formatUnit(row.meta_esperada_corte, row.unidad))}</strong></div>
-          <div><span class="muted">% vs esperado</span><strong>${formatPercent(row.pct_vs_esperado)}</strong></div>
+          <div><span style="color:var(--muted)">Meta anual</span><strong>${escapeHtml(formatUnit(row.meta_anual, row.unidad))}</strong></div>
+          <div><span style="color:var(--muted)">Esperado al corte</span><strong>${escapeHtml(formatUnit(row.meta_esperada_corte, row.unidad))}</strong></div>
+          <div><span style="color:var(--muted)">% vs esperado</span><strong>${formatPercent(row.pct_vs_esperado)}</strong></div>
         </div>
       </div>
     `;
@@ -291,18 +305,18 @@ function renderTrendChart() {
         }
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: '#5f735f' } },
+        x: { grid: { display: false }, ticks: { color: '#516851', font: { family: "'JetBrains Mono', monospace", size: 10 } } },
         y: {
           beginAtZero: true,
-          ticks: { color: '#5f735f' },
-          grid: { color: 'rgba(26,35,26,.07)' },
+          ticks: { color: '#516851', font: { family: "'JetBrains Mono', monospace", size: 10 } },
+          grid: { color: 'rgba(220,233,220,.8)' },
           title: { display: true, text: 'Jornadas / jabones' }
         },
         y1: {
           beginAtZero: true,
           position: 'right',
           grid: { drawOnChartArea: false },
-          ticks: { color: '#5f735f' },
+          ticks: { color: '#516851', font: { family: "'JetBrains Mono', monospace", size: 10 } },
           title: { display: true, text: 'Litros' }
         }
       }
@@ -316,21 +330,24 @@ function renderDiagnostic(current) {
   const strongest = rows.slice().sort((a, b) => (b.pct_vs_esperado || 0) - (a.pct_vs_esperado || 0))[0];
   const salesUnits = toNumber(current.hotel_vendidos_mes) + toNumber(current.tocador_vendidos_mes);
 
+  const avg = average(rows.map((row) => row.pct_vs_esperado));
+  const avgCls = avg >= 1 ? 'green' : avg >= 0.75 ? 'yellow' : 'red';
+  const avgLbl = avg >= 1 ? 'En línea' : avg >= 0.75 ? 'En seguimiento' : 'Rezago';
   document.getElementById('diagnosticRow').innerHTML = `
-    <article class="card mini">
-      <h3>Diagnóstico del mes</h3>
-      <strong>${escapeHtml(statusClass(average(rows.map((row) => row.pct_vs_esperado))).label)}</strong>
+    <article class="card mini-card">
+      <h3>Estado general</h3>
+      <div class="mc-val"><span class="chip ${avgCls}">${escapeHtml(avgLbl)}</span></div>
       <p>${escapeHtml(buildDiagnosticText(rows))}</p>
     </article>
-    <article class="card mini">
+    <article class="card mini-card">
       <h3>Mayor tracción</h3>
-      <strong>${escapeHtml(strongest ? strongest.indicador_nombre : '—')}</strong>
-      <p>${strongest ? `Va al ${formatPercent(strongest.pct_vs_esperado)} de lo esperado al corte.` : 'Sin datos.'}</p>
+      <div class="mc-val">${escapeHtml(strongest ? strongest.indicador_nombre : '—')}</div>
+      <p>${strongest ? `Alcanza el <strong>${formatPercent(strongest.pct_vs_esperado)}</strong> del ritmo esperado al corte.` : 'Sin datos.'}</p>
     </article>
-    <article class="card mini">
+    <article class="card mini-card">
       <h3>Capa operativa</h3>
-      <strong>${formatNumber(salesUnits)} vendidos</strong>
-      <p>${formatCurrency(current.ingresos_mes)} en ingresos y ${formatNumber(current.actividades_mes)} actividades complementarias en el período.</p>
+      <div class="mc-val">${formatNumber(salesUnits)} jabones</div>
+      <p>${formatCurrency(current.ingresos_mes)} en ingresos · <strong>${formatNumber(current.actividades_mes)}</strong> actividades complementarias.</p>
     </article>
   `;
 }
@@ -458,12 +475,12 @@ function chartOptions(yTitle, tooltipFormatter) {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: '#5f735f' },
+        ticks: { color: '#516851', font: { family: "'JetBrains Mono', monospace", size: 10 } },
       },
       y: {
         beginAtZero: true,
-        ticks: { color: '#5f735f' },
-        grid: { color: 'rgba(26,35,26,.07)' },
+        ticks: { color: '#516851', font: { family: "'JetBrains Mono', monospace", size: 10 } },
+        grid: { color: 'rgba(220,233,220,.8)' },
         title: { display: true, text: yTitle },
       },
     },
