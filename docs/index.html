@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>ADALA · Portal institucional</title>
-  <meta name="description" content="Portal institucional ADALA. Acceso al dashboard piloto de Atitlán Recicla.">
+  <meta name="description" content="Portal institucional ADALA. Acceso a los dashboards de Atitlán Recicla y Conservando Atitlán.">
   <style>
     :root{
       --bg:#f3f7fb;
@@ -74,7 +74,7 @@
     .lead{
       font-size:1.08rem;
       color:var(--muted);
-      max-width:760px;
+      max-width:820px;
       line-height:1.7;
       margin:0 0 28px;
     }
@@ -157,8 +157,12 @@
       line-height:1.7;
       margin:0;
     }
-    .program-card{
+    .program-list{
+      display:grid;
+      gap:18px;
       margin-top:18px;
+    }
+    .program-card{
       display:flex;
       flex-wrap:wrap;
       justify-content:space-between;
@@ -182,7 +186,12 @@
     }
     .program-card p{
       margin:0;
-      max-width:680px;
+      max-width:700px;
+    }
+    .program-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
     @media (max-width: 860px){
       .hero{padding:28px}
@@ -194,27 +203,27 @@
   <main class="shell">
     <section class="hero">
       <div class="tag">ADALA · Portal institucional</div>
-      <h1>Dashboard institucional en construcción</h1>
+      <h1>Portal institucional multi-programa</h1>
       <p class="lead">
-        Este portal será la entrada general de la asociación y más adelante mostrará un resumen ejecutivo del avance de todos los programas.
-        Por ahora, el piloto activo disponible es <strong>Atitlán Recicla</strong>.
+        Esta portada central reúne el acceso a los dashboards específicos de los programas de la asociación.
+        Ya están disponibles <strong>Atitlán Recicla</strong> y <strong>Conservando Atitlán</strong>, mientras se sigue consolidando el resumen ejecutivo institucional común.
       </p>
 
       <div class="cta-row">
-        <a class="btn btn-primary" href="./index_atitlanrecicla.html">Entrar a Atitlán Recicla</a>
-        <a class="btn btn-secondary" href="./data/institucional_indicadores.csv">Ver CSV institucional actual</a>
+        <a class="btn btn-primary" href="./index_atitlanrecicla.html">Abrir Atitlán Recicla</a>
+        <a class="btn btn-secondary" href="./index_conservando_atitlan.html">Abrir Conservando Atitlán</a>
       </div>
 
       <div class="status-grid">
         <article class="status-card">
           <span>Estado del portal</span>
-          <strong>En construcción</strong>
-          <p>La portada institucional general se completará cuando se integren los demás programas.</p>
+          <strong>En consolidación</strong>
+          <p>La portada institucional seguirá creciendo conforme se integren más programas y se fortalezca la capa ejecutiva común.</p>
         </article>
         <article class="status-card">
-          <span>Piloto activo</span>
-          <strong>Atitlán Recicla</strong>
-          <p>Ya cuenta con lectura, transformación de datos y tablero específico del programa.</p>
+          <span>Programas activos</span>
+          <strong>2 dashboards disponibles</strong>
+          <p>Atitlán Recicla y Conservando Atitlán ya cuentan con ruta de datos, procesamiento y tablero específico.</p>
         </article>
         <article class="status-card">
           <span>Objetivo final</span>
@@ -225,22 +234,36 @@
     </section>
 
     <section class="section">
-      <h2>Qué verás en la siguiente etapa</h2>
+      <h2>Programas disponibles</h2>
       <p>
-        Este sitio principal mostrará tarjetas por programa con semáforo de avance mensual, progreso acumulado anual y acceso directo a cada tablero.
-        Mientras tanto, la navegación se centra en el primer programa piloto ya operativo.
+        Cada programa conserva su propia lógica operativa y de medición, pero alimenta una capa institucional mínima para el seguimiento general.
       </p>
 
-      <div class="program-card">
-        <div>
-          <small>Programa disponible</small>
-          <h3>Atitlán Recicla</h3>
-          <p>
-            Monitoreo mensual de materiales reciclables, PET, vidrio, ingresos, participación y desempeño por zona, con comparación frente a metas mensuales y avance acumulado del año.
-          </p>
+      <div class="program-list">
+        <div class="program-card">
+          <div>
+            <small>Programa disponible</small>
+            <h3>Atitlán Recicla</h3>
+            <p>
+              Monitoreo mensual de materiales reciclables, PET, vidrio, ingresos, participación y desempeño por zona, con comparación frente a metas mensuales y avance acumulado del año.
+            </p>
+          </div>
+          <div class="program-actions">
+            <a class="btn btn-primary" href="./index_atitlanrecicla.html">Abrir dashboard</a>
+          </div>
         </div>
-        <div>
-          <a class="btn btn-primary" href="./index_atitlanrecicla.html">Abrir dashboard</a>
+
+        <div class="program-card">
+          <div>
+            <small>Programa disponible</small>
+            <h3>Conservando Atitlán</h3>
+            <p>
+              Seguimiento mensual de jornadas de recolección, litros de aceite usado recuperado, agua protegida, producción de jabones y desempeño operativo del programa.
+            </p>
+          </div>
+          <div class="program-actions">
+            <a class="btn btn-primary" href="./index_conservando_atitlan.html">Abrir dashboard</a>
+          </div>
         </div>
       </div>
     </section>
