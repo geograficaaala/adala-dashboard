@@ -680,6 +680,7 @@ function render(state){
   renderMaterials(state);
   renderTerritory(state);
   renderDiagnostic(state);
+  renderNewCharts(state);
 }
 
 function bindControls(state){
@@ -1873,17 +1874,6 @@ function renderExec(){
       <p>La zona con mayor volumen de materiales fue <strong>${escapeHtml(topZone)}</strong>. El avance acumulado anual en materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> respecto a la meta anual esperada al corte.</p>`;
   }
 }
-
-/* ── Hook into the existing render() to also render new charts ── */
-const _origRender = render;  // capture original render (defined above in logic block)
-function render(state){
-  _origRender(state);
-  renderNewCharts(state);
-}
-
-/* ── Also re-render new charts on period/zone change ──
-   The original bindControls attaches onchange to selects and calls render().
-   We override render so new charts update automatically. ── */
 
 /* Initialize */
 document.body.classList.add('view-full');
