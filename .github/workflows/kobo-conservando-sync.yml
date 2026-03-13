@@ -36,16 +36,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: conservando-atitlan-kobo-raw
-          path: |
-            data_raw/conservando_atitlan/kobo_mensual_raw.csv
-            data_raw/conservando_atitlan/kobo_export_meta.json
+          path: data_raw/conservando_atitlan/
           if-no-files-found: error
 
       - name: Commit raw updates if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data_raw/conservando_atitlan/kobo_mensual_raw.csv data_raw/conservando_atitlan/kobo_export_meta.json
+          git add data_raw/conservando_atitlan/
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
