@@ -1,0 +1,13 @@
+{
+  "kobo_base_url": "https://kf.kobotoolbox.org",
+  "asset_uid": "aCkhnRiCPnLnNETLF8XAZp",
+  "export_name": "EXPORT_CONSERVANDO_ATITLAN",
+  "export_uid": "esTj9vatiqrgD2dPNNNkdvj",
+  "export_url": "https://kf.kobotoolbox.org/api/v2/assets/aCkhnRiCPnLnNETLF8XAZp/export-settings/esTj9vatiqrgD2dPNNNkdvj/",
+  "data_url_csv": "https://kf.kobotoolbox.org/api/v2/assets/aCkhnRiCPnLnNETLF8XAZp/export-settings/esTj9vatiqrgD2dPNNNkdvj/data.csv",
+  "data_url_xlsx": "https://kf.kobotoolbox.org/api/v2/assets/aCkhnRiCPnLnNETLF8XAZp/export-settings/esTj9vatiqrgD2dPNNNkdvj/data.xlsx",
+  "downloaded_kind": "xlsx",
+  "downloaded_url": "https://kf.kobotoolbox.org/api/v2/assets/aCkhnRiCPnLnNETLF8XAZp/export-settings/esTj9vatiqrgD2dPNNNkdvj/data.xlsx",
+  "saved_file": "data_raw/conservando_atitlan/kobo_mensual_raw.xlsx",
+  "size_bytes": 4915
+}
