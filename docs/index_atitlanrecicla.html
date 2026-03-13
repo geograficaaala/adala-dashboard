@@ -146,7 +146,7 @@
     </article>
     <article class="card panel">
       <h3>Semáforo de indicadores</h3>
-      <p class="sub" id="semaforoSubtitle">Cumplimiento del mes y avance acumulado.</p>
+      <p class="sub" id="semaforoSubtitle">Cumplimiento del mes y avance acumulado al corte.</p>
       <div id="semaforoTable"></div>
     </article>
   </section>
@@ -332,7 +332,7 @@ function renderHero(state){
     miniItem("PET del período", formatByUnit(metrics.pet?.valor,"qq")),
     miniItem("Vidrio del período", formatByUnit(metrics.vidrio?.valor,"qq")),
     miniItem("Ingreso bruto", formatByUnit(metrics.ingreso_bruto_total?.valor,"GTQ")),
-    miniItem(state.selectedZone==="__all__" ? "Avance anual materiales" : "Aporte zonal del mes", state.selectedZone==="__all__" ? formatPercent(metrics.materiales_generales?.annualPct) : formatPercent(metrics.materiales_generales?.sharePct))
+    miniItem(state.selectedZone==="__all__" ? "Avance acumulado materiales" : "Aporte zonal del mes", state.selectedZone==="__all__" ? formatPercent(metrics.materiales_generales?.annualPct) : formatPercent(metrics.materiales_generales?.sharePct))
   ].join("");
 }
 
@@ -342,7 +342,7 @@ function renderKpis(state){
   const grid=document.getElementById("kpiGrid");
   const subtitle=document.getElementById("kpiSubtitle");
   subtitle.textContent = state.selectedZone==="__all__"
-    ? `Meta mensual y avance acumulado para ${periodLabel(period)}.`
+    ? `Meta mensual y avance acumulado al corte para ${periodLabel(period)}.`
     : `Lectura específica de ${getZoneLabel(state.selectedZone)} para ${periodLabel(period)}.`;
 
   grid.innerHTML="";
@@ -357,13 +357,13 @@ function renderKpis(state){
       chipClass=semaforoClass(row.monthlyPct);
       chipText=semaforoText(row.monthlyPct);
       line1=`Cumplimiento mensual: <strong>${escapeHtml(formatPercent(row.monthlyPct))}</strong>`;
-      line2=`Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong>`;
+      line2=`Avance acumulado al corte: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong>`;
       progressWidth=Math.max(0,Math.min((row.monthlyPct||0)*100,100));
     }else{
       chipClass=shareClass(row.sharePct);
       chipText=shareText(row.sharePct);
       line1=`Aporte de la zona al total del mes: <strong>${escapeHtml(formatPercent(row.sharePct))}</strong>`;
-      line2=`Aporte de la zona al acumulado anual: <strong>${escapeHtml(formatPercent(row.annualSharePct))}</strong>`;
+      line2=`Aporte de la zona al acumulado del año: <strong>${escapeHtml(formatPercent(row.annualSharePct))}</strong>`;
       progressWidth=Math.max(0,Math.min((row.sharePct||0)*100,100));
     }
 
@@ -410,7 +410,7 @@ function renderSemaforo(state){
   const subtitle=document.getElementById("semaforoSubtitle");
 
   if(state.selectedZone==="__all__"){
-    subtitle.textContent="Cumplimiento del mes y avance acumulado del programa.";
+    subtitle.textContent="Cumplimiento del mes y avance acumulado al corte del programa.";
     const rows=KPI_IDS.map(id=>metrics[id]).filter(Boolean).map(m=>({
       indicador:m.label,
       mensual:m.monthlyPct,
