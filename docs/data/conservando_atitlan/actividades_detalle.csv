@@ -1,0 +1,2 @@
+programa_id,programa_nombre,anio,mes_num,mes,periodo,periodo_clave,fecha_actividad,tipo_actividad,cantidad_actividad,municipio_actividad,descripcion_actividad,evidencia_actividad,parent_uuid
+conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,2026-03-06,publicacion_redes,4,San Juan La Laguna,,,85e104dd-19aa-4b8c-9872-29d9ecdc33c6

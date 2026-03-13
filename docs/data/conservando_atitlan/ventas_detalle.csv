@@ -1,0 +1,2 @@
+programa_id,programa_nombre,anio,mes_num,mes,periodo,periodo_clave,fecha_venta,tipo_cliente,cliente_nombre,factura_referencia,fuente_precio,hotel_vendidos,precio_hotel_unit,subtotal_hotel,tocador_vendidos,precio_tocador_unit,subtotal_tocador,total_venta,comprobante_venta,observaciones_venta,parent_uuid
+conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,2026-03-21,hotel,Porta Hotel del Lago,,tabla_descuentos,400,10,4000,344,15,5160,9160,,,85e104dd-19aa-4b8c-9872-29d9ecdc33c6
