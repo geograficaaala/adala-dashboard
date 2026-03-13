@@ -7,26 +7,16 @@ const DATA_PATHS = {
   actividades: './data/conservando_atitlan/actividades_detalle.csv',
 };
 
-const TREND_OPTIONS = [
-  { id: 'jornadas_mes', label: 'Jornadas de recolección', kind: 'total' },
-  { id: 'aceite_litros_mes', label: 'Aceite recolectado', kind: 'total' },
-  { id: 'agua_protegida_mes', label: 'Agua protegida', kind: 'total' },
-  { id: 'jabones_producidos_mes', label: 'Jabones producidos', kind: 'total' },
-  { id: 'ingresos_mes', label: 'Ingresos por ventas', kind: 'total' },
+const CHART_MODES = [
+  { id: 'pct_acumulado', label: 'Avance acumulado vs esperado (%)' },
+  { id: 'valor_mes', label: 'Valores mensuales por indicador' },
 ];
 
-const INDICATOR_META = {
-  jornadas: { label: 'Jornadas', unit: 'jornadas' },
-  aceite_litros: { label: 'Aceite recolectado', unit: 'litros' },
-  agua_protegida_litros: { label: 'Agua protegida', unit: 'litros' },
-  jabones_producidos: { label: 'Jabones producidos', unit: 'unidades' },
-};
-
-let state = {
+const state = {
   datasets: {},
   selectedPeriod: null,
-  selectedTrend: 'aceite_litros_mes',
   latestPeriod: null,
+  chartMode: CHART_MODES[0].id,
   chart: null,
 };
 
@@ -34,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
   bootstrap().catch((error) => {
     console.error(error);
     document.getElementById('statusLabel').textContent = 'Error';
-    document.getElementById('kpis').innerHTML = `<article class="card kpi"><div class="label">Error</div><div class="sub">No fue posible cargar los archivos publicados del programa.</div></article>`;
+    document.getElementById('kpis').innerHTML = `
+      <article class="card kpi">
+        <div class="label">No se pudo cargar el dashboard</div>
+        <div class="sub">${escapeHtml(error.message || 'Error desconocido')}</div>
+      </article>`;
   });
 });
 
@@ -51,64 +45,35 @@ async function bootstrap() {
   state.datasets = { total, indicadores, jornadas, produccion, ventas, actividades };
 
   total.forEach((row) => {
-    row.anio = toNumber(row.anio);
-    row.mes_num = toNumber(row.mes_num);
-    row.jornadas_mes = toNumber(row.jornadas_mes);
-    row.aceite_litros_mes = toNumber(row.aceite_litros_mes);
-    row.agua_protegida_mes = toNumber(row.agua_protegida_mes);
-    row.inmuebles_atendidos_mes = toNumber(row.inmuebles_atendidos_mes);
-    row.hotel_producidos_mes = toNumber(row.hotel_producidos_mes);
-    row.tocador_producidos_mes = toNumber(row.tocador_producidos_mes);
-    row.jabones_producidos_mes = toNumber(row.jabones_producidos_mes);
-    row.hotel_vendidos_mes = toNumber(row.hotel_vendidos_mes);
-    row.tocador_vendidos_mes = toNumber(row.tocador_vendidos_mes);
-    row.ingresos_mes = toNumber(row.ingresos_mes);
-    row.actividades_mes = toNumber(row.actividades_mes);
-    row.jornadas_acum = toNumber(row.jornadas_acum);
-    row.aceite_litros_acum = toNumber(row.aceite_litros_acum);
-    row.agua_protegida_acum = toNumber(row.agua_protegida_acum);
-    row.jabones_producidos_acum = toNumber(row.jabones_producidos_acum);
-    row.meta_anual_jornadas = toNumber(row.meta_anual_jornadas);
-    row.meta_anual_aceite = toNumber(row.meta_anual_aceite);
-    row.meta_anual_agua = toNumber(row.meta_anual_agua);
-    row.meta_anual_jabones = toNumber(row.meta_anual_jabones);
-    row.meta_esperada_jornadas = toNumber(row.meta_esperada_jornadas);
-    row.meta_esperada_aceite = toNumber(row.meta_esperada_aceite);
-    row.meta_esperada_agua = toNumber(row.meta_esperada_agua);
-    row.meta_esperada_jabones = toNumber(row.meta_esperada_jabones);
-    row.pct_avance_anual_jornadas = toNumber(row.pct_avance_anual_jornadas);
-    row.pct_avance_anual_aceite = toNumber(row.pct_avance_anual_aceite);
-    row.pct_avance_anual_agua = toNumber(row.pct_avance_anual_agua);
-    row.pct_avance_anual_jabones = toNumber(row.pct_avance_anual_jabones);
-    row.pct_vs_esperado_jornadas = toNumber(row.pct_vs_esperado_jornadas);
-    row.pct_vs_esperado_aceite = toNumber(row.pct_vs_esperado_aceite);
-    row.pct_vs_esperado_agua = toNumber(row.pct_vs_esperado_agua);
-    row.pct_vs_esperado_jabones = toNumber(row.pct_vs_esperado_jabones);
+    [
+      'anio','mes_num','jornadas_mes','aceite_litros_mes','agua_protegida_mes','inmuebles_atendidos_mes',
+      'hotel_producidos_mes','tocador_producidos_mes','jabones_producidos_mes','hotel_vendidos_mes','tocador_vendidos_mes',
+      'ingresos_mes','actividades_mes','meta_anual_jornadas','meta_anual_aceite','meta_anual_agua','meta_anual_jabones',
+      'jornadas_acum','aceite_litros_acum','agua_protegida_acum','jabones_producidos_acum','meta_esperada_jornadas',
+      'meta_esperada_aceite','meta_esperada_agua','meta_esperada_jabones','pct_avance_anual_jornadas','pct_avance_anual_aceite',
+      'pct_avance_anual_agua','pct_avance_anual_jabones','pct_vs_esperado_jornadas','pct_vs_esperado_aceite',
+      'pct_vs_esperado_agua','pct_vs_esperado_jabones'
+    ].forEach((key) => row[key] = toNumber(row[key]));
     row.has_any_data = parseBoolean(row.has_any_data);
     row.es_ultimo_mes_con_datos = parseBoolean(row.es_ultimo_mes_con_datos);
   });
 
   indicadores.forEach((row) => {
-    row.anio = toNumber(row.anio);
-    row.mes_num = toNumber(row.mes_num);
-    row.valor_mes = toNumber(row.valor_mes);
-    row.valor_acumulado = toNumber(row.valor_acumulado);
-    row.meta_anual = toNumber(row.meta_anual);
-    row.meta_esperada_corte = toNumber(row.meta_esperada_corte);
-    row.pct_avance_anual = toNumber(row.pct_avance_anual);
-    row.pct_vs_esperado = toNumber(row.pct_vs_esperado);
+    ['anio','mes_num','valor_mes','valor_acumulado','meta_anual','meta_esperada_corte','pct_avance_anual','pct_vs_esperado']
+      .forEach((key) => row[key] = toNumber(row[key]));
     row.es_ultimo_mes_con_datos = parseBoolean(row.es_ultimo_mes_con_datos);
   });
 
-  for (const rows of [jornadas, produccion, ventas, actividades]) {
+  [jornadas, produccion, ventas, actividades].forEach((rows) => {
     rows.forEach((row) => {
       row.anio = toNumber(row.anio);
       row.mes_num = toNumber(row.mes_num);
     });
-  }
+  });
 
   const periods = total
     .filter((row) => row.has_any_data)
+    .slice()
     .sort((a, b) => (a.anio - b.anio) || (a.mes_num - b.mes_num));
 
   if (!periods.length) {
@@ -127,24 +92,22 @@ async function bootstrap() {
 
 function bindControls(periods) {
   const monthSelect = document.getElementById('monthSelect');
-  monthSelect.innerHTML = periods
-    .slice()
-    .reverse()
-    .map((row) => `<option value="${escapeHtml(row.periodo)}">${escapeHtml(formatPeriodLabel(row))}</option>`)
-    .join('');
+  monthSelect.innerHTML = periods.slice().reverse().map((row) =>
+    `<option value="${escapeHtml(row.periodo)}">${escapeHtml(formatPeriodLabel(row))}</option>`
+  ).join('');
   monthSelect.value = state.selectedPeriod;
   monthSelect.addEventListener('change', (event) => {
     state.selectedPeriod = event.target.value;
     renderAll();
   });
 
-  const trendSelect = document.getElementById('trendSelect');
-  trendSelect.innerHTML = TREND_OPTIONS
-    .map((option) => `<option value="${escapeHtml(option.id)}">${escapeHtml(option.label)}</option>`)
-    .join('');
-  trendSelect.value = state.selectedTrend;
-  trendSelect.addEventListener('change', (event) => {
-    state.selectedTrend = event.target.value;
+  const chartModeSelect = document.getElementById('chartModeSelect');
+  chartModeSelect.innerHTML = CHART_MODES.map((row) =>
+    `<option value="${escapeHtml(row.id)}">${escapeHtml(row.label)}</option>`
+  ).join('');
+  chartModeSelect.value = state.chartMode;
+  chartModeSelect.addEventListener('change', (event) => {
+    state.chartMode = event.target.value;
     renderTrendChart();
   });
 }
@@ -170,7 +133,7 @@ function renderKpis(current) {
     {
       label: 'Jornadas del mes',
       value: formatNumber(current.jornadas_mes),
-      sub: `${formatNumber(current.jornadas_acum)} acumuladas en 2026`,
+      sub: `${formatNumber(current.jornadas_acum)} acumuladas de ${formatNumber(current.meta_anual_jornadas)}`,
       pct: current.pct_vs_esperado_jornadas,
     },
     {
@@ -209,10 +172,7 @@ function renderKpis(current) {
 function renderProgress(current) {
   const rows = state.datasets.indicadores
     .filter((row) => row.periodo === current.periodo)
-    .sort((a, b) => {
-      const order = ['jornadas', 'aceite_litros', 'agua_protegida_litros', 'jabones_producidos'];
-      return order.indexOf(a.indicador_id) - order.indexOf(b.indicador_id);
-    });
+    .sort((a, b) => indicatorOrder(a.indicador_id) - indicatorOrder(b.indicador_id));
 
   document.getElementById('progressList').innerHTML = rows.map((row) => {
     const tone = statusClass(row.pct_vs_esperado);
@@ -222,7 +182,7 @@ function renderProgress(current) {
         <div class="progress-top">
           <div>
             <div class="progress-title">${escapeHtml(row.indicador_nombre)}</div>
-            <div class="progress-meta">${escapeHtml(formatUnit(row.valor_acumulado, row.unidad))} acumulados</div>
+            <div class="progress-meta">${escapeHtml(formatUnit(row.valor_mes, row.unidad))} en el mes · ${escapeHtml(formatUnit(row.valor_acumulado, row.unidad))} acumulados</div>
           </div>
           <span class="badge ${tone.className}">${escapeHtml(tone.label)}</span>
         </div>
@@ -230,7 +190,7 @@ function renderProgress(current) {
         <div class="progress-stats">
           <div><span class="muted">Meta anual</span><strong>${escapeHtml(formatUnit(row.meta_anual, row.unidad))}</strong></div>
           <div><span class="muted">Esperado al corte</span><strong>${escapeHtml(formatUnit(row.meta_esperada_corte, row.unidad))}</strong></div>
-          <div><span class="muted">% contra esperado</span><strong>${formatPercent(row.pct_vs_esperado)}</strong></div>
+          <div><span class="muted">% vs esperado</span><strong>${formatPercent(row.pct_vs_esperado)}</strong></div>
         </div>
       </div>
     `;
@@ -238,53 +198,115 @@ function renderProgress(current) {
 }
 
 function renderTrendChart() {
-  const rows = state.datasets.total
+  const totalRows = state.datasets.total
     .filter((row) => row.has_any_data)
     .slice()
     .sort((a, b) => (a.anio - b.anio) || (a.mes_num - b.mes_num));
 
-  const selected = TREND_OPTIONS.find((option) => option.id === state.selectedTrend) || TREND_OPTIONS[0];
-  document.getElementById('trendSubtitle').textContent = `${selected.label} por mes en 2026.`;
-
-  const labels = rows.map((row) => formatPeriodLabel(row));
-  const values = rows.map((row) => toNumber(row[selected.id]));
-  const latestIndex = rows.findIndex((row) => row.periodo === state.selectedPeriod);
+  const current = getCurrentRow();
+  const ctx = document.getElementById('trendChart');
+  const mode = state.chartMode;
 
   if (state.chart) state.chart.destroy();
-  state.chart = new Chart(document.getElementById('trendChart'), {
+
+  if (mode === 'pct_acumulado') {
+    document.getElementById('trendSubtitle').textContent = 'Comparación del avance acumulado de los cuatro indicadores frente al ritmo esperado del año.';
+
+    const labels = totalRows.map((row) => formatPeriodLabel(row));
+    const selectedIndex = totalRows.findIndex((row) => row.periodo === state.selectedPeriod);
+    const expectedSeries = totalRows.map((row) => (row.meta_esperada_jornadas && row.meta_anual_jornadas)
+      ? (row.meta_esperada_jornadas / row.meta_anual_jornadas) * 100
+      : ((row.mes_num / 12) * 100));
+
+    state.chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          buildLineDataset('Jornadas', totalRows.map((r) => r.pct_avance_anual_jornadas * 100), '#1e6b3f', selectedIndex),
+          buildLineDataset('Aceite', totalRows.map((r) => r.pct_avance_anual_aceite * 100), '#1b587e', selectedIndex),
+          buildLineDataset('Agua protegida', totalRows.map((r) => r.pct_avance_anual_agua * 100), '#8b6100', selectedIndex),
+          buildLineDataset('Jabones', totalRows.map((r) => r.pct_avance_anual_jabones * 100), '#9b2f2f', selectedIndex),
+          {
+            label: 'Esperado al corte',
+            data: expectedSeries,
+            borderColor: '#6c757d',
+            backgroundColor: 'rgba(108,117,125,.15)',
+            borderDash: [8, 6],
+            pointRadius: 0,
+            pointHoverRadius: 0,
+            borderWidth: 2,
+            tension: 0,
+          }
+        ]
+      },
+      options: chartOptions('% de meta anual', (value) => `${formatNumber(value)}%`)
+    });
+    return;
+  }
+
+  document.getElementById('trendSubtitle').textContent = `Comparación mensual del período seleccionado (${formatPeriodLabel(current)} visible en tablas y KPIs).`;
+  const labels = totalRows.map((row) => formatPeriodLabel(row));
+  const selectedIndex = totalRows.findIndex((row) => row.periodo === state.selectedPeriod);
+
+  state.chart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels,
-      datasets: [{
-        label: selected.label,
-        data: values,
-        backgroundColor: labels.map((_, index) => index === latestIndex ? 'rgba(30,107,63,0.85)' : 'rgba(27,88,126,0.35)'),
-        borderRadius: 8,
-      }],
+      datasets: [
+        buildBarDataset('Jornadas', totalRows.map((r) => r.jornadas_mes), 'rgba(30,107,63,.82)', selectedIndex),
+        buildBarDataset('Jabones producidos', totalRows.map((r) => r.jabones_producidos_mes), 'rgba(27,88,126,.62)', selectedIndex),
+        {
+          type: 'line',
+          label: 'Aceite recolectado (L)',
+          data: totalRows.map((r) => r.aceite_litros_mes),
+          borderColor: '#8b6100',
+          backgroundColor: 'rgba(139,97,0,.15)',
+          borderWidth: 3,
+          tension: .25,
+          yAxisID: 'y1'
+        },
+        {
+          type: 'line',
+          label: 'Agua protegida (L)',
+          data: totalRows.map((r) => r.agua_protegida_mes),
+          borderColor: '#9b2f2f',
+          backgroundColor: 'rgba(155,47,47,.12)',
+          borderWidth: 3,
+          tension: .25,
+          yAxisID: 'y1'
+        }
+      ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: { display: false },
+        legend: { position: 'bottom' },
         tooltip: {
           callbacks: {
-            label: (context) => `${selected.label}: ${formatNumber(context.parsed.y)}`,
-          },
-        },
+            label: (context) => `${context.dataset.label}: ${formatNumber(context.parsed.y)}`,
+          }
+        }
       },
       scales: {
-        x: {
-          grid: { display: false },
-          ticks: { color: '#5f735f' },
-        },
+        x: { grid: { display: false }, ticks: { color: '#5f735f' } },
         y: {
           beginAtZero: true,
           ticks: { color: '#5f735f' },
           grid: { color: 'rgba(26,35,26,.07)' },
+          title: { display: true, text: 'Jornadas / jabones' }
         },
-      },
-    },
+        y1: {
+          beginAtZero: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: { color: '#5f735f' },
+          title: { display: true, text: 'Litros' }
+        }
+      }
+    }
   });
 }
 
@@ -393,6 +415,61 @@ function getCurrentRow() {
   return state.datasets.total.find((row) => row.periodo === state.selectedPeriod) || null;
 }
 
+function indicatorOrder(id) {
+  return ['jornadas', 'aceite_litros', 'agua_protegida_litros', 'jabones_producidos'].indexOf(id);
+}
+
+function buildLineDataset(label, data, color, selectedIndex) {
+  return {
+    label,
+    data,
+    borderColor: color,
+    backgroundColor: color,
+    borderWidth: 3,
+    tension: .25,
+    fill: false,
+    pointRadius: data.map((_, index) => index === selectedIndex ? 5 : 3),
+    pointHoverRadius: 6,
+  };
+}
+
+function buildBarDataset(label, data, color, selectedIndex) {
+  return {
+    label,
+    data,
+    backgroundColor: data.map((_, index) => index === selectedIndex ? color.replace('.62', '.92').replace('.82', '.96') : color),
+    borderRadius: 8,
+  };
+}
+
+function chartOptions(yTitle, tooltipFormatter) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { position: 'bottom' },
+      tooltip: {
+        callbacks: {
+          label: (context) => `${context.dataset.label}: ${tooltipFormatter(context.parsed.y)}`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: '#5f735f' },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: { color: '#5f735f' },
+        grid: { color: 'rgba(26,35,26,.07)' },
+        title: { display: true, text: yTitle },
+      },
+    },
+  };
+}
+
 function formatPeriodLabel(row) {
   return `${fallbackText(row.mes)} ${fallbackText(row.anio)}`.trim();
 }
@@ -427,7 +504,7 @@ function formatPercent(value) {
 }
 
 function formatUnit(value, unit) {
-  const label = unit === 'unidades' ? '' : unit === 'jornadas' ? '' : unit === 'litros' ? ' L' : '';
+  const label = unit === 'litros' ? ' L' : unit === 'unidades' ? '' : unit === 'jornadas' ? '' : '';
   return `${formatNumber(value)}${label}`.trim();
 }
 
