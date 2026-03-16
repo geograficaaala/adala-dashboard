@@ -1,0 +1,26 @@
+programa_id,programa,anio_reportado,mes_reportado,estado_del_reporte,periodo_clave,observaciones_generales_del_mes,Indicador,Valor,Meta anual,Chequeo
+,Fortalecimiento municipal,,,,,,Mes reportado,,,
+,Fortalecimiento municipal,,,,,,Estado del reporte,,,
+,Fortalecimiento municipal,,,,,,Periodo clave,,,
+,Fortalecimiento municipal,,,,,,Municipios con al menos una capacitación,0,15,
+,Fortalecimiento municipal,,,,,,Personas capacitadas,30,75,
+,Fortalecimiento municipal,,,,,,Nuevas asistencias técnicas registradas,0,3,
+,Fortalecimiento municipal,,,,,,Nuevos estudios finalizados,0,2,
+,Fortalecimiento municipal,,,,,,PIRDES implementados,0,5,
+,Fortalecimiento municipal,,,,,,Reuniones del eje de agua y saneamiento / CODEMA,0,10,
+,Fortalecimiento municipal,,,,,,Mesas técnicas departamentales de agua y saneamiento,0,2,
+,Fortalecimiento municipal,,,,,,Chequeos de consistencia,,,
+,Fortalecimiento municipal,,,,,,Módulo,Activo en 02_Modulos,Registros capturados,Estado
+,Fortalecimiento municipal,,,,,,Capacitaciones,Sí,0,REVISAR: sin registros
+,Fortalecimiento municipal,,,,,,Asistencias técnicas,No,0,OK
+,Fortalecimiento municipal,,,,,,Estudios de caracterización,Sí,0,REVISAR: sin registros
+,Fortalecimiento municipal,,,,,,PIRDES,,0,Pendiente
+,Fortalecimiento municipal,,,,,,Reuniones y mesas técnicas,,0,Pendiente
+,Fortalecimiento municipal,,,,,,Validaciones adicionales,,,
+,Fortalecimiento municipal,,,,,,Filas de capacitación con subtotal inválido,0,,
+,Fortalecimiento municipal,,,,,,Filas de capacitación incompletas,1,,
+,Fortalecimiento municipal,,,,,,Filas de asistencias incompletas,0,,
+,Fortalecimiento municipal,,,,,,Filas de estudios incompletas,0,,
+,Fortalecimiento municipal,,,,,,Filas de PIRDES con validación de participantes,0,,
+,Fortalecimiento municipal,,,,,,Filas de PIRDES incompletas,0,,
+,Fortalecimiento municipal,,,,,,Filas de reuniones incompletas,3,,

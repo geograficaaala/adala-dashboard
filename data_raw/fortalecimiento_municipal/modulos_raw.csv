@@ -1,0 +1,6 @@
+programa_id,programa,anio_reportado,mes_reportado,estado_del_reporte,periodo_clave,observaciones_generales_del_mes,Módulo,Activo este mes,Nota
+,Fortalecimiento municipal,,,,,,Capacitaciones,Sí,"Si eliges Sí, usa la pestaña 03_Capacitaciones"
+,Fortalecimiento municipal,,,,,,Asistencias técnicas,No,"Si eliges Sí, usa la pestaña 04_Asistencias"
+,Fortalecimiento municipal,,,,,,Estudios de caracterización,Sí,"Si eliges Sí, usa la pestaña 05_Estudios"
+,Fortalecimiento municipal,,,,,,PIRDES,,"Si eliges Sí, usa la pestaña 06_PIRDES"
+,Fortalecimiento municipal,,,,,,Reuniones y mesas técnicas,,"Si eliges Sí, usa la pestaña 07_Reuniones"

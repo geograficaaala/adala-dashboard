@@ -1,0 +1,25 @@
+{
+  "spreadsheet_id": "1GlcWmYIQjh_hXNJX8yKzgxAl35weWGaCsyValIR0-E4",
+  "spreadsheet_title": "Fortalecimiento_municipal",
+  "read_at_utc": "2026-03-16T01:10:28Z",
+  "context": {
+    "programa_id": "",
+    "programa": "Fortalecimiento municipal",
+    "anio_reportado": "",
+    "mes_reportado": "",
+    "estado_del_reporte": "",
+    "periodo_clave": "",
+    "observaciones_generales_del_mes": ""
+  },
+  "outputs": [
+    "encabezado_raw.csv",
+    "encabezado.csv",
+    "modulos_raw.csv",
+    "capacitaciones_raw.csv",
+    "asistencias_raw.csv",
+    "estudios_raw.csv",
+    "pirds_raw.csv",
+    "reuniones_raw.csv",
+    "resumen_raw.csv"
+  ]
+}
