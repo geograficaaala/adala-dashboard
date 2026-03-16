@@ -1,0 +1,8 @@
+﻿indicador_id,indicador_nombre,valor_mes,valor_acumulado,meta_anual,esperado_corte,pct_meta,pct_esperado,periodo_clave,mes_label,mes_num,anio_reportado,es_ultimo_mes_real
+municipios_capacitados,Municipios capacitados,0,0,15.0,3.75,0.0,0.0,2026-03,Marzo,3,2026,True
+personas_capacitadas,Personas capacitadas,0,0,75.0,18.75,0.0,0.0,2026-03,Marzo,3,2026,True
+asistencias_tecnicas,Asistencias técnicas,0,0,3.0,0.75,0.0,0.0,2026-03,Marzo,3,2026,True
+estudios_caracterizacion,Estudios de caracterización,0,0,2.0,0.5,0.0,0.0,2026-03,Marzo,3,2026,True
+pirds_implementados,PIRDES implementados,0,0,5.0,1.25,0.0,0.0,2026-03,Marzo,3,2026,True
+reuniones_eje_agua_saneamiento,Reuniones del eje agua y saneamiento,0,0,10.0,2.5,0.0,0.0,2026-03,Marzo,3,2026,True
+mesas_tecnicas_departamentales,Mesas técnicas departamentales,0,0,2.0,0.5,0.0,0.0,2026-03,Marzo,3,2026,True
