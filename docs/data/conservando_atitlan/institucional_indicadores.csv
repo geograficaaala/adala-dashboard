@@ -1,5 +1,0 @@
-programa_id,programa_nombre,anio,mes_num,mes,periodo,periodo_clave,nivel_agregacion,territorio,indicador_id,indicador_nombre,valor_mes,valor_acumulado,meta_anual,meta_esperada_corte,pct_avance_anual,pct_vs_esperado,unidad,fuente,es_ultimo_mes_con_datos
-conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,programa,TOTAL,jornadas,Jornadas de recolección,1,1,12,3.0,0.08333333333333333,0.3333333333333333,jornadas,KoBo,True
-conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,programa,TOTAL,aceite_litros,Aceite usado recolectado,300,300,80000,20000.0,0.00375,0.015,litros,KoBo,True
-conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,programa,TOTAL,agua_protegida_litros,Agua protegida,300000,300000,80000000,20000000.0,0.00375,0.015,litros,KoBo,True
-conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,programa,TOTAL,jabones_producidos,Jabones producidos,5345,5345,65040,16260.0,0.08218019680196802,0.32872078720787207,unidades,KoBo,True
