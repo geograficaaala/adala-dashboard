@@ -1,6 +1,0 @@
-﻿indicador_id,indicador_nombre,valor_mes,valor_acumulado,meta_anual,esperado_corte,pct_meta,pct_esperado,periodo_clave,mes_label,mes_num,anio_reportado,es_ultimo_mes_real
-municipios_capacitados,Municipios capacitados,1.0,2.0,15,8.75,13.333333333333334,22.857142857142858,2026-jul,Julio,7,2026,True
-personas_capacitadas,Personas capacitadas,32.0,78.0,75,43.75,104.0,178.28571428571428,2026-jul,Julio,7,2026,True
-asistencias_tecnicas,Asistencias técnicas,1.0,3.0,3,1.75,100.0,171.42857142857142,2026-jul,Julio,7,2026,True
-estudios_caracterizacion,Estudios de caracterización,1.0,2.0,2,1.1666666666666667,100.0,171.42857142857142,2026-jul,Julio,7,2026,True
-pirds_implementados,PIRDES implementados,1.0,2.0,5,2.916666666666667,40.0,68.57142857142856,2026-jul,Julio,7,2026,True
