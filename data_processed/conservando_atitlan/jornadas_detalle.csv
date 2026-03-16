@@ -1,2 +1,0 @@
-programa_id,programa_nombre,anio,mes_num,mes,periodo,periodo_clave,fecha_jornada,municipios_visitados_texto,num_municipios_visitados,inmuebles_atendidos,litros_aceite_jornada,agua_protegida_jornada,foto_jornada,observaciones_jornada,parent_uuid
-conservando_atitlan,Conservando Atitlán,2026,3,MAR,2026-03,2026-mar,2026-03-03,San Juan La Laguna,5,23,300,300000,,,85e104dd-19aa-4b8c-9872-29d9ecdc33c6
