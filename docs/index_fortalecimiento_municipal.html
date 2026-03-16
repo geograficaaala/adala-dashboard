@@ -67,6 +67,12 @@
     label{display:block;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
     select,.value-box{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font:inherit;color:var(--text)}
     .value-box{min-height:44px;display:flex;align-items:center;font-weight:700}
+    .inline-help{margin-top:8px;font-size:.79rem;color:var(--muted)}
+    .quick-filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .filter-chip{border:1px solid var(--line);background:#fff;color:var(--text);padding:8px 12px;border-radius:999px;font:inherit;font-weight:700;cursor:pointer}
+    .filter-chip:hover{border-color:#bfd2c2;background:#f8fcf9}
+    .filter-chip.active{background:var(--green);border-color:var(--green);color:#fff}
+    .filter-chip:disabled{opacity:.48;cursor:not-allowed;background:#f6f8f6}
 
     .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
     .kpi-card{padding:18px 16px;border-top:4px solid var(--line);cursor:default}
@@ -94,7 +100,9 @@
     .two-col{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-bottom:18px}
     .panel{padding:18px 18px 16px}
     .panel .sub{font-size:.87rem;color:var(--muted);margin:-4px 0 12px}
-    .chart-wrap{height:360px}
+    .chart-wrap{height:360px;position:relative;display:flex;align-items:center;justify-content:center}
+    .chart-wrap canvas{width:100% !important;height:100% !important}
+    .chart-empty{max-width:420px}
 
     .narrative{padding:20px 22px;margin-bottom:18px;background:linear-gradient(180deg,#ffffff,#f8fcf9)}
     .narrative p{margin:0 0 10px;color:var(--muted)}
@@ -110,6 +118,7 @@
     td{color:#294133}
     tr:hover td{background:#f8fcf9}
     .empty{padding:18px;text-align:center;color:var(--muted);font-size:.92rem}
+    .kpi-empty{font-size:1rem;font-weight:800;line-height:1.3;margin:10px 0 4px}
 
     .loading,.error{padding:28px 24px;text-align:center;border-radius:18px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}
     .error{color:var(--red);background:#fff8f8}
@@ -164,6 +173,8 @@
         <div class="card">
           <label for="periodoSelect">Período</label>
           <select id="periodoSelect"></select>
+          <div class="inline-help">Filtros rápidos para enero, febrero y marzo.</div>
+          <div id="quickFilters" class="quick-filters"></div>
         </div>
         <div class="card">
           <label>Estado del reporte</label>
@@ -310,6 +321,36 @@
       return n(a.mes_num)-n(b.mes_num);
     }
 
+    function detailRowsForPeriod(periodo){
+      return DETAIL_CONFIG.reduce((acc,cfg)=> acc + ((state.data[cfg.key]||[]).filter(r=>r.periodo_clave===periodo).length), 0);
+    }
+
+    function hasValidPeriodData(periodo){
+      return detailRowsForPeriod(periodo) > 0;
+    }
+
+    function hasAnyValidDataForYear(anio){
+      return DETAIL_CONFIG.some(cfg => (state.data[cfg.key]||[]).some(r=>n(r.anio_reportado)===n(anio)));
+    }
+
+    function setChartEmpty(canvasId, message){
+      const canvas=document.getElementById(canvasId);
+      const wrap=canvas.parentElement;
+      let empty=wrap.querySelector('.chart-empty');
+      if(message){
+        canvas.style.display='none';
+        if(!empty){
+          empty=document.createElement('div');
+          empty.className='empty chart-empty';
+          wrap.appendChild(empty);
+        }
+        empty.textContent=message;
+      } else {
+        canvas.style.display='block';
+        if(empty) empty.remove();
+      }
+    }
+
     async function init(){
       try{
         const [total,caps,asis,est,pirds,reuniones] = await Promise.all([
@@ -336,13 +377,41 @@
       const latest=state.data.total[state.data.total.length-1];
       state.selectedPeriod = latest.periodo_clave;
       select.value = state.selectedPeriod;
-      select.addEventListener('change', ()=>{ state.selectedPeriod = select.value; render(); });
+      select.addEventListener('change', ()=>{
+        state.selectedPeriod = select.value;
+        renderQuickFilters();
+        render();
+      });
+      renderQuickFilters();
     }
 
     function getCurrent(){
       return state.data.total.find(r=>r.periodo_clave===state.selectedPeriod) || state.data.total[state.data.total.length-1];
     }
     function getLatest(){ return state.data.total[state.data.total.length-1]; }
+
+    function renderQuickFilters(){
+      const host=document.getElementById('quickFilters');
+      const current=getCurrent();
+      const baseYear=n((current||getLatest()).anio_reportado);
+      const labels=[{num:1,label:'Enero'},{num:2,label:'Febrero'},{num:3,label:'Marzo'}];
+      host.innerHTML = labels.map(m=>{
+        const row=state.data.total.find(r=>n(r.anio_reportado)===baseYear && n(r.mes_num)===m.num);
+        const active=row && row.periodo_clave===state.selectedPeriod;
+        return `<button type="button" class="filter-chip ${active?'active':''}" data-periodo="${row?esc(row.periodo_clave):''}" ${row?'':'disabled'}>${m.label}</button>`;
+      }).join('');
+      host.querySelectorAll('.filter-chip[data-periodo]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const periodo=btn.getAttribute('data-periodo');
+          if(!periodo) return;
+          state.selectedPeriod=periodo;
+          document.getElementById('periodoSelect').value=periodo;
+          renderQuickFilters();
+          render();
+        });
+      });
+    }
+
     function avgPctEsperado(row){
       const vals=INDICATORS.map(ind=>n(row[`${ind.id}_pct_esperado`]));
       return vals.reduce((a,b)=>a+b,0)/(vals.length||1);
@@ -351,21 +420,23 @@
     function render(){
       const current=getCurrent();
       const latest=getLatest();
-      const avg=avgPctEsperado(current);
+      const hasPeriodData=hasValidPeriodData(current.periodo_clave);
+      const hasYearData=hasAnyValidDataForYear(current.anio_reportado);
+      const avg=hasYearData ? avgPctEsperado(current) : 0;
 
       document.getElementById('heroPeriodo').textContent = periodLabel(current);
       document.getElementById('heroUltimo').textContent = periodLabel(latest);
-      document.getElementById('heroEstado').textContent = overallStatus(avg);
+      document.getElementById('heroEstado').textContent = hasYearData ? overallStatus(avg) : 'Sin registros válidos aún';
       document.getElementById('estadoReporte').textContent = txt(current.estado_reporte);
       document.getElementById('observacionesBox').textContent = txt(current.observaciones_generales) === '—' ? 'Sin observaciones' : txt(current.observaciones_generales);
 
       renderMetas(current);
-      renderKpis(current);
-      renderOps(current);
-      renderNarrative(current, avg);
-      renderHistoricoChart();
-      renderCorteChart(current);
-      renderDetails(current.periodo_clave);
+      renderKpis(current, hasYearData);
+      renderOps(current, hasPeriodData);
+      renderNarrative(current, avg, hasPeriodData, hasYearData);
+      renderHistoricoChart(hasYearData);
+      renderCorteChart(current, hasYearData);
+      renderDetails(current.periodo_clave, hasPeriodData);
     }
 
     function renderMetas(current){
@@ -374,7 +445,7 @@
       }).join('');
     }
 
-    function renderKpis(current){
+    function renderKpis(current, hasYearData){
       const html = INDICATORS.map(ind=>{
         const mes=n(current[`${ind.id}_mes`]);
         const acum=n(current[`${ind.id}_acum`]);
@@ -382,6 +453,27 @@
         const esperado=n(current[`${ind.id}_esperado`]);
         const pctMeta=n(current[`${ind.id}_pct_meta`]);
         const pctEsp=n(current[`${ind.id}_pct_esperado`]);
+        if(!hasYearData){
+          return `
+          <article class="card kpi-card" style="border-top-color:${ind.color}">
+            <div class="kpi-head">
+              <div class="kpi-name">${esc(ind.name)}</div>
+              <span class="status-chip status-blue">Sin datos</span>
+            </div>
+            <div class="kpi-empty">Sin registros válidos aún</div>
+            <div style="font-size:.88rem;color:var(--muted)">La meta anual ya está configurada en <strong style="color:var(--text)">${fmtNum(meta)}</strong>.</div>
+            <div class="bar"><span style="width:0%;background:${ind.color}"></span></div>
+            <div class="kpi-meta">
+              <div class="mini-stat"><div class="l">Mes</div><div class="v">—</div></div>
+              <div class="mini-stat"><div class="l">Meta</div><div class="v">${fmtNum(meta)}</div></div>
+              <div class="mini-stat"><div class="l">Esperado</div><div class="v">—</div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:.82rem;color:var(--muted)">
+              <span>% meta: <strong style="color:var(--text)">—</strong></span>
+              <span>% esperado: <strong style="color:var(--text)">—</strong></span>
+            </div>
+          </article>`;
+        }
         return `
           <article class="card kpi-card" style="border-top-color:${ind.color}">
             <div class="kpi-head">
@@ -405,7 +497,17 @@
       document.getElementById('kpiGrid').innerHTML = html;
     }
 
-    function renderOps(current){
+    function renderOps(current, hasPeriodData){
+      if(!hasPeriodData){
+        const labels=['Capacitaciones del mes','Reuniones del mes','Fracción anual esperada','Última actualización'];
+        document.getElementById('opsGrid').innerHTML = labels.map(label=>`
+          <article class="card ops-card">
+            <div class="l">${esc(label)}</div>
+            <div class="v" style="font-size:1rem">Sin registros válidos aún</div>
+            <div class="s">Todavía no hay actividades válidas cargadas para este período.</div>
+          </article>`).join('');
+        return;
+      }
       const cards = [
         {label:'Capacitaciones del mes', value:fmtNum(current.capacitaciones_mes), sub:'Actividades registradas en el período'},
         {label:'Reuniones del mes', value:fmtNum(current.reuniones_mes), sub:'Total de reuniones registradas'},
@@ -420,7 +522,14 @@
         </article>`).join('');
     }
 
-    function renderNarrative(current, avg){
+    function renderNarrative(current, avg, hasPeriodData, hasYearData){
+      if(!hasYearData){
+        document.getElementById('narrativeBox').innerHTML = `
+          <h2 class="section-title">Lectura del período</h2>
+          <p>Al cierre de <strong>${esc(periodLabel(current))}</strong>, el dashboard ya tiene configuradas sus metas anuales, pero <strong>todavía no existen registros válidos</strong> en las tablas operativas del programa.</p>
+          <p>Cuando el coordinador cargue actividades de enero, febrero o marzo y se vuelva a ejecutar el workflow, aquí aparecerán el avance mensual, el acumulado anual y la lectura automática del desempeño.</p>`;
+        return;
+      }
       const sorted=[...INDICATORS].sort((a,b)=>n(current[`${b.id}_pct_esperado`]) - n(current[`${a.id}_pct_esperado`]));
       const best=sorted[0];
       const worst=sorted[sorted.length-1];
@@ -440,7 +549,14 @@
       document.getElementById('narrativeBox').innerHTML = textos.join('');
     }
 
-    function renderHistoricoChart(){
+    function renderHistoricoChart(hasYearData){
+      if(!hasYearData){
+        if(state.charts.historico) state.charts.historico.destroy();
+        state.charts.historico = null;
+        setChartEmpty('chartHistorico', 'Sin registros válidos aún. El histórico aparecerá cuando existan actividades procesadas en el año.');
+        return;
+      }
+      setChartEmpty('chartHistorico', '');
       const rows=state.data.total;
       const labels=rows.map(periodLabel);
       const datasets=INDICATORS.map(ind=>(
@@ -472,7 +588,14 @@
       });
     }
 
-    function renderCorteChart(current){
+    function renderCorteChart(current, hasYearData){
+      if(!hasYearData){
+        if(state.charts.corte) state.charts.corte.destroy();
+        state.charts.corte = null;
+        setChartEmpty('chartCorte', 'Sin registros válidos aún. Este corte comparará acumulado, esperado y meta cuando exista carga válida.');
+        return;
+      }
+      setChartEmpty('chartCorte', '');
       const labels=INDICATORS.map(ind=>ind.name);
       const acumulado=INDICATORS.map(ind=>n(current[`${ind.id}_acum`]));
       const esperado=INDICATORS.map(ind=>n(current[`${ind.id}_esperado`]));
@@ -501,7 +624,7 @@
       });
     }
 
-    function renderDetails(periodo){
+    function renderDetails(periodo, hasPeriodData){
       const grid=document.getElementById('detailGrid');
       grid.innerHTML = DETAIL_CONFIG.map(cfg=>{
         const rows=(state.data[cfg.key]||[]).filter(r=>r.periodo_clave===periodo);
@@ -513,7 +636,7 @@
                 ${rows.slice(0,12).map(r=>`<tr>${cfg.columns.map(c=>`<td>${esc(formatCell(r[c[1]], c[1]))}</td>`).join('')}</tr>`).join('')}
               </tbody>
             </table>
-          </div>` : `<div class="tbl-wrap"><div class="empty">Sin registros para este período.</div></div>`;
+          </div>` : `<div class="tbl-wrap"><div class="empty">${hasPeriodData ? 'Sin registros para este módulo en el período seleccionado.' : 'Sin registros válidos aún para este período.'}</div></div>`;
         return `<article class="card table-panel"><h3 class="section-title" style="font-size:1rem;margin-bottom:10px">${esc(cfg.title)}</h3>${body}</article>`;
       }).join('');
     }
