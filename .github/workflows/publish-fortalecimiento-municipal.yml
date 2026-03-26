@@ -1,0 +1,64 @@
+name: Publish Fortalecimiento Municipal
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 11 * * *"  # diario 05:20 Guatemala / ajustable
+
+permissions:
+  contents: write
+
+jobs:
+  publish-fortalecimiento:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create folders
+        run: |
+          mkdir -p data_raw/fortalecimiento_municipal
+          mkdir -p data_processed/fortalecimiento_municipal
+          mkdir -p docs/data/fortalecimiento_municipal
+
+      - name: Read Fortalecimiento sheet
+        env:
+          GOOGLE_CREDS_JSON: ${{ secrets.GOOGLE_CREDS_JSON }}
+          SHEET_ID_FORTALECIMIENTO_MUNICIPAL: ${{ secrets.SHEET_ID_FORTALECIMIENTO_MUNICIPAL }}
+        run: python scripts/read_fortalecimiento_municipal.py
+
+      - name: Transform Fortalecimiento data
+        run: python scripts/transform_fortalecimiento_municipal.py
+
+      - name: Commit published CSVs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/fortalecimiento_municipal/*.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Fortalecimiento municipal dashboard CSVs"
+            git push
+          fi
+
+      - name: Upload raw CSV artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: raw-csv-fortalecimiento
+          path: data_raw/fortalecimiento_municipal/*
+
+      - name: Upload processed CSV artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: processed-csv-fortalecimiento
+          path: data_processed/fortalecimiento_municipal/*.csv
