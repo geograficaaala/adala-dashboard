@@ -3,188 +3,571 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ADALA · Resumen institucional</title>
-  <meta name="description" content="Dashboard resumen institucional de ADALA">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,300&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>AALA · Tablero Institucional</title>
+  <meta name="description" content="Tablero dinámico institucional de cumplimiento de indicadores — AALA">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
-    :root{
-      --bg:#eef2ec;--surface:#f7faf7;--card:#ffffff;--text:#162316;--text-2:#344d34;--muted:#5c7a5c;
-      --line:#cddacd;--line-soft:#e2ece2;--green:#1c6b3a;--green-mid:#2d8a52;--green-soft:#d2eddc;
-      --green-pale:#eaf5ee;--accent:#1a547a;--accent-soft:#daeaf6;--gold:#7a5500;--gold-soft:#fef4cc;
-      --red:#8f1c1c;--red-soft:#fce8e8;--shadow-sm:0 1px 3px rgba(16,42,16,.07),0 4px 16px rgba(16,42,16,.06);
-      --shadow:0 2px 8px rgba(16,42,16,.08),0 8px 28px rgba(16,42,16,.08);--radius:18px;--radius-sm:11px;--radius-xs:7px;
-      --font-head:'Fraunces', Georgia, serif;--font-body:'DM Sans', system-ui, sans-serif;--font-mono:'JetBrains Mono', monospace;
+    :root {
+      --bg: #eef4fc;
+      --surface: #f4f8fe;
+      --card: #ffffff;
+      --text: #0c1d3a;
+      --text-2: #2a4570;
+      --muted: #6685aa;
+
+      --line: #c5d8f0;
+      --line-soft: #ddeaf8;
+
+      --blue: #1a56a8;
+      --blue-mid: #2575cc;
+      --blue-light: #4a90d9;
+      --blue-soft: #d0e6f8;
+      --blue-pale: #eaf3fd;
+      --sky: #38b6e8;
+      --sky-soft: #d0f0fb;
+      --sky-pale: #eaf9fe;
+
+      --green: #157a50;
+      --green-soft: #c5eed9;
+      --green-pale: #eafaf2;
+      --gold: #7a5500;
+      --gold-soft: #fef4cc;
+      --gold-pale: #fffbeb;
+      --red: #8f1c1c;
+      --red-soft: #fce8e8;
+      --red-pale: #fff5f5;
+
+      --shadow-xs: 0 1px 3px rgba(10,35,80,.05), 0 2px 8px rgba(10,35,80,.04);
+      --shadow-sm: 0 1px 4px rgba(10,35,80,.06), 0 4px 16px rgba(10,35,80,.06);
+      --shadow:    0 2px 12px rgba(10,35,80,.08), 0 8px 32px rgba(10,35,80,.08);
+      --shadow-lg: 0 8px 40px rgba(10,35,80,.14), 0 2px 8px rgba(10,35,80,.06);
+      --shadow-hover: 0 16px 48px rgba(10,35,80,.16), 0 4px 12px rgba(10,35,80,.08);
+
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-xs: 8px;
+
+      --font-head: 'Lora', Georgia, serif;
+      --font-body: 'Sora', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh;line-height:1.55;-webkit-font-smoothing:antialiased;
-      background-image:
-        radial-gradient(ellipse 90% 55% at 5% -5%, rgba(45,138,82,.10) 0%, transparent 55%),
-        radial-gradient(ellipse 70% 50% at 95% 100%, rgba(26,84,122,.08) 0%, transparent 55%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Ccircle cx='42' cy='42' r='1' fill='%232d8a52' fill-opacity='.06'/%3E%3C/svg%3E");
-      background-attachment:fixed;
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { scroll-behavior: smooth }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
     }
-    .wrap{max-width:1380px;margin:0 auto;padding:28px 22px 64px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
-    .tag{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(45,138,82,.2)}
-    .tag::before{content:'●';font-size:.55em;opacity:.7}
-    .status{padding:10px 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm);font-size:.9rem;color:var(--text-2)}
-    .hero{display:grid;grid-template-columns:1.55fr .95fr;gap:18px;margin-bottom:18px}
-    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
-    .hero-main{padding:34px 36px 30px;position:relative;overflow:hidden}
-    .hero-main::after{content:'◌';position:absolute;right:8px;bottom:-48px;font-size:12rem;opacity:.05}
-    .eyebrow{font-size:.82rem;text-transform:uppercase;letter-spacing:.11em;color:var(--green-mid);font-weight:800;margin-bottom:12px}
-    h1{font-family:var(--font-head);font-size:clamp(2.25rem,5vw,4.2rem);line-height:1.02;letter-spacing:-.03em;margin-bottom:14px;max-width:14ch}
-    .hero-copy{font-size:1rem;color:var(--text-2);max-width:70ch}
-    .hero-sub{margin-top:18px;color:var(--muted);font-size:.92rem}
-    .hero-badges{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-weight:600;color:var(--text-2);font-size:.85rem}
-    .hero-side{padding:26px;display:grid;gap:12px}
-    .mini-kpi{padding:16px 18px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
-    .mini-kpi-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:6px}
-    .mini-kpi-value{font-family:var(--font-head);font-size:1.95rem;line-height:1;color:var(--green)}
-    .mini-kpi-sub{margin-top:4px;font-size:.82rem;color:var(--text-2)}
-    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
-    .summary-card{padding:18px}
-    .summary-label{font-size:.77rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:800;margin-bottom:8px}
-    .summary-value{font-family:var(--font-head);font-size:2rem;line-height:1;color:var(--green)}
-    .summary-sub{margin-top:8px;color:var(--text-2);font-size:.9rem}
-    .section-grid{display:grid;grid-template-columns:1.2fr .9fr;gap:18px;margin-bottom:18px}
-    .section-card{padding:22px 24px}
-    .section-title{font-family:var(--font-head);font-size:1.5rem;line-height:1.1;letter-spacing:-.02em;margin-bottom:8px}
-    .section-kicker{font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .prose{color:var(--text-2);text-align:justify}
-    .chart-card{padding:20px 22px}
-    .chart-wrap{height:360px}
-    .program-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .program-card{padding:22px 24px;display:grid;gap:14px}
-    .program-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-    .program-title{font-family:var(--font-head);font-size:1.65rem;line-height:1.05}
-    .program-meta{color:var(--muted);font-size:.88rem}
-    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.78rem;font-weight:700}
-    .chip.good{background:var(--green-soft);color:var(--green)}
-    .chip.warn{background:var(--gold-soft);color:var(--gold)}
-    .chip.bad{background:var(--red-soft);color:var(--red)}
-    .chip.neutral{background:var(--accent-soft);color:var(--accent)}
-    .metric-list{display:grid;gap:10px}
-    .metric-row{display:grid;grid-template-columns:1.7fr .85fr .85fr .85fr;gap:8px;align-items:center}
-    .metric-row .name{font-weight:700;color:var(--text)}
-    .metric-row .num{font-family:var(--font-mono);font-size:.86rem;color:var(--text-2)}
-    .bar{height:10px;border-radius:999px;background:var(--line-soft);overflow:hidden}
-    .bar > span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--green-mid))}
-    .program-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .program-badges{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:999px;background:var(--green);color:#fff;text-decoration:none;font-weight:700}
-    .btn.secondary{background:#fff;color:var(--green);border:1.5px solid var(--line)}
-    .small{font-size:.84rem;color:var(--text-2)}
-    .table{width:100%;border-collapse:collapse}
-    .table th,.table td{padding:10px 8px;border-bottom:1px solid var(--line-soft);text-align:left;font-size:.88rem;vertical-align:top}
-    .table th{font-size:.76rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-    .empty{padding:16px;border-radius:14px;background:var(--surface);border:1px dashed var(--line);color:var(--muted)}
-    .foot{margin-top:24px;color:var(--muted);font-size:.86rem}
-    @media (max-width:1160px){.hero,.section-grid,.program-grid,.summary-grid{grid-template-columns:1fr}}
-    @media (max-width:720px){.wrap{padding:20px 14px 40px}.hero-main,.hero-side,.section-card,.chart-card,.program-card{padding:18px}.metric-row{grid-template-columns:1fr}.chart-wrap{height:320px}}
+
+    /* ── FONDO ATMOSFÉRICO ── */
+    body {
+      background:
+        linear-gradient(160deg, #d8eaff 0%, #eef4fc 38%, #e4f3fb 68%, #f0f6ff 100%) fixed;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background:
+        radial-gradient(ellipse 90% 70% at 0% -5%,    rgba(37,117,204,.22) 0%, transparent 50%),
+        radial-gradient(ellipse 70% 60% at 100% 110%,  rgba(56,182,232,.18) 0%, transparent 50%),
+        radial-gradient(ellipse 55% 45% at 50% 55%,    rgba(26,86,168,.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 82% 8%,     rgba(100,200,240,.12) 0%, transparent 50%);
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: radial-gradient(circle 1px at 1px 1px, rgba(37,117,204,.07) 1px, transparent 0);
+      background-size: 38px 38px;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(238,244,252,.88);
+      backdrop-filter: blur(18px) saturate(1.6);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      border-bottom: 1px solid var(--line-soft);
+      height: 64px;
+      display: flex; align-items: center;
+      padding: 0 32px; gap: 20px;
+      animation: fadeDown .5s ease both;
+    }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-12px) } to { opacity:1; transform:none } }
+
+    .header-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: .9rem; color: var(--blue); letter-spacing: .02em;
+      text-decoration: none; white-space: nowrap;
+    }
+    .header-brand .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--sky), var(--blue-mid));
+      box-shadow: 0 0 8px rgba(56,182,232,.6);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 6px rgba(56,182,232,.5) }
+      50%      { box-shadow: 0 0 14px rgba(56,182,232,.9) }
+    }
+
+    /* TABS DE NAVEGACIÓN */
+    .nav-tabs {
+      display: flex; gap: 4px; margin-left: auto;
+      background: rgba(255,255,255,.6);
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 4px;
+    }
+    .nav-tab {
+      padding: 7px 18px; border-radius: 999px; border: none; cursor: pointer;
+      font-family: var(--font-body); font-size: .82rem; font-weight: 600;
+      color: var(--muted); background: transparent;
+      transition: all .25s ease;
+      white-space: nowrap;
+    }
+    .nav-tab:hover { color: var(--blue-mid); background: rgba(37,117,204,.07) }
+    .nav-tab.active {
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(37,117,204,.35);
+    }
+
+    .status-badge {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 14px; border-radius: 999px;
+      background: rgba(255,255,255,.7); border: 1px solid var(--line);
+      font-size: .79rem; font-weight: 600; color: var(--text-2);
+      white-space: nowrap;
+    }
+    .status-badge .live { width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2.5s ease-in-out infinite }
+
+    /* ── PÁGINAS ── */
+    .page { display: none; animation: fadeIn .4s ease both }
+    .page.active { display: block }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:none } }
+
+    /* ── WRAP ── */
+    .wrap { max-width: 1380px; margin: 0 auto; padding: 36px 28px 80px; position: relative; z-index: 1 }
+
+    /* ── HERO ── */
+    .hero {
+      display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; margin-bottom: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1.5px solid var(--line-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: transform .3s cubic-bezier(.25,.46,.45,.94), box-shadow .3s ease;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .hero-main {
+      padding: 40px 44px 36px;
+      background: linear-gradient(135deg, #ffffff 0%, #edf5ff 50%, #dceeff 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-main::before {
+      content: '';
+      position: absolute; right: -80px; top: -80px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(56,182,232,.18) 0%, rgba(37,117,204,.08) 50%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-main::after {
+      content: '';
+      position: absolute; left: -40px; bottom: -50px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,117,204,.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-size: .75rem; text-transform: uppercase; letter-spacing: .12em;
+      color: var(--blue-mid); font-weight: 800; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .eyebrow::before {
+      content: ''; display: block; width: 28px; height: 2px;
+      background: linear-gradient(90deg, var(--sky), var(--blue-mid)); border-radius: 2px;
+    }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 3.5vw, 3rem);
+      line-height: 1.1; letter-spacing: -.02em;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--text) 40%, var(--blue-mid) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-copy { font-size: .97rem; color: var(--text-2); max-width: 65ch; line-height: 1.65 }
+
+    .hero-pills { margin-top: 22px; display: flex; gap: 8px; flex-wrap: wrap }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--surface);
+      font-size: .8rem; font-weight: 600; color: var(--text-2);
+      transition: all .2s ease;
+    }
+    .pill:hover { background: var(--blue-pale); border-color: var(--blue-soft); color: var(--blue) }
+
+    /* KPIs LATERALES */
+    .hero-side {
+      padding: 24px;
+      display: grid; gap: 14px;
+      background: linear-gradient(160deg, #eaf6fe 0%, #d8ecfc 50%, #e4f4fd 100%);
+    }
+    .kpi-box {
+      padding: 18px 20px; border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      position: relative; overflow: hidden;
+      transition: background .2s, border-color .2s;
+    }
+    .kpi-box:hover { background: var(--blue-pale); border-color: var(--blue-soft) }
+    .kpi-box::after {
+      content: ''; position: absolute; right: -20px; bottom: -20px;
+      width: 80px; height: 80px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(37,117,204,.06) 0%, transparent 70%);
+    }
+    .kpi-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; margin-bottom: 7px }
+    .kpi-value { font-family: var(--font-head); font-size: 2rem; line-height: 1; color: var(--blue-mid) }
+    .kpi-sub { margin-top: 5px; font-size: .79rem; color: var(--text-2) }
+
+    /* ── SUMMARY CARDS ── */
+    .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px }
+    .summary-card { padding: 22px 24px }
+    .s-label { font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); font-weight: 700; margin-bottom: 10px }
+    .s-value { font-family: var(--font-head); font-size: 2.4rem; line-height: 1; color: var(--blue-mid) }
+    .s-sub { margin-top: 8px; font-size: .86rem; color: var(--text-2) }
+
+    /* COLORES DE SUMMARY */
+    .s-blue  .s-value { color: var(--blue-mid) }
+    .s-red   .s-value { color: var(--red) }
+    .s-blue-light { background: linear-gradient(135deg, #ffffff 0%, #ddeeff 60%, #c8e4f8 100%) }
+    .s-red-light  { background: linear-gradient(135deg, #ffffff 0%, #fde8e8 60%, #fcd4d4 100%) }
+
+    /* ── SECTION GRID ── */
+    .section-grid { display: grid; grid-template-columns: 1.15fr .95fr; gap: 20px; margin-bottom: 24px }
+    .section-card { padding: 28px 30px }
+    .section-kicker { font-size: .73rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 10px }
+    h2.section-title { font-family: var(--font-head); font-size: 1.45rem; line-height: 1.15; margin-bottom: 12px; color: var(--text) }
+    .prose { color: var(--text-2); font-size: .95rem; line-height: 1.7 }
+    .chart-card { padding: 22px 26px }
+    .chart-wrap { height: 320px }
+
+    /* ── PROGRAM GRID ── */
+    .program-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 24px }
+    .program-card {
+      padding: 26px 28px; display: grid; gap: 16px;
+      background: linear-gradient(145deg, #ffffff 0%, #eaf3fd 55%, #d8ecfc 100%);
+    }
+    .program-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px }
+    .program-title { font-family: var(--font-head); font-size: 1.5rem; line-height: 1.1; color: var(--text) }
+    .program-kicker { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--blue-light); margin-bottom: 6px }
+
+    /* CHIP */
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; font-size: .75rem; font-weight: 700 }
+    .chip.good    { background: var(--green-soft); color: var(--green) }
+    .chip.warn    { background: var(--gold-soft);  color: var(--gold) }
+    .chip.bad     { background: var(--red-soft);   color: var(--red) }
+    .chip.neutral { background: var(--blue-soft);  color: var(--blue) }
+    .chip.sky     { background: var(--sky-soft);   color: #0076a8 }
+
+    /* MÉTRICAS */
+    .metric-list { display: grid; gap: 11px }
+    .metric-row { display: grid; grid-template-columns: 2fr .9fr .85fr .9fr; gap: 8px; align-items: center }
+    .metric-row .mname { font-weight: 600; font-size: .87rem; color: var(--text) }
+    .metric-row .mnum  { font-family: var(--font-mono); font-size: .81rem; color: var(--text-2) }
+    .bar { height: 8px; border-radius: 999px; background: var(--line-soft); overflow: hidden }
+    .bar > span {
+      display: block; height: 100%; border-radius: 999px;
+      background: linear-gradient(90deg, var(--sky), var(--blue-mid));
+      transition: width .8s cubic-bezier(.25,.46,.45,.94);
+    }
+    .bar > span.over { background: linear-gradient(90deg, var(--green), #1fc87a) }
+    .bar > span.warn { background: linear-gradient(90deg, #f5a623, #f0c040) }
+    .bar > span.bad  { background: linear-gradient(90deg, #e05c5c, #f08080) }
+
+    .metric-header { display: grid; grid-template-columns: 2fr .9fr .85fr .9fr; gap: 8px; padding-bottom: 7px; border-bottom: 1px solid var(--line-soft); margin-bottom: 2px }
+    .metric-header span { font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700 }
+
+    /* FOOTER DE TARJETA */
+    .program-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid var(--line-soft) }
+    .program-badges { display: flex; gap: 8px; flex-wrap: wrap }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+      color: #fff; text-decoration: none; font-weight: 700; font-size: .83rem;
+      box-shadow: 0 3px 12px rgba(37,117,204,.35);
+      transition: all .2s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,117,204,.45) }
+    .btn svg { width: 14px; height: 14px }
+    .btn.secondary {
+      background: transparent; color: var(--blue-mid);
+      border: 1.5px solid var(--blue-soft);
+      box-shadow: none;
+    }
+    .btn.secondary:hover { background: var(--blue-pale) }
+
+    /* ── MATRIZ ── */
+    .matrix-card { padding: 26px 28px }
+    .table { width: 100%; border-collapse: collapse }
+    .table th { font-size: .7rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 2px solid var(--line); text-align: left }
+    .table td { padding: 13px 10px; border-bottom: 1px solid var(--line-soft); font-size: .87rem; vertical-align: middle }
+    .table tr:last-child td { border-bottom: none }
+    .table tr { transition: background .2s }
+    .table tr:hover td { background: var(--blue-pale) }
+
+    /* ── PÁGINA DE GRÁFICA ── */
+    .chart-full { padding: 28px 30px; margin-bottom: 24px }
+    .chart-full .chart-wrap { height: 420px }
+
+    /* ── CARGANDO ── */
+    .loading-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; padding: 60px 20px; color: var(--muted); font-size: .9rem;
+    }
+    .spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 3px solid var(--line);
+      border-top-color: var(--blue-mid);
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    .empty { padding: 18px; border-radius: 12px; background: var(--surface); border: 1px dashed var(--line); color: var(--muted); font-size: .88rem }
+
+    /* ── ANIMACIONES STAGGER ── */
+    .stagger-1 { animation: fadeIn .45s .05s ease both }
+    .stagger-2 { animation: fadeIn .45s .12s ease both }
+    .stagger-3 { animation: fadeIn .45s .19s ease both }
+    .stagger-4 { animation: fadeIn .45s .26s ease both }
+    .stagger-5 { animation: fadeIn .45s .33s ease both }
+    .stagger-6 { animation: fadeIn .45s .40s ease both }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .hero, .section-grid, .program-grid { grid-template-columns: 1fr }
+      .summary-grid { grid-template-columns: 1fr 1fr }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 20px 16px 60px }
+      .hero-main { padding: 26px 22px }
+      .nav-tabs { gap: 2px }
+      .nav-tab { padding: 6px 12px; font-size: .76rem }
+      .summary-grid { grid-template-columns: 1fr }
+      .metric-row { grid-template-columns: 1fr }
+      .header { padding: 0 16px; gap: 10px }
+    }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <span class="tag">ADALA · Resumen institucional</span>
-      <span class="status" id="statusTop">Cargando panorama institucional...</span>
-    </div>
 
+<!-- ── HEADER STICKY ── -->
+<header class="header">
+  <a class="header-brand" href="#">
+    <span class="dot"></span>
+    AALA
+  </a>
+  <nav class="nav-tabs" role="tablist">
+    <button class="nav-tab active" data-page="resumen" role="tab">Resumen</button>
+    <button class="nav-tab" data-page="programas" role="tab">Programas y proyectos</button>
+    <button class="nav-tab" data-page="grafica" role="tab">Comparativo</button>
+    <button class="nav-tab" data-page="matriz" role="tab">Matriz</button>
+  </nav>
+  <div class="status-badge">
+    <span class="live"></span>
+    <span id="statusTop">Cargando...</span>
+  </div>
+</header>
+
+<!-- ════════════════════════════════
+     PÁGINA 1 · RESUMEN
+════════════════════════════════ -->
+<div class="page active" id="page-resumen">
+  <div class="wrap">
+
+    <!-- HERO -->
     <section class="hero">
-      <article class="card hero-main">
-        <div class="eyebrow">Capa ejecutiva multi-programa</div>
-        <h1>Resumen institucional de programas</h1>
+      <article class="card hero-main stagger-1">
+        <div class="eyebrow">Asociación Amigos del Lago de Atitlán</div>
+        <h1>Tablero dinámico institucional de cumplimiento de indicadores</h1>
         <p class="hero-copy">
-          Este tablero presenta una vista ejecutiva de los programas institucionales de ADALA. No intenta sumar indicadores incompatibles entre sí; en cambio, compara el estado de cada programa contra sus propias metas, identifica alertas y permite entrar al dashboard específico de cada uno.
+          Este tablero permite medir el avance en la consecución de los indicadores de los programas y proyectos institucionales de la Asociación Amigos del Lago de Atitlán, comparando el estado de cada programa contra sus propias metas e identificando alertas.
         </p>
-        <p class="hero-sub">
-          Arquitectura vigente: fuente del programa → lectura → transformación → salida del programa → dashboard del programa + resumen institucional.
-        </p>
-        <div class="hero-badges">
-          <span class="pill">4 programas publicados</span>
-          <span class="pill">GitHub Pages</span>
-          <span class="pill">Sheets + Kobo</span>
-          <span class="pill">Actualización automática</span>
-        </div>
+      
       </article>
-      <aside class="card hero-side">
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">Programas activos</div>
-          <div class="mini-kpi-value" id="kpiPrograms">4</div>
-          <div class="mini-kpi-sub">Piloto institucional + tres programas Kobo</div>
+      <aside class="card hero-side stagger-2">
+        <div class="kpi-box">
+          <div class="kpi-label">Programas activos</div>
+          <div class="kpi-value" id="kpiPrograms">4</div>
+          <div class="kpi-sub">Con datos publicados y seguimiento activo</div>
         </div>
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">Último corte institucional</div>
-          <div class="mini-kpi-value" id="kpiLatest">—</div>
-          <div class="mini-kpi-sub" id="kpiLatestSub">Comparado a partir del último mes con datos de cada programa</div>
+        <div class="kpi-box">
+          <div class="kpi-label">Último corte institucional</div>
+          <div class="kpi-value" id="kpiLatest">—</div>
+          <div class="kpi-sub" id="kpiLatestSub">Corte más reciente con datos reales</div>
         </div>
-        <div class="mini-kpi">
-          <div class="mini-kpi-label">Semáforo al corte</div>
-          <div class="mini-kpi-value" id="kpiHealth">—</div>
-          <div class="mini-kpi-sub" id="kpiHealthSub">Promedio de indicadores contra esperado por programa</div>
+        <div class="kpi-box">
+          <div class="kpi-label">Semáforo al corte</div>
+          <div class="kpi-value" id="kpiHealth">—</div>
+          <div class="kpi-sub" id="kpiHealthSub">Promedio institucional vs esperado</div>
         </div>
       </aside>
     </section>
 
+    <!-- SUMMARY CARDS -->
     <section class="summary-grid">
-      <article class="card summary-card">
-        <div class="summary-label">Dashboards publicados</div>
-        <div class="summary-value">4</div>
-        <div class="summary-sub">Atitlán Recicla, Conservando Atitlán, Fortalecimiento Municipal y EPC</div>
+      <article class="card summary-card s-blue-light stagger-3">
+        <div class="s-label">Programas y proyectos con cumplimiento a la fecha</div>
+        <div class="s-value s-blue" id="kpiOnTrack">—</div>
+        <div class="s-sub">Con promedio al menos 80% del esperado al corte</div>
       </article>
-      <article class="card summary-card">
-        <div class="summary-label">Fuentes integradas</div>
-        <div class="summary-value" id="kpiSources">—</div>
-        <div class="summary-sub">Piloto con Google Sheets y programas nuevos con Kobo</div>
-      </article>
-      <article class="card summary-card">
-        <div class="summary-label">Programas en seguimiento</div>
-        <div class="summary-value" id="kpiOnTrack">—</div>
-        <div class="summary-sub">Con promedio al menos 80% del esperado al corte</div>
-      </article>
-      <article class="card summary-card">
-        <div class="summary-label">Programas con alerta</div>
-        <div class="summary-value" id="kpiAlert">—</div>
-        <div class="summary-sub">Con promedio por debajo de 80% del esperado</div>
+      <article class="card summary-card s-red-light stagger-4">
+        <div class="s-label">Programas y proyectos con alerta</div>
+        <div class="s-value s-red" id="kpiAlert">—</div>
+        <div class="s-sub">Con promedio por debajo del 80% del esperado</div>
       </article>
     </section>
 
+    <!-- LECTURA + CHART MINI -->
     <section class="section-grid">
-      <article class="card section-card">
+      <article class="card section-card stagger-5">
         <div class="section-kicker">Lectura institucional</div>
-        <h2 class="section-title">Qué se compara aquí</h2>
+        <h2 class="section-title">¿Qué se compara aquí?</h2>
         <p class="prose">
-          El resumen institucional compara el desempeño de cada programa frente a sus metas y su esperado al corte. Como los programas no comparten unidades operativas ni resultados equivalentes, el análisis se apoya en porcentajes de avance y no en la suma bruta de litros, personas, jornadas o actividades entre programas.
+          El tablero compara el desempeño de cada programa frente a sus metas y su avance esperado al presente mes. Como los programas no comparten unidades operativas ni resultados equivalentes, el análisis se apoya en porcentajes de avance y no en la suma directa de datos entre programas.
         </p>
       </article>
-      <article class="card chart-card">
-        <div class="section-kicker">Comparación ejecutiva</div>
-        <h2 class="section-title">Promedio de avance vs esperado por programa</h2>
+      <article class="card chart-card stagger-6">
+        <div class="section-kicker">Vista rápida</div>
+        <h2 class="section-title">Avance vs esperado</h2>
         <div class="chart-wrap">
-          <canvas id="programChart"></canvas>
+          <canvas id="programChartMini"></canvas>
         </div>
       </article>
     </section>
 
-    <section class="program-grid" id="programGrid"></section>
+  </div>
+</div>
 
-    <section class="card section-card" style="margin-top:18px">
-      <div class="section-kicker">Matriz institucional de corte</div>
-      <h2 class="section-title">Estado resumido por programa</h2>
-      <div id="matrixWrap" class="empty">Cargando matriz...</div>
-    </section>
-
-    <div class="foot">
-      Este dashboard vive en <code>docs/index.html</code> y enlaza a los tableros específicos de cada programa. Cada tarjeta usa el último mes con datos reales disponible en la publicación.
+<!-- ════════════════════════════════
+     PÁGINA 2 · PROGRAMAS
+════════════════════════════════ -->
+<div class="page" id="page-programas">
+  <div class="wrap">
+    <div class="program-grid" id="programGrid">
+      <div class="loading-state" style="grid-column:1/-1">
+        <div class="spinner"></div>
+        <span>Cargando programas...</span>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- ════════════════════════════════
+     PÁGINA 3 · COMPARATIVO
+════════════════════════════════ -->
+<div class="page" id="page-grafica">
+  <div class="wrap">
+    <article class="card chart-full">
+      <div class="section-kicker">Comparación ejecutiva</div>
+      <h2 class="section-title">Promedio de avance vs esperado por programa</h2>
+      <div class="chart-wrap">
+        <canvas id="programChart"></canvas>
+      </div>
+    </article>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     PÁGINA 4 · MATRIZ
+════════════════════════════════ -->
+<div class="page" id="page-matriz">
+  <div class="wrap">
+    <article class="card matrix-card">
+      <div class="section-kicker">Matriz institucional de corte</div>
+      <h2 class="section-title">Estado resumido por programa y proyecto</h2>
+      <div id="matrixWrap" class="empty" style="margin-top:16px">Cargando matriz...</div>
+    </article>
+  </div>
+</div>
 
 <script>
+/* ────────────────────────────────
+   NAVEGACIÓN POR TABS
+──────────────────────────────── */
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const page = document.getElementById('page-' + tab.dataset.page);
+    if (page) page.classList.add('active');
+  });
+});
+
+/* ────────────────────────────────
+   UTILIDADES
+──────────────────────────────── */
+const fmt    = (n, d=0) => new Intl.NumberFormat('es-GT', {maximumFractionDigits:d, minimumFractionDigits:d}).format(Number(n||0));
+const fmtPct = (n) => `${fmt(n,1)}%`;
+const safe   = (v) => (v===undefined || v===null || v==='') ? '—' : String(v);
+
+function parseCsv(url){
+  return new Promise((resolve, reject) => {
+    Papa.parse(url, {
+      download:true, header:true, skipEmptyLines:'greedy',
+      complete: res => resolve(res.data || []),
+      error: reject
+    });
+  });
+}
+function cast(rows){
+  return rows.map(r => {
+    const o = {...r};
+    for (const k of Object.keys(o)){
+      if (o[k] === '') continue;
+      const num = Number(String(o[k]).replace(/,/g,''));
+      if (!Number.isNaN(num) && String(o[k]).trim() !== '') o[k] = num;
+    }
+    return o;
+  });
+}
+function statusClass(score){
+  if (score >= 100) return ['good','Adelantado / al día'];
+  if (score >= 80)  return ['warn','En seguimiento'];
+  return ['bad','Requiere atención'];
+}
+function avg(arr){
+  const nums = arr.map(Number).filter(v => !Number.isNaN(v) && Number.isFinite(v));
+  return nums.length ? nums.reduce((a,b)=>a+b,0)/nums.length : 0;
+}
+function sortByMonth(rows){ return rows.sort((a,b) => (Number(a.mes_num||0) - Number(b.mes_num||0))) }
+function barClass(pct){
+  if (pct >= 100) return 'over';
+  if (pct >= 80)  return '';
+  if (pct >= 50)  return 'warn';
+  return 'bad';
+}
+
+/* ────────────────────────────────
+   PROGRAMAS CONFIG
+──────────────────────────────── */
 const PROGRAMS = [
   {
     id: 'atitlan_recicla',
@@ -224,314 +607,356 @@ const PROGRAMS = [
   }
 ];
 
-const fmt = (n, d=0) => new Intl.NumberFormat('es-GT', {maximumFractionDigits:d, minimumFractionDigits:d}).format(Number(n||0));
-const fmtPct = (n) => `${fmt(n,1)}%`;
-const safe = (v) => (v===undefined || v===null || v==='') ? '—' : String(v);
+/* ────────────────────────────────
+   LOADERS
+──────────────────────────────── */
 
-function parseCsv(url){
-  return new Promise((resolve, reject) => {
-    Papa.parse(url, { download:true, header:true, skipEmptyLines:'greedy',
-      complete: res => resolve(res.data || []), error: reject });
-  });
-}
-function cast(rows){
-  return rows.map(r => {
-    const o = {...r};
-    for (const k of Object.keys(o)) {
-      if (o[k] === '') continue;
-      const num = Number(String(o[k]).replace(/,/g,''));
-      if (!Number.isNaN(num) && String(o[k]).trim() !== '') o[k] = num;
-    }
-    return o;
-  });
-}
-function statusClass(score){
-  if (score >= 100) return ['good','Adelantado / al día'];
-  if (score >= 80) return ['warn','En seguimiento'];
-  return ['bad','Requiere atención'];
-}
-function avg(arr){
-  const nums = arr.map(Number).filter(v => !Number.isNaN(v) && Number.isFinite(v));
-  return nums.length ? nums.reduce((a,b)=>a+b,0)/nums.length : 0;
-}
-function sortByMonth(rows){
-  return rows.sort((a,b) => (Number(a.mes_num||0) - Number(b.mes_num||0)));
-}
+// METAS ANUALES ATITLÁN RECICLA (basadas en los CSV de la repo)
+const META_ANUAL_MATERIALES = 17920;   // qq — 815 TM
+const META_ANUAL_INGRESOS   = 448000;  // GTQ brutos
+const META_DIARIA_LIDERESA  = 135;     // GTQ/día (meta mensual del CSV)
 
 async function loadAtitlan(cfg){
   const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
   const total = sortByMonth(cast(totalRaw).filter(r => !r.zona || String(r.zona).toUpperCase() === 'TOTAL'));
-  const inds = cast(indRaw);
-  const latest = total[total.length - 1] || {};
-  const latestMonth = Number(latest.mes_num || Math.max(...inds.map(r => Number(r.mes_num || 0))));
-  const latestIndicators = inds.filter(r => Number(r.mes_num) === latestMonth && String(r.nivel_agregacion||'').toLowerCase() === 'programa');
-  const score = avg(latestIndicators.filter(r => Number(r.meta_mensual)>0).map(r => (Number(r.valor||0)/Number(r.meta_mensual||1))*100));
+  const inds  = cast(indRaw);
+
+  // Último mes con datos reales (total_materiales_qq > 0)
+  const withData = total.filter(r => Number(r.total_materiales_qq || 0) > 0);
+  const latest   = withData[withData.length - 1] || {};
+  const latestMonth = Number(latest.mes_num || 0);
+
+  // Score (promedio de indicadores del último mes)
+  const latestIndicators = inds.filter(r =>
+    Number(r.mes_num) === latestMonth &&
+    String(r.nivel_agregacion||'').toLowerCase() === 'programa'
+  );
+  const score = avg(
+    latestIndicators
+      .filter(r => Number(r.meta_mensual) > 0)
+      .map(r => (Number(r.valor||0) / Number(r.meta_mensual||1)) * 100)
+  );
+
+  // ACUMULADOS al último mes con datos
+  const rowsConDatos = total.filter(r => Number(r.total_materiales_qq || 0) > 0);
+  const acumMateriales = rowsConDatos.reduce((s, r) => s + Number(r.total_materiales_qq || 0), 0);
+  const acumIngresos   = rowsConDatos.reduce((s, r) => s + Number(r.ingreso_bruto_total || 0), 0);
+
+  // Ingreso diario lideresa del último mes
+  const ingresoLideresaRow = latestIndicators.find(r => r.indicador_id === 'ingreso_diario_lideresa');
+  const ingresoLideresaVal = ingresoLideresaRow ? Number(ingresoLideresaRow.valor || 0) : Number(latest.ingreso_diario_lideresa || 0);
+  // Meta anual como referencia: meses transcurridos × meta mensual (GTQ/día promedio)
+  const mesesConDatos = rowsConDatos.length;
+
+  // Porcentajes de avance anual
+  const pctMateriales = (acumMateriales / META_ANUAL_MATERIALES) * 100;
+  const pctIngresos   = (acumIngresos   / META_ANUAL_INGRESOS)   * 100;
+  // Para lideresa: % del último mes vs meta mensual
+  const pctLideresa   = ingresoLideresaRow
+    ? (Number(ingresoLideresaRow.valor||0) / Number(ingresoLideresaRow.meta_mensual||META_DIARIA_LIDERESA)) * 100
+    : 0;
+
   const keyMetrics = [
-    { label:'Materiales recolectados', mes: latest.total_materiales_qq, acum:null, meta:null, unit:'qq', pct: null },
-    { label:'Ingreso neto territorio', mes: latest.ingreso_neto_total_territorio, acum:null, meta:null, unit:'GTQ', pct: null },
-    { label:'Mujeres activas', mes: latest.mujeres_activas, acum:null, meta:null, unit:'promedio', pct: null },
-    { label:'Participación en actividades', mes: Number(latest.pct_participacion_actividades||0)*100, acum:null, meta:100, unit:'%', pct:Number(latest.pct_participacion_actividades||0)*100 }
+    {
+      label: 'Colecta de materiales reciclables',
+      meta: META_ANUAL_MATERIALES,
+      acum: acumMateriales,
+      unit: 'qq / 815 TM',
+      pct: pctMateriales,
+      metaLabel: `Meta anual: ${fmt(META_ANUAL_MATERIALES)} qq`
+    },
+    {
+      label: 'Ingresos brutos por comercialización',
+      meta: META_ANUAL_INGRESOS,
+      acum: acumIngresos,
+      unit: 'GTQ',
+      pct: pctIngresos,
+      metaLabel: `Meta anual: Q${fmt(META_ANUAL_INGRESOS)}`
+    },
+    {
+      label: 'Ingresos medios diarios por lideresas',
+      meta: META_DIARIA_LIDERESA,
+      acum: ingresoLideresaVal,
+      unit: 'GTQ/día',
+      pct: pctLideresa,
+      metaLabel: `Meta: Q${fmt(META_DIARIA_LIDERESA)}/día`,
+      isMensual: true
+    }
   ];
+
   return {
     ...cfg,
-    latestLabel: `${safe(latest.mes)} ${safe(latest.anio)}`.trim(),
-    periodKey: `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}`,
+    latestLabel: withData.length ? `${safe(latest.mes)} ${safe(latest.anio)}` : 'Sin datos',
+    periodKey: latestMonth ? `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}` : '—',
     score: score || 0,
     scoreLabel: 'Cumplimiento promedio vs metas mensuales',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets',
-    summaryLine: 'Piloto institucional con indicadores operativos y metas mensuales.',
-    matrix: { periodo: `${safe(latest.mes)} ${safe(latest.anio)}`, score: score || 0, source: 'Sheets' }
+    mesesConDatos
   };
 }
 
 async function loadConservando(cfg){
   const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
   const total = sortByMonth(cast(totalRaw));
-  const inds = cast(indRaw);
-  const latest = total.find(r => String(r.es_ultimo_mes_con_datos).toLowerCase() === 'true') || total[total.length-1] || {};
+  const inds  = cast(indRaw);
+  const latest = total.find(r => String(r.es_ultimo_mes_con_datos||'').toLowerCase()==='true') || total[total.length-1] || {};
   const latestPeriod = latest.periodo_clave;
-  const latestIndicators = inds.filter(r => r.periodo_clave === latestPeriod || String(r.es_ultimo_mes_con_datos).toLowerCase() === 'true');
+  const latestIndicators = inds.filter(r => r.periodo_clave===latestPeriod || String(r.es_ultimo_mes_con_datos||'').toLowerCase()==='true');
   const score = avg(latestIndicators.map(r => Number(r.pct_vs_esperado||0)));
   const keyMetrics = [
-    { label:'Jornadas', mes: latest.jornadas_mes, acum: latest.jornadas_acum, meta: latest.meta_anual_jornadas, unit:'jornadas', pct: latest.pct_avance_anual_jornadas },
-    { label:'Aceite recolectado', mes: latest.aceite_litros_mes, acum: latest.aceite_litros_acum, meta: latest.meta_anual_aceite, unit:'litros', pct: latest.pct_avance_anual_aceite },
-    { label:'Agua protegida', mes: latest.agua_protegida_mes, acum: latest.agua_protegida_acum, meta: latest.meta_anual_agua, unit:'litros', pct: latest.pct_avance_anual_agua },
-    { label:'Jabones producidos', mes: latest.jabones_producidos_mes, acum: latest.jabones_producidos_acum, meta: latest.meta_anual_jabones, unit:'unidades', pct: latest.pct_avance_anual_jabones }
+    { label:'Jornadas',          meta: latest.meta_anual_jornadas, acum: latest.jornadas_acum,        unit:'jornadas', pct: Number(latest.pct_avance_anual_jornadas||0)*100,  metaLabel:`Meta anual: ${fmt(latest.meta_anual_jornadas)} jornadas` },
+    { label:'Aceite recolectado', meta: latest.meta_anual_aceite,   acum: latest.aceite_litros_acum,   unit:'litros',   pct: Number(latest.pct_avance_anual_aceite||0)*100,    metaLabel:`Meta anual: ${fmt(latest.meta_anual_aceite)} l` },
+    { label:'Agua protegida',     meta: latest.meta_anual_agua,     acum: latest.agua_protegida_acum,  unit:'litros',   pct: Number(latest.pct_avance_anual_agua||0)*100,      metaLabel:`Meta anual: ${fmt(latest.meta_anual_agua)} l` },
+    { label:'Jabones producidos', meta: latest.meta_anual_jabones,  acum: latest.jabones_producidos_acum, unit:'unidades', pct: Number(latest.pct_avance_anual_jabones||0)*100, metaLabel:`Meta anual: ${fmt(latest.meta_anual_jabones)} u` }
   ];
-  return {
-    ...cfg,
-    latestLabel: `${safe(latest.mes)} ${safe(latest.anio)}`.trim(),
-    periodKey: latestPeriod,
-    score: score || 0,
-    scoreLabel: 'Promedio oficial vs esperado',
-    metrics: keyMetrics,
-    sourceSummary: 'Kobo mensual único',
-    summaryLine: 'Jornadas, aceite, agua protegida y jabones producidos.',
-    matrix: { periodo: `${safe(latest.mes)} ${safe(latest.anio)}`, score: score || 0, source: 'Kobo' }
-  };
+  return { ...cfg, latestLabel:`${safe(latest.mes)} ${safe(latest.anio)}`.trim(), periodKey:latestPeriod, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
 }
 
 async function loadFM(cfg){
   const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
   const total = sortByMonth(cast(totalRaw));
-  const inds = cast(indRaw);
-  const latest = total.find(r => String(r.es_ultimo_mes_real).toLowerCase() === 'true') || total[total.length-1] || {};
-  const score = avg(inds.map(r => Number(r.pct_esperado||0)));
-  const m = {};
-  inds.forEach(r => m[r.indicador_id] = r);
+  const inds  = cast(indRaw);
+  const latest = total.find(r => String(r.es_ultimo_mes_real||'').toLowerCase()==='true') || total[total.length-1] || {};
+  const score  = avg(inds.map(r => Number(r.pct_esperado||0)));
+  const m = {}; inds.forEach(r => m[r.indicador_id] = r);
   const keyMetrics = [
-    { label:'Municipios capacitados', mes: m.municipios_capacitados?.valor_mes, acum: m.municipios_capacitados?.valor_acumulado, meta: m.municipios_capacitados?.meta_anual, unit:'municipios', pct: m.municipios_capacitados?.pct_meta },
-    { label:'Personas capacitadas', mes: m.personas_capacitadas?.valor_mes, acum: m.personas_capacitadas?.valor_acumulado, meta: m.personas_capacitadas?.meta_anual, unit:'personas', pct: m.personas_capacitadas?.pct_meta },
-    { label:'Asistencias técnicas', mes: m.asistencias_tecnicas?.valor_mes, acum: m.asistencias_tecnicas?.valor_acumulado, meta: m.asistencias_tecnicas?.meta_anual, unit:'asistencias', pct: m.asistencias_tecnicas?.pct_meta },
-    { label:'PIRDES implementados', mes: m.pirds_implementados?.valor_mes, acum: m.pirds_implementados?.valor_acumulado, meta: m.pirds_implementados?.meta_anual, unit:'PIRDES', pct: m.pirds_implementados?.pct_meta }
+    { label:'Municipios capacitados',  meta:m.municipios_capacitados?.meta_anual, acum:m.municipios_capacitados?.valor_acumulado,  unit:'municipios', pct:Number(m.municipios_capacitados?.pct_meta||0)*100,  metaLabel:`Meta: ${safe(m.municipios_capacitados?.meta_anual)}` },
+    { label:'Personas capacitadas',    meta:m.personas_capacitadas?.meta_anual,   acum:m.personas_capacitadas?.valor_acumulado,    unit:'personas',   pct:Number(m.personas_capacitadas?.pct_meta||0)*100,    metaLabel:`Meta: ${safe(m.personas_capacitadas?.meta_anual)}` },
+    { label:'Asistencias técnicas',    meta:m.asistencias_tecnicas?.meta_anual,   acum:m.asistencias_tecnicas?.valor_acumulado,    unit:'asistencias', pct:Number(m.asistencias_tecnicas?.pct_meta||0)*100,   metaLabel:`Meta: ${safe(m.asistencias_tecnicas?.meta_anual)}` },
+    { label:'PIRDES implementados',    meta:m.pirds_implementados?.meta_anual,    acum:m.pirds_implementados?.valor_acumulado,     unit:'PIRDES',     pct:Number(m.pirds_implementados?.pct_meta||0)*100,     metaLabel:`Meta: ${safe(m.pirds_implementados?.meta_anual)}` }
   ];
-  return {
-    ...cfg,
-    latestLabel: `${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`.trim(),
-    periodKey: latest.periodo_clave,
-    score: score || 0,
-    scoreLabel: 'Promedio oficial vs esperado',
-    metrics: keyMetrics,
-    sourceSummary: 'Kobo mensual único',
-    summaryLine: 'Capacitaciones, asistencias técnicas, estudios y PIRDES.',
-    matrix: { periodo: `${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`, score: score || 0, source: 'Kobo' }
-  };
+  return { ...cfg, latestLabel:`${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`.trim(), periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
 }
 
 async function loadEPC(cfg){
   const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
   const total = sortByMonth(cast(totalRaw));
-  const inds = cast(indRaw);
-  const latest = total.find(r => String(r.is_latest_data_month).toLowerCase() === 'true') || total[total.length-1] || {};
-  const score = avg(inds.map(r => Number(r.pct_vs_esperado||0)));
-  const m = {};
-  inds.forEach(r => m[r.indicator_id] = r);
+  const inds  = cast(indRaw);
+  const latest = total.find(r => String(r.is_latest_data_month||'').toLowerCase()==='true') || total[total.length-1] || {};
+  const score  = avg(inds.map(r => Number(r.pct_vs_esperado||0)));
+  const m = {}; inds.forEach(r => m[r.indicator_id] = r);
   const keyMetrics = [
-    { label:'Docentes capacitados', mes: m.docentes_capacitados?.valor_mes, acum: m.docentes_capacitados?.valor_acumulado, meta: m.docentes_capacitados?.meta_anual, unit:'personas', pct: m.docentes_capacitados?.pct_meta_anual },
-    { label:'Centros alcanzados', mes: m.centros_cobertura?.valor_mes, acum: m.centros_cobertura?.valor_acumulado, meta: m.centros_cobertura?.meta_anual, unit:'centros', pct: m.centros_cobertura?.pct_meta_anual },
-    { label:'Estudiantes EPC', mes: m.estudiantes_epc?.valor_mes, acum: m.estudiantes_epc?.valor_acumulado, meta: m.estudiantes_epc?.meta_anual, unit:'estudiantes', pct: m.estudiantes_epc?.pct_meta_anual },
-    { label:'Actividades de campo', mes: m.actividades_campo?.valor_mes, acum: m.actividades_campo?.valor_acumulado, meta: m.actividades_campo?.meta_anual, unit:'actividades', pct: m.actividades_campo?.pct_meta_anual }
+    { label:'Docentes capacitados', meta:m.docentes_capacitados?.meta_anual,  acum:m.docentes_capacitados?.valor_acumulado,  unit:'personas',    pct:Number(m.docentes_capacitados?.pct_meta_anual||0)*100,  metaLabel:`Meta: ${safe(m.docentes_capacitados?.meta_anual)}` },
+    { label:'Centros alcanzados',   meta:m.centros_cobertura?.meta_anual,     acum:m.centros_cobertura?.valor_acumulado,     unit:'centros',     pct:Number(m.centros_cobertura?.pct_meta_anual||0)*100,     metaLabel:`Meta: ${safe(m.centros_cobertura?.meta_anual)}` },
+    { label:'Estudiantes EPC',      meta:m.estudiantes_epc?.meta_anual,       acum:m.estudiantes_epc?.valor_acumulado,       unit:'estudiantes', pct:Number(m.estudiantes_epc?.pct_meta_anual||0)*100,       metaLabel:`Meta: ${safe(m.estudiantes_epc?.meta_anual)}` },
+    { label:'Actividades de campo', meta:m.actividades_campo?.meta_anual,     acum:m.actividades_campo?.valor_acumulado,     unit:'actividades', pct:Number(m.actividades_campo?.pct_meta_anual||0)*100,     metaLabel:`Meta: ${safe(m.actividades_campo?.meta_anual)}` }
   ];
-  return {
-    ...cfg,
-    latestLabel: `${safe(latest.mes_label)} 2026`,
-    periodKey: latest.periodo_clave,
-    score: score || 0,
-    scoreLabel: 'Promedio oficial vs esperado',
-    metrics: keyMetrics,
-    sourceSummary: 'Kobo mensual único',
-    summaryLine: 'Cobertura educativa, actividades de campo y diplomado juvenil.',
-    matrix: { periodo: `${safe(latest.mes_label)} 2026`, score: score || 0, source: 'Kobo' }
-  };
+  return { ...cfg, latestLabel:`${safe(latest.mes_label)} 2026`, periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
 }
 
+/* ────────────────────────────────
+   RENDER MÉTRICAS
+──────────────────────────────── */
 function metricRow(m){
-  const hasPct = m.pct !== null && m.pct !== undefined && !Number.isNaN(Number(m.pct));
+  const pct = Number(m.pct || 0);
+  const hasPct = !Number.isNaN(pct);
+  const w = hasPct ? Math.min(pct, 140) : 0;
+  const cls = barClass(pct);
+  const acumLabel = m.isMensual
+    ? `${fmt(m.acum, m.unit==='GTQ/día'?1:0)} ${m.unit}`
+    : `${fmt(m.acum, 0)} / ${fmt(m.meta||0)} ${m.unit}`;
   return `
     <div class="metric-row">
-      <div class="name">${m.label}</div>
-      <div class="num">${m.acum !== null && m.acum !== undefined ? `${fmt(m.acum)} / ${fmt(m.meta||0)}` : `${fmt(m.mes, m.unit === '%' ? 1 : 0)} ${m.unit||''}`}</div>
-      <div class="num">${hasPct ? fmtPct(m.pct) : '—'}</div>
-      <div class="bar">${hasPct ? `<span style="width:${Math.min(Number(m.pct||0),140)}%"></span>` : ''}</div>
+      <div class="mname">${m.label}</div>
+      <div class="mnum">${acumLabel}</div>
+      <div class="mnum">${hasPct ? fmtPct(pct) : '—'}</div>
+      <div class="bar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
     </div>
   `;
 }
 
+/* ────────────────────────────────
+   RENDER TARJETA DE PROGRAMA
+──────────────────────────────── */
 function programCard(p){
   const [chipClass, chipText] = statusClass(p.score);
   return `
     <article class="card program-card">
       <div class="program-head">
         <div>
+          <div class="program-kicker">Indicadores priorizados</div>
           <div class="program-title">${p.name}</div>
-          <div class="program-meta">Último corte: ${safe(p.latestLabel)} · Fuente: ${p.sourceSummary}</div>
         </div>
         <span class="chip ${chipClass}">${chipText}</span>
       </div>
-      <div class="small">${p.summaryLine}</div>
       <div class="metric-list">
+        <div class="metric-header">
+          <span>Indicador</span>
+          <span>Acumulado / Meta</span>
+          <span>% Avance</span>
+          <span></span>
+        </div>
         ${p.metrics.map(metricRow).join('')}
       </div>
       <div class="program-footer">
         <div class="program-badges">
           <span class="chip neutral">${p.scoreLabel}: ${fmtPct(p.score)}</span>
-          <span class="chip neutral">Periodo: ${safe(p.periodKey)}</span>
+          <span class="chip sky">Período: ${safe(p.periodKey)}</span>
         </div>
-        <a class="btn" href="${p.dashboard}">Abrir dashboard</a>
+        <a class="btn" href="${p.dashboard}">
+          Abrir tablero
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
       </div>
     </article>
   `;
 }
 
+/* ────────────────────────────────
+   RENDER RESUMEN GLOBAL
+──────────────────────────────── */
 function renderSummary(programs){
-  const latestLabels = programs.map(p => p.latestLabel).filter(Boolean);
   const avgScore = avg(programs.map(p => p.score));
-  const onTrack = programs.filter(p => p.score >= 80).length;
-  const alert = programs.filter(p => p.score < 80).length;
-  const sources = new Set(programs.map(p => p.source)).size;
-  const [chipClass, chipText] = statusClass(avgScore);
+  const onTrack  = programs.filter(p => p.score >= 80).length;
+  const alert    = programs.filter(p => p.score < 80).length;
+  const latestLabels = programs.map(p => p.latestLabel).filter(Boolean);
+  const [, chipText] = statusClass(avgScore);
 
-  document.getElementById('statusTop').textContent = `Programas cargados: ${programs.length} · Promedio institucional vs esperado: ${fmtPct(avgScore)}`;
-  document.getElementById('kpiLatest').textContent = latestLabels.filter(Boolean).length ? '2026' : '—';
-  document.getElementById('kpiLatestSub').textContent = latestLabels.join(' · ');
+  document.getElementById('statusTop').textContent =
+    `${programs.length} programas · ${fmtPct(avgScore)} promedio institucional`;
+  const meaningfulLabels = latestLabels.filter(l => l && l !== 'Sin datos');
+  document.getElementById('kpiLatest').textContent = meaningfulLabels.length ? '2026' : '—';
+  document.getElementById('kpiLatestSub').textContent = meaningfulLabels.length
+    ? meaningfulLabels.join(' · ')
+    : 'Sin datos disponibles aún';
   document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
   document.getElementById('kpiHealthSub').textContent = chipText;
-  document.getElementById('kpiSources').textContent = String(sources);
   document.getElementById('kpiOnTrack').textContent = String(onTrack);
   document.getElementById('kpiAlert').textContent = String(alert);
 
   document.getElementById('programGrid').innerHTML = programs.map(programCard).join('');
   renderMatrix(programs);
-  renderChart(programs);
+  renderCharts(programs);
 }
 
+/* ────────────────────────────────
+   RENDER MATRIZ
+──────────────────────────────── */
 function renderMatrix(programs){
-  const html = `
+  const rows = programs.map(p => {
+    const [chipClass, chipText] = statusClass(p.score);
+    return `
+      <tr>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.sourceSummary}</td>
+        <td>${safe(p.latestLabel)}</td>
+        <td><span style="font-family:var(--font-mono);font-size:.86rem">${fmtPct(p.score)}</span></td>
+        <td><span class="chip ${chipClass}">${chipText}</span></td>
+        <td><a class="btn secondary" href="${p.dashboard}">Abrir</a></td>
+      </tr>
+    `;
+  }).join('');
+  document.getElementById('matrixWrap').innerHTML = `
     <table class="table">
-      <thead>
-        <tr>
-          <th>Programa</th>
-          <th>Fuente</th>
-          <th>Último corte</th>
-          <th>Promedio vs esperado</th>
-          <th>Estado</th>
-          <th>Dashboard</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${programs.map(p => {
-          const [chipClass, chipText] = statusClass(p.score);
-          return `
-            <tr>
-              <td><strong>${p.name}</strong></td>
-              <td>${p.sourceSummary}</td>
-              <td>${safe(p.latestLabel)}</td>
-              <td>${fmtPct(p.score)}</td>
-              <td><span class="chip ${chipClass}">${chipText}</span></td>
-              <td><a class="btn secondary" href="${p.dashboard}">Abrir</a></td>
-            </tr>
-          `;
-        }).join('')}
-      </tbody>
+      <thead><tr>
+        <th>Programa / Proyecto</th>
+        <th>Fuente</th>
+        <th>Último corte</th>
+        <th>Promedio vs esperado</th>
+        <th>Estado</th>
+        <th>Tablero</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
     </table>
   `;
-  document.getElementById('matrixWrap').innerHTML = html;
 }
 
-let chartRef = null;
-function renderChart(programs){
-  const ctx = document.getElementById('programChart');
-  if (chartRef) chartRef.destroy();
-  chartRef = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: programs.map(p => p.name),
-      datasets: [
-        {
-          label: 'Promedio de avance vs esperado',
-          data: programs.map(p => Number(p.score || 0)),
-          borderWidth: 1,
-          borderRadius: 8
-        },
-        {
-          type: 'line',
-          label: 'Referencia esperado',
-          data: programs.map(() => 100),
-          borderDash: [6,6],
-          pointRadius: 0,
-          tension: 0
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          suggestedMax: 120,
-          ticks: { callback: v => `${v}%` },
-          grid: { color: 'rgba(52,77,52,.08)' }
-        },
-        x: { grid: { display:false } }
+/* ────────────────────────────────
+   RENDER GRÁFICAS
+──────────────────────────────── */
+const CHART_COLORS = {
+  bar:    'rgba(37,117,204,.75)',
+  barHov: 'rgba(37,117,204,1)',
+  line:   'rgba(56,182,232,.8)',
+  border: 'rgba(37,117,204,1)'
+};
+
+function chartOptions(mini = false){
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true, suggestedMax: 120,
+        ticks: { callback: v => `${v}%`, font: { family: "'Sora', sans-serif", size: mini ? 10 : 12 } },
+        grid: { color: 'rgba(37,117,204,.07)' }
       },
-      plugins: {
-        legend: { position: 'bottom' },
-        tooltip: {
-          callbacks: {
-            label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y,1)}%`
-          }
-        }
+      x: {
+        grid: { display: false },
+        ticks: { font: { family: "'Sora', sans-serif", size: mini ? 10 : 12 } }
       }
+    },
+    plugins: {
+      legend: { position: 'bottom', labels: { font: { family: "'Sora', sans-serif", size: 12 }, usePointStyle: true } },
+      tooltip: { callbacks: { label: ctx => `${ctx.dataset.label}: ${fmt(ctx.parsed.y,1)}%` } }
     }
-  });
+  };
 }
 
+let chartRef = null, chartMiniRef = null;
+
+function renderCharts(programs){
+  const labels = programs.map(p => p.name);
+  const data   = programs.map(p => Number(p.score || 0));
+
+  // Mini (resumen)
+  const ctxMini = document.getElementById('programChartMini');
+  if (ctxMini){
+    if (chartMiniRef) chartMiniRef.destroy();
+    chartMiniRef = new Chart(ctxMini, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label:'Avance promedio', data, backgroundColor: CHART_COLORS.bar, borderColor: CHART_COLORS.border, borderWidth:1.5, borderRadius:8 },
+          { type:'line', label:'Meta (100%)', data: programs.map(()=>100), borderColor: CHART_COLORS.line, borderDash:[5,5], pointRadius:0, tension:0, borderWidth:1.5 }
+        ]
+      },
+      options: chartOptions(true)
+    });
+  }
+
+  // Full (comparativo)
+  const ctx = document.getElementById('programChart');
+  if (ctx){
+    if (chartRef) chartRef.destroy();
+    chartRef = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label:'Promedio de avance vs esperado', data, backgroundColor: CHART_COLORS.bar, borderColor: CHART_COLORS.border, borderWidth:1.5, borderRadius:10 },
+          { type:'line', label:'Referencia 100%', data: programs.map(()=>100), borderColor: CHART_COLORS.line, borderDash:[6,6], pointRadius:0, tension:0, borderWidth:2 }
+        ]
+      },
+      options: chartOptions(false)
+    });
+  }
+}
+
+/* ────────────────────────────────
+   INIT
+──────────────────────────────── */
 async function init(){
-  try{
+  try {
     const programs = [];
-    for (const cfg of PROGRAMS) {
+    for (const cfg of PROGRAMS){
       try {
         programs.push(await cfg.loader(cfg));
-      } catch (err) {
-        console.error('Error loading program', cfg.id, err);
+      } catch(err){
+        console.error('Error cargando programa', cfg.id, err);
         programs.push({
           ...cfg,
-          latestLabel:'Sin datos',
-          periodKey:'—',
-          score:0,
-          scoreLabel:'Sin información',
-          metrics:[],
-          sourceSummary:cfg.source,
-          summaryLine:'No se pudieron cargar los CSV publicados de este programa.'
+          latestLabel:'Sin datos', periodKey:'—', score:0,
+          scoreLabel:'Sin información', metrics:[], sourceSummary:cfg.source
         });
       }
     }
     renderSummary(programs);
-  } catch (err) {
+  } catch(err){
     console.error(err);
-    document.getElementById('statusTop').textContent = 'Error al cargar el resumen institucional.';
+    document.getElementById('statusTop').textContent = 'Error al cargar el tablero institucional.';
   }
 }
 
