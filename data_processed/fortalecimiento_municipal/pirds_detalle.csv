@@ -1,3 +1,6 @@
 ﻿periodo_clave,anio_reportado,mes_num,mes_label,fecha_pirds,municipio_pirds,estado_pirds,participantes_total,participantes_tecnicos,participantes_operarios,pirds_implementado_mes,pirds_implementado_flag,requiere_seguimiento_pirds,observaciones_pirds
 2026-02,2026,2,Febrero,2026-01-25,San Antonio Palopó,Diagnóstico,4,4,0,Sí,1,Sí,
 2026-02,2026,2,Febrero,2026-04-02,Sololá,Diagnóstico,3,3,0,Sí,1,Sí,
+2026-02,2026,2,Febrero,2026-06-02,San Antonio Palopó,Diagnóstico,2,2,0,Sí,1,Sí,
+2026-02,2026,2,Febrero,2026-09-02,Sololá,Revisión técnica,3,3,0,Sí,1,Sí,
+2026-02,2026,2,Febrero,2026-12-02,San Antonio Palopó,Diagnóstico,1,1,0,Sí,1,Sí,

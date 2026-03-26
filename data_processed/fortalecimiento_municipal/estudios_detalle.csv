@@ -1,3 +1,7 @@
 ﻿periodo_clave,anio_reportado,mes_num,mes_label,fecha_estudio,municipio_estudio,tipo_estudio,sector_estudio,estado_estudio,estudio_finalizado_mes,estudio_finalizado_flag,instituciones_apoyo_estudio,observaciones_estudio
 2026-02,2026,2,Febrero,2026-01-25,Panajachel,Caracterización de residuos sólidos,,Análisis,No,0,AALA,Estudio de caracterizaci+on de residuos de cooperativa INTERCOP
 2026-02,2026,2,Febrero,2026-02-02,San Antonio Palopó,Caracterización de aguas residuales,,Planificación,Sí,1,AALA,
+2026-02,2026,2,Febrero,2026-02-13,San Andrés Semetabaj,Caracterización de residuos sólidos,,Análisis,No,0,AALA,Corrección de observaciónes del MARN
+2026-02,2026,2,Febrero,2026-02-13,Santa Lucía Utatlán,Caracterización de residuos sólidos,,Análisis,Sí,1,AALA-AMSCLAE,Corrección de observaciónes del MARN
+2026-02,2026,2,Febrero,2026-02-16,San Andrés Semetabaj,Caracterización de residuos sólidos,,Análisis,No,0,AALA,Corrección de observaciónes del MARN
+2026-02,2026,2,Febrero,2026-02-16,Santa Lucía Utatlán,Caracterización de residuos sólidos,,Finalizado,Sí,1,AALA-AMSCLAE,
