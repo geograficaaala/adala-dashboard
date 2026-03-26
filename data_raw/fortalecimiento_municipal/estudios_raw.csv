@@ -1,3 +1,7 @@
 programa_id,programa,anio_reportado,mes_reportado,estado_del_reporte,periodo_clave,observaciones_generales_del_mes,No.,Fecha *,Municipio *,Tipo de estudio *,Estado del estudio *,¿Se finalizó este mes? *,Instituciones de apoyo,Evidencia / archivo / enlace,Observaciones,Nuevo estudio finalizado (auto),Estado fila,Sector: Comercial,Sector: Mercados,Sector: Domiciliar,Sector: Mixto,Sector: Otro
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,1,25/01/2026,Panajachel,Caracterización de residuos sólidos,Análisis,No,AALA,,Estudio de caracterizaci+on de residuos de cooperativa INTERCOP,0,INCOMPLETA,,,,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,2,2026-02-02,San Antonio Palopó,Caracterización de aguas residuales,Planificación,Sí,AALA,,,1,INCOMPLETA,,,,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,3,13/02/26,San Andrés Semetabaj,Caracterización de residuos sólidos,Análisis,No,AALA,,Corrección de observaciónes del MARN,0,INCOMPLETA,,,,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,4,13/02/26,Santa Lucía Utatlán,Caracterización de residuos sólidos,Análisis,Sí,AALA y AMSCLAE,,Corrección de observaciónes del MARN,1,INCOMPLETA,,,,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,5,16/02/26,San Andrés Semetabaj,Caracterización de residuos sólidos,Análisis,No,AALA,,Corrección de observaciónes del MARN,0,INCOMPLETA,,,,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,6,16/02/26,Santa Lucía Utatlán,Caracterización de residuos sólidos,Finalizado,Sí,,,,1,INCOMPLETA,,,,,

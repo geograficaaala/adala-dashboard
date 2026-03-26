@@ -1,3 +1,6 @@
 programa_id,programa,anio_reportado,mes_reportado,estado_del_reporte,periodo_clave,observaciones_generales_del_mes,No.,Fecha *,Municipio *,Estado del PIRDES *,¿Implementado este mes? *,Participantes totales,N° técnicos,N° operarios,Subtotal téc.+oper.,¿Requiere seguimiento adicional? *,Evidencia / archivo / enlace,Observaciones,Validación participantes,PIRDES implementado (auto),Estado fila
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,1,25/01/26,San Antonio Palopó,Diagnóstico,Sí,4,4,0,4,Sí,,,OK,1,OK
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,2,2026-04-02,Sololá,Diagnóstico,Sí,3,3,0,3,Sí,,,OK,1,OK
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,3,2026-06-02,San Antonio Palopó,Diagnóstico,Sí,2,2,0,2,Sí,,,OK,1,OK
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,4,2026-09-02,Sololá,Revisión técnica,Sí,3,3,0,3,Sí,,,OK,1,OK
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,5,2026-12-02,San Antonio Palopó,Diagnóstico,Sí,1,1,0,1,Sí,,,OK,1,OK

@@ -4,23 +4,23 @@ programa_id,programa,anio_reportado,mes_reportado,estado_del_reporte,periodo_cla
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Periodo clave,2026-02,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Municipios con al menos una capacitación,0,15,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Personas capacitadas,5,75,
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Nuevas asistencias técnicas registradas,0,3,
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Nuevos estudios finalizados,1,2,
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,PIRDES implementados,2,5,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Nuevas asistencias técnicas registradas,3,3,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Nuevos estudios finalizados,3,2,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,PIRDES implementados,5,5,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Reuniones del eje de agua y saneamiento / CODEMA,1,10,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Mesas técnicas departamentales de agua y saneamiento,0,2,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Chequeos de consistencia,,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Módulo,Activo en 02_Modulos,Registros capturados,Estado
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Capacitaciones,Sí,0,REVISAR: sin registros
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Asistencias técnicas,Sí,0,REVISAR: sin registros
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Asistencias técnicas,Sí,3,OK
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Estudios de caracterización,Sí,1,OK
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,PIRDES,Sí,1,OK
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Reuniones y mesas técnicas,Sí,2,OK
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,PIRDES,Sí,4,OK
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Reuniones y mesas técnicas,Sí,3,OK
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Validaciones adicionales,,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de capacitación con subtotal inválido,0,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de capacitación incompletas,1,,
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de asistencias incompletas,0,,
-,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de estudios incompletas,2,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de asistencias incompletas,3,,
+,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de estudios incompletas,6,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de PIRDES con validación de participantes,0,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de PIRDES incompletas,0,,
 ,Fortalecimiento municipal,,Febrero,Final,2026-02,,Filas de reuniones incompletas,0,,
