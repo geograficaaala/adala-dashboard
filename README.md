@@ -1,1 +1,1 @@
-# adala-dashboard
+# AALA-dashboard
