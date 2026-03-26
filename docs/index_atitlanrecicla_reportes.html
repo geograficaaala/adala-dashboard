@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Generador de informes · Atitlán Recicla</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.3.1/html-docx.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    :root{
+      --bg:#edf2ed; --surface:#f6faf6; --card:#fff; --text:#132213; --text-2:#2c472c;
+      --muted:#516851; --line:#c5d7c5; --line-soft:#dce9dc;
+      --green:#195f33; --green-mid:#267a46; --green-soft:#c8e8d8; --green-pale:#e6f4ec;
+      --yellow:#795200; --yellow-soft:#fef3cc; --red:#881818; --red-soft:#fce6e6;
+      --shadow-sm:0 1px 4px rgba(14,36,14,.06),0 4px 16px rgba(14,36,14,.05);
+      --shadow:0 3px 12px rgba(14,36,14,.09),0 8px 28px rgba(14,36,14,.07);
+      --radius:16px; --radius-sm:10px;
+      --font-head:Georgia,serif; --font-body:system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.5}
+    .wrap{max-width:1400px;margin:0 auto;padding:26px 20px 48px}
+    .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+    .topbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{display:inline-flex;align-items:center;gap:8px;padding:8px 18px 8px 11px;border-radius:999px;background:var(--card);border:1.5px solid var(--line);text-decoration:none;color:var(--text-2);box-shadow:var(--shadow-sm);font-weight:600;font-size:.88rem}
+    .back:hover{border-color:var(--green-mid);color:var(--green)}
+    .back-arrow{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--green-pale);color:var(--green-mid);font-size:.78rem;font-weight:700}
+    .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;background:var(--green-pale);color:var(--green);font-weight:700;font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;border:1px solid rgba(38,122,70,.18)}
+    .tag::before{content:'●';font-size:.46em;opacity:.6}
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:18px}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .controls{padding:18px;position:sticky;top:16px}
+    .controls h1{margin:0 0 8px;font-size:1.55rem;font-family:var(--font-head)}
+    .controls p{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:.82rem;font-weight:700;color:var(--text-2);margin-bottom:6px}
+    .field select,.field input,.field textarea{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);font:inherit;background:#fff;color:var(--text)}
+    .field small{display:block;margin-top:6px;color:var(--muted);font-size:.75rem}
+    .buttons{display:grid;gap:10px;margin-top:14px}
+    .btn{appearance:none;border:none;border-radius:12px;padding:11px 14px;font:inherit;font-weight:700;cursor:pointer}
+    .btn-primary{background:var(--green-mid);color:#fff}
+    .btn-secondary{background:#fff;color:var(--text-2);border:1.5px solid var(--line)}
+    .btn:hover{transform:translateY(-1px)}
+    .note{margin-top:14px;padding:12px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft);font-size:.82rem;color:var(--muted)}
+    .preview-shell{padding:16px}
+    .preview-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 14px 16px;border-bottom:1px solid var(--line-soft);margin-bottom:18px;flex-wrap:wrap}
+    .preview-head h2{margin:0;font-size:1.1rem}
+    .preview-head p{margin:4px 0 0;color:var(--muted);font-size:.82rem}
+    .page{width:210mm;min-height:297mm;margin:0 auto 20px;background:#fff;box-shadow:0 10px 28px rgba(0,0,0,.08);padding:24mm 22mm}
+    .doc-preview,.doc-preview *{font-family:"Times New Roman", Times, serif;font-size:12pt;line-height:1.15;color:#111}
+    .doc-preview p{margin:0 0 8pt;text-align:justify}
+    .doc-preview h1,.doc-preview h2,.doc-preview h3,.doc-preview h4{margin:0 0 8pt;font-weight:700;text-align:center}
+    .doc-preview h1{font-size:15pt;text-transform:uppercase}
+    .doc-preview h2{font-size:13pt;text-transform:uppercase}
+    .doc-preview h3{font-size:12pt;text-transform:uppercase;text-align:left}
+    .doc-preview h4{font-size:12pt;text-align:left}
+    .doc-preview .center{text-align:center}
+    .doc-preview .right{text-align:right}
+    .doc-preview .left{text-align:left}
+    .doc-preview .small{font-size:11pt}
+    .doc-preview .spacer{height:12pt}
+    .doc-preview .section-title{margin:12pt 0 8pt;font-weight:700;text-transform:uppercase}
+    .doc-preview ul,.doc-preview ol{margin:0 0 8pt 20pt;padding:0}
+    .doc-preview li{margin:0 0 4pt;text-align:justify}
+    .doc-preview table{width:100%;border-collapse:collapse;margin:8pt 0 12pt}
+    .doc-preview th,.doc-preview td{border:1px solid #222;padding:6pt 7pt;vertical-align:top;text-align:left}
+    .doc-preview .no-border td,.doc-preview .no-border th{border:none;padding:2pt 4pt}
+    .doc-preview .signature-block{margin-top:28pt}
+    .doc-preview .signature-line{display:block;border-top:1px solid #111;margin:30pt 0 6pt;width:62%}
+    .doc-preview .photo-box{height:120pt;border:1px solid #999;display:flex;align-items:center;justify-content:center;text-align:center;color:#666;margin-bottom:10pt}
+    .doc-preview .page-break{break-before:page;page-break-before:always}
+    .doc-preview .kpi-chip{display:inline-block;border:1px solid #444;padding:1pt 6pt}
+    @media (max-width:1200px){.layout{grid-template-columns:1fr}.controls{position:relative;top:auto}.page{width:100%;min-height:auto;padding:22px}}
+    @media print{
+      body{background:#fff}
+      .no-print{display:none!important}
+      .wrap{max-width:none;padding:0}
+      .layout{display:block}
+      .preview-shell{padding:0}
+      .card{border:none;box-shadow:none}
+      .preview-head{display:none}
+      .page{width:auto;min-height:auto;margin:0;box-shadow:none;padding:20mm 18mm;page-break-after:always}
+      .page:last-child{page-break-after:auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar no-print">
+      <div class="topbar-left">
+        <a class="back" href="./index_atitlanrecicla.html"><span class="back-arrow">←</span>Volver al dashboard</a>
+        <span class="tag">Atitlán Recicla · generador v1</span>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="card controls no-print">
+        <h1>Generador de informes</h1>
+        <p>Primera versión para Atitlán Recicla. La vista previa usa Times New Roman 12, texto justificado e interlineado 1.15.</p>
+
+        <div class="field">
+          <label for="reportType">Tipo de informe</label>
+          <select id="reportType">
+            <option value="informe_mensual">Informe mensual de gerencia</option>
+            <option value="memoria_reunion">Memoria de reunión de avances</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="periodSelect">Período</label>
+          <select id="periodSelect"></select>
+          <small>Se listan los meses con datos válidos en <code>docs/data/total_mes.csv</code>.</small>
+        </div>
+
+        <div class="field">
+          <label for="reporterName">Nombre responsable</label>
+          <input id="reporterName" value="Darlyn Salguero López">
+        </div>
+
+        <div class="field">
+          <label for="reporterRole">Cargo</label>
+          <input id="reporterRole" value="Gerente Atitlán Recicla">
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-primary" id="refreshBtn">Actualizar vista previa</button>
+          <button class="btn btn-secondary" id="wordBtn">Descargar Word</button>
+          <button class="btn btn-secondary" id="pdfBtn">Imprimir / PDF</button>
+        </div>
+
+        <div class="note">
+          Esta versión toma la narrativa base de los dos documentos que compartiste y reemplaza los datos del período seleccionado con los CSV actuales del dashboard. Los campos que hoy no existen en la base quedan como texto fijo o con valor 0.
+        </div>
+      </aside>
+
+      <main class="card preview-shell">
+        <div class="preview-head no-print">
+          <div>
+            <h2 id="previewTitle">Vista previa</h2>
+            <p id="previewSub">Documento listo para revisar antes de exportar.</p>
+          </div>
+        </div>
+        <div id="previewRoot"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="./atitlan_reportes.js"></script>
+</body>
+</html>
