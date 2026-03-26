@@ -988,11 +988,24 @@ def build_total_mes(
     total["reuniones_eje_agua_saneamiento_pct_esperado"] = pct("reuniones_eje_agua_saneamiento_acum", "reuniones_eje_agua_saneamiento_esperado")
     total["mesas_tecnicas_departamentales_pct_esperado"] = pct("mesas_tecnicas_departamentales_acum", "mesas_tecnicas_departamentales_esperado")
 
-    # Último período real.
+    # Último período real = el último que tenga al menos un indicador con datos.
+    # Esto evita que una fila fantasma (Borrador vacío) se marque como último.
     total["es_ultimo_mes_real"] = False
-    if not total.empty:
-        last_idx = total.index[-1]
-        total.loc[last_idx, "es_ultimo_mes_real"] = True
+    indicadores_mes = [
+        "capacitaciones_mes", "asistencias_tecnicas_mes", "estudios_caracterizacion_mes",
+        "pirds_implementados_mes", "reuniones_mes"
+    ]
+    cols_existentes = [c for c in indicadores_mes if c in total.columns]
+    if cols_existentes:
+        tiene_datos = total[cols_existentes].apply(pd.to_numeric, errors="coerce").fillna(0).sum(axis=1) > 0
+        filas_con_datos = total[tiene_datos]
+        if not filas_con_datos.empty:
+            total.loc[filas_con_datos.index[-1], "es_ultimo_mes_real"] = True
+        elif not total.empty:
+            # Fallback: si ningún período tiene datos, usar el último por fecha
+            total.loc[total.index[-1], "es_ultimo_mes_real"] = True
+    elif not total.empty:
+        total.loc[total.index[-1], "es_ultimo_mes_real"] = True
 
     for col in TOTAL_COLS:
         if col not in total.columns:
