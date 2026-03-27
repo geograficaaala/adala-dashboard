@@ -1,5 +1,7 @@
-programa_id,periodo,anio,mes_num,mes_nombre,tema,es_tema_nucleo,eventos
-fortalecimiento_municipal,2026-01,2026,1,Enero,Saneamiento ambiental,False,1
-fortalecimiento_municipal,2026-03,2026,3,Marzo,Cumplimiento legal ambiental,True,1
-fortalecimiento_municipal,2026-03,2026,3,Marzo,SNIP · Sistema Nacional de Inversión Pública,True,1
-fortalecimiento_municipal,2026-03,2026,3,Marzo,Saneamiento ambiental,False,1
+programa_id,periodo,anio,mes_num,mes_nombre,tema,es_tema_nucleo,eventos,personas
+fortalecimiento_municipal,2026-01,2026,1,Enero,Cumplimiento legal ambiental y saneamiento,True,1,5.0
+fortalecimiento_municipal,2026-01,2026,1,Enero,Saneamiento ambiental,False,1,5.0
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Cumplimiento legal ambiental,False,1,52.0
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Cumplimiento legal ambiental y saneamiento,True,1,52.0
+fortalecimiento_municipal,2026-03,2026,3,Marzo,SNIP · Sistema Nacional de Inversión Pública,True,1,52.0
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Saneamiento ambiental,False,1,52.0
