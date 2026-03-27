@@ -720,28 +720,132 @@ async function loadFM(cfg){
   const latest = total.find(r => String(r.es_ultimo_mes_real||'').toLowerCase()==='true') || total[total.length-1] || {};
   const score  = avg(inds.map(r => Number(r.pct_esperado||0)));
   const m = {}; inds.forEach(r => m[r.indicador_id] = r);
+  const pick = (...ids) => ids.map(id => m[id]).find(Boolean);
+
+  const municipios = pick('municipios_capacitados');
+  const personas   = pick('personas_capacitadas');
+  const asist      = pick('asistencias_tecnicas');
+  const estudios   = pick('estudios_caracterizacion','estudios_caracterizacion_residuos','caracterizacion_residuos','estudios_residuos_solidos');
+  const pirdes     = pick('pirds_implementados','pirdes_implementados');
+
+  const municipiosVal = Number(municipios?.valor_acumulado || 0);
+  const personasVal   = Number(personas?.valor_acumulado || 0);
+  const asistVal      = Number(asist?.valor_acumulado || 0);
+  const estudiosVal   = Number(estudios?.valor_acumulado || 0);
+  const pirdesVal     = Number(pirdes?.valor_acumulado || 0);
+
+  const pctFortalecimiento = Math.min((municipiosVal / 15) * 100, (personasVal / 75) * 100);
+  const pctAsistencia      = (asistVal / 3) * 100;
+  const pctResiduos        = estudios ? Math.min((estudiosVal / 2) * 100, (pirdesVal / 5) * 100) : (pirdesVal / 5) * 100;
+
   const keyMetrics = [
-    { label:'Municipios capacitados',  meta:m.municipios_capacitados?.meta_anual, acum:m.municipios_capacitados?.valor_acumulado,  unit:'municipios', pct:Number(m.municipios_capacitados?.pct_meta||0)*100,  metaLabel:`Meta: ${safe(m.municipios_capacitados?.meta_anual)}` },
-    { label:'Personas capacitadas',    meta:m.personas_capacitadas?.meta_anual,   acum:m.personas_capacitadas?.valor_acumulado,    unit:'personas',   pct:Number(m.personas_capacitadas?.pct_meta||0)*100,    metaLabel:`Meta: ${safe(m.personas_capacitadas?.meta_anual)}` },
-    { label:'Asistencias técnicas',    meta:m.asistencias_tecnicas?.meta_anual,   acum:m.asistencias_tecnicas?.valor_acumulado,    unit:'asistencias', pct:Number(m.asistencias_tecnicas?.pct_meta||0)*100,   metaLabel:`Meta: ${safe(m.asistencias_tecnicas?.meta_anual)}` },
-    { label:'PIRDES implementados',    meta:m.pirds_implementados?.meta_anual,    acum:m.pirds_implementados?.valor_acumulado,     unit:'PIRDES',     pct:Number(m.pirds_implementados?.pct_meta||0)*100,     metaLabel:`Meta: ${safe(m.pirds_implementados?.meta_anual)}` }
+    {
+      label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental.',
+      acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
+      pct:pctFortalecimiento,
+      pctDisplay:fmtPct(pctFortalecimiento),
+      barPct:pctFortalecimiento
+    },
+    {
+      label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento con fondos CODEDE.',
+      acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
+      pct:pctAsistencia,
+      pctDisplay:fmtPct(pctAsistencia),
+      barPct:pctAsistencia
+    },
+    {
+      label:'2 estudios de caracterización de residuos del sector comercial y mercados, y al menos 5 PIRDES implementados.',
+      acumDisplay:estudios
+        ? `${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`
+        : `${fmt(pirdesVal)} / 5 PIRDES`,
+      pct:pctResiduos,
+      pctDisplay:fmtPct(pctResiduos),
+      barPct:pctResiduos
+    }
   ];
+
   return { ...cfg, latestLabel:`${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`.trim(), periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
 }
 
 async function loadEPC(cfg){
   const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
-  const total = sortByMonth(cast(totalRaw));
+  const total = cast(totalRaw).sort((a,b) => String(a.periodo_clave || '').localeCompare(String(b.periodo_clave || '')) || (Number(a.mes_num||0) - Number(b.mes_num||0)));
   const inds  = cast(indRaw);
   const latest = total.find(r => String(r.is_latest_data_month||'').toLowerCase()==='true') || total[total.length-1] || {};
   const score  = avg(inds.map(r => Number(r.pct_vs_esperado||0)));
   const m = {}; inds.forEach(r => m[r.indicator_id] = r);
-  const keyMetrics = [
-    { label:'Docentes capacitados', meta:m.docentes_capacitados?.meta_anual,  acum:m.docentes_capacitados?.valor_acumulado,  unit:'personas',    pct:Number(m.docentes_capacitados?.pct_meta_anual||0)*100,  metaLabel:`Meta: ${safe(m.docentes_capacitados?.meta_anual)}` },
-    { label:'Centros alcanzados',   meta:m.centros_cobertura?.meta_anual,     acum:m.centros_cobertura?.valor_acumulado,     unit:'centros',     pct:Number(m.centros_cobertura?.pct_meta_anual||0)*100,     metaLabel:`Meta: ${safe(m.centros_cobertura?.meta_anual)}` },
-    { label:'Estudiantes EPC',      meta:m.estudiantes_epc?.meta_anual,       acum:m.estudiantes_epc?.valor_acumulado,       unit:'estudiantes', pct:Number(m.estudiantes_epc?.pct_meta_anual||0)*100,       metaLabel:`Meta: ${safe(m.estudiantes_epc?.meta_anual)}` },
-    { label:'Actividades de campo', meta:m.actividades_campo?.meta_anual,     acum:m.actividades_campo?.valor_acumulado,     unit:'actividades', pct:Number(m.actividades_campo?.pct_meta_anual||0)*100,     metaLabel:`Meta: ${safe(m.actividades_campo?.meta_anual)}` }
+
+  const META_DOCENTES = 121;
+  const META_ESTUDIANTES_MENSUAL = 3514;
+  const META_ESTUDIANTES_MESES = 8;
+  const META_JOVENES = 120;
+  const cohortes = [
+    {
+      nombre: 'Cohorte marzo',
+      inicio: '2026-03',
+      sesiones: [68, 53]
+    },
+    {
+      nombre: 'Cohorte julio',
+      inicio: '2026-07',
+      sesiones: []
+    }
   ];
+
+  const docentesVal = Number(m.docentes_capacitados?.valor_acumulado || 0);
+  const pctDocentes = (docentesVal / META_DOCENTES) * 100;
+
+  const mesesEPC = total.filter(r => {
+    const pk = String(r.periodo_clave || '');
+    return pk >= '2026-03' && pk <= '2026-10';
+  });
+  const mesesCumplidosEstudiantes = mesesEPC.filter(r => Number(r.estudiantes_epc_mes || 0) >= META_ESTUDIANTES_MENSUAL).length;
+  const pctEstudiantes = (mesesCumplidosEstudiantes / META_ESTUDIANTES_MESES) * 100;
+
+  const cohorteActiva = [...cohortes].reverse().find(c => String(latest.periodo_clave || '') >= c.inicio && c.sesiones.length) || cohortes.find(c => c.sesiones.length) || cohortes[0];
+  const inscritosCohorte = Number(cohorteActiva?.sesiones?.[0] || 0);
+  const asistenciaSostenida = Number(cohorteActiva?.sesiones?.[cohorteActiva.sesiones.length - 1] || inscritosCohorte || 0);
+  const pctCohorte = inscritosCohorte > 0 ? (asistenciaSostenida / inscritosCohorte) * 100 : 0;
+  const cohorteDisplay = cohortes.map((c, i) => c.sesiones.length
+    ? `C${i+1} ${fmt(Number(c.sesiones[c.sesiones.length - 1] || 0))}/${fmt(Number(c.sesiones[0] || 0))}`
+    : `C${i+1} pendiente`
+  ).join(' · ');
+
+  const actividadesVal = Number(m.actividades_campo?.valor_acumulado || 0);
+  const actividadesMeta = Number(m.actividades_campo?.meta_anual || 0);
+  const pctActividades = actividadesMeta > 0 ? (actividadesVal / actividadesMeta) * 100 : Number(m.actividades_campo?.pct_meta_anual || 0) * 100;
+
+  const keyMetrics = [
+    {
+      label:'121 docentes capacitados durante la Fase 2 del programa EPC en 50 centros educativos de 13 municipios.',
+      acumDisplay:`${fmt(docentesVal)} / ${fmt(META_DOCENTES)} docentes`,
+      pct:pctDocentes,
+      pctDisplay:fmtPct(pctDocentes),
+      barPct:pctDocentes
+    },
+    {
+      label:'3,514 estudiantes alcanzados mensualmente en 50 escuelas durante los 8 meses de trabajo de EPC 2026.',
+      acumDisplay:`${mesesCumplidosEstudiantes} / ${META_ESTUDIANTES_MESES} meses con ${fmt(META_ESTUDIANTES_MENSUAL)} estudiantes`,
+      pct:pctEstudiantes,
+      pctDisplay:`${mesesCumplidosEstudiantes}/${META_ESTUDIANTES_MESES} meses`,
+      barPct:pctEstudiantes
+    },
+    {
+      label:'120 jóvenes de 12 municipios formados en 5 módulos temáticos con seguimiento de asistencia sostenida por cohorte.',
+      acumDisplay:cohorteDisplay,
+      pct:pctCohorte,
+      pctDisplay:`${fmtPct(pctCohorte)} cohorte activa`,
+      barPct:pctCohorte
+    },
+    {
+      label:'Actividades en campo',
+      acum:actividadesVal,
+      meta:actividadesMeta,
+      unit:'actividades',
+      pct:pctActividades
+    }
+  ];
+
   return { ...cfg, latestLabel:`${safe(latest.mes_label)} 2026`, periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
 }
 
@@ -749,18 +853,20 @@ async function loadEPC(cfg){
    RENDER MÉTRICAS
 ──────────────────────────────── */
 function metricRow(m){
-  const pct = Number(m.pct || 0);
-  const hasPct = !Number.isNaN(pct);
-  const w = hasPct ? Math.min(pct, 140) : 0;
-  const cls = barClass(pct);
-  const acumLabel = m.isMensual
+  const pct = Number(m.pct);
+  const barPct = Number.isFinite(Number(m.barPct)) ? Number(m.barPct) : pct;
+  const hasPct = Number.isFinite(barPct);
+  const w = hasPct ? Math.min(Math.max(barPct, 0), 140) : 0;
+  const cls = barClass(hasPct ? barPct : 0);
+  const acumLabel = m.acumDisplay || (m.isMensual
     ? `${fmt(m.acum, m.unit==='GTQ/día'?1:0)} ${m.unit}`
-    : `${fmt(m.acum, 0)} / ${fmt(m.meta||0)} ${m.unit}`;
+    : `${fmt(m.acum, 0)} / ${fmt(m.meta||0)} ${m.unit}`);
+  const pctLabel = m.pctDisplay || (hasPct ? fmtPct(barPct) : '—');
   return `
     <div class="metric-row">
       <div class="mname">${m.label}</div>
       <div class="mnum">${acumLabel}</div>
-      <div class="mnum">${hasPct ? fmtPct(pct) : '—'}</div>
+      <div class="mnum">${pctLabel}</div>
       <div class="bar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
     </div>
   `;
