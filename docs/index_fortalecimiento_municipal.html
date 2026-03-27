@@ -152,13 +152,19 @@
     .kpi-card.yellow{border-top-color:#d0a000}
     .kpi-card.red{border-top-color:#d15b5b}
     .kpi-card.muted{border-top-color:var(--sky)}
+    .kpi-card[onclick]{cursor:pointer}
+    .kpi-card[onclick]:hover .kpi-label::after{content:' ↗';font-size:.65em;opacity:.45}
     .kpi-top{display:flex;justify-content:space-between;gap:8px;align-items:start;margin-bottom:10px}
+    .kpi-label{font-weight:600;font-size:.78rem;color:var(--text-2);line-height:1.35;flex:1}
     .kpi-title{font-weight:700;font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);min-height:auto;line-height:1.3}
     .kpi-main{display:flex;align-items:baseline;gap:8px;margin:10px 0 6px}
     .kpi-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--text)}
     .kpi-unit{font-size:.79rem;color:var(--muted)}
     .kpi-meta{color:var(--muted);font-size:.79rem;line-height:1.55}
     .kpi-meta + .kpi-meta{margin-top:3px}
+    .kpi-gap-green{color:var(--green)!important}
+    .kpi-gap-yellow{color:var(--gold)!important}
+    .kpi-gap-red{color:var(--red)!important}
 
     /* badge (used by JS inside kpi cards) */
     .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:var(--radius-xs);
