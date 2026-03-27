@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fortalecimiento municipal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lora:wght@600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#eef4fc; --surface:#f4f8fe; --card:#ffffff; --text:#0c1d3a; --text-2:#2a4570; --muted:#6685aa;
+      --line:#c5d8f0; --line-soft:#ddeaf8;
+      --blue:#1a56a8; --blue-mid:#2575cc; --blue-light:#4a90d9; --blue-soft:#d0e6f8; --blue-pale:#eaf3fd;
+      --sky:#38b6e8; --sky-soft:#d0f0fb; --sky-pale:#eaf9fe;
+      --green:#157a50; --green-mid:#1d9e68; --green-soft:#c5eed9; --green-pale:#eafaf2;
+      --gold:#7a5500; --gold-soft:#fef4cc; --red:#8f1c1c; --red-soft:#fce8e8;
+      --yellow:#7a5500; --yellow-soft:#fef4cc;
+      --shadow-sm:0 1px 4px rgba(10,35,80,.06),0 4px 16px rgba(10,35,80,.06);
+      --shadow:0 2px 12px rgba(10,35,80,.09),0 8px 32px rgba(10,35,80,.08);
+      --shadow-lg:0 8px 40px rgba(10,35,80,.15),0 2px 8px rgba(10,35,80,.06);
+      --radius:18px; --radius-sm:11px; --radius-xs:7px;
+      --font-head:'Lora',Georgia,serif;
+      --font-body:'Sora',system-ui,sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:var(--font-body);
+      background:linear-gradient(160deg,#d8eaff 0%,#eef4fc 38%,#e4f3fb 68%,#f0f6ff 100%) fixed;
+      color:var(--text);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;
+    }
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:
+        radial-gradient(ellipse 90% 70% at 0% -5%,rgba(37,117,204,.20) 0%,transparent 50%),
+        radial-gradient(ellipse 70% 60% at 100% 110%,rgba(56,182,232,.16) 0%,transparent 50%),
+        radial-gradient(ellipse 40% 30% at 82% 8%,rgba(100,200,240,.10) 0%,transparent 50%);
+    }
+    body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,204,.06) 1px,transparent 0);
+      background-size:38px 38px;
+    }
+    .wrap{max-width:1320px;margin:0 auto;padding:26px 20px 64px;position:relative;z-index:1}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:26px;flex-wrap:wrap;
+      position:sticky;top:0;z-index:200;
+      background:rgba(238,244,252,.90);backdrop-filter:blur(18px) saturate(1.6);
+      -webkit-backdrop-filter:blur(18px) saturate(1.6);
+      border-bottom:1px solid var(--line-soft);
+      margin-left:-20px;margin-right:-20px;padding:12px 20px;margin-top:-26px;margin-bottom:20px;
+    }
+    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 11px;border-radius:999px;
+      background:rgba(255,255,255,.8);border:1px solid var(--line);text-decoration:none;
+      color:var(--text-2);font-weight:600;font-size:.84rem;transition:all .2s ease;}
+    .back:hover{background:var(--blue-pale);border-color:var(--blue-soft);color:var(--blue);transform:translateY(-1px)}
+    .back-arrow{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:.75rem;font-weight:700;flex-shrink:0}
+    .control{display:flex;flex-direction:column;gap:6px;min-width:180px}
+    .control label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    .control select{
+      border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;font:inherit;color:var(--text);
+      box-shadow:var(--shadow-sm);outline:none;
+    }
+    .control select:focus{border-color:var(--blue-light);box-shadow:0 0 0 4px rgba(37,117,204,.1)}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:18px}
+    .hero-main{padding:30px 34px 26px;background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);position:relative;overflow:hidden}
+    .hero-main::before{content:'';position:absolute;right:-10%;top:-20%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.18),transparent 60%)}
+    .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-mid);margin-bottom:8px}
+    h1{font-family:var(--font-head);font-size:2.35rem;line-height:1.1;margin-bottom:12px;max-width:14ch}
+    .sub{color:var(--text-2);max-width:70ch}
+    .hero-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.7);font-size:.82rem;color:var(--text-2);font-weight:600}
+    .hero-side{padding:22px;display:grid;gap:12px;align-content:start;background:linear-gradient(180deg,#ffffff,#f4f8fe)}
+    .hero-stat{padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
+    .hero-stat .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:6px}
+    .hero-stat .v{font-size:1.6rem;font-weight:800;color:var(--text)}
+    .hero-stat .d{font-size:.88rem;color:var(--text-2)}
+    .section{margin-top:22px}
+    .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .section-head h2{font-size:1.24rem;font-family:var(--font-head)}
+    .section-head p{color:var(--muted);font-size:.92rem}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+    .kpi-card{padding:18px;position:relative;overflow:hidden}
+    .kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--blue-light)}
+    .kpi-card.green::after{background:var(--green-mid)}
+    .kpi-card.yellow::after{background:#d0a000}
+    .kpi-card.red::after{background:#d15b5b}
+    .kpi-card.muted::after{background:var(--sky)}
+    .kpi-title{font-size:.86rem;color:var(--text-2);min-height:46px;font-weight:700}
+    .kpi-main{display:flex;align-items:baseline;gap:8px;margin:12px 0 8px}
+    .kpi-value{font-size:2rem;font-weight:800;line-height:1}
+    .kpi-unit{font-size:.88rem;color:var(--muted);font-weight:700}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.76rem;font-weight:700}
+    .badge.green{background:var(--green-pale);color:var(--green)}
+    .badge.yellow{background:var(--gold-soft);color:var(--gold)}
+    .badge.red{background:var(--red-soft);color:var(--red)}
+    .badge.muted{background:var(--sky-pale);color:var(--blue-mid)}
+    .micro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+    .micro > div{padding:9px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft)}
+    .micro .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+    .micro .val{font-size:1rem;font-weight:800;color:var(--text)}
+    .progress{height:9px;background:var(--blue-pale);border-radius:999px;overflow:hidden;margin-top:14px}
+    .bar{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--sky));border-radius:999px}
+    .bar.green{background:linear-gradient(90deg,var(--green-mid),#45c687)}
+    .bar.yellow{background:linear-gradient(90deg,#b88a00,#e0b423)}
+    .bar.red{background:linear-gradient(90deg,#c94747,#ea7b7b)}
+    .panel-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:16px}
+    .panel{padding:18px}
+    .chart-box{padding:12px 0 0}
+    .chart-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .chart-title h3{font-size:1rem}
+    .chart-note{color:var(--muted);font-size:.84rem}
+    .svg-chart{width:100%;height:auto;display:block}
+    .chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:var(--text-2);font-size:.82rem}
+    .legend-item{display:flex;align-items:center;gap:6px}
+    .legend-dot{width:10px;height:10px;border-radius:50%}
+    .split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .support-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .support-card{padding:16px;background:linear-gradient(180deg,#fff,#f6fafe)}
+    .support-card .v{font-size:1.5rem;font-weight:800}
+    .support-card .k{font-size:.8rem;color:var(--muted);font-weight:700}
+    .note-list{display:grid;gap:10px}
+    .note{padding:12px 14px;border-radius:14px;border:1px solid var(--line-soft);background:var(--surface);color:var(--text-2);font-size:.9rem}
+    .quality-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+    .quality-card{padding:14px;border-radius:14px;background:linear-gradient(180deg,#fff,#f6fafe);border:1px solid var(--line-soft)}
+    .quality-card .module{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase}
+    .quality-card .metric{font-size:1.45rem;font-weight:800;margin:8px 0 2px}
+    .quality-card .subline{font-size:.82rem;color:var(--text-2)}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .tab-btn{border:none;background:#fff;color:var(--text-2);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit;font-weight:700;cursor:pointer}
+    .tab-btn.active{background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(37,117,204,.35)}
+    .table-wrap{overflow:auto;border:1px solid var(--line-soft);border-radius:16px}
+    table{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff}
+    th,td{padding:11px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+    th{position:sticky;top:0;background:#f6fafe;color:var(--text-2);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+    tbody tr:hover{background:#f9fbff}
+    .empty{padding:24px;color:var(--muted);text-align:center;background:var(--surface);border:1px dashed var(--line);border-radius:14px}
+    .foot{margin-top:22px;color:var(--muted);font-size:.84rem;text-align:center}
+    @media (max-width:1100px){
+      .hero,.panel-grid,.split{grid-template-columns:1fr}
+      .kpi-grid,.support-grid,.quality-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width:720px){
+      h1{font-size:1.8rem}
+      .kpi-grid,.support-grid,.quality-grid{grid-template-columns:1fr}
+      .wrap{padding:20px 14px 48px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a href="./index.html" class="back"><span class="back-arrow">←</span> Volver al inicio</a>
+      </div>
+      <div class="topbar-right">
+        <div class="control">
+          <label for="periodSelect">Período</label>
+          <select id="periodSelect"></select>
+        </div>
+        <div class="control">
+          <label for="indicatorSelect">Indicador destacado</label>
+          <select id="indicatorSelect"></select>
+        </div>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="card hero-main">
+        <div class="eyebrow">AALA · tablero operativo</div>
+        <h1>Fortalecimiento municipal</h1>
+        <p class="sub">Seguimiento mensual de capacitaciones, asistencias técnicas, estudios, PIRDES y reuniones. El tablero toma la cohorte desde las fechas capturadas en las filas del sheet, no desde el encabezado.</p>
+        <div class="hero-chips" id="heroChips"></div>
+      </div>
+      <div class="card hero-side">
+        <div class="hero-stat">
+          <div class="k">Período seleccionado</div>
+          <div class="v" id="heroPeriod">—</div>
+          <div class="d" id="heroRange">—</div>
+        </div>
+        <div class="hero-stat">
+          <div class="k">Meses detectados</div>
+          <div class="v" id="heroMonths">—</div>
+          <div class="d">Cohortes disponibles para filtrar</div>
+        </div>
+        <div class="hero-stat">
+          <div class="k">Actualización</div>
+          <div class="v" id="heroUpdate">—</div>
+          <div class="d" id="heroNotes">—</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Indicadores de avance</h2>
+          <p>Tarjetas principales contra meta anual y meta de cohorte del período seleccionado.</p>
+        </div>
+      </div>
+      <div class="kpi-grid" id="kpiGrid"></div>
+    </section>
+
+    <section class="section panel-grid">
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Seguimiento de cohorte</h3>
+            <div class="chart-note">Acumulado del indicador seleccionado frente a la meta de cohorte.</div>
+          </div>
+        </div>
+        <div class="chart-box" id="trendChart"></div>
+      </div>
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Semáforo del período</h3>
+            <div class="chart-note">Color operativo según avance acumulado vs meta de cohorte.</div>
+          </div>
+        </div>
+        <div id="semaforoBoard"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Producción del período</h2>
+          <p>Métricas operativas del mes para lectura rápida del programa.</p>
+        </div>
+      </div>
+      <div class="support-grid" id="supportGrid"></div>
+    </section>
+
+    <section class="section split">
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Capacitaciones por tema</h3>
+            <div class="chart-note">Temas homologados para no depender de nombres literales del sheet.</div>
+          </div>
+        </div>
+        <div id="temaChart"></div>
+      </div>
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Municipios alcanzados en capacitaciones núcleo</h3>
+            <div class="chart-note">Cuenta solo municipios efectivamente capturados en el período.</div>
+          </div>
+        </div>
+        <div id="municipioChart"></div>
+      </div>
+    </section>
+
+    <section class="section split">
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Asistencias por sector</h3>
+            <div class="chart-note">Incluye el proxy operativo mientras no exista columna explícita de CODEDE.</div>
+          </div>
+        </div>
+        <div id="asistenciaChart"></div>
+      </div>
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Estudios por sector</h3>
+            <div class="chart-note">Muestra estudios registrados y los finalizados en el período.</div>
+          </div>
+        </div>
+        <div id="estudioChart"></div>
+      </div>
+    </section>
+
+    <section class="section split">
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Reuniones por tipo</h3>
+            <div class="chart-note">Seguimiento del eje CODEMA, mesas técnicas y otras reuniones.</div>
+          </div>
+        </div>
+        <div id="reunionChart"></div>
+      </div>
+      <div class="card panel">
+        <div class="chart-title">
+          <div>
+            <h3>Calidad de datos del período</h3>
+            <div class="chart-note">Las alertas no excluyen la fila si sí trae evidencia operativa mínima.</div>
+          </div>
+        </div>
+        <div id="qualityCards"></div>
+      </div>
+    </section>
+
+    <section class="section split">
+      <div class="card panel">
+        <div class="section-head" style="margin-bottom:10px">
+          <div>
+            <h2>Notas operativas</h2>
+            <p>Convenciones y decisiones del transform publicadas junto al tablero.</p>
+          </div>
+        </div>
+        <div class="note-list" id="noteList"></div>
+      </div>
+      <div class="card panel">
+        <div class="section-head" style="margin-bottom:10px">
+          <div>
+            <h2>Diagnóstico del período</h2>
+            <p>Lectura rápida de lo que más se movió en la cohorte seleccionada.</p>
+          </div>
+        </div>
+        <div class="note-list" id="diagnosticList"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Detalle del período</h2>
+          <p>Filas del mes seleccionado por módulo. Sirve para revisar evidencia sin salir del dashboard.</p>
+        </div>
+      </div>
+      <div class="tabs" id="detailTabs"></div>
+      <div id="detailTable"></div>
+    </section>
+
+    <div class="foot">Dashboard de Fortalecimiento municipal · AALA</div>
+  </div>
+
+  <script src="./fortalecimiento_municipal.js"></script>
+</body>
+</html>
