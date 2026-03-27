@@ -1,0 +1,64 @@
+name: Publish Conservando Atitlan
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 11 * * *"   # diario 05:20 Guatemala
+
+permissions:
+  contents: write
+
+jobs:
+  publish-conservando-atitlan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create folders
+        run: |
+          mkdir -p data_raw/conservando_atitlan
+          mkdir -p data_processed/conservando_atitlan
+          mkdir -p docs/data/conservando_atitlan
+
+      - name: Read Conservando Atitlan sheet
+        env:
+          GOOGLE_CREDS_JSON: ${{ secrets.GOOGLE_CREDS_JSON }}
+          SHEET_ID_CONSERVANDO_ATITLAN: ${{ secrets.SHEET_ID_CONSERVANDO_ATITLAN }}
+        run: python scripts/read_conservando_atitlan.py
+
+      - name: Transform Conservando Atitlan data
+        run: python scripts/transform_conservando_atitlan.py
+
+      - name: Commit published CSVs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/conservando_atitlan/*.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Conservando Atitlan dashboard CSVs"
+            git push
+          fi
+
+      - name: Upload raw CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-csv-conservando-atitlan
+          path: data_raw/conservando_atitlan/*
+
+      - name: Upload processed CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: processed-csv-conservando-atitlan
+          path: data_processed/conservando_atitlan/*.csv
