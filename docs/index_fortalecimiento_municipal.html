@@ -657,6 +657,15 @@ td.destacado { font-weight: 600; color: var(--text-2) }
 }
 .chart-host { cursor: zoom-in }
 .chart-host:hover { outline: 2px solid var(--accent-soft); border-radius: var(--radius-sm) }
+/* Alertas en grid 2 columnas */
+.alertas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 4px;
+}
+.alerta strong { font-weight: 600 }  /* menos heavy que bold puro */
+@media (max-width: 700px) { .alertas-grid { grid-template-columns: 1fr } }
 
 .kpi-nota-proxy {
   margin-top: 8px; padding: 7px 10px;
@@ -1014,7 +1023,7 @@ function buildHTML(tot,totPrev,inds,indsPrim,capTema,capMuni,asistSector,reunTip
       <h3>¿Cómo vamos en el año?</h3>
       <p class="panel-sub">Avance acumulado de cada indicador primario frente a su meta anual. La línea punteada marca el ritmo esperado al corte.</p>
       <div class="chart-host" id="grafAcum">${grafAcumHTML}</div>
-      <div class="nota-narrativa" id="notaAcum"></div>
+
     </article>
     <div style="display:grid;gap:16px">
       <article class="card panel">
@@ -1062,18 +1071,16 @@ function buildHTML(tot,totPrev,inds,indsPrim,capTema,capMuni,asistSector,reunTip
 <!-- ALERTAS -->
 <div class="divider">Lectura del período</div>
 <section class="section s6">
-  <div class="grid-2">
-    <article class="card panel">
-      <h3>El programa nos dice</h3>
-      <p class="panel-sub">Señales clave que requieren atención o celebración en ${mesLabel}.</p>
-      <div class="alertas-list">${alertasHTML}</div>
-    </article>
-    <article class="card panel">
-      <h3>Todos los indicadores al corte</h3>
-      <p class="panel-sub">Lectura completa de primarios y complementarios.</p>
-      <div class="tbl-wrap">${buildTablaIndicadores(inds)}</div>
-    </article>
-  </div>
+  <article class="card panel" style="margin-bottom:16px">
+    <h3>El programa nos dice</h3>
+    <p class="panel-sub">Señales clave que requieren atención o celebración en ${mesLabel}.</p>
+    <div class="alertas-grid">${alertasHTML}</div>
+  </article>
+  <article class="card panel">
+    <h3>Todos los indicadores al corte</h3>
+    <p class="panel-sub">Lectura completa de indicadores primarios y complementarios · ${mesLabel}.</p>
+    <div class="tbl-wrap">${buildTablaIndicadores(inds)}</div>
+  </article>
 </section>
 `;
 }
@@ -1212,8 +1219,8 @@ function buildGrafAcum(indsPrim,p){
         fill="${col}" opacity="${metaSuperada?0.75:0.85}"/>
       ${metaSuperada?`<text x="${labelX+wReal-6}" y="${y+barH/2}" dominant-baseline="central" text-anchor="end"
         style="font-size:9px;font-weight:700;fill:#fff;font-family:'JetBrains Mono',monospace">✓ META</text>`:''}
-      <text x="${labelX+wReal+7}" y="${y+barH/2}" dominant-baseline="central"
-        style="font-size:10px;font-weight:700;fill:${pctColor};font-family:'JetBrains Mono',monospace">${pctLabel}</text>
+      ${!metaSuperada?`<text x="${labelX+wReal+7}" y="${y+barH/2}" dominant-baseline="central"
+        style="font-size:10px;font-weight:700;fill:${pctColor};font-family:'JetBrains Mono',monospace">${pctLabel}</text>`:''}
     </g>`;
   });
 
@@ -1222,7 +1229,10 @@ function buildGrafAcum(indsPrim,p){
 
 /* ── Gráfica temas ── */
 function buildGrafTemas(temas){
-  if(!temas.length) return '<p class="panel-sub" style="margin-top:8px">Sin capacitaciones registradas este período.</p>';
+  if(!temas.length) return `<div class="alerta informacion" style="margin-top:4px">
+  <span class="alerta-icon">📋</span>
+  <span>No se realizaron capacitaciones grupales en este período. La actividad del mes se concentró en asistencias técnicas directas y reuniones de coordinación.</span>
+</div>`;
   const maxP=Math.max(...temas.map(r=>+r.personas||0));
   const h=temas.length*44+10;
   const W=400;
@@ -1292,7 +1302,7 @@ function buildGrafReun(reun){
   });
   return `<svg viewBox="0 0 ${W} 195" style="overflow:visible;width:100%">
     <text x="${cxBase}" y="${cy}" text-anchor="middle" dominant-baseline="central" style="font-size:22px;font-weight:500;fill:var(--text);font-family:var(--font-mono)">${total}</text>
-    <text x="${cxBase}" y="${cy+20}" text-anchor="middle" style="font-size:10px;fill:var(--muted);font-family:var(--font-body)">reuniones</text>
+    <text x="${cxBase}" y="${cy+20}" text-anchor="middle" style="font-size:10px;fill:var(--muted);font-family:var(--font-body)">este mes</text>
     ${paths}
     <g transform="translate(0,16)">${legend}</g>
   </svg>`;
