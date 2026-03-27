@@ -485,73 +485,184 @@
 
 
 
+    /* ── ESTADO GLOBAL (fortalecimiento-style pill) ── */
+    .estado-global{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap;border:1.5px solid transparent;transition:all .3s ease}
+    .estado-global .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;animation:pulse-dot 2.5s ease-in-out infinite}
+    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.42}}
+    .estado-global.green{background:var(--green-pale);color:var(--green);border-color:rgba(24,122,90,.2)}
+    .estado-global.green .dot{background:var(--green)}
+    .estado-global.yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(139,106,23,.22)}
+    .estado-global.yellow .dot{background:var(--gold)}
+    .estado-global.red{background:var(--red-soft);color:var(--red);border-color:rgba(162,50,52,.2)}
+    .estado-global.red .dot{background:var(--red)}
+    .estado-global.sin-actividad{background:var(--surface);color:var(--muted);border-color:var(--line)}
+    .estado-global.sin-actividad .dot{background:var(--muted)}
+
     /* ── PRESENTATION MODE ── */
     body.presentation-open .wrap{filter:blur(10px) saturate(.82);transform:scale(.992);pointer-events:none;user-select:none;transition:filter .35s ease,transform .35s ease}
-    .presentation-overlay{position:fixed;inset:0;z-index:2600;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(7,16,34,.18);backdrop-filter:blur(22px) saturate(.85);-webkit-backdrop-filter:blur(22px) saturate(.85);opacity:0;pointer-events:none;transition:opacity .28s ease}
+    .presentation-overlay{
+      position:fixed;inset:0;z-index:2600;
+      display:flex;flex-direction:column;
+      background:linear-gradient(160deg,rgba(10,22,42,.96) 0%,rgba(18,36,60,.97) 50%,rgba(8,24,40,.95) 100%);
+      backdrop-filter:blur(24px) saturate(.7);-webkit-backdrop-filter:blur(24px) saturate(.7);
+      opacity:0;pointer-events:none;transition:opacity .3s ease;
+      padding:0;overflow:hidden;
+    }
     .presentation-overlay.open{opacity:1;pointer-events:auto}
-    .presentation-shell{width:min(1180px,94vw);display:grid;gap:14px}
-    .presentation-top,.presentation-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#f3f8ff}
-    .presentation-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:.88rem;font-weight:700;letter-spacing:.02em}
-    .presentation-meta span{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18)}
-    .presentation-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .presentation-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:999px;padding:10px 16px;background:rgba(255,255,255,.13);color:#fff;font-family:var(--font-body);font-size:.84rem;font-weight:700;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease;border:1px solid rgba(255,255,255,.16)}
-    .presentation-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.2)}
-    .presentation-btn.primary{background:linear-gradient(135deg,var(--green-mid),var(--green));border-color:transparent}
-    .presentation-stage{overflow:hidden;border-radius:30px;box-shadow:0 40px 100px rgba(5,12,28,.42),0 10px 26px rgba(5,12,28,.24)}
-    .presentation-track{display:flex;transition:transform .45s cubic-bezier(.22,.61,.36,1)}
-    .presentation-slide{flex:0 0 100%;aspect-ratio:16/9;background:linear-gradient(145deg,#f8fbff 0%,#edf5ff 44%,#dfeefe 100%);color:var(--text);padding:34px 38px;position:relative;overflow:hidden}
-    .presentation-slide::before{content:'';position:absolute;inset:auto -10% -28% auto;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.22),transparent 68%);pointer-events:none}
-    .presentation-slide::after{content:'';position:absolute;left:-110px;top:-120px;width:290px;height:290px;border-radius:50%;background:radial-gradient(circle,rgba(37,117,204,.10),transparent 70%);pointer-events:none}
-    .presentation-slide-inner{position:relative;z-index:1;height:100%;display:grid;grid-template-rows:auto auto 1fr auto;gap:18px}
-    .presentation-kicker{display:inline-flex;align-items:center;gap:9px;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-mid)}
-    .presentation-kicker::before{content:'';width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--green-mid),var(--sky))}
-    .presentation-title-row{display:flex;justify-content:space-between;gap:22px;align-items:flex-start}
-    .presentation-title-row h2{font-family:var(--font-head);font-size:2.6rem;line-height:1.03;letter-spacing:-.03em;margin:10px 0 10px;max-width:700px}
-    .presentation-title-row p{font-size:1rem;line-height:1.72;color:var(--text-2);max-width:720px}
-    .presentation-brand-badge{display:grid;justify-items:end;gap:10px;text-align:right}
-    .presentation-brand-badge img{width:170px;max-width:100%;filter:drop-shadow(0 10px 20px rgba(10,35,80,.12))}
-    .presentation-brand-badge small{font-size:.8rem;color:var(--muted);max-width:220px;line-height:1.6}
+
+    /* Chrome bar at top */
+    .presentation-chrome{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 28px;
+      background:rgba(255,255,255,.04);
+      border-bottom:1px solid rgba(255,255,255,.1);
+      flex-shrink:0;
+    }
+    .presentation-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .presentation-meta span{
+      display:inline-flex;align-items:center;gap:6px;padding:6px 13px;
+      border-radius:999px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.02em
+    }
+    .presentation-actions{display:flex;align-items:center;gap:7px}
+    .presentation-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:6px;
+      border:none;border-radius:999px;padding:9px 18px;
+      background:rgba(255,255,255,.1);color:#fff;
+      font-family:var(--font-body);font-size:.82rem;font-weight:700;cursor:pointer;
+      transition:transform .2s ease,background .2s ease;
+      border:1px solid rgba(255,255,255,.14)
+    }
+    .presentation-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.18)}
+    .presentation-btn.primary{background:linear-gradient(135deg,var(--green-mid),var(--green));border-color:transparent;box-shadow:0 4px 18px rgba(36,145,109,.35)}
+    .presentation-btn.primary:hover{background:linear-gradient(135deg,var(--green),var(--green-mid))}
+
+    /* Slide stage — full remaining height */
+    .presentation-stage-wrap{
+      flex:1;min-height:0;display:flex;flex-direction:column;padding:20px 32px 0;overflow:hidden;
+    }
+    .presentation-stage{
+      flex:1;min-height:0;overflow:hidden;
+      border-radius:24px 24px 0 0;
+      box-shadow:0 -8px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08);
+    }
+    .presentation-track{display:flex;height:100%;transition:transform .48s cubic-bezier(.22,.61,.36,1)}
+    .presentation-slide{
+      flex:0 0 100%;height:100%;
+      background:linear-gradient(148deg,#f5fafd 0%,#ebf5fc 40%,#dfedf8 100%);
+      color:var(--text);padding:36px 46px 30px;position:relative;overflow:hidden;
+    }
+    .presentation-slide::before{
+      content:'';position:absolute;inset:auto -8% -22% auto;
+      width:380px;height:380px;border-radius:50%;
+      background:radial-gradient(circle,rgba(83,188,193,.18),transparent 68%);pointer-events:none
+    }
+    .presentation-slide::after{
+      content:'';position:absolute;left:-120px;top:-100px;
+      width:320px;height:320px;border-radius:50%;
+      background:radial-gradient(circle,rgba(43,135,166,.09),transparent 70%);pointer-events:none
+    }
+    .presentation-slide-inner{
+      position:relative;z-index:1;height:100%;
+      display:flex;flex-direction:column;gap:20px;
+    }
+
+    .presentation-kicker{
+      display:inline-flex;align-items:center;gap:9px;padding:7px 14px;
+      border-radius:999px;background:rgba(255,255,255,.75);border:1px solid var(--line-soft);
+      font-size:.71rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--blue-mid);
+      width:fit-content;flex-shrink:0;
+    }
+    .presentation-kicker::before{content:'';width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--green-mid),var(--sky))}
+
+    .presentation-title-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;flex-shrink:0}
+    .presentation-title-row h2{
+      font-family:var(--font-head);font-size:clamp(1.8rem,3.2vw,2.8rem);
+      line-height:1.04;letter-spacing:-.03em;margin:0 0 8px;max-width:680px
+    }
+    .presentation-title-row p{font-size:.97rem;line-height:1.72;color:var(--text-2);max-width:680px}
+    .presentation-brand-badge{display:grid;justify-items:end;gap:10px;text-align:right;flex-shrink:0}
+    .presentation-brand-badge img{width:150px;max-width:100%;filter:drop-shadow(0 8px 18px rgba(10,35,80,.12))}
+    .presentation-brand-badge small{font-size:.78rem;color:var(--muted);max-width:200px;line-height:1.6}
+
+    /* KPI cards in slides */
     .presentation-summary-grid,.presentation-metric-grid,.presentation-goal-grid{display:grid;gap:14px}
     .presentation-summary-grid{grid-template-columns:repeat(4,1fr)}
     .presentation-metric-grid{grid-template-columns:repeat(4,1fr)}
     .presentation-goal-grid{grid-template-columns:repeat(3,1fr)}
-    .presentation-card{background:rgba(255,255,255,.82);border:1.5px solid rgba(197,216,240,.95);border-radius:24px;padding:18px 18px 16px;box-shadow:0 10px 34px rgba(10,35,80,.09)}
-    .presentation-card small{display:block;font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .presentation-card strong{display:block;font-size:1.45rem;line-height:1.05;font-family:var(--font-mono);font-weight:500;color:var(--text)}
-    .presentation-card p{margin-top:10px;color:var(--text-2);font-size:.84rem;line-height:1.58}
-    .presentation-chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 10px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+
+    .presentation-kpi-pairs{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;flex:1;min-height:0}
+    .presentation-kpi-pair-card{
+      background:rgba(255,255,255,.86);border:1.5px solid rgba(200,220,240,.9);
+      border-radius:22px;padding:20px 22px;box-shadow:0 8px 28px rgba(23,50,58,.1);
+      display:flex;flex-direction:column;gap:8px;overflow:hidden;
+    }
+    .presentation-kpi-pair-card .pkpi-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+    .presentation-kpi-pair-card .pkpi-label{font-size:.69rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+    .presentation-kpi-pair-card .pkpi-value{font-family:var(--font-mono);font-size:2rem;font-weight:500;color:var(--text);line-height:1;letter-spacing:-.02em}
+    .presentation-kpi-pair-card .pkpi-meta{font-size:.82rem;color:var(--muted);line-height:1.5}
+    .presentation-kpi-pair-card .pkpi-bar-wrap{height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:4px}
+    .presentation-kpi-pair-card .pkpi-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid));transition:width .8s cubic-bezier(.4,0,.2,1)}
+    .presentation-kpi-pair-card .pkpi-bar.green{background:linear-gradient(90deg,var(--green-mid),var(--green))}
+    .presentation-kpi-pair-card .pkpi-bar.yellow{background:linear-gradient(90deg,#d4a017,var(--gold))}
+    .presentation-kpi-pair-card .pkpi-bar.red{background:linear-gradient(90deg,#e87070,var(--red))}
+    .presentation-kpi-pair-card .pkpi-mini-chart{flex:1;min-height:0;margin-top:8px}
+
+    .presentation-card{
+      background:rgba(255,255,255,.82);border:1.5px solid rgba(200,220,240,.9);
+      border-radius:22px;padding:18px 20px 16px;box-shadow:0 8px 28px rgba(23,50,58,.09)
+    }
+    .presentation-card small{display:block;font-size:.69rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+    .presentation-card strong{display:block;font-size:1.55rem;line-height:1.05;font-family:var(--font-mono);font-weight:500;color:var(--text)}
+    .presentation-card p{margin-top:8px;color:var(--text-2);font-size:.83rem;line-height:1.58}
+    .presentation-chip{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:6px 11px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
     .presentation-chip.green{background:var(--green-soft);color:var(--green)}
     .presentation-chip.yellow{background:var(--gold-soft);color:var(--gold)}
     .presentation-chip.red{background:var(--red-soft);color:var(--red)}
     .presentation-chip.muted{background:var(--surface);color:var(--muted)}
-    .presentation-highlight-strip{display:flex;gap:10px;flex-wrap:wrap}
-    .presentation-highlight-strip span{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.66);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700;color:var(--text-2)}
-    .presentation-columns{display:grid;grid-template-columns:1.18fr .82fr;gap:16px;min-height:0}
-    .presentation-visual-card,.presentation-list-card{background:rgba(255,255,255,.84);border:1.5px solid rgba(197,216,240,.95);border-radius:24px;padding:18px 20px;box-shadow:0 10px 34px rgba(10,35,80,.09);display:flex;flex-direction:column}
-    .presentation-visual-card h3,.presentation-list-card h3{font-family:var(--font-head);font-size:1.22rem;margin-bottom:4px}
-    .presentation-visual-card p,.presentation-list-card p{color:var(--muted);font-size:.84rem;line-height:1.55;margin-bottom:12px}
-    .presentation-visual{flex:1;min-height:0;background:linear-gradient(180deg,rgba(244,248,254,.95),rgba(255,255,255,.92));border-radius:18px;border:1px solid var(--line-soft);padding:12px}
-    .presentation-list{display:grid;gap:10px;margin-top:4px}
-    .presentation-list-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:11px 12px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
-    .presentation-rank{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:.88rem}
-    .presentation-list-item strong{display:block;font-size:.94rem;color:var(--text)}
-    .presentation-list-item span{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
-    .presentation-list-item em{font-style:normal;font-family:var(--font-mono);font-size:.84rem;color:var(--blue-mid);font-weight:700}
-    .presentation-alerts{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .presentation-alert-stack{display:grid;gap:10px}
-    .presentation-alert-box{padding:14px 16px;border-radius:18px;font-size:.9rem;line-height:1.65;border:1px solid transparent;background:#fff}
+
+    .presentation-highlight-strip{display:flex;gap:10px;flex-wrap:wrap;flex-shrink:0}
+    .presentation-highlight-strip span{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 15px;
+      border-radius:999px;background:rgba(255,255,255,.68);border:1px solid var(--line-soft);
+      font-size:.81rem;font-weight:700;color:var(--text-2)
+    }
+    .presentation-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;flex:1;min-height:0}
+    .presentation-visual-card,.presentation-list-card{
+      background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);
+      border-radius:22px;padding:18px 22px;box-shadow:0 8px 28px rgba(23,50,58,.09);
+      display:flex;flex-direction:column;overflow:hidden;
+    }
+    .presentation-visual-card h3,.presentation-list-card h3{font-family:var(--font-head);font-size:1.18rem;margin-bottom:4px}
+    .presentation-visual-card p,.presentation-list-card p{color:var(--muted);font-size:.82rem;line-height:1.55;margin-bottom:10px}
+    .presentation-visual{flex:1;min-height:0;background:linear-gradient(180deg,rgba(244,250,254,.9),rgba(255,255,255,.9));border-radius:16px;border:1px solid var(--line-soft);padding:10px;overflow:hidden}
+    .presentation-list{display:grid;gap:9px;overflow:auto;flex:1}
+    .presentation-list-item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--surface);border:1px solid var(--line-soft)}
+    .presentation-rank{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--blue-soft);color:var(--blue);font-weight:800;font-size:.84rem;flex-shrink:0}
+    .presentation-list-item strong{display:block;font-size:.9rem;color:var(--text)}
+    .presentation-list-item span{display:block;font-size:.76rem;color:var(--muted);margin-top:1px}
+    .presentation-list-item em{font-style:normal;font-family:var(--font-mono);font-size:.82rem;color:var(--blue-mid);font-weight:700}
+
+    .presentation-alerts{display:grid;grid-template-columns:1fr 1fr;gap:16px;flex:1}
+    .presentation-alert-stack{display:grid;gap:10px;align-content:start}
+    .presentation-alert-box{padding:14px 18px;border-radius:18px;font-size:.88rem;line-height:1.65;border:1px solid transparent;background:#fff}
     .presentation-alert-box.red{background:var(--red-soft);color:var(--red);border-color:rgba(143,28,28,.14)}
-    .presentation-alert-box.yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(122,85,0,.16)}
-    .presentation-alert-box.green{background:var(--green-pale);color:var(--green);border-color:rgba(21,122,80,.14)}
-    .presentation-note{padding:18px 20px;border-radius:22px;background:rgba(255,255,255,.82);border:1.5px solid rgba(197,216,240,.95);box-shadow:0 10px 34px rgba(10,35,80,.09)}
-    .presentation-note h3{font-family:var(--font-head);font-size:1.25rem;margin-bottom:10px}
-    .presentation-note p{font-size:.96rem;line-height:1.8;color:var(--text-2)}
-    .presentation-note p+p{margin-top:10px}
-    .presentation-footer{font-size:.82rem;color:#eef4ff}
-    .presentation-dots{display:flex;gap:8px;align-items:center}
-    .presentation-dot{width:10px;height:10px;border-radius:50%;border:none;background:rgba(255,255,255,.35);cursor:pointer;transition:transform .2s ease,background .2s ease}
-    .presentation-dot.active{background:#fff;transform:scale(1.15)}
-    .presentation-counter{font-family:var(--font-mono);font-size:.85rem;background:rgba(255,255,255,.12);padding:7px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
+    .presentation-alert-box.yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(139,106,23,.16)}
+    .presentation-alert-box.green{background:var(--green-pale);color:var(--green);border-color:rgba(24,122,90,.14)}
+    .presentation-note{padding:20px 22px;border-radius:22px;background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);box-shadow:0 8px 28px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:10px}
+    .presentation-note h3{font-family:var(--font-head);font-size:1.2rem;margin-bottom:2px}
+    .presentation-note p{font-size:.93rem;line-height:1.78;color:var(--text-2)}
+
+    /* Footer bar */
+    .presentation-footer-bar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:12px 32px 16px;flex-shrink:0;
+    }
+    .presentation-dots{display:flex;gap:7px;align-items:center}
+    .presentation-dot{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.28);cursor:pointer;transition:transform .2s ease,background .2s ease}
+    .presentation-dot.active{background:#fff;transform:scale(1.2)}
+    .presentation-counter{font-family:var(--font-mono);font-size:.82rem;background:rgba(255,255,255,.1);padding:6px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
     @media(max-width:1100px){.hero,.intro-grid,.grid-2,.grid-2-equal,.toolbar,.exec-hero-row,.exec-kpi-grid,.presentation-columns,.presentation-alerts{grid-template-columns:1fr}.hero-shell{grid-template-columns:1fr}.intro-stack{grid-template-columns:1fr}.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}.exec-strip,.exec-row-2,.presentation-summary-grid,.presentation-metric-grid,.presentation-goal-grid{grid-template-columns:repeat(2,1fr)}.exec-toolbar{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(2,1fr)}.hero-grid{grid-template-columns:1fr 1fr}.presentation-title-row{grid-template-columns:1fr;display:grid}.presentation-brand-badge{justify-items:start;text-align:left}}
     @media(max-width:640px){.kpis,.exec-kpi-grid,.exec-strip,.exec-row-2{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr}.hero-main{padding:22px 18px}.hero-main h1{font-size:1.8rem}.hero-tag-row{margin:14px 0 16px}.hero-brand{padding:14px}.intro-story h3,.intro-focus h3,.annual-panel h3{font-size:1.14rem}}
     @media(max-width:700px){.modal-box{max-width:100%;max-height:100vh;border-radius:0}.interp-grid{grid-template-columns:1fr}.presentation-meta span{font-size:.78rem;padding:8px 12px}.presentation-btn{padding:9px 13px}}
@@ -564,6 +675,10 @@
     <div class="topbar-left">
       <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver a inicio</a>
       <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
+      <div class="estado-global sin-actividad" id="estadoGlobal" style="display:none">
+        <span class="dot"></span>
+        <span id="estadoLabel">Cargando…</span>
+      </div>
     </div>
     <div class="topbar-right">
       <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">
@@ -772,22 +887,25 @@
 
 <!-- PRESENTATION MODE -->
 <div class="presentation-overlay" id="presentationOverlay" aria-hidden="true">
-  <div class="presentation-shell">
-    <div class="presentation-top">
-      <div class="presentation-meta" id="presentationMeta"></div>
-      <div class="presentation-actions">
-        <button class="presentation-btn" type="button" onclick="prevPresentationSlide()">&#8592; Anterior</button>
-        <button class="presentation-btn" type="button" onclick="nextPresentationSlide()">Siguiente &#8594;</button>
-        <button class="presentation-btn primary" type="button" onclick="closePresentation()">Cerrar presentación</button>
-      </div>
+  <!-- Chrome bar -->
+  <div class="presentation-chrome">
+    <div class="presentation-meta" id="presentationMeta"></div>
+    <div class="presentation-actions">
+      <button class="presentation-btn" type="button" onclick="prevPresentationSlide()">&#8592; Anterior</button>
+      <button class="presentation-btn" type="button" onclick="nextPresentationSlide()">Siguiente &#8594;</button>
+      <button class="presentation-btn primary" type="button" onclick="closePresentation()">&#215; Cerrar</button>
     </div>
+  </div>
+  <!-- Slide stage -->
+  <div class="presentation-stage-wrap">
     <div class="presentation-stage">
       <div class="presentation-track" id="presentationTrack"></div>
     </div>
-    <div class="presentation-footer">
-      <div class="presentation-dots" id="presentationDots"></div>
-      <div class="presentation-counter" id="presentationCounter">1 / 1</div>
-    </div>
+  </div>
+  <!-- Footer bar -->
+  <div class="presentation-footer-bar">
+    <div class="presentation-dots" id="presentationDots"></div>
+    <div class="presentation-counter" id="presentationCounter">1 / 1</div>
   </div>
 </div>
 
@@ -904,10 +1022,25 @@ function render(state){
   renderTerritory(state);
   renderDiagnostic(state);
   try{ renderNewCharts(state); }catch(e){ console.warn('renderNewCharts:',e); }
+  updateEstadoGlobal(state);
   setTimeout(setupChartZoom, 300);
   if(document.getElementById('presentationOverlay')?.classList.contains('open')){
     setTimeout(function(){ buildPresentation(getPresentationState()); }, 180);
   }
+}
+
+function updateEstadoGlobal(state){
+  const el=document.getElementById('estadoGlobal');
+  const lbl=document.getElementById('estadoLabel');
+  if(!el||!lbl) return;
+  const period=getSelectedPeriod(state);
+  if(!period){ el.style.display='none'; return; }
+  const status=buildProgramStatus(state,period);
+  const clsMap={'green':'green','yellow':'yellow','red':'red'};
+  const cls=clsMap[status.className]||'sin-actividad';
+  el.className='estado-global '+cls;
+  lbl.textContent=periodLabel(period)+' · '+status.label;
+  el.style.display='inline-flex';
 }
 
 function bindControls(state){
@@ -2600,53 +2733,161 @@ function buildPresentation(state){
     <span>${escapeHtml(status.label)}</span>`;
 
   track.innerHTML=`
+    <!-- SLIDE 1: Portada / Resumen ejecutivo -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
         <div class="presentation-kicker">Narrativa visual del dashboard</div>
         <div class="presentation-title-row">
           <div>
             <h2>Resumen ejecutivo de Atitlán Recicla</h2>
-            <p>Una vista tipo presentación con los KPIs clave del período, lista para exponer resultados sin salir del tablero. El enfoque visual conserva el contexto institucional y prioriza lectura rápida.</p>
+            <p>Vista rápida del período para exponer resultados en reunión. KPIs clave, estado del programa y contexto territorial en una sola pantalla.</p>
           </div>
           <div class="presentation-brand-badge">
             <img src="./logosatitlan.png" alt="Logotipos de Atitlán Recicla">
-            <small>Asociación Amigos del Lago de Atitlán · economía circular · liderazgo de mujeres recicladoras</small>
+            <small>Cooperativa de mujeres recicladoras · economía circular · cuenca del Lago de Atitlán</small>
           </div>
         </div>
         <div class="presentation-summary-grid">
           ${heroCards.map(card=>`<article class="presentation-card"><small>${escapeHtml(card.label)}</small><strong>${escapeHtml(card.value)}</strong><p>${escapeHtml(card.sub)}</p></article>`).join('')}
         </div>
         <div class="presentation-highlight-strip">
-          <span>Vista actual: <strong>${escapeHtml(getZoneLabel(state.selectedZone))}</strong></span>
-          <span>Zonas con actividad: <strong>${escapeHtml(String(zoneRows.length))}</strong></span>
-          <span>Territorios con actividad: <strong>${escapeHtml(String(territoryRows.length))}</strong></span>
-          <span>Estado general: <strong>${escapeHtml(status.label)}</strong></span>
+          <span>📍 Vista: <strong>${escapeHtml(getZoneLabel(state.selectedZone))}</strong></span>
+          <span>🗺️ Zonas activas: <strong>${escapeHtml(String(zoneRows.length))}</strong></span>
+          <span>📦 Territorios activos: <strong>${escapeHtml(String(territoryRows.length))}</strong></span>
+          <span>⚡ Estado: <strong>${escapeHtml(status.label)}</strong></span>
         </div>
       </div>
     </section>
 
+    <!-- SLIDE 2: KPIs de volumen (Materiales + PET) -->
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">KPIs de volumen</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Materiales y PET recolectado</h2>
+            <p>Indicadores de volumen físico del período. El avance acumulado muestra dónde está el programa respecto a la meta anual.</p>
+          </div>
+        </div>
+        <div class="presentation-kpi-pairs">
+          ${(()=>{
+            const ids=['materiales_generales','pet'];
+            return ids.map(id=>{
+              const row=metrics[id];if(!row)return '';
+              const cls=semaforoClass(row.monthlyPct);
+              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
+              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
+              return `<article class="presentation-kpi-pair-card">
+                <div class="pkpi-header">
+                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
+                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
+                </div>
+                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
+                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
+                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
+              </article>`;
+            }).join('');
+          })()}
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: KPIs de vidrio e ingresos -->
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">KPIs de vidrio e ingresos</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Vidrio recolectado e ingreso bruto</h2>
+            <p>Indicadores económicos y de vidrio del período. El vidrio es uno de los materiales con mayor peso en el ingreso de la cooperativa.</p>
+          </div>
+        </div>
+        <div class="presentation-kpi-pairs">
+          ${(()=>{
+            const ids=['vidrio','ingreso_bruto_total'];
+            return ids.map(id=>{
+              const row=metrics[id];if(!row)return '';
+              const cls=semaforoClass(row.monthlyPct);
+              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
+              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
+              return `<article class="presentation-kpi-pair-card">
+                <div class="pkpi-header">
+                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
+                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
+                </div>
+                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
+                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
+                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
+              </article>`;
+            }).join('');
+          })()}
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: KPIs de lideresas y participación -->
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">KPIs de lideresas y participación</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Ingreso de lideresas y participación</h2>
+            <p>Indicadores que miden el impacto social directo: ingreso diario de las lideresas y su participación en actividades y comercialización.</p>
+          </div>
+        </div>
+        <div class="presentation-kpi-pairs">
+          ${(()=>{
+            const ids=['ingreso_diario_lideresa','participacion_actividades'];
+            return ids.map(id=>{
+              const row=metrics[id];if(!row)return '';
+              const cls=semaforoClass(row.monthlyPct);
+              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
+              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
+              return `<article class="presentation-kpi-pair-card">
+                <div class="pkpi-header">
+                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
+                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
+                </div>
+                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
+                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
+                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
+                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
+              </article>`;
+            }).join('');
+          })()}
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Panel completo de KPIs -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
         <div class="presentation-kicker">Todos los KPIs</div>
         <div class="presentation-title-row">
           <div>
-            <h2>Panel de indicadores del corte</h2>
-            <p>Los KPIs del tablero se reordenan como diapositiva para facilitar su lectura durante una exposición. Conservan metas, semáforos y aportes acumulados.</p>
+            <h2>Panel completo de indicadores</h2>
+            <p>Todos los KPIs del período en una vista consolidada. Conservan metas, semáforos y avance acumulado anual.</p>
           </div>
         </div>
-        <div class="presentation-metric-grid">
+        <div class="presentation-metric-grid" style="flex:1;align-content:start">
           ${KPI_IDS.map(id=>{ const row=metrics[id]; if(!row) return ''; const chipClass=state.selectedZone==='__all__'?semaforoClass(row.monthlyPct):shareClass(row.sharePct); const chipText=state.selectedZone==='__all__'?`${formatPercent(row.monthlyPct)} del mes`:`${formatPercent(row.sharePct)} del total`; const foot=state.selectedZone==='__all__'?`Avance anual: ${formatPercent(row.annualPct)}`:`Acumulado zona: ${formatPercent(row.annualSharePct)}`; return `<article class="presentation-card"><small>${escapeHtml(row.label)}</small><strong>${escapeHtml(formatByUnit(row.valor,row.unit))}</strong><p>${escapeHtml(foot)}</p><span class="presentation-chip ${chipClass}">${escapeHtml(chipText)}</span></article>`; }).join('')}
         </div>
       </div>
     </section>
 
+    <!-- SLIDE 6: Tendencia histórica + zonas -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
         <div class="presentation-kicker">Tendencia y zonas</div>
         <div class="presentation-title-row">
           <div>
             <h2>Cómo evoluciona el período y dónde se concentra el volumen</h2>
-            <p>En una sola diapositiva se combinan la serie histórica del indicador seleccionado y la comparativa territorial por zona, para que la historia del período sea más clara en reunión.</p>
+            <p>Serie histórica del indicador seleccionado combinada con la comparativa territorial por zona.</p>
           </div>
         </div>
         <div class="presentation-columns">
@@ -2666,13 +2907,14 @@ function buildPresentation(state){
       </div>
     </section>
 
+    <!-- SLIDE 7: Composición de materiales -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
         <div class="presentation-kicker">Composición y materiales</div>
         <div class="presentation-title-row">
           <div>
-            <h2>Qué materiales dominan la operación actual</h2>
-            <p>El modo presentación también muestra una lectura más visual de la mezcla de materiales, resaltando concentración y oportunidades para diversificar la recuperación.</p>
+            <h2>Qué materiales dominan la operación</h2>
+            <p>Mezcla de materiales del período: concentración, participación relativa y oportunidades de diversificación.</p>
           </div>
         </div>
         <div class="presentation-columns">
@@ -2685,35 +2927,49 @@ function buildPresentation(state){
             <h3>Top materiales</h3>
             <p>Participación relativa dentro del volumen registrado.</p>
             <div class="presentation-list">
-              ${materialGroup.map((row,idx)=>{ const total=materialGroup.reduce((sum,r)=>sum+safeNumber(r.cantidad),0)||1; const pct=Math.round((safeNumber(row.cantidad)/total)*100); return `<div class="presentation-list-item"><div class="presentation-rank">${idx+1}</div><div><strong>${escapeHtml(row.material||'—')}</strong><span>${escapeHtml(String(pct))}% del total del mix</span></div><em>${escapeHtml(formatNumber(safeNumber(row.cantidad)))}</em></div>`; }).join('') || '<div class="presentation-alert-box green">No hay materiales para este corte.</div>'}
+              ${materialGroup.map((row,idx)=>{ const total=materialGroup.reduce((sum,r)=>sum+safeNumber(r.cantidad),0)||1; const pct=Math.round((safeNumber(row.cantidad)/total)*100); return `<div class="presentation-list-item"><div class="presentation-rank">${idx+1}</div><div><strong>${escapeHtml(row.material||'—')}</strong><span>${escapeHtml(String(pct))}% del mix</span></div><em>${escapeHtml(formatNumber(safeNumber(row.cantidad)))}</em></div>`; }).join('') || '<div class="presentation-alert-box green">No hay materiales para este corte.</div>'}
             </div>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- SLIDE 8: Metas anuales acumuladas -->
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">Metas anuales</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Avance acumulado hacia metas 2026</h2>
+            <p>Progreso real acumulado desde enero hasta el corte actual versus las metas anuales oficiales del programa.</p>
+          </div>
+        </div>
+        <div class="presentation-goal-grid" style="flex:1;align-content:start">
+          ${ANNUAL_GOAL_IDS.slice(0,6).map(id=>{ const cfg=METRIC_CONFIG[id]; if(!cfg) return ''; const annualGoal=safeNumber(cfg.meta)*11; const accumulated=sumMetricSeries(state,id,period.anio,'__all__',period.mes_num); const pct=annualGoal?accumulated/annualGoal:0; const cls=semaforoClassAnnual(pct); const bw=Math.max(0,Math.min(pct*100,100)).toFixed(1); return `<article class="presentation-card"><small>${escapeHtml(cfg.label)}</small><strong>${escapeHtml(formatByUnit(accumulated,cfg.unit))}</strong><p>Meta anual: ${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</p><div style="height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin:8px 0 4px"><div style="height:100%;width:${bw}%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid))"></div></div><span class="presentation-chip ${cls}">${escapeHtml(formatPercent(pct))} acumulado</span></article>`; }).join('')}
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Alertas y cierre -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
         <div class="presentation-kicker">Alertas y mensaje final</div>
         <div class="presentation-title-row">
           <div>
             <h2>Lecturas para cerrar la presentación</h2>
-            <p>La última diapositiva resume alertas operativas y metas anuales, para terminar la conversación con foco de decisión y no solo con números.</p>
+            <p>Alertas operativas del período y mensaje de cierre para enfocar la conversación en decisiones concretas.</p>
           </div>
         </div>
-        <div class="presentation-alerts">
+        <div class="presentation-alerts" style="flex:1">
           <div class="presentation-alert-stack">
             ${alerts.map(alert=>`<div class="presentation-alert-box ${alert.type}">${escapeHtml(alert.text)}</div>`).join('')}
           </div>
           <div class="presentation-note">
             <h3>Mensaje de cierre</h3>
             <p>En <strong>${escapeHtml(periodLabel(period))}</strong>, Atitlán Recicla reporta <strong>${escapeHtml(formatByUnit(metrics.materiales_generales?.valor,'qq'))}</strong> de materiales y <strong>${escapeHtml(formatByUnit(metrics.ingreso_bruto_total?.valor,'GTQ'))}</strong> de ingreso bruto total.</p>
-            <p>${zoneRows.length ? `La zona con mayor volumen es <strong>${escapeHtml(zoneRows[0].zona||'—')}</strong>, mientras que ${materialGroup.length ? `el material con más presencia es <strong>${escapeHtml(materialGroup[0].material||'—')}</strong>.` : 'no se identificó un material dominante.'}` : 'No hay suficiente actividad territorial para destacar una zona líder en este corte.'}</p>
-            <p>Esta vista ya está lista para presentar resultados en pantalla completa y puede seguir creciendo con transiciones, autoplay o exportación futura.</p>
+            <p>${zoneRows.length ? `La zona con mayor volumen es <strong>${escapeHtml(zoneRows[0].zona||'—')}</strong>, mientras que ${materialGroup.length ? `el material dominante es <strong>${escapeHtml(materialGroup[0].material||'—')}</strong>.` : 'no se identificó un material dominante.'}` : 'No hay suficiente actividad territorial para destacar una zona líder.'}</p>
+            <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Cooperativa Atitlán Recicla · primera cooperativa de mujeres recicladoras en Centroamérica · ${escapeHtml(periodLabel(period))}</p>
           </div>
-        </div>
-        <div class="presentation-goal-grid">
-          ${ANNUAL_GOAL_IDS.slice(0,6).map(id=>{ const cfg=METRIC_CONFIG[id]; if(!cfg) return ''; const annualGoal=safeNumber(cfg.meta)*11; const accumulated=sumMetricSeries(state,id,period.anio,'__all__',period.mes_num); const pct=annualGoal?accumulated/annualGoal:0; const cls=semaforoClassAnnual(pct); return `<article class="presentation-card"><small>${escapeHtml(cfg.label)}</small><strong>${escapeHtml(formatByUnit(accumulated,cfg.unit))}</strong><p>Meta anual: ${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</p><span class="presentation-chip ${cls}">${escapeHtml(formatPercent(pct))} acumulado</span></article>`; }).join('')}
         </div>
       </div>
     </section>`;
