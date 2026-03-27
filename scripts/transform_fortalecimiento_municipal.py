@@ -1,9 +1,6 @@
 from __future__ import annotations
-
-import json
 from pathlib import Path
-from typing import Iterable
-
+import unicodedata
 import pandas as pd
 
 PROGRAM_ID = "fortalecimiento_municipal"
@@ -59,12 +56,14 @@ INDICATOR_LABELS = {
     "mesas_tecnicas_municipales": ("Mesas técnicas municipales", "mesas", "complementario"),
 }
 
-CORE_TRAINING_THEMES = {
-    "Tema: SNIP · Sistema Nacional de Inversión Pública",
-    "Tema: SIG · Sistemas de Información Geográfica",
-    "Tema: Recolección digital de datos",
-    "Tema: Cumplimiento legal ambiental",
-}
+CORE_THEME_ALIAS_RULES = [
+    ("SNIP · Sistema Nacional de Inversión Pública", ["snip", "inversion publica", "inversión pública", "sistema nacional de inversion publica", "sistema nacional de inversión pública"]),
+    ("SIG · Sistemas de Información Geográfica", ["sig", "informacion geografica", "información geográfica", "geografica", "geográfica", "gis", "cartografia", "cartografía", "georrefer"]),
+    ("Recolección digital de datos", ["recoleccion digital", "recolección digital", "levantamiento digital", "captura digital", "kobo", "encuesta digital", "datos digitales"]),
+    ("Cumplimiento legal ambiental y saneamiento", ["cumplimiento legal", "legal ambiental", "saneamiento ambiental", "agua y saneamiento", "ambiental", "normativa ambiental"]),
+]
+
+CANONICAL_CORE_THEMES = {label for label, _ in CORE_THEME_ALIAS_RULES}
 
 WATER_SANITATION_SECTORS = {
     "Alcantarillado",
@@ -133,7 +132,6 @@ def parse_date_any(value):
     if s == "" or s.lower() in {"nan", "na", "n/a"}:
         return pd.NaT
 
-    # Google Sheets serial number / Excel serial number
     num = parse_number(s)
     if pd.notna(num):
         try:
@@ -161,17 +159,15 @@ def normalize_text(value) -> str:
     return " ".join(str(value).strip().split()) if value is not None else ""
 
 
+def slug_text(value) -> str:
+    text = normalize_text(value).lower()
+    text = unicodedata.normalize("NFKD", text)
+    text = "".join(ch for ch in text if not unicodedata.combining(ch))
+    return text
+
+
 def month_name(month_num: int) -> str:
     return MONTH_NAMES_ES.get(int(month_num), f"Mes {month_num}")
-
-
-def first_non_empty(*values):
-    for value in values:
-        if str(value).strip():
-            return str(value).strip()
-    return ""
-
-
 
 
 def safe_sum(series) -> float:
@@ -208,6 +204,30 @@ def ensure_base_fields(df: pd.DataFrame, module_name: str) -> pd.DataFrame:
     return df
 
 
+def classify_core_theme(*texts) -> list[str]:
+    combined = " | ".join(normalize_text(t) for t in texts if normalize_text(t))
+    combined_slug = slug_text(combined)
+    hits = []
+    for label, keywords in CORE_THEME_ALIAS_RULES:
+        if any(keyword in combined_slug for keyword in keywords):
+            hits.append(label)
+    return list(dict.fromkeys(hits))
+
+
+def coalesce_numeric(*values) -> float:
+    for value in values:
+        num = parse_number(value)
+        if pd.notna(num):
+            return float(num)
+    return 0.0
+
+
+def split_pipe_values(value: str) -> list[str]:
+    if value is None:
+        return []
+    return [x.strip() for x in str(value).split(" | ") if x.strip()]
+
+
 def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     df = read_csv(RAW_DIR / MODULE_FILE_MAP["capacitaciones"])
     if df.empty:
@@ -217,32 +237,74 @@ def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     muni_cols = extract_yes_columns(df, "Mun: ")
     tema_cols = extract_yes_columns(df, "Tema: ")
 
-    df["participantes_totales"] = df.get("Participantes totales *", "").apply(parse_number)
+    df["participantes_totales"] = df.apply(
+        lambda r: coalesce_numeric(
+            r.get("Participantes totales *", ""),
+            r.get("Subtotal categorías", ""),
+        ),
+        axis=1,
+    )
     df["n_tecnicos"] = df.get("N° técnicos", "").apply(parse_number)
     df["n_operarios"] = df.get("N° operarios", "").apply(parse_number)
     df["n_otro_personal"] = df.get("N° otro personal", "").apply(parse_number)
 
-    df["municipios"] = df[muni_cols].apply(
-        lambda row: [col.replace("Mun: ", "") for col, v in row.items() if parse_bool(v)],
-        axis=1,
-    ) if muni_cols else [[] for _ in range(len(df))]
-
-    df["temas"] = df[tema_cols].apply(
-        lambda row: [col.replace("Tema: ", "") for col, v in row.items() if parse_bool(v)],
-        axis=1,
-    ) if tema_cols else [[] for _ in range(len(df))]
-
-    df["has_core_theme"] = df[tema_cols].apply(
-        lambda row: any(parse_bool(row.get(col)) for col in CORE_TRAINING_THEMES if col in row.index),
-        axis=1,
-    ) if tema_cols else False
-
-    df["row_has_minimum_data"] = (
-        df["fecha"].notna()
-        & pd.to_numeric(df["participantes_totales"], errors="coerce").fillna(0).gt(0)
-        & df.get("Tipo de actividad *", "").astype(str).str.strip().ne("")
+    df["municipios_list"] = (
+        df[muni_cols].apply(
+            lambda row: [col.replace("Mun: ", "") for col, v in row.items() if parse_bool(v)],
+            axis=1,
+        ) if muni_cols else [[] for _ in range(len(df))]
     )
-    df["row_alert_municipio_missing"] = df["row_has_minimum_data"] & df["municipios"].apply(len).eq(0)
+
+    df["temas_seleccionados"] = (
+        df[tema_cols].apply(
+            lambda row: [col.replace("Tema: ", "") for col, v in row.items() if parse_bool(v)],
+            axis=1,
+        ) if tema_cols else [[] for _ in range(len(df))]
+    )
+
+    def infer_dashboard_themes(row) -> list[str]:
+        selected = row["temas_seleccionados"]
+        inferred = classify_core_theme(
+            row.get("Tipo de actividad *", ""),
+            row.get("Observaciones", ""),
+            " | ".join(selected),
+        )
+        clean_selected = [normalize_text(x) for x in selected if normalize_text(x)]
+        if inferred:
+            return list(dict.fromkeys(inferred + clean_selected))
+        activity = normalize_text(row.get("Tipo de actividad *", ""))
+        if clean_selected:
+            return clean_selected
+        if activity:
+            return [activity]
+        return []
+
+    df["temas_dashboard"] = df.apply(infer_dashboard_themes, axis=1)
+    df["temas_nucleo"] = df.apply(
+        lambda r: classify_core_theme(
+            r.get("Tipo de actividad *", ""),
+            r.get("Observaciones", ""),
+            " | ".join(r["temas_seleccionados"]),
+        ),
+        axis=1,
+    )
+    df["has_core_theme"] = df["temas_nucleo"].apply(lambda xs: len(xs) > 0)
+
+    people_total = pd.to_numeric(df["participantes_totales"], errors="coerce").fillna(0)
+    disaggregated_total = (
+        pd.to_numeric(df["n_tecnicos"], errors="coerce").fillna(0)
+        + pd.to_numeric(df["n_operarios"], errors="coerce").fillna(0)
+        + pd.to_numeric(df["n_otro_personal"], errors="coerce").fillna(0)
+    )
+    has_people = people_total.gt(0) | disaggregated_total.gt(0)
+    has_substance = (
+        df.get("Tipo de actividad *", "").astype(str).str.strip().ne("")
+        | df.get("Instituciones participantes", "").astype(str).str.strip().ne("")
+        | df.get("Observaciones", "").astype(str).str.strip().ne("")
+    )
+
+    df["row_has_minimum_data"] = df["fecha"].notna() & has_people & has_substance
+    df["row_alert_municipio_missing"] = df["row_has_minimum_data"] & df["has_core_theme"] & df["municipios_list"].apply(len).eq(0)
     df["row_alert_estado_incompleto"] = df["estado_fila_norm"].eq("INCOMPLETA")
     df["registro_valido"] = df["row_has_minimum_data"]
 
@@ -263,14 +325,15 @@ def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     ].copy()
     detail["modalidad"] = df.get("Modalidad *", "").astype(str)
     detail["tipo_actividad"] = df.get("Tipo de actividad *", "").astype(str)
-    detail["participantes_totales"] = df["participantes_totales"]
+    detail["participantes_totales"] = people_total
     detail["n_tecnicos"] = df["n_tecnicos"]
     detail["n_operarios"] = df["n_operarios"]
     detail["n_otro_personal"] = df["n_otro_personal"]
     detail["instituciones_participantes"] = df.get("Instituciones participantes", "").astype(str)
     detail["observaciones"] = df.get("Observaciones", "").astype(str)
-    detail["municipios"] = df["municipios"].apply(lambda xs: " | ".join(xs))
-    detail["temas"] = df["temas"].apply(lambda xs: " | ".join(xs))
+    detail["municipios"] = df["municipios_list"].apply(lambda xs: " | ".join(xs))
+    detail["temas"] = df["temas_dashboard"].apply(lambda xs: " | ".join(xs))
+    detail["temas_nucleo"] = df["temas_nucleo"].apply(lambda xs: " | ".join(xs))
     detail["has_core_theme"] = df["has_core_theme"]
 
     tema_rows = []
@@ -278,7 +341,10 @@ def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     valid = df[df["registro_valido"]].copy()
     for _, row in valid.iterrows():
-        for tema in row["temas"]:
+        themes_for_row = row["temas_dashboard"] or row["temas_nucleo"]
+        if not themes_for_row:
+            themes_for_row = [normalize_text(row.get("Tipo de actividad *", ""))] if normalize_text(row.get("Tipo de actividad *", "")) else []
+        for tema in themes_for_row:
             tema_rows.append(
                 {
                     "programa_id": PROGRAM_ID,
@@ -287,11 +353,12 @@ def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
                     "mes_num": row["mes_num"],
                     "mes_nombre": row["mes_nombre"],
                     "tema": tema,
-                    "es_tema_nucleo": tema in {t.replace("Tema: ", "") for t in CORE_TRAINING_THEMES},
+                    "es_tema_nucleo": tema in CANONICAL_CORE_THEMES,
                     "eventos": 1,
+                    "personas": float(row["participantes_totales"] or 0),
                 }
             )
-        for municipio in row["municipios"]:
+        for municipio in row["municipios_list"]:
             muni_rows.append(
                 {
                     "programa_id": PROGRAM_ID,
@@ -311,7 +378,7 @@ def build_capacitaciones() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
             ["programa_id", "periodo", "anio", "mes_num", "mes_nombre", "tema", "es_tema_nucleo"],
             dropna=False,
             as_index=False,
-        )["eventos"].sum()
+        )[["eventos", "personas"]].sum()
 
     muni_df = pd.DataFrame(muni_rows)
     if not muni_df.empty:
@@ -334,37 +401,44 @@ def build_asistencias() -> tuple[pd.DataFrame, pd.DataFrame]:
 
     df["nueva_asistencia_auto"] = pd.to_numeric(df.get("Nueva asistencia (auto)", "").apply(parse_number), errors="coerce").fillna(0)
     df["es_nueva_asistencia"] = df.get("¿Cuenta como nueva asistencia? *", "").apply(parse_bool) | df["nueva_asistencia_auto"].gt(0)
-    df["sectores"] = df[sector_cols].apply(
-        lambda row: [col.replace("Sector: ", "") for col, v in row.items() if parse_bool(v)],
-        axis=1,
-    ) if sector_cols else [[] for _ in range(len(df))]
+    df["sectores"] = (
+        df[sector_cols].apply(
+            lambda row: [col.replace("Sector: ", "") for col, v in row.items() if parse_bool(v)],
+            axis=1,
+        ) if sector_cols else [[] for _ in range(len(df))]
+    )
 
     df["row_has_minimum_data"] = (
         df["fecha"].notna()
         & df.get("Municipio *", "").astype(str).str.strip().ne("")
-        & df.get("Código corto del proyecto *", "").astype(str).str.strip().ne("")
+        & (
+            df.get("Código corto del proyecto *", "").astype(str).str.strip().ne("")
+            | df.get("Nombre corto del proyecto", "").astype(str).str.strip().ne("")
+            | df.get("Tipo de asistencia / actividad *", "").astype(str).str.strip().ne("")
+            | df.get("Resultado o avance del mes", "").astype(str).str.strip().ne("")
+        )
     )
     df["registro_valido"] = df["row_has_minimum_data"]
+    df["row_alert_estado_incompleto"] = df["estado_fila_norm"].eq("INCOMPLETA")
 
-    # Hook para futura columna explícita CODEDE
     codede_cols = [c for c in df.columns if "CODEDE" in str(c).upper()]
-    if codede_cols:
-        codede_flag = df[codede_cols[0]].apply(parse_bool)
-    else:
-        codede_flag = False
+    codede_flag = df[codede_cols[0]].apply(parse_bool) if codede_cols else pd.Series(False, index=df.index)
+
+    line_slug = df.get("Línea / enfoque *", "").astype(str).apply(slug_text)
+    type_slug = df.get("Tipo de asistencia / actividad *", "").astype(str).apply(slug_text)
 
     df["proxy_priorizada_agua_saneamiento"] = (
         df["es_nueva_asistencia"]
         & (
             df["sectores"].apply(lambda xs: any(s in WATER_SANITATION_SECTORS for s in xs))
-            | df.get("Línea / enfoque *", "").astype(str).isin(list(WATER_SANITATION_SECTORS) + ["Agua y saneamiento"])
-            | df.get("Tipo de asistencia / actividad *", "").astype(str).str.contains("agua y saneamiento", case=False, na=False)
+            | line_slug.str.contains("agua|saneamiento|residuos|alcantarillado|tratamiento", regex=True, na=False)
+            | type_slug.str.contains("agua|saneamiento|residuos|alcantarillado|tratamiento", regex=True, na=False)
         )
     )
     df["cuenta_indicador_asistencia"] = codede_flag | df["proxy_priorizada_agua_saneamiento"]
 
     detail = df[
-        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm"]
+        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm", "row_alert_estado_incompleto"]
     ].copy()
     detail["municipio"] = df.get("Municipio *", "").astype(str)
     detail["proyecto_codigo"] = df.get("Código corto del proyecto *", "").astype(str)
@@ -380,22 +454,8 @@ def build_asistencias() -> tuple[pd.DataFrame, pd.DataFrame]:
     sector_rows = []
     valid = df[df["registro_valido"]].copy()
     for _, row in valid.iterrows():
-        if row["sectores"]:
-            for sector in row["sectores"]:
-                sector_rows.append(
-                    {
-                        "programa_id": PROGRAM_ID,
-                        "periodo": row["periodo"],
-                        "anio": row["anio"],
-                        "mes_num": row["mes_num"],
-                        "mes_nombre": row["mes_nombre"],
-                        "sector": sector,
-                        "actividades": 1,
-                        "nuevas_asistencias": int(bool(row["es_nueva_asistencia"])),
-                        "asistencia_indicador": int(bool(row["cuenta_indicador_asistencia"])),
-                    }
-                )
-        else:
+        sectors = row["sectores"] if row["sectores"] else ["Sin sector marcado"]
+        for sector in sectors:
             sector_rows.append(
                 {
                     "programa_id": PROGRAM_ID,
@@ -403,7 +463,7 @@ def build_asistencias() -> tuple[pd.DataFrame, pd.DataFrame]:
                     "anio": row["anio"],
                     "mes_num": row["mes_num"],
                     "mes_nombre": row["mes_nombre"],
-                    "sector": "Sin sector marcado",
+                    "sector": sector,
                     "actividades": 1,
                     "nuevas_asistencias": int(bool(row["es_nueva_asistencia"])),
                     "asistencia_indicador": int(bool(row["cuenta_indicador_asistencia"])),
@@ -430,33 +490,46 @@ def build_estudios() -> tuple[pd.DataFrame, pd.DataFrame]:
     sector_cols = extract_yes_columns(df, "Sector: ")
 
     df["nuevo_finalizado_auto"] = pd.to_numeric(df.get("Nuevo estudio finalizado (auto)", "").apply(parse_number), errors="coerce").fillna(0)
-    df["se_finalizo_mes"] = df.get("¿Se finalizó este mes? *", "").apply(parse_bool) | df["nuevo_finalizado_auto"].gt(0)
-    df["sectores"] = df[sector_cols].apply(
-        lambda row: [col.replace("Sector: ", "") for col, v in row.items() if parse_bool(v)],
-        axis=1,
-    ) if sector_cols else [[] for _ in range(len(df))]
+    status_slug = df.get("Estado del estudio *", "").astype(str).apply(slug_text)
+    df["se_finalizo_mes"] = (
+        df.get("¿Se finalizó este mes? *", "").apply(parse_bool)
+        | df["nuevo_finalizado_auto"].gt(0)
+        | status_slug.str.contains("final", na=False)
+    )
+    df["sectores"] = (
+        df[sector_cols].apply(
+            lambda row: [col.replace("Sector: ", "") for col, v in row.items() if parse_bool(v)],
+            axis=1,
+        ) if sector_cols else [[] for _ in range(len(df))]
+    )
 
     df["row_has_minimum_data"] = (
         df["fecha"].notna()
         & df.get("Municipio *", "").astype(str).str.strip().ne("")
-        & df.get("Tipo de estudio *", "").astype(str).str.strip().ne("")
+        & (
+            df.get("Tipo de estudio *", "").astype(str).str.strip().ne("")
+            | df.get("Estado del estudio *", "").astype(str).str.strip().ne("")
+            | df.get("Observaciones", "").astype(str).str.strip().ne("")
+        )
     )
     df["registro_valido"] = df["row_has_minimum_data"]
-    df["estudio_key"] = (
+    df["row_alert_estado_incompleto"] = df["estado_fila_norm"].eq("INCOMPLETA")
+    df["study_key"] = (
         df.get("Municipio *", "").astype(str).str.strip()
         + "||"
         + df.get("Tipo de estudio *", "").astype(str).str.strip()
         + "||"
         + df["sectores"].apply(lambda xs: "|".join(sorted(xs)))
     )
+    study_type_slug = df.get("Tipo de estudio *", "").astype(str).apply(slug_text)
     df["is_rs_comercial_mercados"] = (
-        df.get("Tipo de estudio *", "").astype(str).isin(["Caracterización de residuos sólidos", "Caracterización conjunta RS y AR"])
+        study_type_slug.str.contains("residuos", na=False)
         & df["sectores"].apply(lambda xs: any(x in {"Comercial", "Mercados"} for x in xs))
     )
     df["cuenta_indicador_estudio"] = df["is_rs_comercial_mercados"] & df["se_finalizo_mes"]
 
     detail = df[
-        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm"]
+        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm", "row_alert_estado_incompleto"]
     ].copy()
     detail["municipio"] = df.get("Municipio *", "").astype(str)
     detail["tipo_estudio"] = df.get("Tipo de estudio *", "").astype(str)
@@ -471,22 +544,8 @@ def build_estudios() -> tuple[pd.DataFrame, pd.DataFrame]:
     sector_rows = []
     valid = df[df["registro_valido"]].copy()
     for _, row in valid.iterrows():
-        if row["sectores"]:
-            for sector in row["sectores"]:
-                sector_rows.append(
-                    {
-                        "programa_id": PROGRAM_ID,
-                        "periodo": row["periodo"],
-                        "anio": row["anio"],
-                        "mes_num": row["mes_num"],
-                        "mes_nombre": row["mes_nombre"],
-                        "sector": sector,
-                        "estudios": 1,
-                        "estudios_finalizados": int(bool(row["se_finalizo_mes"])),
-                        "estudios_rs_comercial_mercados": int(bool(row["is_rs_comercial_mercados"] and row["se_finalizo_mes"])),
-                    }
-                )
-        else:
+        sectors = row["sectores"] if row["sectores"] else ["Sin sector marcado"]
+        for sector in sectors:
             sector_rows.append(
                 {
                     "programa_id": PROGRAM_ID,
@@ -494,7 +553,7 @@ def build_estudios() -> tuple[pd.DataFrame, pd.DataFrame]:
                     "anio": row["anio"],
                     "mes_num": row["mes_num"],
                     "mes_nombre": row["mes_nombre"],
-                    "sector": "Sin sector marcado",
+                    "sector": sector,
                     "estudios": 1,
                     "estudios_finalizados": int(bool(row["se_finalizo_mes"])),
                     "estudios_rs_comercial_mercados": int(bool(row["is_rs_comercial_mercados"] and row["se_finalizo_mes"])),
@@ -518,19 +577,31 @@ def build_pirdes() -> pd.DataFrame:
         return pd.DataFrame()
 
     df = ensure_base_fields(df, "pirdes")
+
     df["pirdes_auto"] = pd.to_numeric(df.get("PIRDES implementado (auto)", "").apply(parse_number), errors="coerce").fillna(0)
-    df["implementado_mes"] = df.get("¿Implementado este mes? *", "").apply(parse_bool) | df["pirdes_auto"].gt(0)
+    state_slug = df.get("Estado del PIRDES *", "").astype(str).apply(slug_text)
+    df["implementado_mes"] = (
+        df.get("¿Implementado este mes? *", "").apply(parse_bool)
+        | df["pirdes_auto"].gt(0)
+        | state_slug.str.contains("implement", na=False)
+    )
     df["participantes_totales"] = df.get("Participantes totales", "").apply(parse_number)
     df["n_tecnicos"] = df.get("N° técnicos", "").apply(parse_number)
     df["n_operarios"] = df.get("N° operarios", "").apply(parse_number)
     df["row_has_minimum_data"] = (
         df["fecha"].notna()
         & df.get("Municipio *", "").astype(str).str.strip().ne("")
+        & (
+            df.get("Estado del PIRDES *", "").astype(str).str.strip().ne("")
+            | pd.to_numeric(df["participantes_totales"], errors="coerce").fillna(0).gt(0)
+            | df.get("Observaciones", "").astype(str).str.strip().ne("")
+        )
     )
     df["registro_valido"] = df["row_has_minimum_data"]
+    df["row_alert_estado_incompleto"] = df["estado_fila_norm"].eq("INCOMPLETA")
 
     detail = df[
-        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm"]
+        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm", "row_alert_estado_incompleto"]
     ].copy()
     detail["municipio"] = df.get("Municipio *", "").astype(str)
     detail["estado_pirdes"] = df.get("Estado del PIRDES *", "").astype(str)
@@ -544,6 +615,18 @@ def build_pirdes() -> pd.DataFrame:
     return detail
 
 
+def normalize_reunion_type(value: str) -> str:
+    raw = normalize_text(value)
+    slug = slug_text(raw)
+    if "codema" in slug:
+        return "Eje de agua y saneamiento / CODEMA"
+    if "mesa tecnica departamental" in slug:
+        return "Mesa técnica departamental de agua y saneamiento"
+    if "mesa tecnica municipal" in slug or "reunion tecnica con municipio" in slug:
+        return "Mesa técnica municipal"
+    return raw
+
+
 def build_reuniones() -> tuple[pd.DataFrame, pd.DataFrame]:
     df = read_csv(RAW_DIR / MODULE_FILE_MAP["reuniones"])
     if df.empty:
@@ -552,21 +635,32 @@ def build_reuniones() -> tuple[pd.DataFrame, pd.DataFrame]:
     df = ensure_base_fields(df, "reuniones")
     muni_cols = extract_yes_columns(df, "Mun: ")
 
-    df["municipios"] = df[muni_cols].apply(
-        lambda row: [col.replace("Mun: ", "") for col, v in row.items() if parse_bool(v)],
-        axis=1,
-    ) if muni_cols else [[] for _ in range(len(df))]
+    df["municipios_list"] = (
+        df[muni_cols].apply(
+            lambda row: [col.replace("Mun: ", "") for col, v in row.items() if parse_bool(v)],
+            axis=1,
+        ) if muni_cols else [[] for _ in range(len(df))]
+    )
 
-    df["tipo_reunion"] = df.get("Tipo de reunión / espacio *", "").astype(str).str.strip()
+    df["tipo_reunion"] = df.get("Tipo de reunión / espacio *", "").astype(str).apply(normalize_reunion_type)
     df["is_codema"] = df["tipo_reunion"].eq("Eje de agua y saneamiento / CODEMA")
     df["is_mesa_dep"] = df["tipo_reunion"].eq("Mesa técnica departamental de agua y saneamiento")
     df["is_mesa_municipal"] = df["tipo_reunion"].eq("Mesa técnica municipal")
 
-    df["row_has_minimum_data"] = df["fecha"].notna() & df["tipo_reunion"].ne("")
+    df["row_has_minimum_data"] = (
+        df["fecha"].notna()
+        & (
+            df["tipo_reunion"].ne("")
+            | df.get("Tema principal", "").astype(str).str.strip().ne("")
+            | df.get("Instituciones participantes", "").astype(str).str.strip().ne("")
+            | df.get("Acuerdos principales", "").astype(str).str.strip().ne("")
+        )
+    )
     df["registro_valido"] = df["row_has_minimum_data"]
+    df["row_alert_estado_incompleto"] = df["estado_fila_norm"].eq("INCOMPLETA")
 
     detail = df[
-        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm"]
+        ["row_number", "module_name", "fecha", "anio", "mes_num", "mes_nombre", "periodo", "registro_valido", "estado_fila_norm", "row_alert_estado_incompleto"]
     ].copy()
     detail["tipo_reunion"] = df["tipo_reunion"]
     detail["tema_principal"] = df.get("Tema principal", "").astype(str)
@@ -575,7 +669,7 @@ def build_reuniones() -> tuple[pd.DataFrame, pd.DataFrame]:
     detail["is_codema"] = df["is_codema"]
     detail["is_mesa_dep"] = df["is_mesa_dep"]
     detail["is_mesa_municipal"] = df["is_mesa_municipal"]
-    detail["municipios"] = df["municipios"].apply(lambda xs: " | ".join(xs))
+    detail["municipios"] = df["municipios_list"].apply(lambda xs: " | ".join(xs))
 
     type_df = (
         detail[detail["registro_valido"]]
@@ -589,7 +683,7 @@ def build_reuniones() -> tuple[pd.DataFrame, pd.DataFrame]:
     return detail, type_df
 
 
-def compute_periods(*frames: Iterable[pd.DataFrame]) -> pd.DataFrame:
+def compute_periods(*frames) -> pd.DataFrame:
     periods = []
     for df in frames:
         if df is None or df.empty or "fecha" not in df.columns:
@@ -626,9 +720,7 @@ def build_indicator_rows(
     cap_tema_df: pd.DataFrame,
     cap_muni_df: pd.DataFrame,
     asis_detail: pd.DataFrame,
-    asis_sector_df: pd.DataFrame,
     est_detail: pd.DataFrame,
-    est_sector_df: pd.DataFrame,
     pirdes_detail: pd.DataFrame,
     reu_detail: pd.DataFrame,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -677,11 +769,11 @@ def build_indicator_rows(
 
         municipios_cap_mes = set()
         for value in cap_month_core["municipios"]:
-            municipios_cap_mes.update([x for x in str(value).split(" | ") if x.strip()])
+            municipios_cap_mes.update(split_pipe_values(value))
 
         municipios_cap_acum = set()
         for value in cap_upto_core["municipios"]:
-            municipios_cap_acum.update([x for x in str(value).split(" | ") if x.strip()])
+            municipios_cap_acum.update(split_pipe_values(value))
 
         temas_nucleo_mes = cap_tema_df[(cap_tema_df["periodo"] == periodo) & (cap_tema_df["es_tema_nucleo"])]
         reuniones_mes = reu_valid[reu_valid["periodo"] == periodo]
@@ -737,8 +829,8 @@ def build_indicator_rows(
                 "valor_acumulado": safe_sum(cap_upto["n_otro_personal"]),
             },
             "asistencias_nuevas_total": {
-                "valor_mes": float(asis_valid[(asis_valid["periodo"] == periodo)]["es_nueva_asistencia"].fillna(False).sum()),
-                "valor_acumulado": float(asis_valid[(asis_valid["periodo"] <= periodo)]["es_nueva_asistencia"].fillna(False).sum()),
+                "valor_mes": float(asis_valid[asis_valid["periodo"] == periodo]["es_nueva_asistencia"].fillna(False).sum()),
+                "valor_acumulado": float(asis_valid[asis_valid["periodo"] <= periodo]["es_nueva_asistencia"].fillna(False).sum()),
             },
             "estudios_finalizados_total": {
                 "valor_mes": float((first_study_any == periodo).sum()),
@@ -763,7 +855,7 @@ def build_indicator_rows(
             "mes_nombre": mes_nombre,
             "cohorte_mes_indice": mes_num,
             "fecha_min_periodo": periodo + "-01",
-            "fecha_max_periodo": (pd.Period(periodo).to_timestamp(how="end")).date().isoformat(),
+            "fecha_max_periodo": pd.Period(periodo).to_timestamp(how="end").date().isoformat(),
             "eventos_capacitacion_mes": metrics["eventos_capacitacion_total"]["valor_mes"],
             "eventos_capacitacion_acum": metrics["eventos_capacitacion_total"]["valor_acumulado"],
             "municipios_capacitacion_nucleo_mes": metrics["municipios_capacitacion_nucleo"]["valor_mes"],
@@ -901,9 +993,7 @@ def main():
         cap_tema_df=cap_tema_df,
         cap_muni_df=cap_muni_df,
         asis_detail=asis_detail,
-        asis_sector_df=asis_sector_df,
         est_detail=est_detail,
-        est_sector_df=est_sector_df,
         pirdes_detail=pirdes_detail,
         reu_detail=reu_detail,
     )
@@ -919,7 +1009,8 @@ def main():
                 "fecha_max_global": str(periods["periodo"].max()) if not periods.empty else "",
                 "usa_encabezado_como_fuente_periodo": False,
                 "nota_asistencias_codede": "Indicador publicado como proxy operativo mientras no exista columna explícita CODEDE en el sheet.",
-                "nota_capacitaciones": "Cobertura municipal se calcula desde columnas Mun: ..., no desde el encabezado.",
+                "nota_capacitaciones": "Estado fila e INCOMPLETA solo alertan calidad; no excluyen KPIs si la fila sí trae evidencia operativa mínima.",
+                "nota_temas_nucleo": "Los temas núcleo se homologan desde Tema:, Tipo de actividad y Observaciones para no depender de nombres literales.",
             }
         ]
     )
