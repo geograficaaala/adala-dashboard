@@ -1,12 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fortalecimiento municipal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Lora:wght@600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Fortalecimiento municipal · AALA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg:#eef4fc; --surface:#f4f8fe; --card:#ffffff; --text:#0c1d3a; --text-2:#2a4570; --muted:#6685aa;
@@ -54,74 +52,93 @@
       color:var(--text-2);font-weight:600;font-size:.84rem;transition:all .2s ease;}
     .back:hover{background:var(--blue-pale);border-color:var(--blue-soft);color:var(--blue);transform:translateY(-1px)}
     .back-arrow{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:.75rem;font-weight:700;flex-shrink:0}
-    .control{display:flex;flex-direction:column;gap:6px;min-width:180px}
-    .control label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-    .control select{
-      border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;font:inherit;color:var(--text);
-      box-shadow:var(--shadow-sm);outline:none;
-    }
-    .control select:focus{border-color:var(--blue-light);box-shadow:0 0 0 4px rgba(37,117,204,.1)}
-    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
+    .pill{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:var(--radius-sm);font-weight:700;font-size:.84rem;border:1.5px solid transparent}
+    .pill.green{background:var(--green-soft);color:var(--green);border-color:rgba(21,122,80,.2)}
+    .pill.yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(122,85,0,.18)}
+    .pill.red{background:var(--red-soft);color:var(--red);border-color:rgba(143,28,28,.18)}
+    .pill.muted{background:var(--surface);color:var(--muted);border-color:var(--line)}
+    .card{background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm);transition:transform .25s ease,box-shadow .25s ease,border-color .2s ease}
+    .card:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(10,35,80,.14),0 4px 12px rgba(10,35,80,.08);border-color:var(--blue-soft)}
     .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:18px}
     .hero-main{padding:30px 34px 26px;background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);position:relative;overflow:hidden}
-    .hero-main::before{content:'';position:absolute;right:-10%;top:-20%;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.18),transparent 60%)}
-    .eyebrow{font-size:.78rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--blue-mid);margin-bottom:8px}
-    h1{font-family:var(--font-head);font-size:2.35rem;line-height:1.1;margin-bottom:12px;max-width:14ch}
-    .sub{color:var(--text-2);max-width:70ch}
-    .hero-chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .chip{padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.7);font-size:.82rem;color:var(--text-2);font-weight:600}
-    .hero-side{padding:22px;display:grid;gap:12px;align-content:start;background:linear-gradient(180deg,#ffffff,#f4f8fe)}
-    .hero-stat{padding:16px;border-radius:16px;background:var(--surface);border:1px solid var(--line-soft)}
-    .hero-stat .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:6px}
-    .hero-stat .v{font-size:1.6rem;font-weight:800;color:var(--text)}
-    .hero-stat .d{font-size:.88rem;color:var(--text-2)}
-    .section{margin-top:22px}
-    .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-    .section-head h2{font-size:1.24rem;font-family:var(--font-head)}
-    .section-head p{color:var(--muted);font-size:.92rem}
-    .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-    .kpi-card{padding:18px;position:relative;overflow:hidden}
-    .kpi-card::after{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:var(--blue-light)}
-    .kpi-card.green::after{background:var(--green-mid)}
-    .kpi-card.yellow::after{background:#d0a000}
-    .kpi-card.red::after{background:#d15b5b}
-    .kpi-card.muted::after{background:var(--sky)}
-    .kpi-title{font-size:.86rem;color:var(--text-2);min-height:46px;font-weight:700}
-    .kpi-main{display:flex;align-items:baseline;gap:8px;margin:12px 0 8px}
-    .kpi-value{font-size:2rem;font-weight:800;line-height:1}
-    .kpi-unit{font-size:.88rem;color:var(--muted);font-weight:700}
-    .badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.76rem;font-weight:700}
-    .badge.green{background:var(--green-pale);color:var(--green)}
-    .badge.yellow{background:var(--gold-soft);color:var(--gold)}
-    .badge.red{background:var(--red-soft);color:var(--red)}
-    .badge.muted{background:var(--sky-pale);color:var(--blue-mid)}
-    .micro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
-    .micro > div{padding:9px 10px;border-radius:12px;background:var(--surface);border:1px solid var(--line-soft)}
-    .micro .label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
-    .micro .val{font-size:1rem;font-weight:800;color:var(--text)}
-    .progress{height:9px;background:var(--blue-pale);border-radius:999px;overflow:hidden;margin-top:14px}
-    .bar{height:100%;background:linear-gradient(90deg,var(--blue-mid),var(--sky));border-radius:999px}
-    .bar.green{background:linear-gradient(90deg,var(--green-mid),#45c687)}
-    .bar.yellow{background:linear-gradient(90deg,#b88a00,#e0b423)}
-    .bar.red{background:linear-gradient(90deg,#c94747,#ea7b7b)}
-    .panel-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:16px}
-    .panel{padding:18px}
-    .chart-box{padding:12px 0 0}
-    .chart-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-    .chart-title h3{font-size:1rem}
-    .chart-note{color:var(--muted);font-size:.84rem}
-    .svg-chart{width:100%;height:auto;display:block}
-    .chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;color:var(--text-2);font-size:.82rem}
-    .legend-item{display:flex;align-items:center;gap:6px}
-    .legend-dot{width:10px;height:10px;border-radius:50%}
-    .split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .support-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-    .support-card{padding:16px;background:linear-gradient(180deg,#fff,#f6fafe)}
-    .support-card .v{font-size:1.5rem;font-weight:800}
-    .support-card .k{font-size:.8rem;color:var(--muted);font-weight:700}
+    .hero-main::before{content:'';position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.15) 0%,rgba(37,117,204,.07) 50%,transparent 70%);pointer-events:none}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--blue-mid);margin-bottom:8px}
+    .hero-eyebrow::before{content:'';display:inline-block;width:14px;height:2px;background:linear-gradient(90deg,var(--sky),var(--blue-mid));border-radius:2px}
+    .hero-main h1{font-family:var(--font-head);font-size:2.35rem;font-weight:600;line-height:1.1;background:linear-gradient(135deg,var(--text) 40%,var(--blue-mid) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em;margin-bottom:10px}
+    .hero-main p{color:var(--text-2);max-width:690px;line-height:1.75;font-size:.93rem}
+    .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+    .hero-stat{padding:12px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,.7);border:1.5px solid var(--line-soft)}
+    .hero-stat small{display:block;color:var(--muted);margin-bottom:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em}
+    .hero-stat strong{font-family:var(--font-mono);font-size:1rem;color:var(--text)}
+    .hero-side{padding:22px 20px;display:flex;flex-direction:column;background:linear-gradient(160deg,#eaf6fe 0%,#d8ecfc 50%,#e4f4fd 100%)}
+    .hero-side-label{font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .mini-list{display:grid;gap:7px}
+    .mini-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 12px;border-radius:var(--radius-sm);background:rgba(255,255,255,.65);border:1.5px solid var(--line-soft)}
+    .mini-item span{font-size:.83rem;color:var(--text-2)}
+    .mini-item strong{font-family:var(--font-mono);font-size:.88rem;color:var(--blue-mid)}
+    .toolbar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .filter{padding:12px 14px}
+    .filter label{display:block;font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:7px}
+    .filter select,.filter .readout{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);background:var(--surface);font-size:.87rem;font-family:var(--font-body);color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+    .filter select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%236685aa' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:30px}
+    .filter select:focus{border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(37,117,204,.12)}
+    .readout{display:flex;align-items:center;font-weight:700;background:var(--blue-pale);border-color:var(--blue-soft);font-family:var(--font-mono);font-size:.84rem;color:var(--blue-mid)}
+    .section{margin-bottom:18px}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:0 0 13px;padding-bottom:10px;border-bottom:1px solid var(--line-soft)}
+    .section-head h2{font-family:var(--font-head);font-size:1.22rem;font-weight:600;color:var(--text);letter-spacing:-.01em}
+    .section-head p{margin:3px 0 0;color:var(--muted);font-size:.84rem}
+    .section-divider{display:flex;align-items:center;gap:13px;margin:28px 0 16px;color:var(--blue-mid);font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+    .section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+    .narrative-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+    .panel{padding:20px 22px}
+    .panel h3{font-family:var(--font-head);font-size:1.04rem;font-weight:600;color:var(--text);margin-bottom:3px;letter-spacing:-.01em}
+    .panel p.sub{margin:0 0 14px;color:var(--muted);font-size:.82rem;line-height:1.5}
+    .panel-accent{border-top:3px solid var(--blue-mid)}
+    .panel-sky{border-top:3px solid var(--sky)}
     .note-list{display:grid;gap:10px}
-    .note{padding:12px 14px;border-radius:14px;border:1px solid var(--line-soft);background:var(--surface);color:var(--text-2);font-size:.9rem}
-    .quality-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+    .note{padding:12px 14px;border-radius:14px;border:1px solid var(--line-soft);background:var(--surface);color:var(--text-2);font-size:.9rem;line-height:1.65}
+    .summary-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .summary-pill{padding:7px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line-soft);font-size:.78rem;color:var(--text-2);font-weight:700}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .kpi{padding:18px 16px 16px;position:relative;overflow:hidden;border-top:3px solid var(--line-soft)}
+    .kpi.green{border-top-color:var(--green-mid)}
+    .kpi.yellow{border-top-color:#d0a000}
+    .kpi.red{border-top-color:#d15b5b}
+    .kpi.muted{border-top-color:var(--sky)}
+    .kpi-top{display:flex;justify-content:space-between;gap:8px;align-items:start;margin-bottom:10px}
+    .kpi-label{font-weight:700;font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:5px;line-height:1.3}
+    .kpi-name{font-size:.94rem;line-height:1.42;font-weight:700;color:var(--text)}
+    .kpi-value{font-family:var(--font-mono);font-size:1.52rem;font-weight:500;margin-bottom:4px;color:var(--text);line-height:1;letter-spacing:-.02em}
+    .kpi-meta{color:var(--muted);font-size:.79rem;line-height:1.55}
+    .kpi-meta strong{color:var(--text-2)}
+    .chip{padding:4px 9px;border-radius:var(--radius-xs);font-weight:700;font-size:.67rem;white-space:nowrap;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+    .chip.green{background:var(--green-soft);color:var(--green)}
+    .chip.yellow{background:var(--gold-soft);color:var(--gold)}
+    .chip.red{background:var(--red-soft);color:var(--red)}
+    .chip.muted{background:var(--surface);color:var(--muted)}
+    .progress-bullet{position:relative;height:12px;border-radius:999px;background:var(--line-soft);overflow:visible;margin:13px 0 8px}
+    .progress-bullet .fill{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid))}
+    .progress-bullet.green .fill{background:linear-gradient(90deg,#36c888,var(--green-mid))}
+    .progress-bullet.yellow .fill{background:linear-gradient(90deg,#e9c64b,#c69100)}
+    .progress-bullet.red .fill{background:linear-gradient(90deg,#f08a8a,#d15b5b)}
+    .progress-bullet .marker{position:absolute;top:-3px;width:2px;height:18px;background:var(--text);opacity:.55;border-radius:2px}
+    .progress-labels{display:flex;justify-content:space-between;gap:10px;font-size:.74rem;color:var(--muted)}
+    .progress-labels strong{color:var(--text-2)}
+    .grid-2{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+    .grid-2-equal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+    .chart-wrap{overflow:auto;border-radius:var(--radius-xs);background:var(--surface);border:1px solid var(--line-soft);padding:8px 0 4px}
+    .viz-wrap{width:100%}
+    .viz-svg{width:100%;height:auto;display:block;overflow:visible}
+    .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.79rem;margin-top:10px;padding-top:8px;border-top:1px solid var(--line-soft)}
+    .legend span{display:flex;align-items:center;gap:5px}
+    .legend i{display:inline-block;width:20px;height:3px;border-radius:2px;flex-shrink:0}
+    .bar-list{display:grid;gap:10px}
+    .bar-row{display:grid;grid-template-columns:170px 1fr auto;gap:12px;align-items:center}
+    .bar-row .name{font-size:.84rem;color:var(--text-2);font-weight:700;line-height:1.35}
+    .bar-row .val{font-family:var(--font-mono);font-size:.82rem;color:var(--text);font-weight:700}
+    .stack{display:grid;gap:8px}
+    .quality-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
     .quality-card{padding:14px;border-radius:14px;background:linear-gradient(180deg,#fff,#f6fafe);border:1px solid var(--line-soft)}
     .quality-card .module{font-size:.8rem;color:var(--muted);font-weight:700;text-transform:uppercase}
     .quality-card .metric{font-size:1.45rem;font-weight:800;margin:8px 0 2px}
@@ -129,21 +146,24 @@
     .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
     .tab-btn{border:none;background:#fff;color:var(--text-2);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font:inherit;font-weight:700;cursor:pointer}
     .tab-btn.active{background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(37,117,204,.35)}
-    .table-wrap{overflow:auto;border:1px solid var(--line-soft);border-radius:16px}
-    table{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff}
-    th,td{padding:11px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
-    th{position:sticky;top:0;background:#f6fafe;color:var(--text-2);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
-    tbody tr:hover{background:#f9fbff}
-    .empty{padding:24px;color:var(--muted);text-align:center;background:var(--surface);border:1px dashed var(--line);border-radius:14px}
-    .foot{margin-top:22px;color:var(--muted);font-size:.84rem;text-align:center}
+    .table-wrap{overflow:auto;border:1px solid var(--line-soft);border-radius:var(--radius-sm);background:#fff}
+    table{width:100%;border-collapse:collapse;font-size:.85rem}
+    th,td{padding:10px 12px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top}
+    th{background:var(--surface);font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    tr:last-child td{border-bottom:none}
+    .empty{padding:18px;border:1px dashed var(--line);border-radius:14px;background:rgba(255,255,255,.65);color:var(--muted);font-size:.9rem}
+    .footer-note{margin-top:18px;color:var(--muted);font-size:.78rem;line-height:1.7}
     @media (max-width:1100px){
-      .hero,.panel-grid,.split{grid-template-columns:1fr}
-      .kpi-grid,.support-grid,.quality-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero,.narrative-grid,.grid-2,.grid-2-equal{grid-template-columns:1fr}
+      .hero-grid,.kpis,.toolbar,.grid-3,.quality-grid{grid-template-columns:repeat(2,1fr)}
     }
     @media (max-width:720px){
-      h1{font-size:1.8rem}
-      .kpi-grid,.support-grid,.quality-grid{grid-template-columns:1fr}
-      .wrap{padding:20px 14px 48px}
+      .wrap{padding:18px 14px 44px}
+      .topbar{margin-left:-14px;margin-right:-14px;padding:10px 14px;margin-top:-18px}
+      .hero-main,.hero-side,.panel{padding:18px}
+      .hero-main h1{font-size:1.8rem}
+      .hero-grid,.kpis,.toolbar,.grid-3,.quality-grid{grid-template-columns:1fr}
+      .bar-row{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -151,183 +171,152 @@
   <div class="wrap">
     <div class="topbar">
       <div class="topbar-left">
-        <a href="./index.html" class="back"><span class="back-arrow">←</span> Volver al inicio</a>
+        <a class="back" href="./index.html"><span class="back-arrow">←</span>Volver al inicio</a>
       </div>
       <div class="topbar-right">
-        <div class="control">
-          <label for="periodSelect">Período</label>
-          <select id="periodSelect"></select>
-        </div>
-        <div class="control">
-          <label for="indicatorSelect">Indicador destacado</label>
-          <select id="indicatorSelect"></select>
-        </div>
+        <div id="heroStatus" class="pill muted">Cargando datos…</div>
       </div>
     </div>
 
     <section class="hero">
-      <div class="card hero-main">
-        <div class="eyebrow">AALA · tablero operativo</div>
+      <article class="card hero-main">
+        <div class="hero-eyebrow">Programa AALA</div>
         <h1>Fortalecimiento municipal</h1>
-        <p class="sub">Seguimiento mensual de capacitaciones, asistencias técnicas, estudios, PIRDES y reuniones. El tablero toma la cohorte desde las fechas capturadas en las filas del sheet, no desde el encabezado.</p>
-        <div class="hero-chips" id="heroChips"></div>
+        <p>
+          Tablero de seguimiento para leer el avance del programa contra sus metas anuales, con foco en el aporte del período seleccionado,
+          el avance acumulado al corte y las brechas frente al ritmo esperado del año.
+        </p>
+        <div id="heroStats" class="hero-grid"></div>
+      </article>
+
+      <aside class="card hero-side">
+        <div class="hero-side-label">Lectura ejecutiva</div>
+        <div id="heroMiniList" class="mini-list"></div>
+      </aside>
+    </section>
+
+    <section class="toolbar">
+      <div class="card filter">
+        <label for="yearSelect">Año</label>
+        <select id="yearSelect"></select>
       </div>
-      <div class="card hero-side">
-        <div class="hero-stat">
-          <div class="k">Período seleccionado</div>
-          <div class="v" id="heroPeriod">—</div>
-          <div class="d" id="heroRange">—</div>
-        </div>
-        <div class="hero-stat">
-          <div class="k">Meses detectados</div>
-          <div class="v" id="heroMonths">—</div>
-          <div class="d">Cohortes disponibles para filtrar</div>
-        </div>
-        <div class="hero-stat">
-          <div class="k">Actualización</div>
-          <div class="v" id="heroUpdate">—</div>
-          <div class="d" id="heroNotes">—</div>
-        </div>
+      <div class="card filter">
+        <label for="periodSelect">Período</label>
+        <select id="periodSelect"></select>
+      </div>
+      <div class="card filter">
+        <label for="indicatorSelect">Indicador foco</label>
+        <select id="indicatorSelect"></select>
+      </div>
+      <div class="card filter">
+        <label>Corte seleccionado</label>
+        <div id="periodReadout" class="readout">—</div>
       </div>
     </section>
 
     <section class="section">
       <div class="section-head">
         <div>
-          <h2>Indicadores de avance</h2>
-          <p>Tarjetas principales contra meta anual y meta de cohorte del período seleccionado.</p>
+          <h2>Lectura rápida del corte</h2>
+          <p>Resumen ejecutivo del desempeño acumulado frente a las metas del año.</p>
         </div>
       </div>
-      <div class="kpi-grid" id="kpiGrid"></div>
+      <div class="narrative-grid">
+        <article class="card panel panel-accent">
+          <h3>Resumen del período</h3>
+          <p class="sub">Cómo va el programa al corte seleccionado y qué aporta el mes.</p>
+          <div id="narrativeNotes" class="note-list"></div>
+        </article>
+        <article class="card panel panel-sky">
+          <h3>Claves del corte</h3>
+          <p class="sub">Lecturas rápidas para seguimiento mensual.</p>
+          <div id="summaryPills" class="summary-pills"></div>
+          <div id="methodNotes" class="note-list" style="margin-top:14px"></div>
+        </article>
+      </div>
     </section>
 
-    <section class="section panel-grid">
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Seguimiento de cohorte</h3>
-            <div class="chart-note">Acumulado del indicador seleccionado frente a la meta de cohorte.</div>
-          </div>
-        </div>
-        <div class="chart-box" id="trendChart"></div>
-      </div>
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Semáforo del período</h3>
-            <div class="chart-note">Color operativo según avance acumulado vs meta de cohorte.</div>
-          </div>
-        </div>
-        <div id="semaforoBoard"></div>
-      </div>
-    </section>
+    <div class="section-divider">KPIs prioritarios</div>
 
     <section class="section">
       <div class="section-head">
         <div>
-          <h2>Producción del período</h2>
-          <p>Métricas operativas del mes para lectura rápida del programa.</p>
+          <h2>Avance anual por indicador</h2>
+          <p>Tarjetas comparando acumulado real vs meta anual y el ritmo esperado al corte.</p>
         </div>
       </div>
-      <div class="support-grid" id="supportGrid"></div>
+      <div id="kpiGrid" class="kpis"></div>
     </section>
 
-    <section class="section split">
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Capacitaciones por tema</h3>
-            <div class="chart-note">Temas homologados para no depender de nombres literales del sheet.</div>
-          </div>
-        </div>
+    <section class="section grid-2">
+      <article class="card panel panel-accent">
+        <h3>Brecha contra el esperado</h3>
+        <p class="sub">Cada barra muestra el avance acumulado y una marca del avance esperado al corte.</p>
+        <div id="gapChart"></div>
+      </article>
+      <article class="card panel panel-sky">
+        <h3>Serie del indicador foco</h3>
+        <p id="trendSubtitle" class="sub">Evolución acumulada y aporte del mes.</p>
+        <div id="trendChart"></div>
+      </article>
+    </section>
+
+    <section class="section grid-2-equal">
+      <article class="card panel panel-accent">
+        <h3>Capacitaciones del período</h3>
+        <p class="sub">Distribución por tema y aporte mensual.</p>
         <div id="temaChart"></div>
-      </div>
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Municipios alcanzados en capacitaciones núcleo</h3>
-            <div class="chart-note">Cuenta solo municipios efectivamente capturados en el período.</div>
-          </div>
-        </div>
+      </article>
+      <article class="card panel panel-sky">
+        <h3>Cobertura municipal del período</h3>
+        <p class="sub">Municipios alcanzados por capacitaciones núcleo.</p>
         <div id="municipioChart"></div>
-      </div>
+      </article>
     </section>
 
-    <section class="section split">
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Asistencias por sector</h3>
-            <div class="chart-note">Incluye el proxy operativo mientras no exista columna explícita de CODEDE.</div>
-          </div>
-        </div>
+    <section class="section grid-3">
+      <article class="card panel panel-accent">
+        <h3>Asistencias por sector</h3>
+        <p class="sub">Nuevas asistencias y las que cuentan para el indicador.</p>
         <div id="asistenciaChart"></div>
-      </div>
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Estudios por sector</h3>
-            <div class="chart-note">Muestra estudios registrados y los finalizados en el período.</div>
-          </div>
-        </div>
+      </article>
+      <article class="card panel panel-sky">
+        <h3>Estudios por sector</h3>
+        <p class="sub">Estudios registrados y finalizados en el período.</p>
         <div id="estudioChart"></div>
-      </div>
-    </section>
-
-    <section class="section split">
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Reuniones por tipo</h3>
-            <div class="chart-note">Seguimiento del eje CODEMA, mesas técnicas y otras reuniones.</div>
-          </div>
-        </div>
+      </article>
+      <article class="card panel panel-accent">
+        <h3>Reuniones por tipo</h3>
+        <p class="sub">Lectura del movimiento mensual en gobernanza.</p>
         <div id="reunionChart"></div>
-      </div>
-      <div class="card panel">
-        <div class="chart-title">
-          <div>
-            <h3>Calidad de datos del período</h3>
-            <div class="chart-note">Las alertas no excluyen la fila si sí trae evidencia operativa mínima.</div>
-          </div>
-        </div>
-        <div id="qualityCards"></div>
-      </div>
+      </article>
     </section>
 
-    <section class="section split">
-      <div class="card panel">
-        <div class="section-head" style="margin-bottom:10px">
-          <div>
-            <h2>Notas operativas</h2>
-            <p>Convenciones y decisiones del transform publicadas junto al tablero.</p>
-          </div>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Calidad de captura</h2>
+          <p>Alertas de datos que se muestran como QA, sin bloquear el tablero.</p>
         </div>
-        <div class="note-list" id="noteList"></div>
       </div>
-      <div class="card panel">
-        <div class="section-head" style="margin-bottom:10px">
-          <div>
-            <h2>Diagnóstico del período</h2>
-            <p>Lectura rápida de lo que más se movió en la cohorte seleccionada.</p>
-          </div>
-        </div>
-        <div class="note-list" id="diagnosticList"></div>
-      </div>
+      <div id="qualityCards"></div>
     </section>
 
     <section class="section">
       <div class="section-head">
         <div>
           <h2>Detalle del período</h2>
-          <p>Filas del mes seleccionado por módulo. Sirve para revisar evidencia sin salir del dashboard.</p>
+          <p>Primeras filas válidas del período seleccionado por módulo.</p>
         </div>
       </div>
-      <div class="tabs" id="detailTabs"></div>
+      <div id="detailTabs" class="tabs"></div>
       <div id="detailTable"></div>
     </section>
 
-    <div class="foot">Dashboard de Fortalecimiento municipal · AALA</div>
+    <p class="footer-note">
+      Este tablero usa las fechas registradas en cada fila del sheet como fuente del período. El encabezado se conserva como metadata,
+      pero no define el mes que se muestra en el dashboard.
+    </p>
   </div>
 
   <script src="./fortalecimiento_municipal.js"></script>
