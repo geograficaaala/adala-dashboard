@@ -1,0 +1,12 @@
+programa_id,periodo,anio,mes_num,mes_nombre,tipo_reunion,reuniones
+fortalecimiento_municipal,2026-01,2026,1,Enero,Eje de agua y saneamiento / CODEMA,1
+fortalecimiento_municipal,2026-01,2026,1,Enero,Mesa técnica municipal,1
+fortalecimiento_municipal,2026-01,2026,1,Enero,Otro,2
+fortalecimiento_municipal,2026-01,2026,1,Enero,Reunión técnica con municipio,3
+fortalecimiento_municipal,2026-02,2026,2,Febrero,Eje de agua y saneamiento / CODEMA,1
+fortalecimiento_municipal,2026-02,2026,2,Febrero,Mesa técnica municipal,1
+fortalecimiento_municipal,2026-02,2026,2,Febrero,Otro,2
+fortalecimiento_municipal,2026-02,2026,2,Febrero,Reunión técnica con municipio,1
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Eje de agua y saneamiento / CODEMA,1
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Mesa técnica municipal,3
+fortalecimiento_municipal,2026-03,2026,3,Marzo,Otro,5
