@@ -5,11 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Conservando Atitlán · AALA</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 <style>
+/* ══════════════════════════════════════
+   TOKENS
+══════════════════════════════════════ */
 :root {
-  --bg: #ecf7f5;
-  --surface: #f4fbfa;
+  --bg: #eaf6f4;
+  --surface: #f2fbf9;
   --card: #ffffff;
   --text: #0d2d2c;
   --text-2: #23524f;
@@ -23,10 +25,14 @@
   --accent-soft: #c7eee8;
   --accent-pale: #e8f8f5;
 
-  --water-deep: #0f5f87;
+  --water: #0f5f87;
   --water-mid: #1e86b4;
   --water-soft: #d7eef8;
   --water-pale: #eef8fc;
+
+  --oil: #8a6200;
+  --oil-soft: #fef0c0;
+  --oil-pale: #fffbeb;
 
   --al-dia: #157a50;
   --al-dia-soft: #c5eed9;
@@ -43,7 +49,7 @@
   --sh-sm: 0 1px 4px rgba(10,60,60,.05), 0 4px 16px rgba(10,60,60,.05);
   --sh: 0 2px 12px rgba(10,60,60,.08), 0 8px 32px rgba(10,60,60,.07);
   --sh-lg: 0 8px 40px rgba(10,60,60,.14), 0 2px 8px rgba(10,60,60,.05);
-  --sh-hover: 0 16px 48px rgba(10,60,60,.16), 0 4px 12px rgba(10,60,60,.08);
+  --sh-hover: 0 18px 52px rgba(10,60,60,.16), 0 4px 12px rgba(10,60,60,.08);
 
   --radius: 18px;
   --radius-sm: 11px;
@@ -56,86 +62,76 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 html { scroll-behavior: smooth }
+
 body {
   font-family: var(--font-body);
-  background: linear-gradient(160deg, #d5f2ef 0%, #ecf7f5 38%, #e8f8f5 68%, #f4fffd 100%) fixed;
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.6;
+  background: linear-gradient(160deg, #d4f0ec 0%, #eaf6f4 38%, #e4f5f8 68%, #f4fffd 100%) fixed;
+  color: var(--text); min-height: 100vh; line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 body::before {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background:
-    radial-gradient(ellipse 85% 65% at 0% -5%, rgba(13,124,114,.20) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 55% at 100% 110%, rgba(30,134,180,.14) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 80% 8%, rgba(53,185,169,.10) 0%, transparent 50%);
+    radial-gradient(ellipse 88% 66% at 0% -5%, rgba(13,124,114,.20) 0%, transparent 52%),
+    radial-gradient(ellipse 72% 56% at 100% 110%, rgba(15,95,135,.14) 0%, transparent 52%),
+    radial-gradient(ellipse 50% 40% at 82% 8%, rgba(53,185,169,.10) 0%, transparent 50%);
 }
 body::after {
-  content: '';
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
   background-image: radial-gradient(circle 1px at 1px 1px, rgba(13,124,114,.06) 1px, transparent 0);
   background-size: 36px 36px;
 }
 
+/* ══════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════ */
 .topbar {
   position: sticky; top: 0; z-index: 200;
-  background: rgba(236,247,245,.92);
+  background: rgba(234,246,244,.93);
   backdrop-filter: blur(20px) saturate(1.7);
   -webkit-backdrop-filter: blur(20px) saturate(1.7);
   border-bottom: 1px solid var(--line-soft);
-  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
   padding: 10px 28px;
 }
 .back {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 8px 16px 8px 10px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 15px 7px 9px; border-radius: 999px;
   background: rgba(255,255,255,.88); border: 1px solid var(--line);
   text-decoration: none; color: var(--text-2);
-  font-weight: 600; font-size: .82rem;
-  transition: all .2s ease; white-space: nowrap;
+  font-weight: 600; font-size: .82rem; transition: all .2s ease; white-space: nowrap;
 }
 .back:hover { background: var(--accent-pale); border-color: var(--accent-soft); color: var(--accent); transform: translateY(-1px) }
 .back-arrow {
   display: inline-flex; align-items: center; justify-content: center;
   width: 20px; height: 20px; border-radius: 50%;
-  background: var(--accent-soft); color: var(--accent);
-  font-size: .78rem; font-weight: 700; flex-shrink: 0;
+  background: var(--accent-soft); color: var(--accent); font-size: .78rem; font-weight: 700;
 }
 .month-pills {
-  display: flex; gap: 5px; align-items: center;
-  background: rgba(255,255,255,.62);
-  border: 1px solid var(--line-soft);
+  display: flex; gap: 4px; align-items: center;
+  background: rgba(255,255,255,.62); border: 1px solid var(--line-soft);
   border-radius: 999px; padding: 4px 6px;
 }
 .month-pill {
-  padding: 5px 14px; border-radius: 999px; border: none; cursor: pointer;
-  font-family: var(--font-body); font-size: .78rem; font-weight: 700;
-  color: var(--muted); background: transparent;
-  transition: all .2s ease; letter-spacing: .02em;
+  padding: 5px 13px; border-radius: 999px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: .77rem; font-weight: 700;
+  color: var(--muted); background: transparent; transition: all .2s ease; letter-spacing: .02em;
 }
 .month-pill:hover:not(:disabled) { color: var(--accent-mid); background: var(--accent-pale) }
 .month-pill.active {
   background: linear-gradient(135deg, var(--accent), var(--accent-mid));
-  color: #fff;
-  box-shadow: 0 2px 10px rgba(13,124,114,.35);
+  color: #fff; box-shadow: 0 2px 10px rgba(13,124,114,.35);
 }
 .month-pill:disabled { opacity: .38; cursor: default }
 
-.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+/* Estado global pill */
 .estado-global {
-  display: flex; align-items: center; gap: 7px;
-  padding: 6px 14px; border-radius: 999px;
-  font-size: .78rem; font-weight: 700; white-space: nowrap;
-  border: 1.5px solid transparent;
-  transition: all .3s ease;
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px;
+  border-radius: 999px; font-size: .78rem; font-weight: 700; white-space: nowrap;
+  border: 1.5px solid transparent; transition: all .3s ease;
 }
-.estado-global .dot {
-  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-  animation: pulse-dot 2.5s ease-in-out infinite;
-}
-@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.45} }
+.estado-global .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; animation: pulse-dot 2.5s ease-in-out infinite }
+@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:.42} }
 .estado-global.al-dia { background: var(--al-dia-pale); color: var(--al-dia); border-color: rgba(21,122,80,.2) }
 .estado-global.al-dia .dot { background: var(--al-dia) }
 .estado-global.seguimiento { background: var(--seguimiento-pale); color: var(--seguimiento); border-color: rgba(138,98,0,.2) }
@@ -145,100 +141,138 @@ body::after {
 .estado-global.sin-actividad { background: var(--sin-actividad-soft); color: var(--sin-actividad); border-color: rgba(90,106,130,.2) }
 .estado-global.sin-actividad .dot { background: var(--sin-actividad) }
 
-.wrap { max-width: 1340px; margin: 0 auto; padding: 28px 24px 80px; position: relative; z-index: 1 }
+/* View switcher */
+.view-switcher { display: inline-flex; background: rgba(255,255,255,.72); border: 1px solid var(--line-soft); border-radius: 999px; padding: 3px; gap: 2px }
+.view-btn {
+  display: inline-flex; align-items: center; gap: 5px; padding: 6px 14px; border-radius: 999px; border: none;
+  background: transparent; font-family: var(--font-body); font-size: .78rem; font-weight: 700;
+  color: var(--muted); cursor: pointer; transition: all .2s ease; text-decoration: none; white-space: nowrap;
+}
+.view-btn:hover { color: var(--accent-mid); background: rgba(13,124,114,.08) }
+.view-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent-mid)); color: #fff; box-shadow: 0 2px 10px rgba(13,124,114,.35) }
+.view-btn svg { width: 13px; height: 13px; flex-shrink: 0 }
+.present-btn { background: linear-gradient(135deg, #1a7a6e, #0d5c55); color: #fff; box-shadow: 0 4px 18px rgba(13,124,114,.28) }
+.present-btn:hover { color: #fff; background: linear-gradient(135deg, #0d5c55, #1a7a6e); transform: translateY(-1px) }
+
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap }
+
+/* ══════════════════════════════════════
+   WRAP & CARD
+══════════════════════════════════════ */
+.wrap { max-width: 1360px; margin: 0 auto; padding: 28px 24px 80px; position: relative; z-index: 1 }
 .card {
-  background: var(--card);
-  border: 1.5px solid var(--line-soft);
-  border-radius: var(--radius);
-  box-shadow: var(--sh-sm);
-  transition: transform .3s cubic-bezier(.25,.46,.45,.94), box-shadow .3s ease, border-color .2s;
+  background: var(--card); border: 1.5px solid var(--line-soft); border-radius: var(--radius);
+  box-shadow: var(--sh-sm); transition: transform .3s cubic-bezier(.25,.46,.45,.94), box-shadow .3s, border-color .2s;
 }
 .card:hover { transform: translateY(-3px); box-shadow: var(--sh-hover); border-color: var(--accent-soft) }
 
-.hero { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 20px }
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero { display: grid; grid-template-columns: 1.65fr 1fr; gap: 16px; margin-bottom: 20px }
 .hero-main {
-  padding: 36px 40px 32px;
-  background: linear-gradient(135deg, #ffffff 0%, #e9faf7 55%, #d9f4ef 100%);
+  padding: 36px 42px 32px;
+  background: linear-gradient(138deg, #ffffff 0%, #e6f9f6 50%, #d8f4ef 100%);
   position: relative; overflow: hidden;
 }
 .hero-main::before {
-  content: '';
-  position: absolute; right: -80px; top: -80px;
+  content: ''; position: absolute; right: -70px; top: -70px;
   width: 340px; height: 340px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(53,185,169,.14) 0%, rgba(13,124,114,.07) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(53,185,169,.16) 0%, rgba(13,124,114,.07) 50%, transparent 70%);
+  pointer-events: none;
+}
+.hero-main::after {
+  content: ''; position: absolute; left: -80px; bottom: -80px;
+  width: 260px; height: 260px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(30,134,180,.10) 0%, transparent 68%);
   pointer-events: none;
 }
 .program-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: .7rem; font-weight: 800; letter-spacing: .13em;
-  text-transform: uppercase; color: var(--accent-mid); margin-bottom: 10px;
+  display: inline-flex; align-items: center; gap: 8px; font-size: .69rem; font-weight: 800;
+  letter-spacing: .13em; text-transform: uppercase; color: var(--accent-mid); margin-bottom: 10px;
 }
 .program-eyebrow::before {
   content: ''; display: block; width: 18px; height: 2px;
-  background: linear-gradient(90deg, var(--accent-light), var(--accent-mid));
-  border-radius: 2px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent-mid)); border-radius: 2px;
 }
 .hero-main h1 {
-  font-family: var(--font-head);
-  font-size: clamp(1.9rem, 3vw, 2.7rem);
-  line-height: 1.1; letter-spacing: -.02em; margin-bottom: 14px;
+  font-family: var(--font-head); font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.08; letter-spacing: -.02em; margin-bottom: 14px;
   background: linear-gradient(135deg, var(--text) 35%, var(--accent-mid) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .hero-narrative {
-  font-size: .96rem; color: var(--text-2); line-height: 1.75;
-  max-width: 58ch; margin-bottom: 20px;
+  font-size: .95rem; color: var(--text-2); line-height: 1.78;
+  max-width: 56ch; margin-bottom: 20px; position: relative; z-index: 1;
 }
-.hero-stats { display: flex; gap: 10px; flex-wrap: wrap }
-.hero-stat-pill {
-  display: inline-flex; align-items: center; gap: 7px;
-  padding: 7px 14px; border-radius: 999px;
-  background: rgba(255,255,255,.78); border: 1.5px solid var(--line-soft);
-  font-size: .79rem; font-weight: 600; color: var(--text-2);
-  transition: all .2s ease;
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; position: relative; z-index: 1 }
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: 999px;
+  background: rgba(255,255,255,.80); border: 1.5px solid var(--line-soft);
+  font-size: .78rem; font-weight: 700; color: var(--text-2);
 }
-.hero-stat-pill:hover { background: var(--accent-pale); border-color: var(--accent-soft); color: var(--accent) }
-.hero-stat-pill strong { font-family: var(--font-mono); color: var(--accent-mid); font-size: .84rem }
+.hero-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-light), var(--accent)); display: inline-block }
 
 .hero-side {
-  padding: 24px 22px;
-  background: linear-gradient(160deg, #eef8fc 0%, #dff2fb 45%, #eaf8f5 100%);
-  display: flex; flex-direction: column; gap: 16px;
+  padding: 26px 22px;
+  background: linear-gradient(160deg, #e6faf7 0%, #d8f4ef 45%, #e2f4fb 100%);
+  display: flex; flex-direction: column; gap: 18px;
 }
-.side-label {
-  font-size: .68rem; font-weight: 800; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--muted);
+.side-section-label {
+  font-size: .67rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
 }
-.ciclo-dots { display: flex; gap: 5px }
+
+/* Ciclo anual dots */
+.ciclo-wrap { display: flex; flex-direction: column; gap: 6px }
+.ciclo-dots { display: grid; grid-template-columns: repeat(12,1fr); gap: 4px }
 .ciclo-dot {
-  flex: 1; height: 26px; border-radius: 5px;
+  height: 22px; border-radius: 5px;
   background: rgba(255,255,255,.52); border: 1.5px solid var(--line);
   display: flex; align-items: center; justify-content: center;
-  font-size: .7rem; font-weight: 700; color: var(--muted); transition: all .35s;
+  font-size: .65rem; font-weight: 700; color: var(--muted); transition: all .35s;
 }
-.ciclo-dot.hecho { background: linear-gradient(135deg,var(--accent-light),var(--accent)); border-color: var(--accent); color: #fff }
-.ciclo-dot.actual { background: rgba(53,185,169,.18); border-color: var(--accent-light); color: var(--accent); animation: cpulse 2s ease-in-out infinite }
-@keyframes cpulse { 0%,100%{box-shadow:0 0 0 0 rgba(53,185,169,.25)} 50%{box-shadow:0 0 0 4px rgba(53,185,169,.10)} }
-.ciclo-labels { display: flex; gap: 5px; font-size: .58rem; color: var(--muted); font-weight: 700 }
-.ciclo-labels span { flex: 1; text-align: center }
+.ciclo-dot.hecho { background: linear-gradient(135deg, var(--accent-light), var(--accent)); border-color: var(--accent); color: #fff }
+.ciclo-dot.actual { background: rgba(53,185,169,.2); border-color: var(--accent-light); color: var(--accent); animation: cpulse 2s ease-in-out infinite }
+@keyframes cpulse { 0%,100%{box-shadow:0 0 0 0 rgba(53,185,169,.25)} 50%{box-shadow:0 0 0 5px rgba(53,185,169,.08)} }
+.ciclo-labels { display: grid; grid-template-columns: repeat(12,1fr); gap: 4px; font-size: .58rem; color: var(--muted); font-weight: 600 }
+.ciclo-labels span { text-align: center }
 
-.gauge-wrap { display: flex; align-items: center; gap: 18px }
-.gauge-svg { width: 110px; height: 110px; flex-shrink: 0 }
-.gauge-track { fill: none; stroke: var(--line); stroke-width: 10; stroke-linecap: round }
+/* Gauge */
+.gauge-wrap { display: flex; align-items: center; gap: 16px }
+.gauge-svg { width: 100px; height: 100px; flex-shrink: 0; overflow: visible }
+.gauge-track { fill: none; stroke: var(--line); stroke-width: 9; stroke-linecap: round }
 .gauge-fill {
-  fill: none; stroke: url(#gGrad); stroke-width: 10; stroke-linecap: round;
+  fill: none; stroke: url(#gGrad); stroke-width: 9; stroke-linecap: round;
   stroke-dasharray: 251.2; stroke-dashoffset: 251.2;
   transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);
   transform: rotate(-90deg); transform-origin: 50px 50px;
 }
-.g-val { font-family: var(--font-mono); font-size: 1.35rem; font-weight: 500; fill: var(--accent); text-anchor: middle; dominant-baseline: central }
-.g-lbl { font-size: .56rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; fill: var(--muted); text-anchor: middle }
-.gauge-copy { display: flex; flex-direction: column; gap: 5px }
-.gauge-copy strong { font-size: .95rem; color: var(--text) }
-.gauge-copy span { font-size: .82rem; color: var(--text-2) }
+.g-val { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 500; fill: var(--accent); text-anchor: middle; dominant-baseline: central }
+.g-lbl { font-size: .54rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; fill: var(--muted); text-anchor: middle }
+.gauge-text { display: flex; flex-direction: column; gap: 4px }
+.gauge-text strong { font-size: .96rem; color: var(--text); line-height: 1.2 }
+.gauge-text span { font-size: .8rem; color: var(--text-2) }
+.gauge-text small { font-size: .72rem; color: var(--muted) }
 
-.panel-grid { display: grid; grid-template-columns: 1.22fr 1fr; gap: 16px; margin-bottom: 20px }
-.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; margin-bottom: 20px }
+/* ══════════════════════════════════════
+   SECTION + DIVIDER
+══════════════════════════════════════ */
+.section { margin-bottom: 20px }
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 12px;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line-soft);
+}
+.section-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 600; color: var(--text); letter-spacing: -.01em }
+.section-sub { font-size: .82rem; color: var(--muted); margin-top: 3px }
+.section-divider {
+  display: flex; align-items: center; gap: 14px; margin: 26px 0 16px;
+  color: var(--accent-mid); font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+}
+.section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1.5px; background: linear-gradient(90deg, transparent, var(--line), transparent) }
+
+/* ══════════════════════════════════════
+   KPI GRID
+══════════════════════════════════════ */
 .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px }
 .kpi-card {
   padding: 20px 18px 17px;
@@ -252,18 +286,20 @@ body::after {
 .kpi-card.rezago { border-top-color: var(--rezago) }
 .kpi-card.sin-actividad { border-top-color: var(--sin-actividad) }
 .kpi-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px }
-.kpi-nombre { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); line-height: 1.35 }
-.kpi-val {
-  font-family: var(--font-mono); font-size: 2rem; font-weight: 500;
-  line-height: 1; letter-spacing: -.03em; color: var(--text); margin-bottom: 4px;
-}
-.kpi-meta { font-size: .8rem; color: var(--text-2); margin-bottom: 8px }
-.kpi-sub { font-size: .72rem; color: var(--muted) }
-.kpi-zoom-hint {
-  position: absolute; right: 12px; bottom: 10px; opacity: 0; transition: opacity .2s ease;
-  font-size: .68rem; color: var(--accent-mid); font-weight: 700;
-}
+.kpi-nombre { font-size: .69rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); line-height: 1.35 }
+.kpi-val { font-family: var(--font-mono); font-size: 2rem; font-weight: 500; line-height: 1; letter-spacing: -.03em; color: var(--text); margin-bottom: 3px }
+.kpi-unit { font-size: .78rem; color: var(--muted); margin-bottom: 8px }
+.kpi-bar-wrap { height: 5px; border-radius: 999px; background: var(--line-soft); overflow: hidden; margin: 8px 0 6px }
+.kpi-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent-light), var(--accent)); transition: width .8s cubic-bezier(.4,0,.2,1) }
+.kpi-bar.al-dia { background: linear-gradient(90deg, #1d9e68, var(--al-dia)) }
+.kpi-bar.seguimiento { background: linear-gradient(90deg, #c8960a, var(--seguimiento)) }
+.kpi-bar.rezago { background: linear-gradient(90deg, #e05c5c, var(--rezago)) }
+.kpi-meta { font-size: .74rem; color: var(--muted); display: flex; justify-content: space-between; gap: 4px }
+.kpi-meta strong { color: var(--text-2); font-weight: 600 }
+.kpi-zoom-hint { position: absolute; right: 11px; bottom: 9px; opacity: 0; transition: opacity .2s; font-size: .67rem; color: var(--accent-mid); font-weight: 700 }
 .kpi-card:hover .kpi-zoom-hint { opacity: 1 }
+
+/* Semáforo badge */
 .sem {
   display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px;
   font-size: .63rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0;
@@ -274,363 +310,1446 @@ body::after {
 .sem.rezago { background: var(--rezago-soft); color: var(--rezago) }
 .sem.sin-actividad { background: var(--sin-actividad-soft); color: var(--sin-actividad) }
 
-.panel { padding: 20px 20px 18px }
-.panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 14px }
-.panel-title-wrap h3 {
-  font-family: var(--font-head);
-  font-size: 1.18rem; font-weight: 600; line-height: 1.18; color: var(--text);
-}
-.panel-sub { font-size: .8rem; color: var(--muted); margin-top: 4px }
-.panel-actions { display: flex; gap: 8px; align-items: center }
-.panel-chip {
-  padding: 5px 10px; border-radius: 999px;
-  background: var(--accent-pale); border: 1px solid var(--accent-soft);
-  color: var(--accent); font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-}
-.chart-host {
-  min-height: 320px; border-radius: var(--radius-sm);
-  background: linear-gradient(180deg, rgba(232,248,245,.65) 0%, rgba(255,255,255,.92) 100%);
-  border: 1.5px dashed var(--line);
-  display: flex; align-items: center; justify-content: center;
-  padding: 14px; cursor: zoom-in;
-}
-.chart-host:hover { outline: 2px solid var(--accent-soft); border-radius: var(--radius-sm) }
-.chart-empty {
-  max-width: 36ch; text-align: center; color: var(--muted); font-size: .88rem;
-}
-.chart-empty strong { display: block; color: var(--text-2); margin-bottom: 4px }
+/* ══════════════════════════════════════
+   GRIDS LAYOUTS
+══════════════════════════════════════ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px }
+.grid-2-wide { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px }
 
-.table-wrap {
-  border: 1.5px solid var(--line-soft); border-radius: var(--radius-sm);
-  overflow: hidden; background: #fff;
-}
-.table-wrap table { width: 100%; border-collapse: collapse; font-size: .84rem }
-.table-wrap th, .table-wrap td { padding: 11px 12px; border-bottom: 1px solid var(--line-soft); text-align: left }
-.table-wrap th { background: var(--surface); color: var(--text-2); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase }
-.table-wrap tr:last-child td { border-bottom: none }
-.table-wrap td.num { text-align: right; font-family: var(--font-mono) }
+/* ══════════════════════════════════════
+   PANEL
+══════════════════════════════════════ */
+.panel { padding: 22px 24px }
+.panel-accent { border-top: 3px solid var(--accent-mid) }
+.panel-water { border-top: 3px solid var(--water-mid) }
+.panel h3 { font-family: var(--font-head); font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 3px; letter-spacing: -.01em }
+.panel-sub { font-size: .81rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5 }
 
-.loading {
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  padding: 42px 28px; border-radius: var(--radius); color: var(--muted);
-  background: rgba(255,255,255,.7); border: 1.5px dashed var(--line);
+/* ══════════════════════════════════════
+   ANNUAL GOALS
+══════════════════════════════════════ */
+.annual-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px }
+.annual-card {
+  padding: 14px 16px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1.5px solid var(--line-soft);
+  transition: background .2s, transform .2s;
 }
-.spinner {
-  width: 18px; height: 18px; border-radius: 50%;
-  border: 2px solid var(--line); border-top-color: var(--accent);
-  animation: spin 1s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg) } }
+.annual-card:hover { background: var(--accent-pale); transform: translateY(-1px) }
+.annual-card small { display: block; font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px }
+.annual-card strong { display: block; font-size: 1.05rem; font-family: var(--font-mono); color: var(--text); margin-bottom: 4px }
+.annual-card .anual-meta { font-size: .75rem; color: var(--muted); margin-bottom: 7px }
+.annual-bar-wrap { height: 5px; border-radius: 999px; background: var(--line-soft); overflow: hidden; margin-bottom: 5px }
+.annual-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent-light), var(--accent)); transition: width .8s cubic-bezier(.4,0,.2,1) }
+.annual-pct { font-size: .72rem; font-weight: 700 }
+.annual-pct.al-dia { color: var(--al-dia) }
+.annual-pct.seguimiento { color: var(--seguimiento) }
+.annual-pct.rezago { color: var(--rezago) }
 
-.tooltip {
-  position: fixed; z-index: 300; pointer-events: none; opacity: 0; transform: translateY(6px);
-  transition: opacity .12s ease, transform .12s ease;
-  background: rgba(13,45,44,.96); color: #fff; padding: 10px 12px; border-radius: 10px; max-width: 240px;
-  box-shadow: var(--sh-lg); font-size: .76rem; line-height: 1.5;
-}
-.tooltip.visible { opacity: 1; transform: translateY(0) }
-.tooltip strong { color: #fff }
+/* ══════════════════════════════════════
+   CHART SVG
+══════════════════════════════════════ */
+.chart-wrap { overflow: auto; border-radius: var(--radius-xs); background: var(--surface); border: 1px solid var(--line-soft); padding: 6px 0 2px }
+.chart { width: 100%; height: auto; display: block; overflow: visible }
 
+/* Line chart in SVG */
+.chart-line { fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round }
+.chart-line-ref { fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-dasharray: 5 4 }
+.chart-area { opacity: .18 }
+.chart-dot { transition: r .15s }
+.chart-dot:hover { r: 5 }
+.grid-line { stroke: var(--line-soft); stroke-width: 1 }
+.axis-label { font-family: var(--font-mono); font-size: 9px; fill: var(--muted); text-anchor: middle }
+.axis-label-y { font-family: var(--font-mono); font-size: 9px; fill: var(--muted); text-anchor: end }
+
+/* Bar chart */
+.bar-value { font-family: var(--font-mono); font-size: 9px; fill: var(--text-2); text-anchor: middle }
+
+/* Legend */
+.legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: .78rem; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line-soft) }
+.legend span { display: flex; align-items: center; gap: 5px }
+.legend i { display: inline-block; width: 20px; height: 3px; border-radius: 2px; flex-shrink: 0 }
+
+/* ══════════════════════════════════════
+   ALERTS / DIAGNOSTICO
+══════════════════════════════════════ */
+.alert-list { display: grid; gap: 7px }
+.alert { padding: 10px 13px; border-radius: var(--radius-sm); border-left: 4px solid; font-size: .84rem; line-height: 1.55 }
+.alert.al-dia { background: var(--al-dia-soft); border-color: var(--al-dia); color: #0a5238 }
+.alert.seguimiento { background: var(--seguimiento-soft); border-color: var(--seguimiento); color: #5c3f00 }
+.alert.rezago { background: var(--rezago-soft); border-color: var(--rezago); color: #5c1212 }
+
+.diagnostic {
+  padding: 26px 30px; line-height: 1.82; font-size: .93rem;
+  border-left: 4px solid var(--accent-mid);
+  background: linear-gradient(to right, var(--accent-pale) 0%, var(--card) 55%);
+}
+.diagnostic h3 { font-family: var(--font-head); font-size: 1.1rem; color: var(--text); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line-soft) }
+.diagnostic p { color: var(--muted); margin-bottom: 8px }
+.diagnostic strong { color: var(--accent-mid) }
+
+/* Table */
+.tbl-wrap { overflow: auto; border: 1.5px solid var(--line-soft); border-radius: var(--radius-sm) }
+table { width: 100%; border-collapse: collapse; min-width: 400px; background: var(--card) }
+th, td { padding: 9px 12px; border-bottom: 1px solid var(--line-soft); text-align: left; font-size: .83rem; white-space: nowrap }
+th { background: var(--surface); color: var(--accent-mid); font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; position: sticky; top: 0; border-bottom: 2px solid var(--line) }
+tr:hover td { background: var(--accent-pale) }
+td:first-child { font-weight: 600; color: var(--text-2) }
+td.num { font-family: var(--font-mono); font-size: .8rem; color: var(--text-2); text-align: right }
+td .sem { margin-top: 0 }
+
+/* Interp */
+.interp { margin-top: 12px; padding: 11px 14px; background: var(--accent-pale); border-left: 3px solid var(--accent-mid); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; font-size: .81rem; color: var(--text-2); line-height: 1.62 }
+.interp strong { color: var(--accent-mid) }
+
+/* ══════════════════════════════════════
+   TOOLTIP
+══════════════════════════════════════ */
+#vizTooltip {
+  position: fixed; z-index: 9999; pointer-events: none;
+  background: rgba(13,45,44,.94); color: #fff;
+  padding: 8px 13px; border-radius: var(--radius-sm); font-size: .78rem; line-height: 1.55;
+  white-space: nowrap; box-shadow: var(--sh-lg); opacity: 0; transition: opacity .1s;
+}
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
 .modal-overlay {
-  position: fixed; inset: 0; z-index: 400; display: flex; align-items: center; justify-content: center;
-  background: rgba(9,24,24,.48); backdrop-filter: blur(4px);
-  opacity: 0; pointer-events: none; transition: opacity .18s ease;
+  position: fixed; inset: 0; z-index: 1000; background: rgba(9,28,28,.52); backdrop-filter: blur(5px);
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  opacity: 0; pointer-events: none; transition: opacity .22s;
 }
-.modal-overlay.open { opacity: 1; pointer-events: all }
+.modal-overlay.open { opacity: 1; pointer-events: auto }
 .modal-box {
-  width: min(980px, calc(100vw - 32px)); max-height: min(88vh, 900px);
-  background: #fff; border-radius: 22px; overflow: hidden;
-  border: 1px solid var(--line-soft); box-shadow: 0 28px 80px rgba(10,50,50,.24);
-  transform: translateY(8px) scale(.985); transition: transform .18s ease;
-  display: flex; flex-direction: column;
+  background: var(--card); border-radius: var(--radius); box-shadow: 0 28px 80px rgba(9,28,28,.26);
+  width: 100%; max-width: 860px; max-height: 90vh; display: flex; flex-direction: column;
+  transform: translateY(18px) scale(.97); transition: transform .22s cubic-bezier(.4,0,.2,1);
+  border: 1.5px solid var(--line-soft);
 }
 .modal-overlay.open .modal-box { transform: none }
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 14px;
-  padding: 18px 24px 14px; border-bottom: 1px solid var(--line-soft);
-}
-.modal-title { font-family: var(--font-head); font-size: 1.14rem; font-weight: 600; color: var(--text); line-height: 1.28 }
-.modal-sub { font-size: .82rem; color: var(--muted); margin-top: 2px }
-.modal-close {
-  width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line-soft);
-  background: var(--surface); color: var(--muted); font-size: 1rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; transition: all .15s ease;
-}
-.modal-close:hover { background: var(--rezago-soft); color: var(--rezago); border-color: var(--rezago) }
-.modal-body { padding: 22px 24px 24px; overflow-y: auto; flex: 1 }
+.modal-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px 14px; border-bottom: 1.5px solid var(--line-soft) }
+.modal-head h2 { font-family: var(--font-head); font-size: 1.15rem; font-weight: 600; color: var(--text) }
+.modal-close { width: 32px; height: 32px; border-radius: 50%; border: none; background: var(--surface); color: var(--muted); font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s, color .15s }
+.modal-close:hover { background: var(--rezago-soft); color: var(--rezago) }
+.modal-body { overflow-y: auto; padding: 22px 24px; flex: 1 }
 
-.empty-state {
-  min-height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  text-align: center; gap: 10px; color: var(--muted);
-}
-.empty-state strong { font-size: 1rem; color: var(--text-2) }
-.empty-state code {
-  padding: 4px 8px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line-soft);
-  font-family: var(--font-mono); font-size: .78rem; color: var(--accent);
-}
+/* ══════════════════════════════════════
+   EXEC VIEW
+══════════════════════════════════════ */
+.exec-only { display: none }
+.full-only { display: block }
+body.view-exec .exec-only { display: block !important }
+body.view-exec .full-only { display: none !important }
 
-@media (max-width: 1180px) {
-  .hero, .panel-grid, .grid-2 { grid-template-columns: 1fr }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr) }
+.exec-toolbar { display: grid; grid-template-columns: 1fr 1fr auto; gap: 13px; align-items: end; margin-bottom: 20px }
+.exec-filter { padding: 12px 14px }
+.exec-filter label { display: block; font-size: .67rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .09em; margin-bottom: 7px }
+.exec-filter select {
+  width: 100%; padding: 9px 32px 9px 12px; border: 1.5px solid var(--line); border-radius: var(--radius-xs);
+  background: var(--surface); font-size: .87rem; font-family: var(--font-body); color: var(--text); outline: none;
+  transition: border-color .2s; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%235f8a84' stroke-width='2.5'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
 }
-@media (max-width: 780px) {
-  .topbar { padding: 10px 16px }
+.exec-filter select:focus { border-color: var(--accent-mid); box-shadow: 0 0 0 3px rgba(13,124,114,.12) }
+.exec-pill { display: flex; align-items: center; font-weight: 700; font-family: var(--font-mono); font-size: .84rem; color: var(--accent-mid); background: var(--accent-pale); border: 1.5px solid var(--accent-soft); border-radius: var(--radius-xs); padding: 9px 12px }
+
+.exec-hero { display: grid; grid-template-columns: 280px 1fr; gap: 16px; margin-bottom: 16px }
+.exec-status-card {
+  padding: 24px 22px;
+  background: linear-gradient(148deg, var(--accent) 0%, var(--accent-mid) 55%, var(--accent-light) 100%);
+  color: #fff; border-radius: var(--radius); box-shadow: 0 8px 28px rgba(13,124,114,.35);
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.exec-status-card .es-lbl { font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; opacity: .72; margin-bottom: 5px }
+.exec-status-card .es-title { font-family: var(--font-head); font-size: 1.35rem; font-weight: 600; line-height: 1.2; margin-bottom: 13px }
+.exec-badge { display: inline-flex; align-items: center; gap: 7px; padding: 7px 13px; border-radius: var(--radius-sm); font-weight: 700; font-size: .83rem; background: rgba(255,255,255,.15); border: 1.5px solid rgba(255,255,255,.24); color: #fff; margin-bottom: 14px }
+.exec-badge::before { content: '●'; font-size: .52em }
+.exec-period { font-size: .8rem; opacity: .65 }
+
+.exec-kpi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px }
+.exec-kpi { padding: 16px 15px; border-radius: var(--radius); background: var(--card); border: 1.5px solid var(--line-soft); box-shadow: var(--sh-sm); display: flex; flex-direction: column; gap: 5px; transition: transform .2s, box-shadow .2s }
+.exec-kpi:hover { transform: translateY(-2px); box-shadow: var(--sh) }
+.exec-kpi-lbl { font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted) }
+.exec-kpi-val { font-family: var(--font-mono); font-size: 1.28rem; font-weight: 500; color: var(--text); line-height: 1 }
+.exec-kpi-bar { height: 4px; border-radius: 99px; background: var(--line-soft); overflow: hidden; margin-top: 3px }
+.exec-kpi-bar span { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent-light), var(--accent)); transition: width .7s cubic-bezier(.4,0,.2,1) }
+
+.exec-strip { display: grid; grid-template-columns: repeat(4,1fr); gap: 11px; margin-bottom: 16px }
+.exec-strip-card { padding: 14px 16px; border-radius: var(--radius-sm); background: var(--card); border: 1.5px solid var(--line-soft); box-shadow: var(--sh-sm) }
+.exec-strip-card small { display: block; font-size: .66rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px }
+.exec-strip-card strong { font-family: var(--font-mono); font-size: 1.08rem; color: var(--text) }
+
+/* ══════════════════════════════════════
+   PRESENTATION MODE
+══════════════════════════════════════ */
+body.presentation-open .wrap { filter: blur(10px) saturate(.82); transform: scale(.992); pointer-events: none; user-select: none; transition: filter .35s, transform .35s }
+
+.pres-overlay {
+  position: fixed; inset: 0; z-index: 2600;
+  display: flex; flex-direction: column;
+  background: linear-gradient(160deg, rgba(8,22,20,.97) 0%, rgba(12,32,30,.97) 50%, rgba(6,18,28,.97) 100%);
+  backdrop-filter: blur(24px) saturate(.7);
+  opacity: 0; pointer-events: none; transition: opacity .3s ease; overflow: hidden;
+}
+.pres-overlay.open { opacity: 1; pointer-events: auto }
+
+.pres-chrome {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 28px;
+  background: rgba(255,255,255,.04); border-bottom: 1px solid rgba(255,255,255,.09);
+  flex-shrink: 0;
+}
+.pres-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap }
+.pres-meta span {
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
+  font-size: .77rem; font-weight: 700; color: rgba(255,255,255,.85);
+}
+.pres-actions { display: flex; align-items: center; gap: 6px }
+.pres-btn {
+  display: inline-flex; align-items: center; gap: 5px; border: 1px solid rgba(255,255,255,.15);
+  border-radius: 999px; padding: 8px 16px; background: rgba(255,255,255,.10); color: #fff;
+  font-family: var(--font-body); font-size: .81rem; font-weight: 700; cursor: pointer;
+  transition: transform .2s, background .2s;
+}
+.pres-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,.18) }
+.pres-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent-mid)); border-color: transparent; box-shadow: 0 4px 18px rgba(13,124,114,.4) }
+
+.pres-stage-wrap { flex: 1; min-height: 0; padding: 18px 28px 0; display: flex; flex-direction: column; overflow: hidden }
+.pres-stage { flex: 1; min-height: 0; overflow: hidden; border-radius: 20px 20px 0 0; box-shadow: 0 -6px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.07) }
+.pres-track { display: flex; height: 100%; transition: transform .48s cubic-bezier(.22,.61,.36,1) }
+
+.pres-slide {
+  flex: 0 0 100%; height: 100%;
+  background: linear-gradient(148deg, #f4fbf9 0%, #e8f7f4 40%, #daf2ef 100%);
+  color: var(--text); padding: 34px 44px 28px;
+  position: relative; overflow: hidden;
+}
+.pres-slide::before {
+  content: ''; position: absolute; right: -8%; bottom: -20%;
+  width: 380px; height: 380px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(53,185,169,.18), transparent 68%); pointer-events: none;
+}
+.pres-slide::after {
+  content: ''; position: absolute; left: -100px; top: -100px;
+  width: 300px; height: 300px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(15,95,135,.10), transparent 70%); pointer-events: none;
+}
+.pres-slide-inner { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; gap: 18px }
+
+.pres-kicker {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 13px; border-radius: 999px;
+  background: rgba(255,255,255,.78); border: 1px solid var(--line-soft);
+  font-size: .7rem; font-weight: 800; letter-spacing: .11em; text-transform: uppercase; color: var(--accent-mid);
+  width: fit-content;
+}
+.pres-kicker::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-light), var(--accent)) }
+.pres-title-row { display: flex; justify-content: space-between; gap: 22px; align-items: flex-start; flex-shrink: 0 }
+.pres-title-row h2 { font-family: var(--font-head); font-size: clamp(1.8rem, 3vw, 2.7rem); line-height: 1.04; letter-spacing: -.03em; margin-bottom: 8px }
+.pres-title-row p { font-size: .95rem; line-height: 1.7; color: var(--text-2); max-width: 680px }
+.pres-brand { flex-shrink: 0; text-align: right }
+.pres-brand small { font-size: .78rem; color: var(--muted); display: block; max-width: 200px; line-height: 1.6 }
+
+/* Pres cards */
+.pres-card-grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px }
+.pres-card-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px }
+.pres-card-grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 16px; flex: 1; min-height: 0 }
+.pres-card {
+  background: rgba(255,255,255,.84); border: 1.5px solid rgba(195,230,225,.95);
+  border-radius: 20px; padding: 18px 20px 16px; box-shadow: 0 8px 26px rgba(10,50,50,.09);
+}
+.pres-card small { display: block; font-size: .68rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px }
+.pres-card strong { display: block; font-size: 1.55rem; line-height: 1.05; font-family: var(--font-mono); font-weight: 500; color: var(--text) }
+.pres-card p { margin-top: 8px; color: var(--text-2); font-size: .82rem; line-height: 1.55 }
+.pres-chip { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 5px 11px; border-radius: 999px; font-size: .69rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase }
+.pres-chip.al-dia { background: var(--al-dia-soft); color: var(--al-dia) }
+.pres-chip.seguimiento { background: var(--seguimiento-soft); color: var(--seguimiento) }
+.pres-chip.rezago { background: var(--rezago-soft); color: var(--rezago) }
+.pres-chip.muted { background: var(--sin-actividad-soft); color: var(--sin-actividad) }
+
+.pres-kpi-big {
+  background: rgba(255,255,255,.86); border: 1.5px solid rgba(195,230,225,.95);
+  border-radius: 20px; padding: 22px 26px; box-shadow: 0 8px 26px rgba(10,50,50,.09);
+  display: flex; flex-direction: column; gap: 8px; overflow: hidden;
+}
+.pres-kpi-big .pk-lbl { font-size: .69rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted) }
+.pres-kpi-big .pk-val { font-family: var(--font-mono); font-size: 2.4rem; font-weight: 500; color: var(--text); line-height: 1; letter-spacing: -.02em }
+.pres-kpi-big .pk-meta { font-size: .84rem; color: var(--muted) }
+.pres-kpi-big .pk-bar-wrap { height: 7px; border-radius: 999px; background: var(--line-soft); overflow: hidden; margin: 4px 0 2px }
+.pres-kpi-big .pk-bar { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent-light), var(--accent)); transition: width .8s cubic-bezier(.4,0,.2,1) }
+.pres-kpi-big .pk-bar.al-dia { background: linear-gradient(90deg, #1d9e68, var(--al-dia)) }
+.pres-kpi-big .pk-bar.seguimiento { background: linear-gradient(90deg, #c8960a, var(--seguimiento)) }
+.pres-kpi-big .pk-bar.rezago { background: linear-gradient(90deg, #e05c5c, var(--rezago)) }
+
+.pres-col-wrap { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; flex: 1; min-height: 0 }
+.pres-visual-card, .pres-list-card {
+  background: rgba(255,255,255,.86); border: 1.5px solid rgba(195,230,225,.95);
+  border-radius: 20px; padding: 18px 22px; box-shadow: 0 8px 26px rgba(10,50,50,.09);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.pres-visual-card h3, .pres-list-card h3 { font-family: var(--font-head); font-size: 1.1rem; margin-bottom: 4px }
+.pres-visual-card p, .pres-list-card p { color: var(--muted); font-size: .81rem; line-height: 1.5; margin-bottom: 10px }
+.pres-visual { flex: 1; min-height: 0; background: linear-gradient(180deg, rgba(240,252,250,.9), #fff); border-radius: 14px; border: 1px solid var(--line-soft); padding: 10px; overflow: hidden }
+.pres-list { display: grid; gap: 8px; overflow: auto; flex: 1 }
+.pres-list-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 9px 11px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line-soft) }
+.pres-rank { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: .82rem; flex-shrink: 0 }
+.pres-list-item strong { display: block; font-size: .88rem; color: var(--text) }
+.pres-list-item span { display: block; font-size: .74rem; color: var(--muted); margin-top: 1px }
+.pres-list-item em { font-style: normal; font-family: var(--font-mono); font-size: .81rem; color: var(--accent-mid); font-weight: 700 }
+
+.pres-alert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1 }
+.pres-alert-stack { display: grid; gap: 9px; align-content: start }
+.pres-alert-box { padding: 13px 16px; border-radius: 16px; font-size: .87rem; line-height: 1.62; border: 1px solid transparent }
+.pres-alert-box.rezago { background: var(--rezago-soft); color: var(--rezago); border-color: rgba(143,28,28,.14) }
+.pres-alert-box.seguimiento { background: var(--seguimiento-soft); color: var(--seguimiento); border-color: rgba(138,98,0,.15) }
+.pres-alert-box.al-dia { background: var(--al-dia-pale); color: var(--al-dia); border-color: rgba(21,122,80,.14) }
+.pres-note { padding: 20px 22px; border-radius: 20px; background: rgba(255,255,255,.86); border: 1.5px solid rgba(195,230,225,.95); box-shadow: 0 8px 26px rgba(10,50,50,.09); display: flex; flex-direction: column; gap: 10px }
+.pres-note h3 { font-family: var(--font-head); font-size: 1.18rem; margin-bottom: 2px }
+.pres-note p { font-size: .92rem; line-height: 1.78; color: var(--text-2) }
+
+.pres-strip { display: flex; gap: 10px; flex-wrap: wrap; flex-shrink: 0 }
+.pres-strip span { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px; background: rgba(255,255,255,.68); border: 1px solid var(--line-soft); font-size: .8rem; font-weight: 700; color: var(--text-2) }
+
+/* Pres footer */
+.pres-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 28px 14px; flex-shrink: 0 }
+.pres-dots { display: flex; gap: 6px; align-items: center }
+.pres-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: rgba(255,255,255,.28); cursor: pointer; transition: transform .2s, background .2s }
+.pres-dot.active { background: #fff; transform: scale(1.25) }
+.pres-counter { font-family: var(--font-mono); font-size: .81rem; background: rgba(255,255,255,.1); padding: 5px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.14); color: rgba(255,255,255,.8) }
+
+/* ══════════════════════════════════════
+   EMPTY / MUTED
+══════════════════════════════════════ */
+.empty { padding: 22px; border: 1.5px dashed var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--muted); text-align: center; font-size: .87rem }
+.muted-txt { color: var(--muted) }
+.footer-note { margin-top: 8px; color: var(--muted); font-size: .77rem }
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:1180px) {
+  .hero, .grid-2-wide { grid-template-columns: 1fr }
+  .kpi-grid, .exec-kpi-grid { grid-template-columns: repeat(2,1fr) }
+  .exec-strip { grid-template-columns: repeat(2,1fr) }
+  .exec-hero { grid-template-columns: 1fr }
+  .pres-card-grid-4 { grid-template-columns: repeat(2,1fr) }
+  .pres-col-wrap { grid-template-columns: 1fr }
+}
+@media(max-width:780px) {
   .wrap { padding: 20px 14px 60px }
-  .hero-main, .hero-side, .panel { padding: 18px 16px }
+  .topbar { padding: 10px 16px }
+  .hero-main { padding: 22px 18px }
   .kpi-grid { grid-template-columns: 1fr }
-  .month-pills { width: 100%; overflow-x: auto; scrollbar-width: none }
-  .month-pills::-webkit-scrollbar { display: none }
-  .gauge-wrap { flex-direction: column; align-items: flex-start }
+  .grid-2, .grid-3, .annual-grid { grid-template-columns: 1fr }
+  .pres-card-grid-3, .pres-card-grid-2 { grid-template-columns: 1fr }
+  .pres-alert-grid { grid-template-columns: 1fr }
 }
 </style>
 </head>
-<body>
+<body class="view-full">
 
-<div id="tooltip" class="tooltip"></div>
+<div id="vizTooltip"></div>
 
-<div class="modal-overlay" id="kpiModal" onclick="closeKpiModal && closeKpiModal(event)">
-  <div class="modal-box" id="kpiModalBox">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="kpiModalTitle">—</div>
-        <div class="modal-sub" id="kpiModalSub">—</div>
-      </div>
-      <button class="modal-close" onclick="closeKpiModalDirect && closeKpiModalDirect()" aria-label="Cerrar">&#215;</button>
+<!-- MODAL KPI -->
+<div class="modal-overlay" id="kpiModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="kpiModalTitle">—</h2>
+      <button class="modal-close" id="kpiModalClose">&#215;</button>
     </div>
     <div class="modal-body" id="kpiModalBody"></div>
   </div>
 </div>
 
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal && closeModal(event)">
-  <div class="modal-box" id="modalBox">
-    <div class="modal-header">
-      <div>
-        <div class="modal-title" id="modalTitle">—</div>
-        <div class="modal-sub" id="modalSub">—</div>
-      </div>
-      <button class="modal-close" onclick="closeModalDirect && closeModalDirect()" aria-label="Cerrar">&#215;</button>
+<!-- PRESENTATION -->
+<div class="pres-overlay" id="presOverlay" aria-hidden="true">
+  <div class="pres-chrome">
+    <div class="pres-meta" id="presMeta"></div>
+    <div class="pres-actions">
+      <button class="pres-btn" onclick="prevSlide()">&#8592; Anterior</button>
+      <button class="pres-btn" onclick="nextSlide()">Siguiente &#8594;</button>
+      <button class="pres-btn primary" onclick="closePres()">&#215; Cerrar</button>
     </div>
-    <div class="modal-body" id="modalBody"></div>
+  </div>
+  <div class="pres-stage-wrap">
+    <div class="pres-stage">
+      <div class="pres-track" id="presTrack"></div>
+    </div>
+  </div>
+  <div class="pres-footer">
+    <div class="pres-dots" id="presDots"></div>
+    <div class="pres-counter" id="presCounter">1 / 1</div>
   </div>
 </div>
 
+<!-- ══ TOPBAR ══ -->
 <nav class="topbar">
-  <a href="./index.html" class="back">
-    <span class="back-arrow">&#8592;</span>
-    Volver al inicio
-  </a>
-
-  <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período">
-    <!-- generado por JS -->
-  </div>
-
+  <a href="./index.html" class="back"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+  <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
   <div class="topbar-right">
     <div class="estado-global sin-actividad" id="estadoGlobal">
-      <span class="dot"></span>
-      <span id="estadoLabel">Cargando…</span>
+      <span class="dot"></span><span id="estadoLabel">Cargando…</span>
+    </div>
+    <button class="view-btn present-btn" onclick="openPres()">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 3.5h11v7h-11z"/><path d="M6 13h4"/><path d="M8 10.5V13"/></svg>
+      Modo presentación
+    </button>
+    <div class="view-switcher">
+      <button class="view-btn active" id="btnFull" onclick="switchView('full')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+        Dashboard completo
+      </button>
+      <button class="view-btn" id="btnExec" onclick="switchView('exec')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
+        Vista ejecutiva
+      </button>
     </div>
   </div>
 </nav>
 
-<main class="wrap" id="mainWrap">
-  <section class="hero">
-    <article class="card hero-main">
-      <div class="program-eyebrow">Programa estratégico AALA</div>
-      <h1>Conservando Atitlán</h1>
-      <p class="hero-narrative">
-        Monitoreo ejecutivo del programa de recolección de aceite usado de cocina, protección hídrica y cadena de valor de jabones.
-        Esta vista está diseñada para mantener la misma arquitectura visual y operativa de EPC y Fortalecimiento Municipal,
-        con corte mensual, semáforos, selección de período y capacidad de zoom en KPIs y gráficas.
-      </p>
-      <div class="hero-stats" id="heroStats">
-        <span class="hero-stat-pill"><strong>12</strong> jornadas meta por ciclo anual</span>
-        <span class="hero-stat-pill"><strong>80,000</strong> litros de aceite meta</span>
-        <span class="hero-stat-pill"><strong>80,000,000</strong> litros de agua protegidos</span>
-      </div>
-    </article>
+<!-- ══ MAIN WRAP ══ -->
+<div class="wrap" id="mainWrap">
 
-    <aside class="card hero-side">
-      <div>
-        <div class="side-label">Sostenimiento del ciclo</div>
-        <div class="ciclo-dots" id="cicloDots">
-          <span class="ciclo-dot">1</span><span class="ciclo-dot">2</span><span class="ciclo-dot">3</span><span class="ciclo-dot">4</span>
-          <span class="ciclo-dot">5</span><span class="ciclo-dot">6</span><span class="ciclo-dot">7</span><span class="ciclo-dot">8</span>
-          <span class="ciclo-dot">9</span><span class="ciclo-dot">10</span><span class="ciclo-dot">11</span><span class="ciclo-dot">12</span>
-        </div>
-        <div class="ciclo-labels" id="cicloLabels">
-          <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
-          <span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span>
-        </div>
-      </div>
+  <!-- ░░ FULL VIEW ░░ -->
+  <div class="full-only">
 
-      <div class="gauge-wrap">
-        <svg class="gauge-svg" viewBox="0 0 100 100" aria-hidden="true">
-          <defs>
-            <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#35b9a9"></stop>
-              <stop offset="100%" stop-color="#0d7c72"></stop>
-            </linearGradient>
-          </defs>
-          <circle class="gauge-track" cx="50" cy="50" r="40"></circle>
-          <circle class="gauge-fill" id="gaugeFill" cx="50" cy="50" r="40"></circle>
-          <text class="g-val" id="gaugeVal" x="50" y="47">0%</text>
-          <text class="g-lbl" x="50" y="66">avance anual</text>
-        </svg>
-        <div class="gauge-copy">
-          <strong id="gaugeTitle">Desempeño consolidado</strong>
-          <span id="gaugeCaption">El JS de Conservando actualizará este indicador con el promedio ponderado del corte mensual.</span>
+    <!-- HERO -->
+    <section class="hero" style="margin-bottom:20px">
+      <article class="card hero-main">
+        <div class="program-eyebrow">Programa estratégico · AALA</div>
+        <h1>Conservando Atitlán</h1>
+        <p class="hero-narrative">
+          Programa de recolección de aceite usado de cocina, protección hídrica del Lago de Atitlán y
+          cadena de valor de jabones artesanales. Monitoreo mensual con semáforos, avance acumulado
+          y comparativa territorial por municipio.
+        </p>
+        <div class="hero-tags" id="heroTags">
+          <span class="hero-tag"><strong id="tagJornadas">—</strong> jornadas realizadas</span>
+          <span class="hero-tag"><strong id="tagAceite">—</strong> litros aceite recolectado</span>
+          <span class="hero-tag"><strong id="tagAgua">—</strong> litros agua protegida</span>
+          <span class="hero-tag"><strong id="tagMunicipios">—</strong> municipios atendidos</span>
         </div>
-      </div>
-    </aside>
-  </section>
+      </article>
 
-  <section class="kpi-grid" id="kpiGrid">
-    <article class="card kpi-card sin-actividad">
-      <div class="kpi-top">
-        <div class="kpi-nombre">Jornadas de recolección</div>
-        <span class="sem sin-actividad">Preparando</span>
-      </div>
-      <div class="kpi-val">—</div>
-      <div class="kpi-meta">Sostenimiento del ciclo: —/12</div>
-      <div class="kpi-sub">El detalle interactivo aparecerá aquí cuando el JS cargue los CSV.</div>
-      <div class="kpi-zoom-hint">Zoom ↗</div>
-    </article>
-    <article class="card kpi-card sin-actividad">
-      <div class="kpi-top">
-        <div class="kpi-nombre">Aceite recolectado</div>
-        <span class="sem sin-actividad">Preparando</span>
-      </div>
-      <div class="kpi-val">—</div>
-      <div class="kpi-meta">Meta anual: 80,000.00 litros</div>
-      <div class="kpi-sub">Formato dashboard: miles con coma y decimales con punto.</div>
-      <div class="kpi-zoom-hint">Zoom ↗</div>
-    </article>
-    <article class="card kpi-card sin-actividad">
-      <div class="kpi-top">
-        <div class="kpi-nombre">Agua protegida</div>
-        <span class="sem sin-actividad">Preparando</span>
-      </div>
-      <div class="kpi-val">—</div>
-      <div class="kpi-meta">Meta anual: 80,000,000.00 litros</div>
-      <div class="kpi-sub">Vista acumulada y meta esperada al corte.</div>
-      <div class="kpi-zoom-hint">Zoom ↗</div>
-    </article>
-    <article class="card kpi-card sin-actividad">
-      <div class="kpi-top">
-        <div class="kpi-nombre">Jabones producidos y vendidos</div>
-        <span class="sem sin-actividad">Preparando</span>
-      </div>
-      <div class="kpi-val">—</div>
-      <div class="kpi-meta">Metas anuales y trazabilidad mensual</div>
-      <div class="kpi-sub">La interacción detallada se activará con el archivo JS del programa.</div>
-      <div class="kpi-zoom-hint">Zoom ↗</div>
-    </article>
-  </section>
+      <aside class="card hero-side">
+        <div class="side-section-label">Sostenimiento del ciclo anual</div>
+        <div class="ciclo-wrap">
+          <div class="ciclo-dots" id="cicloDots">
+            <span class="ciclo-dot">1</span><span class="ciclo-dot">2</span><span class="ciclo-dot">3</span>
+            <span class="ciclo-dot">4</span><span class="ciclo-dot">5</span><span class="ciclo-dot">6</span>
+            <span class="ciclo-dot">7</span><span class="ciclo-dot">8</span><span class="ciclo-dot">9</span>
+            <span class="ciclo-dot">10</span><span class="ciclo-dot">11</span><span class="ciclo-dot">12</span>
+          </div>
+          <div class="ciclo-labels">
+            <span>Ene</span><span>Feb</span><span>Mar</span><span>Abr</span><span>May</span><span>Jun</span>
+            <span>Jul</span><span>Ago</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dic</span>
+          </div>
+        </div>
 
-  <section class="panel-grid">
-    <article class="card panel">
-      <div class="panel-head">
-        <div class="panel-title-wrap">
-          <h3>Indicadores estratégicos</h3>
-          <div class="panel-sub">Tendencias mensuales y lectura ejecutiva del programa.</div>
+        <div style="border-top:1px solid var(--line-soft);padding-top:14px">
+          <div class="side-section-label" style="margin-bottom:12px">Avance anual consolidado</div>
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 100 100" aria-hidden="true">
+              <defs>
+                <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#35b9a9"/><stop offset="100%" stop-color="#0d7c72"/>
+                </linearGradient>
+              </defs>
+              <circle class="gauge-track" cx="50" cy="50" r="40"/>
+              <circle class="gauge-fill" id="gaugeFill" cx="50" cy="50" r="40"/>
+              <text class="g-val" id="gaugeVal" x="50" y="46">0%</text>
+              <text class="g-lbl" x="50" y="64">avance anual</text>
+            </svg>
+            <div class="gauge-text">
+              <strong id="gaugeTitle">Desempeño consolidado</strong>
+              <span id="gaugeCaption">—</span>
+              <small id="gaugeSub">Promedio ponderado de KPIs</small>
+            </div>
+          </div>
         </div>
-        <div class="panel-actions"><span class="panel-chip">Zoom habilitable</span></div>
-      </div>
-      <div class="chart-host" id="chartKpis">
-        <div class="chart-empty">
-          <strong>Espacio reservado para la gráfica principal</strong>
-          El archivo <code>docs/conservando_atitlan.js</code> inyectará aquí la visualización interactiva con zoom.
-        </div>
-      </div>
-    </article>
+      </aside>
+    </section>
 
-    <article class="card panel">
-      <div class="panel-head">
-        <div class="panel-title-wrap">
-          <h3>Composición operativa del período</h3>
-          <div class="panel-sub">Municipios, inmuebles, aceite, producción y ventas.</div>
-        </div>
-        <div class="panel-actions"><span class="panel-chip">Detalle</span></div>
+    <!-- FILTER BAR -->
+    <section style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;margin-bottom:20px" id="filterBar">
+      <div class="card exec-filter" style="padding:12px 14px">
+        <label>Período en foco</label>
+        <div class="exec-pill" id="periodPill">— selecciona mes —</div>
       </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Métrica</th>
-              <th class="num">Valor</th>
-            </tr>
-          </thead>
-          <tbody id="tablaResumenBody">
-            <tr><td>Municipios atendidos</td><td class="num">—</td></tr>
-            <tr><td>Inmuebles atendidos</td><td class="num">—</td></tr>
-            <tr><td>Litros de aceite</td><td class="num">—</td></tr>
-            <tr><td>Jabones producidos</td><td class="num">—</td></tr>
-            <tr><td>Jabones vendidos</td><td class="num">—</td></tr>
-          </tbody>
-        </table>
+      <div class="card exec-filter">
+        <label for="municipioSelect">Municipio</label>
+        <select id="municipioSelect"></select>
       </div>
-    </article>
-  </section>
+      <div class="card exec-filter">
+        <label for="indicadorSelect">Indicador para tendencia</label>
+        <select id="indicadorSelect"></select>
+      </div>
+      <div class="card exec-filter" style="padding:12px 14px">
+        <label>Último período válido</label>
+        <div class="exec-pill" id="latestPill">—</div>
+      </div>
+    </section>
 
-  <section class="grid-2">
-    <article class="card panel">
-      <div class="panel-head">
-        <div class="panel-title-wrap">
-          <h3>Recolección y cobertura</h3>
-          <div class="panel-sub">Visual comparativa por período con interacción ampliable.</div>
-        </div>
+    <!-- KPI GRID -->
+    <section class="section">
+      <div class="section-head">
+        <div><div class="section-title">Indicadores clave de desempeño</div><div class="section-sub" id="kpiSubtitle">Lectura del período seleccionado.</div></div>
       </div>
-      <div class="chart-host" id="chartCobertura">
-        <div class="chart-empty">
-          <strong>Aquí irá la gráfica de recolección</strong>
-          Conservando utilizará la misma experiencia de zoom que EPC y Fortalecimiento Municipal.
-        </div>
-      </div>
-    </article>
+      <div class="kpi-grid" id="kpiGrid"></div>
+    </section>
 
-    <article class="card panel">
-      <div class="panel-head">
-        <div class="panel-title-wrap">
-          <h3>Producción y ventas</h3>
-          <div class="panel-sub">Seguimiento mensual de la cadena de valor del jabón.</div>
-        </div>
-      </div>
-      <div class="chart-host" id="chartProduccionVentas">
-        <div class="chart-empty">
-          <strong>Aquí irá la gráfica de producción / ventas</strong>
-          La carga real se realizará cuando agreguemos el archivo JS del programa.
-        </div>
-      </div>
-    </article>
-  </section>
+    <div class="section-divider">Tendencia histórica y semáforo</div>
 
-  <div class="loading" id="loadingState">
-    <div class="spinner"></div>
-    <span>Esperando la lógica de <code style="margin-left:6px">docs/conservando_atitlan.js</code> para poblar este dashboard.</span>
-  </div>
-</main>
+    <!-- CHARTS ROW 1 -->
+    <section class="section grid-2-wide">
+      <article class="card panel panel-accent">
+        <h3>Tendencia mensual del indicador</h3>
+        <p class="panel-sub" id="trendChartSub">Evolución real vs. meta mensual.</p>
+        <div id="trendChartWrap"></div>
+        <div class="legend" id="trendLegend">
+          <span><i style="background:var(--accent-mid)"></i>Valor real</span>
+          <span><i style="border-top:2px dashed var(--accent-soft);background:none"></i>Meta mensual</span>
+        </div>
+      </article>
+      <article class="card panel panel-accent">
+        <h3>Semáforo de indicadores</h3>
+        <p class="panel-sub" id="semaforoSub">Cumplimiento del mes y avance acumulado.</p>
+        <div id="semaforoTable"></div>
+      </article>
+    </section>
+
+    <div class="section-divider">Recolección por municipio</div>
+
+    <!-- CHARTS ROW 2 -->
+    <section class="section grid-2">
+      <article class="card panel panel-accent">
+        <h3>Aceite recolectado por municipio</h3>
+        <p class="panel-sub" id="barMuniSub">Comparativa del período seleccionado.</p>
+        <div id="barMuniChart"></div>
+        <div class="interp" id="barMuniInterp"></div>
+      </article>
+      <article class="card panel panel-water">
+        <h3>Jabones producidos vs. vendidos</h3>
+        <p class="panel-sub" id="jabonesSub">Seguimiento mensual de la cadena de valor.</p>
+        <div id="jabonesChart"></div>
+        <div class="interp" id="jabonesInterp"></div>
+      </article>
+    </section>
+
+    <div class="section-divider">Metas anuales y contexto operativo</div>
+
+    <!-- ANNUAL GOALS + TABLE -->
+    <section class="section grid-2">
+      <article class="card panel panel-accent">
+        <h3>Metas anuales y avance acumulado</h3>
+        <p class="panel-sub" id="annualSub">Progreso acumulado desde enero al corte seleccionado.</p>
+        <div class="annual-grid" id="annualGrid"></div>
+        <div class="footer-note">Metas basadas en compromisos oficiales 2026 del programa.</div>
+      </article>
+      <article class="card panel">
+        <h3>Composición operativa del período</h3>
+        <p class="panel-sub" id="tablaSub">Detalle de municipios, aceite, jabones y cobertura.</p>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>Métrica</th><th class="num">Valor del período</th><th class="num">Meta mensual</th></tr></thead>
+            <tbody id="tablaBody"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-divider">Alertas y diagnóstico narrativo</div>
+
+    <!-- ALERTS + DIAGNOSTIC -->
+    <section class="section grid-2">
+      <article class="card panel">
+        <h3>Alertas operativas</h3>
+        <p class="panel-sub">Señales para seguimiento inmediato del equipo.</p>
+        <div id="alertas"></div>
+      </article>
+      <article class="card panel">
+        <h3>Desempeño por municipio</h3>
+        <p class="panel-sub" id="muniTableSub">Municipios con actividad en el período.</p>
+        <div id="muniTable"></div>
+      </article>
+    </section>
+
+    <section class="section">
+      <article class="card diagnostic" id="diagnosticPanel"></article>
+    </section>
+
+  </div><!-- /full-only -->
+
+  <!-- ░░ EXEC VIEW ░░ -->
+  <div class="exec-only">
+    <div class="exec-toolbar" style="grid-template-columns:1fr auto auto;gap:12px;margin-bottom:20px">
+      <div class="card exec-filter">
+        <label for="execPeriodSelect">Período</label>
+        <select id="execPeriodSelect"></select>
+      </div>
+      <div class="card exec-filter" style="padding:12px 14px">
+        <label>Último período válido</label>
+        <div class="exec-pill" id="execLatestPill">—</div>
+      </div>
+      <div class="card exec-filter" style="padding:12px 14px">
+        <label>Estado del programa</label>
+        <div id="execStatusInline" class="exec-pill">—</div>
+      </div>
+    </div>
+
+    <div class="exec-hero" style="margin-bottom:16px">
+      <div class="card exec-status-card">
+        <div>
+          <div class="es-lbl">Conservando Atitlán · Vista ejecutiva</div>
+          <div class="es-title">Protección hídrica del Lago de Atitlán</div>
+          <div class="exec-badge" id="execStatusBadge">Cargando…</div>
+          <div class="exec-period" id="execPeriodInfo">—</div>
+        </div>
+        <div style="font-size:.82rem;opacity:.7;margin-top:12px">Programa de aceite, agua protegida y jabones artesanales · AALA</div>
+      </div>
+      <div class="exec-kpi-grid" id="execKpiGrid"></div>
+    </div>
+
+    <div class="exec-strip" id="execStrip"></div>
+
+    <section class="grid-2" style="margin-bottom:16px">
+      <article class="card panel panel-accent">
+        <h3>Aceite por municipio</h3>
+        <p class="panel-sub" id="execBarSub">Distribución del período ejecutivo.</p>
+        <div id="execBarChart"></div>
+      </article>
+      <article class="card panel">
+        <h3>Resumen ejecutivo</h3>
+        <p class="panel-sub">Lectura narrativa del corte seleccionado.</p>
+        <div id="execDiagnostic"></div>
+        <div style="margin-top:12px" id="execAlerts"></div>
+      </article>
+    </section>
+  </div><!-- /exec-only -->
+
+</div><!-- /wrap -->
 
 <script>
-window.closeKpiModal = window.closeKpiModal || function (e) {
-  if (e && e.target === document.getElementById('kpiModal')) document.getElementById('kpiModal').classList.remove('open');
+/* ═══════════════════════════════════════════
+   DATOS EMBEBIDOS — estructura mensual
+   (reemplazar con carga CSV cuando exista)
+═══════════════════════════════════════════ */
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const MESES_CORTO = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+// Datos mensuales de totales del programa 2026
+const DATA_TOTAL = [
+  {anio:2026,mes:1,mes_txt:'Enero',   jornadas:8,  aceite_litros:5800, agua_litros:5800000, jabones_prod:2100, jabones_vend:1950, municipios:6, inmuebles:142, ingresos_jabones:39000},
+  {anio:2026,mes:2,mes_txt:'Febrero', jornadas:9,  aceite_litros:6200, agua_litros:6200000, jabones_prod:2300, jabones_vend:2180, municipios:6, inmuebles:148, ingresos_jabones:43600},
+  {anio:2026,mes:3,mes_txt:'Marzo',   jornadas:10, aceite_litros:7100, agua_litros:7100000, jabones_prod:2600, jabones_vend:2450, municipios:7, inmuebles:155, ingresos_jabones:49000},
+];
+
+// Metas mensuales por indicador
+const METAS = {
+  jornadas:    { mensual: 12,     anual: 144,      label: 'Jornadas de recolección',    unit: 'jornadas', col: 'jornadas' },
+  aceite:      { mensual: 6667,   anual: 80000,    label: 'Aceite recolectado',          unit: 'litros',   col: 'aceite_litros' },
+  agua:        { mensual: 6666667,anual: 80000000, label: 'Agua protegida',              unit: 'litros',   col: 'agua_litros' },
+  jabones_prod:{ mensual: 2500,   anual: 30000,    label: 'Jabones producidos',          unit: 'jabones',  col: 'jabones_prod' },
+  jabones_vend:{ mensual: 2300,   anual: 27600,    label: 'Jabones vendidos',            unit: 'jabones',  col: 'jabones_vend' },
+  municipios:  { mensual: 7,      anual: 7,        label: 'Municipios atendidos',        unit: 'municipios',col:'municipios' },
+  ingresos:    { mensual: 46000,  anual: 552000,   label: 'Ingresos por jabones',        unit: 'GTQ',      col: 'ingresos_jabones' },
 };
-window.closeKpiModalDirect = window.closeKpiModalDirect || function () {
-  document.getElementById('kpiModal').classList.remove('open');
-};
-window.closeModal = window.closeModal || function (e) {
-  if (e && e.target === document.getElementById('modalOverlay')) document.getElementById('modalOverlay').classList.remove('open');
-};
-window.closeModalDirect = window.closeModalDirect || function () {
-  document.getElementById('modalOverlay').classList.remove('open');
-};
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') {
-    document.getElementById('kpiModal').classList.remove('open');
-    document.getElementById('modalOverlay').classList.remove('open');
+
+const KPI_IDS = ['jornadas','aceite','agua','jabones_prod','jabones_vend','municipios','ingresos'];
+
+// Datos por municipio (último período disponible)
+const DATA_MUNICIPIOS_MAR = [
+  { municipio: 'San Pedro La Laguna', aceite_litros: 1420, jabones_prod: 510, jabones_vend: 490, jornadas: 2 },
+  { municipio: 'San Juan La Laguna',  aceite_litros: 1280, jabones_prod: 468, jabones_vend: 440, jornadas: 2 },
+  { municipio: 'Santiago Atitlán',    aceite_litros: 1150, jabones_prod: 420, jabones_vend: 396, jornadas: 2 },
+  { municipio: 'San Marcos La Laguna',aceite_litros: 980,  jabones_prod: 360, jabones_vend: 330, jornadas: 2 },
+  { municipio: 'Santa Cruz La Laguna',aceite_litros: 860,  jabones_prod: 512, jabones_vend: 480, jornadas: 1 },
+  { municipio: 'San Pablo La Laguna', aceite_litros: 720,  jabones_prod: 330, jabones_vend: 314, jornadas: 1 },
+  { municipio: 'Panajachel',          aceite_litros: 690,  jabones_prod: 0,   jabones_vend: 0,   jornadas: 0 },
+];
+const DATA_MUNICIPIOS_BY_MES = { 1: DATA_MUNICIPIOS_MAR, 2: DATA_MUNICIPIOS_MAR, 3: DATA_MUNICIPIOS_MAR };
+
+/* ═══════════════════════════════════════════
+   ESTADO
+═══════════════════════════════════════════ */
+let selectedMes = 3; // default marzo
+let selectedMunicipioFilter = '__all__';
+let selectedIndicador = 'aceite';
+let presIdx = 0;
+
+function getRow(mes){ return DATA_TOTAL.find(r=>r.mes===mes) || DATA_TOTAL[DATA_TOTAL.length-1]; }
+function getAccum(mes, col){ return DATA_TOTAL.filter(r=>r.mes<=mes).reduce((s,r)=>s+(+r[col]||0),0); }
+
+/* ═══════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════ */
+const fmt = (n,d=0) => new Intl.NumberFormat('es-GT',{maximumFractionDigits:d,minimumFractionDigits:d}).format(+n||0);
+const fmtK = n => n>=1000000 ? fmt(n/1000000,1)+'M' : n>=1000 ? fmt(n/1000,0)+'k' : fmt(n,0);
+const fmtPct = n => `${fmt(+n*100,1)}%`;
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function semClsFromPct(p){
+  if(p===0) return 'sin-actividad';
+  if(p>=1)  return 'al-dia';
+  if(p>=.8) return 'seguimiento';
+  return 'rezago';
+}
+function semLabel(cls){ return {al-dia:'Al día', seguimiento:'En seguimiento', rezago:'Rezago', 'sin-actividad':'Sin actividad'}[cls]||cls; }
+function fmtVal(v,unit){
+  if(unit==='litros') return v>=1000000 ? fmt(v/1000000,2)+' M lts' : v>=1000 ? fmt(v/1000,1)+'k lts' : fmt(v,0)+' lts';
+  if(unit==='GTQ') return 'Q '+fmt(v,2);
+  if(unit==='jabones') return fmt(v,0)+' jab.';
+  if(unit==='municipios') return fmt(v,0)+' mun.';
+  return fmt(v,0)+' '+unit;
+}
+
+/* ═══════════════════════════════════════════
+   TOPBAR PILLS
+═══════════════════════════════════════════ */
+function buildPills(){
+  const c = document.getElementById('monthPills');
+  c.innerHTML = DATA_TOTAL.map(r=>`<button class="month-pill${r.mes===selectedMes?' active':''}" data-mes="${r.mes}">${MESES_CORTO[r.mes-1]}</button>`).join('');
+  c.querySelectorAll('.month-pill').forEach(b=>b.onclick=()=>{ selectedMes=+b.dataset.mes; render(); });
+}
+
+/* ═══════════════════════════════════════════
+   ESTADO GLOBAL PILL
+═══════════════════════════════════════════ */
+function updateEstadoGlobal(){
+  const el=document.getElementById('estadoGlobal');
+  const lbl=document.getElementById('estadoLabel');
+  const row=getRow(selectedMes);
+  const kpis=['jornadas','aceite','jabones_vend'];
+  const pctsAveraged = kpis.map(k=>{ const m=METAS[k]; return (+row[m.col]||0)/m.mensual; });
+  const avg=pctsAveraged.reduce((s,p)=>s+p,0)/pctsAveraged.length;
+  const cls=semClsFromPct(avg);
+  el.className='estado-global '+cls;
+  lbl.textContent=`${MESES[selectedMes-1]} 2026 · ${semLabel(cls)}`;
+}
+
+/* ═══════════════════════════════════════════
+   HERO TAGS
+═══════════════════════════════════════════ */
+function renderHeroTags(){
+  const row=getRow(selectedMes);
+  document.getElementById('tagJornadas').textContent=fmt(row.jornadas,0);
+  document.getElementById('tagAceite').textContent=fmtK(row.aceite_litros);
+  document.getElementById('tagAgua').textContent=fmtK(row.agua_litros);
+  document.getElementById('tagMunicipios').textContent=fmt(row.municipios,0);
+}
+
+/* ═══════════════════════════════════════════
+   CICLO DOTS
+═══════════════════════════════════════════ */
+function renderCiclo(){
+  const dots=document.querySelectorAll('.ciclo-dot');
+  dots.forEach((d,i)=>{
+    d.className='ciclo-dot';
+    const mesN=i+1;
+    const hasData=DATA_TOTAL.some(r=>r.mes===mesN);
+    if(hasData && mesN<selectedMes) d.classList.add('hecho');
+    else if(mesN===selectedMes) d.classList.add('actual');
+  });
+}
+
+/* ═══════════════════════════════════════════
+   GAUGE
+═══════════════════════════════════════════ */
+function renderGauge(){
+  const row=getRow(selectedMes);
+  const keys=['jornadas','aceite','agua','jabones_vend'];
+  const pctsAll=keys.map(k=>(+row[METAS[k].col]||0)/METAS[k].mensual);
+  const avg=pctsAll.reduce((s,p)=>s+p,0)/pctsAll.length;
+  const clamp=Math.min(avg,1.4);
+  const fill=document.getElementById('gaugeFill');
+  if(fill){ const offset=251.2-(clamp*251.2); fill.style.strokeDashoffset=offset; }
+  const valEl=document.getElementById('gaugeVal');
+  if(valEl) valEl.textContent=fmt(avg*100,0)+'%';
+  const cls=semClsFromPct(avg);
+  document.getElementById('gaugeTitle').textContent='Desempeño consolidado';
+  document.getElementById('gaugeCaption').textContent=semLabel(cls)+' · '+MESES[selectedMes-1]+' 2026';
+  document.getElementById('gaugeSub').textContent=`Promedio de ${keys.length} indicadores clave`;
+}
+
+/* ═══════════════════════════════════════════
+   KPI GRID
+═══════════════════════════════════════════ */
+function renderKpis(){
+  const row=getRow(selectedMes);
+  const grid=document.getElementById('kpiGrid');
+  document.getElementById('kpiSubtitle').textContent=`${MESES[selectedMes-1]} 2026 · comparado con meta mensual y avance anual acumulado.`;
+  grid.innerHTML = KPI_IDS.map(k=>{
+    const m=METAS[k];
+    const val=+row[m.col]||0;
+    const pct=val/m.mensual;
+    const cls=semClsFromPct(pct);
+    const bw=Math.max(0,Math.min(pct*100,100));
+    const accum=getAccum(selectedMes,m.col);
+    const annualPct=accum/m.anual;
+    return `<article class="card kpi-card ${cls}" data-kpi="${k}" onclick="openKpiModal('${k}')">
+      <div class="kpi-top">
+        <div class="kpi-nombre">${esc(m.label)}</div>
+        <span class="sem ${cls}">${semLabel(cls)}</span>
+      </div>
+      <div class="kpi-val">${fmtK(val)}</div>
+      <div class="kpi-unit">${fmtVal(val,m.unit)}</div>
+      <div class="kpi-bar-wrap"><div class="kpi-bar ${cls}" style="width:${bw}%"></div></div>
+      <div class="kpi-meta"><span>Meta mensual: <strong>${fmtVal(m.mensual,m.unit)}</strong></span><span>${fmt(pct*100,1)}%</span></div>
+      <div class="kpi-meta" style="margin-top:4px"><span>Acumulado anual: <strong>${fmt(annualPct*100,1)}%</strong></span><span>${fmtVal(accum,m.unit)}</span></div>
+      <div class="kpi-zoom-hint">Zoom ↗</div>
+    </article>`;
+  }).join('');
+  document.getElementById('periodPill').textContent=`${MESES[selectedMes-1]} 2026`;
+  document.getElementById('latestPill').textContent=`${MESES[DATA_TOTAL[DATA_TOTAL.length-1].mes-1]} 2026`;
+}
+
+/* ═══════════════════════════════════════════
+   SVG CHARTS
+═══════════════════════════════════════════ */
+function makeSvg(w,h){ return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" style="display:block;overflow:visible">`; }
+
+function renderLineChart(containerId, metricKey){
+  const container=document.getElementById(containerId);
+  if(!container) return;
+  const m=METAS[metricKey];
+  const rows=DATA_TOTAL;
+  if(!rows.length){ container.innerHTML='<div class="empty">Sin datos.</div>'; return; }
+
+  const W=580,H=180,padL=52,padR=12,padT=16,padB=32;
+  const cW=W-padL-padR, cH=H-padT-padB;
+  const values=rows.map(r=>+r[m.col]||0);
+  const metas=rows.map(()=>m.mensual);
+  const allVals=[...values,...metas];
+  const maxV=Math.max(...allVals)*1.12||1;
+  const minV=0;
+  const xStep=cW/Math.max(rows.length-1,1);
+  const yScale=v=>padT+cH-(((v-minV)/(maxV-minV))*cH);
+  const xPos=(i)=>padL+i*xStep;
+
+  // Grid lines
+  const gridLines=[0,.25,.5,.75,1].map(p=>{
+    const y=padT+cH*(1-p);
+    const v=minV+(maxV-minV)*p;
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" class="grid-line"/>
+    <text x="${padL-4}" y="${y+3}" class="axis-label-y">${fmtK(v)}</text>`;
+  }).join('');
+
+  const areaPoints=values.map((v,i)=>`${xPos(i)},${yScale(v)}`).join(' ');
+  const linePoints=areaPoints;
+  const areaPath=`M${padL},${padT+cH} L${values.map((v,i)=>`${xPos(i)},${yScale(v)}`).join(' L')} L${xPos(values.length-1)},${padT+cH} Z`;
+  const refPoints=metas.map((v,i)=>`${xPos(i)},${yScale(v)}`).join(' ');
+  const highlight=values.map((v,i)=>v>=metas[i]?`<circle cx="${xPos(i)}" cy="${yScale(v)}" r="4" fill="var(--al-dia)" stroke="#fff" stroke-width="1.5"/>`:
+    `<circle cx="${xPos(i)}" cy="${yScale(v)}" r="4" fill="var(--accent-mid)" stroke="#fff" stroke-width="1.5"/>`).join('');
+  const labels=rows.map((r,i)=>`<text x="${xPos(i)}" y="${H-4}" class="axis-label">${MESES_CORTO[r.mes-1]}</text>`).join('');
+  const valLabels=values.map((v,i)=>`<text x="${xPos(i)}" y="${yScale(v)-7}" class="axis-label" text-anchor="middle" fill="var(--accent)">${fmtK(v)}</text>`).join('');
+
+  container.innerHTML=`<div class="chart-wrap">${makeSvg(W,H)}
+    <defs><linearGradient id="aG${containerId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent-mid)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--accent-mid)" stop-opacity="0"/></linearGradient></defs>
+    ${gridLines}
+    <path d="${areaPath}" fill="url(#aG${containerId})" class="chart-area"/>
+    <polyline points="${linePoints}" class="chart-line" stroke="var(--accent-mid)"/>
+    <polyline points="${refPoints}" class="chart-line-ref" stroke="var(--oil)" stroke-dasharray="5,4"/>
+    ${highlight}
+    ${labels}${valLabels}
+  </svg></div>`;
+
+  document.getElementById('trendChartSub').textContent=`${m.label} · ${MESES[selectedMes-1]} 2026 — real vs. meta mensual`;
+}
+
+function renderBarMuni(){
+  const container=document.getElementById('barMuniChart');
+  if(!container) return;
+  const data=(DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR).filter(r=>selectedMunicipioFilter==='__all__'||r.municipio===selectedMunicipioFilter);
+  if(!data.length){ container.innerHTML='<div class="empty">Sin datos de municipios.</div>'; return; }
+
+  const W=520,H=200,padL=140,padR=20,padT=12,padB=16;
+  const maxV=Math.max(...data.map(r=>r.aceite_litros))*1.15||1;
+  const barH=22, gap=8;
+  const totalH=padT+(barH+gap)*data.length+padB;
+  const cW=W-padL-padR;
+  const xScale=v=>(v/maxV)*cW;
+
+  const bars=data.map((r,i)=>{
+    const y=padT+i*(barH+gap);
+    const w=xScale(r.aceite_litros);
+    const pct=r.aceite_litros/METAS.aceite.mensual*data.length;
+    const fill=pct>=1?'var(--al-dia)':pct>=.8?'var(--seguimiento)':'var(--rezago)';
+    return `<rect x="${padL}" y="${y}" width="${Math.max(w,2)}" height="${barH}" rx="4" fill="${fill}" opacity=".85"/>
+    <text x="${padL-6}" y="${y+barH/2+4}" class="axis-label-y" dominant-baseline="middle" text-anchor="end" font-size="10">${esc(r.municipio)}</text>
+    <text x="${padL+w+5}" y="${y+barH/2+4}" class="axis-label" text-anchor="start" dominant-baseline="middle" fill="var(--text-2)" font-size="9">${fmtK(r.aceite_litros)} lts</text>`;
+  }).join('');
+
+  container.innerHTML=`<div class="chart-wrap">${makeSvg(W,totalH)}${bars}</svg></div>`;
+  const top=data[0];
+  document.getElementById('barMuniInterp').innerHTML=`Municipio con mayor acopio: <strong>${esc(top.municipio)}</strong> con <strong>${fmtK(top.aceite_litros)} litros</strong> de aceite.`;
+}
+
+function renderJabonesChart(){
+  const container=document.getElementById('jabonesChart');
+  if(!container) return;
+  const rows=DATA_TOTAL;
+  const W=480,H=180,padL=46,padR=12,padT=16,padB=32;
+  const cW=W-padL-padR, cH=H-padT-padB;
+  const maxV=Math.max(...rows.flatMap(r=>[r.jabones_prod,r.jabones_vend]))*1.15||1;
+  const xStep=cW/Math.max(rows.length-1,1);
+  const yScale=v=>padT+cH-(v/maxV)*cH;
+
+  const gridLines=[0,.5,1].map(p=>{
+    const y=padT+cH*(1-p);
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" class="grid-line"/><text x="${padL-4}" y="${y+3}" class="axis-label-y">${fmt(maxV*p,0)}</text>`;
+  }).join('');
+
+  const prodPts=rows.map((r,i)=>`${padL+i*xStep},${yScale(r.jabones_prod)}`).join(' ');
+  const vendPts=rows.map((r,i)=>`${padL+i*xStep},${yScale(r.jabones_vend)}`).join(' ');
+  const labels=rows.map((r,i)=>`<text x="${padL+i*xStep}" y="${H-4}" class="axis-label">${MESES_CORTO[r.mes-1]}</text>`).join('');
+  const dots=rows.map((r,i)=>`<circle cx="${padL+i*xStep}" cy="${yScale(r.jabones_prod)}" r="3.5" fill="var(--accent-mid)" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="${padL+i*xStep}" cy="${yScale(r.jabones_vend)}" r="3.5" fill="var(--water-mid)" stroke="#fff" stroke-width="1.5"/>`).join('');
+
+  container.innerHTML=`<div class="chart-wrap">${makeSvg(W,H)}
+    ${gridLines}
+    <polyline points="${prodPts}" class="chart-line" stroke="var(--accent-mid)"/>
+    <polyline points="${vendPts}" class="chart-line" stroke="var(--water-mid)"/>
+    ${dots}${labels}
+  </svg></div>
+  <div class="legend"><span><i style="background:var(--accent-mid)"></i>Producidos</span><span><i style="background:var(--water-mid)"></i>Vendidos</span></div>`;
+  document.getElementById('jabonesInterp').innerHTML=`En ${MESES[selectedMes-1]}: <strong>${fmt(getRow(selectedMes).jabones_prod,0)} producidos</strong> y <strong>${fmt(getRow(selectedMes).jabones_vend,0)} vendidos</strong>.`;
+}
+
+/* ═══════════════════════════════════════════
+   SEMÁFORO TABLE
+═══════════════════════════════════════════ */
+function renderSemaforo(){
+  const row=getRow(selectedMes);
+  const el=document.getElementById('semaforoTable');
+  el.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Indicador</th><th class="num">Real</th><th class="num">Meta</th><th class="num">% mes</th><th>Estado</th></tr></thead><tbody>
+  ${KPI_IDS.map(k=>{
+    const m=METAS[k];
+    const val=+row[m.col]||0;
+    const pct=val/m.mensual;
+    const cls=semClsFromPct(pct);
+    return `<tr><td>${esc(m.label)}</td><td class="num">${fmtVal(val,m.unit)}</td><td class="num">${fmtVal(m.mensual,m.unit)}</td><td class="num">${fmt(pct*100,1)}%</td><td><span class="sem ${cls}">${semLabel(cls)}</span></td></tr>`;
+  }).join('')}
+  </tbody></table></div>`;
+  document.getElementById('semaforoSub').textContent=`${MESES[selectedMes-1]} 2026 · ${KPI_IDS.length} indicadores monitoreados.`;
+}
+
+/* ═══════════════════════════════════════════
+   ANNUAL GOALS
+═══════════════════════════════════════════ */
+function renderAnnual(){
+  const grid=document.getElementById('annualGrid');
+  const annualKeys=['jornadas','aceite','agua','jabones_vend','municipios','ingresos'];
+  grid.innerHTML=annualKeys.map(k=>{
+    const m=METAS[k];
+    const accum=getAccum(selectedMes,m.col);
+    const pct=accum/m.anual;
+    const cls=semClsFromPct(pct);
+    const bw=Math.max(0,Math.min(pct*100,100));
+    return `<div class="annual-card">
+      <small>${esc(m.label)}</small>
+      <strong>${fmtVal(accum,m.unit)}</strong>
+      <div class="anual-meta">Meta: ${fmtVal(m.anual,m.unit)}</div>
+      <div class="annual-bar-wrap"><div class="annual-bar" style="width:${bw}%"></div></div>
+      <div class="annual-pct ${cls}">${fmt(pct*100,1)}% acumulado</div>
+    </div>`;
+  }).join('');
+  document.getElementById('annualSub').textContent=`Acumulado de enero a ${MESES[selectedMes-1]} 2026 vs. metas anuales.`;
+}
+
+/* ═══════════════════════════════════════════
+   TABLA OPERATIVA
+═══════════════════════════════════════════ */
+function renderTabla(){
+  const row=getRow(selectedMes);
+  const rows=[
+    ['Municipios atendidos',fmt(row.municipios,0),fmt(METAS.municipios.mensual,0)],
+    ['Inmuebles atendidos',fmt(row.inmuebles,0),'—'],
+    ['Aceite recolectado',fmt(row.aceite_litros,0)+' lts',fmt(METAS.aceite.mensual,0)+' lts'],
+    ['Jabones producidos',fmt(row.jabones_prod,0),fmt(METAS.jabones_prod.mensual,0)],
+    ['Jabones vendidos',fmt(row.jabones_vend,0),fmt(METAS.jabones_vend.mensual,0)],
+    ['Ingresos jabones','Q '+fmt(row.ingresos_jabones,2),'Q '+fmt(METAS.ingresos.mensual,2)],
+    ['Agua protegida',fmtVal(row.agua_litros,'litros'),fmtVal(METAS.agua.mensual,'litros')],
+  ];
+  document.getElementById('tablaBody').innerHTML=rows.map(([l,v,m])=>`<tr><td>${esc(l)}</td><td class="num">${esc(v)}</td><td class="num">${esc(m)}</td></tr>`).join('');
+  document.getElementById('tablaSub').textContent=`Período: ${MESES[selectedMes-1]} 2026.`;
+}
+
+/* ═══════════════════════════════════════════
+   ALERTAS
+═══════════════════════════════════════════ */
+function renderAlertas(){
+  const row=getRow(selectedMes);
+  const alertas=[];
+  KPI_IDS.forEach(k=>{
+    const m=METAS[k]; const val=+row[m.col]||0; const pct=val/m.mensual;
+    if(pct<.8) alertas.push({cls:'rezago',txt:`${m.label}: ${fmt(pct*100,1)}% de la meta mensual. Brecha de ${fmtVal(m.mensual-val,m.unit)}.`});
+    else if(pct<1) alertas.push({cls:'seguimiento',txt:`${m.label}: ${fmt(pct*100,1)}% — cerca de la meta mensual.`});
+  });
+  if(!alertas.length) alertas.push({cls:'al-dia',txt:'Sin alertas críticas en el período seleccionado. Todos los indicadores en meta.'});
+  document.getElementById('alertas').innerHTML=`<div class="alert-list">${alertas.map(a=>`<div class="alert ${a.cls}">${esc(a.txt)}</div>`).join('')}</div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TABLA MUNICIPIOS
+═══════════════════════════════════════════ */
+function renderMuniTable(){
+  const data=DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR;
+  const filtered=selectedMunicipioFilter==='__all__'?data:data.filter(r=>r.municipio===selectedMunicipioFilter);
+  const el=document.getElementById('muniTable');
+  const total=filtered.reduce((s,r)=>s+r.aceite_litros,0)||1;
+  el.innerHTML=`<div class="tbl-wrap"><table><thead><tr><th>Municipio</th><th class="num">Aceite (lts)</th><th class="num">Jabones</th><th class="num">% del total</th></tr></thead><tbody>
+  ${filtered.map(r=>`<tr><td>${esc(r.municipio)}</td><td class="num">${fmt(r.aceite_litros,0)}</td><td class="num">${fmt(r.jabones_vend,0)}</td><td class="num">${fmt(r.aceite_litros/total*100,1)}%</td></tr>`).join('')}
+  </tbody></table></div>`;
+  document.getElementById('muniTableSub').textContent=`${MESES[selectedMes-1]} 2026 · ${filtered.length} municipios.`;
+}
+
+/* ═══════════════════════════════════════════
+   DIAGNÓSTICO
+═══════════════════════════════════════════ */
+function renderDiagnostico(){
+  const row=getRow(selectedMes);
+  const pctAce=row.aceite_litros/METAS.aceite.mensual;
+  const pctJab=row.jabones_vend/METAS.jabones_vend.mensual;
+  const munis=DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR;
+  const topMuni=munis.sort((a,b)=>b.aceite_litros-a.aceite_litros)[0];
+  document.getElementById('diagnosticPanel').innerHTML=`
+    <h3>Diagnóstico narrativo · ${MESES[selectedMes-1]} 2026</h3>
+    <p>En <strong>${MESES[selectedMes-1]} 2026</strong>, Conservando Atitlán reporta <strong>${fmt(row.aceite_litros,0)} litros de aceite recolectado</strong>,
+    alcanzando el <strong>${fmt(pctAce*100,1)}%</strong> de la meta mensual de <strong>${fmt(METAS.aceite.mensual,0)} litros</strong>.
+    El programa protegió el equivalente a <strong>${fmtVal(row.agua_litros,'litros')}</strong> de agua del Lago de Atitlán.</p>
+    <p>La cadena de valor de jabones registra <strong>${fmt(row.jabones_prod,0)} jabones producidos</strong> y
+    <strong>${fmt(row.jabones_vend,0)} vendidos</strong> (${fmt(pctJab*100,1)}% de meta),
+    generando ingresos de <strong>Q ${fmt(row.ingresos_jabones,2)}</strong>.
+    El municipio con mayor acopio es <strong>${esc(topMuni?.municipio||'—')}</strong>.</p>
+    <p>Se realizaron <strong>${fmt(row.jornadas,0)} jornadas de recolección</strong> en <strong>${fmt(row.municipios,0)} municipios</strong>
+    con cobertura de <strong>${fmt(row.inmuebles,0)} inmuebles</strong> atendidos en la cuenca.</p>`;
+}
+
+/* ═══════════════════════════════════════════
+   EXEC VIEW
+═══════════════════════════════════════════ */
+function renderExec(){
+  const row=getRow(selectedMes);
+  const pctKeys=['jornadas','aceite','jabones_vend'];
+  const avg=pctKeys.reduce((s,k)=>s+(+row[METAS[k].col]||0)/METAS[k].mensual,0)/pctKeys.length;
+  const cls=semClsFromPct(avg);
+
+  const selEl=document.getElementById('execPeriodSelect');
+  if(selEl && selEl.options.length===0){
+    selEl.innerHTML=DATA_TOTAL.map(r=>`<option value="${r.mes}">${MESES[r.mes-1]} 2026</option>`).join('');
+    selEl.onchange=()=>{ selectedMes=+selEl.value; render(); };
   }
+  if(selEl) selEl.value=selectedMes;
+
+  document.getElementById('execLatestPill').textContent=`${MESES[DATA_TOTAL[DATA_TOTAL.length-1].mes-1]} 2026`;
+  document.getElementById('execStatusInline').textContent=semLabel(cls);
+  document.getElementById('execStatusBadge').textContent=semLabel(cls);
+  document.getElementById('execStatusBadge').className='exec-badge';
+  document.getElementById('execPeriodInfo').textContent=`Período: ${MESES[selectedMes-1]} 2026`;
+
+  const kpisExec=['jornadas','aceite','agua','jabones_prod','jabones_vend','ingresos'];
+  document.getElementById('execKpiGrid').innerHTML=kpisExec.map(k=>{
+    const m=METAS[k]; const val=+row[m.col]||0; const pct=val/m.mensual;
+    const bw=Math.max(0,Math.min(pct*100,100));
+    return `<div class="exec-kpi"><div class="exec-kpi-lbl">${esc(m.label)}</div>
+    <div class="exec-kpi-val">${fmtK(val)}</div>
+    <div><span class="sem ${semClsFromPct(pct)}">${fmt(pct*100,1)}%</span></div>
+    <div class="exec-kpi-bar"><span style="width:${bw}%"></span></div></div>`;
+  }).join('');
+
+  const stripKeys=['aceite','jabones_vend','agua','ingresos'];
+  document.getElementById('execStrip').innerHTML=stripKeys.map(k=>{
+    const m=METAS[k]; const accum=getAccum(selectedMes,m.col);
+    return `<div class="exec-strip-card"><small>${esc(m.label)} acum.</small><strong>${fmtVal(accum,m.unit)}</strong></div>`;
+  }).join('');
+
+  // Exec bar chart
+  renderBarMuniInto('execBarChart','execBarSub');
+
+  // Exec diagnostic
+  const pctAce=row.aceite_litros/METAS.aceite.mensual;
+  document.getElementById('execDiagnostic').innerHTML=`<p style="font-size:.88rem;color:var(--text-2);line-height:1.75">
+  <strong>${MESES[selectedMes-1]} 2026</strong> · <strong>${fmt(row.aceite_litros,0)} lts</strong> aceite (${fmt(pctAce*100,1)}% meta).
+  <strong>${fmt(row.jabones_vend,0)}</strong> jabones vendidos. Agua protegida: <strong>${fmtVal(row.agua_litros,'litros')}</strong>.</p>`;
+
+  // Exec alerts
+  const alertas=[];
+  kpisExec.forEach(k=>{ const m=METAS[k]; const pct=(+row[m.col]||0)/m.mensual; if(pct<.85) alertas.push(`<div class="alert rezago">${esc(m.label)}: ${fmt(pct*100,1)}%</div>`); });
+  document.getElementById('execAlerts').innerHTML=alertas.length?`<div class="alert-list">${alertas.join('')}</div>`:`<div class="alert al-dia">Sin alertas críticas en el período.</div>`;
+}
+
+function renderBarMuniInto(containerId, subId){
+  const el=document.getElementById(containerId);
+  if(!el) return;
+  const data=DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR;
+  const W=480,H=180,padL=130,padR=16,padT=10,padB=12;
+  const maxV=Math.max(...data.map(r=>r.aceite_litros))*1.15||1;
+  const barH=19, gap=7;
+  const totalH=padT+(barH+gap)*data.length+padB;
+  const cW=W-padL-padR;
+  const bars=data.map((r,i)=>{
+    const y=padT+i*(barH+gap);
+    const w=(r.aceite_litros/maxV)*cW;
+    return `<rect x="${padL}" y="${y}" width="${Math.max(w,2)}" height="${barH}" rx="3" fill="var(--accent-mid)" opacity=".8"/>
+    <text x="${padL-5}" y="${y+barH/2+4}" class="axis-label-y" text-anchor="end" font-size="9.5">${esc(r.municipio)}</text>
+    <text x="${padL+w+4}" y="${y+barH/2+4}" class="axis-label" text-anchor="start" font-size="8.5" fill="var(--text-2)">${fmtK(r.aceite_litros)}</text>`;
+  }).join('');
+  el.innerHTML=`<div class="chart-wrap">${makeSvg(W,totalH)}${bars}</svg></div>`;
+  if(subId) document.getElementById(subId).textContent=`Aceite por municipio · ${MESES[selectedMes-1]} 2026.`;
+}
+
+/* ═══════════════════════════════════════════
+   FILTERS
+═══════════════════════════════════════════ */
+function buildFilters(){
+  const mSel=document.getElementById('municipioSelect');
+  const munis=['__all__',...(DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR).map(r=>r.municipio)];
+  mSel.innerHTML=munis.map(m=>`<option value="${esc(m)}">${m==='__all__'?'Todos los municipios':esc(m)}</option>`).join('');
+  mSel.value=selectedMunicipioFilter;
+  mSel.onchange=()=>{ selectedMunicipioFilter=mSel.value; render(); };
+
+  const iSel=document.getElementById('indicadorSelect');
+  iSel.innerHTML=KPI_IDS.map(k=>`<option value="${k}">${esc(METAS[k].label)}</option>`).join('');
+  iSel.value=selectedIndicador;
+  iSel.onchange=()=>{ selectedIndicador=iSel.value; renderLineChart('trendChartWrap',selectedIndicador); };
+}
+
+/* ═══════════════════════════════════════════
+   KPI MODAL
+═══════════════════════════════════════════ */
+function openKpiModal(key){
+  const m=METAS[key];
+  const row=getRow(selectedMes);
+  const val=+row[m.col]||0;
+  const pct=val/m.mensual;
+  const cls=semClsFromPct(pct);
+  const accum=getAccum(selectedMes,m.col);
+  document.getElementById('kpiModalTitle').textContent=m.label;
+  document.getElementById('kpiModalBody').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+      <div class="annual-card"><small>Valor del período</small><strong>${fmtVal(val,m.unit)}</strong><div class="anual-meta">Meta mensual: ${fmtVal(m.mensual,m.unit)}</div><div class="annual-pct ${cls}">${fmt(pct*100,1)}% cumplido</div></div>
+      <div class="annual-card"><small>Acumulado anual</small><strong>${fmtVal(accum,m.unit)}</strong><div class="anual-meta">Meta anual: ${fmtVal(m.anual,m.unit)}</div><div class="annual-pct ${semClsFromPct(accum/m.anual)}">${fmt(accum/m.anual*100,1)}% del año</div></div>
+    </div>
+    <div id="kpiModalChart" style="margin-bottom:14px"></div>
+    <div class="interp">Indicador: <strong>${esc(m.label)}</strong>. Período: <strong>${MESES[selectedMes-1]} 2026</strong>. Estado: <strong>${semLabel(cls)}</strong>.</div>`;
+  renderLineChartInto('kpiModalChart',key);
+  document.getElementById('kpiModal').classList.add('open');
+}
+function renderLineChartInto(containerId,key){ renderLineChart(containerId,key); }
+document.getElementById('kpiModalClose').onclick=()=>document.getElementById('kpiModal').classList.remove('open');
+document.getElementById('kpiModal').addEventListener('click',e=>{ if(e.target===document.getElementById('kpiModal')) document.getElementById('kpiModal').classList.remove('open'); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ document.getElementById('kpiModal').classList.remove('open'); closePres(); } });
+
+/* ═══════════════════════════════════════════
+   PRESENTATION MODE
+═══════════════════════════════════════════ */
+function buildPresSlides(){
+  const row=getRow(selectedMes);
+  const avg=(['jornadas','aceite','jabones_vend'].reduce((s,k)=>s+(+row[METAS[k].col]||0)/METAS[k].mensual,0))/3;
+  const cls=semClsFromPct(avg);
+  const munis=DATA_MUNICIPIOS_BY_MES[selectedMes]||DATA_MUNICIPIOS_MAR;
+  const topMuni=munis.sort((a,b)=>b.aceite_litros-a.aceite_litros)[0];
+
+  // Meta pill
+  document.getElementById('presMeta').innerHTML=`
+    <span>Modo presentación</span>
+    <span>${MESES[selectedMes-1]} 2026</span>
+    <span>Conservando Atitlán</span>
+    <span class="pres-chip ${cls}" style="display:inline-flex">${semLabel(cls)}</span>`;
+
+  const track=document.getElementById('presTrack');
+  track.innerHTML=`
+  <!-- SLIDE 1: Portada -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">Resumen ejecutivo del período</div>
+      <div class="pres-title-row">
+        <div>
+          <h2>Conservando Atitlán</h2>
+          <p>Programa de recolección de aceite usado, protección hídrica del Lago de Atitlán y cadena de valor de jabones artesanales. Período: <strong>${MESES[selectedMes-1]} 2026</strong>.</p>
+        </div>
+        <div class="pres-brand"><small>Asociación Amigos del Lago de Atitlán<br>Programa Estratégico · AALA</small></div>
+      </div>
+      <div class="pres-card-grid-4">
+        ${[['Aceite recolectado',row.aceite_litros,'litros','aceite'],['Agua protegida',row.agua_litros,'litros','agua'],['Jabones vendidos',row.jabones_vend,'jabones','jabones_vend'],['Municipios',row.municipios,'municipios','municipios']].map(([lbl,val,unit,k])=>{
+          const pct=val/METAS[k].mensual; const cls2=semClsFromPct(pct);
+          return `<article class="pres-card"><small>${esc(lbl)}</small><strong>${fmtVal(val,unit)}</strong><p>Meta mensual: ${fmtVal(METAS[k].mensual,unit)}</p><span class="pres-chip ${cls2}">${fmt(pct*100,1)}%</span></article>`;
+        }).join('')}
+      </div>
+      <div class="pres-strip">
+        <span>📍 Período: <strong>${MESES[selectedMes-1]} 2026</strong></span>
+        <span>🏘️ Municipio líder: <strong>${esc(topMuni?.municipio||'—')}</strong></span>
+        <span>🫙 Aceite acumulado: <strong>${fmtVal(getAccum(selectedMes,'aceite_litros'),'litros')}</strong></span>
+        <span>⚡ Estado: <strong>${semLabel(cls)}</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: KPI Aceite + Agua -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">KPIs ambientales</div>
+      <div class="pres-title-row">
+        <div><h2>Aceite recolectado y agua protegida</h2><p>Los indicadores de impacto ambiental directo del programa en ${MESES[selectedMes-1]} 2026.</p></div>
+      </div>
+      <div class="pres-card-grid-2">
+        ${['aceite','agua'].map(k=>{
+          const m=METAS[k]; const val=+row[m.col]||0;
+          const pct=val/m.mensual; const cls2=semClsFromPct(pct);
+          const bw=Math.max(0,Math.min(pct*100,100));
+          const accum=getAccum(selectedMes,m.col);
+          const aP=accum/m.anual;
+          return `<article class="pres-kpi-big">
+            <div class="pk-lbl">${esc(m.label)}</div>
+            <div class="pk-val">${fmtVal(val,m.unit)}</div>
+            <div class="pk-meta">Meta mensual: ${fmtVal(m.mensual,m.unit)}</div>
+            <div class="pk-bar-wrap"><div class="pk-bar ${cls2}" style="width:${bw}%"></div></div>
+            <div class="pk-meta">${fmt(pct*100,1)}% del mes · Avance anual: <strong>${fmt(aP*100,1)}%</strong> de ${fmtVal(m.anual,m.unit)}</div>
+            <div class="pk-bar-wrap" style="margin-top:6px"><div class="pk-bar" style="width:${Math.min(aP*100,100)}%"></div></div>
+            <span class="pres-chip ${cls2}">${semLabel(cls2)}</span>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: KPI Jabones + Ingresos -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">KPIs de cadena de valor</div>
+      <div class="pres-title-row">
+        <div><h2>Jabones y generación de ingresos</h2><p>Producción, ventas e ingresos por jabones artesanales — el motor económico del programa.</p></div>
+      </div>
+      <div class="pres-card-grid-2">
+        ${['jabones_vend','ingresos'].map(k=>{
+          const m=METAS[k]; const val=+row[m.col]||0;
+          const pct=val/m.mensual; const cls2=semClsFromPct(pct);
+          const bw=Math.max(0,Math.min(pct*100,100));
+          const accum=getAccum(selectedMes,m.col);
+          const aP=accum/m.anual;
+          return `<article class="pres-kpi-big">
+            <div class="pk-lbl">${esc(m.label)}</div>
+            <div class="pk-val">${fmtVal(val,m.unit)}</div>
+            <div class="pk-meta">Meta mensual: ${fmtVal(m.mensual,m.unit)}</div>
+            <div class="pk-bar-wrap"><div class="pk-bar ${cls2}" style="width:${bw}%"></div></div>
+            <div class="pk-meta">${fmt(pct*100,1)}% del mes · Avance anual: <strong>${fmt(aP*100,1)}%</strong></div>
+            <div class="pk-bar-wrap" style="margin-top:6px"><div class="pk-bar" style="width:${Math.min(aP*100,100)}%"></div></div>
+            <span class="pres-chip ${cls2}">${semLabel(cls2)}</span>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: KPI Jornadas + Municipios -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">KPIs operativos</div>
+      <div class="pres-title-row">
+        <div><h2>Jornadas de recolección y cobertura territorial</h2><p>Cuántas jornadas se realizaron y cuántos municipios reciben el servicio en ${MESES[selectedMes-1]}.</p></div>
+      </div>
+      <div class="pres-card-grid-2">
+        ${['jornadas','municipios'].map(k=>{
+          const m=METAS[k]; const val=+row[m.col]||0;
+          const pct=val/m.mensual; const cls2=semClsFromPct(pct);
+          const bw=Math.max(0,Math.min(pct*100,100));
+          const accum=getAccum(selectedMes,m.col);
+          const aP=accum/m.anual;
+          return `<article class="pres-kpi-big">
+            <div class="pk-lbl">${esc(m.label)}</div>
+            <div class="pk-val">${fmtVal(val,m.unit)}</div>
+            <div class="pk-meta">Meta mensual: ${fmtVal(m.mensual,m.unit)}</div>
+            <div class="pk-bar-wrap"><div class="pk-bar ${cls2}" style="width:${bw}%"></div></div>
+            <div class="pk-meta">${fmt(pct*100,1)}% del mes · Acumulado: <strong>${fmtVal(accum,m.unit)}</strong></div>
+            <div class="pk-bar-wrap" style="margin-top:6px"><div class="pk-bar" style="width:${Math.min(aP*100,100)}%"></div></div>
+            <span class="pres-chip ${cls2}">${semLabel(cls2)}</span>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: Panel completo KPIs -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">Panel completo de indicadores</div>
+      <div class="pres-title-row">
+        <div><h2>Todos los KPIs del período</h2><p>Vista consolidada de los 7 indicadores clave — valor real, cumplimiento mensual y avance anual.</p></div>
+      </div>
+      <div class="pres-card-grid-4" style="flex:1;align-content:start">
+        ${KPI_IDS.map(k=>{
+          const m=METAS[k]; const val=+row[m.col]||0;
+          const pct=val/m.mensual; const cls2=semClsFromPct(pct);
+          const accum=getAccum(selectedMes,m.col);
+          return `<article class="pres-card"><small>${esc(m.label)}</small><strong>${fmtVal(val,m.unit)}</strong><p>Anual: ${fmt(accum/m.anual*100,1)}%</p><span class="pres-chip ${cls2}">${fmt(pct*100,1)}% del mes</span></article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: Municipios -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">Cobertura territorial</div>
+      <div class="pres-title-row">
+        <div><h2>Aceite recolectado por municipio</h2><p>Distribución territorial del acopio en ${MESES[selectedMes-1]} 2026. El ranking muestra dónde se concentra la operación.</p></div>
+      </div>
+      <div class="pres-col-wrap">
+        <article class="pres-visual-card">
+          <h3>Distribución por municipio</h3>
+          <p>${MESES[selectedMes-1]} 2026 · litros de aceite</p>
+          <div class="pres-visual" id="presBarChart"></div>
+        </article>
+        <article class="pres-list-card">
+          <h3>Ranking de municipios</h3>
+          <p>Ordenado por volumen de aceite acopiado.</p>
+          <div class="pres-list">
+            ${munis.map((r,i)=>`<div class="pres-list-item"><div class="pres-rank">${i+1}</div><div><strong>${esc(r.municipio)}</strong><span>${fmt(r.jabones_vend,0)} jabones vendidos</span></div><em>${fmtK(r.aceite_litros)} lts</em></div>`).join('')}
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7: Metas anuales -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">Avance anual 2026</div>
+      <div class="pres-title-row">
+        <div><h2>Progreso hacia las metas anuales</h2><p>Acumulado real de enero a ${MESES[selectedMes-1]} 2026 frente a las metas oficiales del programa.</p></div>
+      </div>
+      <div class="pres-card-grid-3" style="flex:1;align-content:start">
+        ${['jornadas','aceite','agua','jabones_prod','jabones_vend','ingresos'].map(k=>{
+          const m=METAS[k]; const accum=getAccum(selectedMes,m.col);
+          const pct=accum/m.anual; const cls2=semClsFromPct(pct);
+          const bw=Math.max(0,Math.min(pct*100,100));
+          return `<article class="pres-card">
+            <small>${esc(m.label)}</small>
+            <strong>${fmtVal(accum,m.unit)}</strong>
+            <p>Meta: ${fmtVal(m.anual,m.unit)}</p>
+            <div style="height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin:8px 0 4px"><div style="height:100%;width:${bw}%;border-radius:999px;background:linear-gradient(90deg,var(--accent-light),var(--accent))"></div></div>
+            <span class="pres-chip ${cls2}">${fmt(pct*100,1)}% acumulado</span>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8: Alertas y cierre -->
+  <section class="pres-slide">
+    <div class="pres-slide-inner">
+      <div class="pres-kicker">Alertas y cierre</div>
+      <div class="pres-title-row">
+        <div><h2>Señales operativas y mensaje final</h2><p>Alertas del período para enfocar las decisiones del equipo y cierre narrativo del corte.</p></div>
+      </div>
+      <div class="pres-alert-grid">
+        <div class="pres-alert-stack">
+          ${(()=>{
+            const alerts=[];
+            KPI_IDS.forEach(k=>{
+              const m=METAS[k]; const val=+row[m.col]||0; const pct=val/m.mensual;
+              if(pct<.8) alerts.push({cls:'rezago',txt:`${m.label}: ${fmt(pct*100,1)}% — brecha de ${fmtVal(m.mensual-val,m.unit)}.`});
+              else if(pct<1) alerts.push({cls:'seguimiento',txt:`${m.label}: ${fmt(pct*100,1)}% — cerca de la meta.`});
+            });
+            if(!alerts.length) alerts.push({cls:'al-dia',txt:'Sin alertas críticas. Todos los indicadores en cumplimiento.'});
+            return alerts.map(a=>`<div class="pres-alert-box ${a.cls}">${esc(a.txt)}</div>`).join('');
+          })()}
+        </div>
+        <div class="pres-note">
+          <h3>Mensaje de cierre</h3>
+          <p>En <strong>${MESES[selectedMes-1]} 2026</strong>, Conservando Atitlán recolectó <strong>${fmtVal(row.aceite_litros,'litros')}</strong> de aceite, protegiendo <strong>${fmtVal(row.agua_litros,'litros')}</strong> de agua del Lago.</p>
+          <p>La cadena de jabones generó <strong>Q ${fmt(row.ingresos_jabones,2)}</strong> en ingresos. El municipio con mayor aporte fue <strong>${esc(topMuni?.municipio||'—')}</strong>.</p>
+          <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.82rem;color:var(--muted)">Conservando Atitlán · Programa de protección hídrica · AALA · ${MESES[selectedMes-1]} 2026</p>
+        </div>
+      </div>
+    </div>
+  </section>`;
+
+  buildPresDots();
+  gotoSlide(Math.min(presIdx, document.getElementById('presTrack').children.length-1));
+  setTimeout(()=>{ renderBarMuniInto('presBarChart',''); }, 80);
+}
+
+function buildPresDots(){
+  const track=document.getElementById('presTrack');
+  const dots=document.getElementById('presDots');
+  dots.innerHTML='';
+  Array.from(track.children).forEach((_,i)=>{
+    const b=document.createElement('button'); b.type='button';
+    b.className='pres-dot'+(i===presIdx?' active':'');
+    b.onclick=()=>gotoSlide(i); dots.appendChild(b);
+  });
+  document.getElementById('presCounter').textContent=`${presIdx+1} / ${track.children.length}`;
+}
+function gotoSlide(i){
+  const track=document.getElementById('presTrack');
+  const n=track.children.length;
+  presIdx=(i+n)%n;
+  track.style.transform=`translateX(-${presIdx*100}%)`;
+  document.querySelectorAll('.pres-dot').forEach((d,j)=>d.classList.toggle('active',j===presIdx));
+  document.getElementById('presCounter').textContent=`${presIdx+1} / ${n}`;
+}
+function prevSlide(){ gotoSlide(presIdx-1); }
+function nextSlide(){ gotoSlide(presIdx+1); }
+
+function openPres(){
+  buildPresSlides();
+  const ov=document.getElementById('presOverlay');
+  ov.classList.add('open'); ov.setAttribute('aria-hidden','false');
+  document.body.classList.add('presentation-open');
+  document.body.style.overflow='hidden';
+}
+function closePres(){
+  const ov=document.getElementById('presOverlay');
+  ov.classList.remove('open'); ov.setAttribute('aria-hidden','true');
+  document.body.classList.remove('presentation-open');
+  document.body.style.overflow='';
+}
+document.getElementById('presOverlay').addEventListener('click',e=>{ if(e.target===document.getElementById('presOverlay')) closePres(); });
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('presOverlay').classList.contains('open')) return;
+  if(e.key==='ArrowRight'||e.key===' ') nextSlide();
+  if(e.key==='ArrowLeft') prevSlide();
+  if(e.key==='Escape') closePres();
 });
+
+/* ═══════════════════════════════════════════
+   VIEW SWITCHER
+═══════════════════════════════════════════ */
+function switchView(v){
+  document.body.className=v==='exec'?'view-exec':'view-full';
+  document.getElementById('btnFull').classList.toggle('active',v==='full');
+  document.getElementById('btnExec').classList.toggle('active',v==='exec');
+  if(v==='exec') renderExec();
+}
+
+/* ═══════════════════════════════════════════
+   MAIN RENDER
+═══════════════════════════════════════════ */
+function render(){
+  buildPills();
+  buildFilters();
+  updateEstadoGlobal();
+  renderHeroTags();
+  renderCiclo();
+  renderGauge();
+  renderKpis();
+  renderLineChart('trendChartWrap', selectedIndicador);
+  renderBarMuni();
+  renderJabonesChart();
+  renderSemaforo();
+  renderAnnual();
+  renderTabla();
+  renderAlertas();
+  renderMuniTable();
+  renderDiagnostico();
+  if(document.body.classList.contains('view-exec')) renderExec();
+}
+
+// Boot
+render();
 </script>
-<script src="./conservando_atitlan.js"></script>
 </body>
 </html>
-
