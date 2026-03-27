@@ -468,6 +468,86 @@ td.destacado { font-weight: 600; color: var(--text-2) }
 .spinner { width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent-mid); animation: spin 1s linear infinite }
 @keyframes spin { to { transform: rotate(360deg) } }
 
+/* KPI nota proxy */
+.kpi-nota-proxy {
+  margin-top: 8px; padding: 7px 10px;
+  background: var(--seguimiento-pale); border-left: 2px solid var(--seguimiento);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  font-size: .72rem; color: var(--seguimiento); line-height: 1.5;
+}
+
+/* KPI zoom hint */
+.kpi-zoom-hint {
+  margin-top: 8px; font-size: .68rem; color: var(--muted);
+  text-align: right; opacity: 0; transition: opacity .2s;
+}
+.kpi-card:hover .kpi-zoom-hint { opacity: 1 }
+
+/* ── MODAL DE ZOOM ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(10,25,58,.55);
+  backdrop-filter: blur(8px) saturate(1.4);
+  -webkit-backdrop-filter: blur(8px) saturate(1.4);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all }
+
+.modal-box {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: 0 24px 80px rgba(10,25,58,.30), 0 4px 16px rgba(10,25,58,.12);
+  border: 1.5px solid var(--line-soft);
+  max-width: 560px; width: 100%;
+  transform: translateY(20px) scale(.97);
+  transition: transform .3s cubic-bezier(.25,.46,.45,.94);
+  overflow: hidden;
+}
+.modal-overlay.open .modal-box { transform: none }
+
+.modal-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-pale) 100%);
+}
+.modal-title { font-family: var(--font-head); font-size: 1.15rem; font-weight: 600; color: var(--text); line-height: 1.3 }
+.modal-close {
+  width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--line);
+  background: var(--surface); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; cursor: pointer; flex-shrink: 0;
+  transition: all .15s; line-height: 1;
+}
+.modal-close:hover { background: var(--rezago-soft); color: var(--rezago); border-color: var(--rezago) }
+
+.modal-body { padding: 20px 28px 24px }
+
+.modal-kpi-hero {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px;
+}
+.modal-kpi-val {
+  font-family: var(--font-mono); font-size: 2.8rem; font-weight: 500;
+  line-height: 1; letter-spacing: -.04em; color: var(--text);
+}
+.modal-kpi-unit { font-size: .9rem; color: var(--muted) }
+
+.modal-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px;
+}
+.modal-stat {
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1.5px solid var(--line-soft);
+}
+.modal-stat-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px }
+.modal-stat-val { font-family: var(--font-mono); font-size: 1.1rem; color: var(--text) }
+
+/* Mini gráfica histórica en modal */
+.modal-hist { margin-top: 14px }
+.modal-hist-title { font-size: .78rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px }
+
 /* Animación entrada stagger */
 @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:none } }
 .s1 { animation: fadeUp .45s .05s ease both }
@@ -490,11 +570,116 @@ td.destacado { font-weight: 600; color: var(--text-2) }
   .kpi-grid, .ops-grid { grid-template-columns: 1fr }
   .month-pills { gap: 3px }
 }
+
+/* ── MODAL ZOOM ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(8,20,45,.65);
+  backdrop-filter: blur(8px) saturate(1.3);
+  -webkit-backdrop-filter: blur(8px) saturate(1.3);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .28s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all }
+.modal-box {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: 0 32px 80px rgba(8,20,45,.35), 0 8px 24px rgba(8,20,45,.15);
+  width: 100%; max-width: 780px; max-height: 88vh;
+  overflow: hidden; display: flex; flex-direction: column;
+  transform: scale(.94) translateY(12px);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-overlay.open .modal-box { transform: scale(1) translateY(0) }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px 14px; border-bottom: 1px solid var(--line-soft);
+  flex-shrink: 0;
+}
+.modal-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 600; color: var(--text) }
+.modal-sub { font-size: .82rem; color: var(--muted); margin-top: 2px }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: var(--surface); color: var(--muted); font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; flex-shrink: 0;
+}
+.modal-close:hover { background: var(--rezago-soft); color: var(--rezago) }
+.modal-body { padding: 24px; overflow-y: auto; flex: 1 }
+.modal-kpi-big {
+  display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px;
+}
+.modal-valor-big {
+  font-family: var(--font-mono); font-size: 3.5rem; font-weight: 500;
+  line-height: 1; letter-spacing: -.04em; color: var(--text);
+}
+.modal-unidad-big { font-size: 1rem; color: var(--muted); font-weight: 500 }
+.modal-barra-wrap {
+  height: 10px; border-radius: 999px; background: var(--line-soft);
+  overflow: hidden; margin: 14px 0 10px; position: relative;
+}
+.modal-barra-esp {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px;
+  background: repeating-linear-gradient(90deg, var(--line) 0, var(--line) 4px, transparent 4px, transparent 8px);
+}
+.modal-barra-real {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent-mid));
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+.modal-barra-real.al-dia { background: linear-gradient(90deg,#1d9e68,var(--al-dia)) }
+.modal-barra-real.seguimiento { background: linear-gradient(90deg,#c8960a,var(--seguimiento)) }
+.modal-barra-real.rezago { background: linear-gradient(90deg,#e05c5c,var(--rezago)) }
+.modal-nota {
+  padding: 11px 15px; border-radius: var(--radius-sm);
+  background: var(--accent-pale); border-left: 3px solid var(--accent-light);
+  font-size: .84rem; color: var(--text-2); line-height: 1.65; margin-top: 14px;
+}
+.modal-nota.warn {
+  background: var(--seguimiento-pale); border-left-color: var(--seguimiento);
+  color: #5a3e00;
+}
+.modal-stats-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 14px;
+}
+.modal-stat {
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1.5px solid var(--line-soft); text-align: center;
+}
+.modal-stat-val { font-family: var(--font-mono); font-size: 1.3rem; color: var(--text); font-weight: 500 }
+.modal-stat-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: 3px }
+.kpi-card { cursor: zoom-in }
+.kpi-card:hover::after {
+  content: '🔍';
+  position: absolute; top: 10px; right: 10px;
+  font-size: .8rem; opacity: .5;
+}
+.chart-host { cursor: zoom-in }
+.chart-host:hover { outline: 2px solid var(--accent-soft); border-radius: var(--radius-sm) }
+
+.kpi-nota-proxy {
+  margin-top: 8px; padding: 7px 10px;
+  background: var(--seguimiento-pale); border-left: 2px solid var(--seguimiento);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  font-size: .68rem; color: #5a3e00; line-height: 1.5;
+}
 </style>
 </head>
 <body>
 
 <div id="tooltip" class="tooltip"></div>
+
+<!-- MODAL DE ZOOM -->
+<div class="modal-overlay" id="kpiModal" onclick="closeKpiModal(event)">
+  <div class="modal-box" id="kpiModalBox">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">—</div>
+      <button class="modal-close" onclick="closeKpiModalDirect()" aria-label="Cerrar">&#215;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <!-- ── TOPBAR ── -->
 <nav class="topbar">
@@ -685,11 +870,13 @@ function renderAll(){
   const indsPrim=inds.filter(r=>r.categoria==='primario').sort((a,b)=>+a.orden_dashboard-+b.orden_dashboard);
 
   // Estado global (promedio de primarios con meta)
-  const primConMeta=indsPrim.filter(r=>r.meta_anual);
-  const avgPct=primConMeta.length
-    ? primConMeta.reduce((s,r)=>s+(+r.pct_meta_anual||0),0)/primConMeta.length
+  const primConMeta=indsPrim.filter(r=>r.meta_anual&&r.meta_cohorte);
+  // Estado global basado en ritmo al corte, no en % del año completo
+  const avgPctCohorte=primConMeta.length
+    ? primConMeta.reduce((s,r)=>s+(Math.min(+r.pct_cohorte||0, 2)),0)/primConMeta.length
     : 0;
-  const estadoG=semaforo(avgPct);
+  const avgPct=avgPctCohorte;
+  const estadoG=semaforo(Math.min(avgPctCohorte, 1.5));
   const estadoEl=document.getElementById('estadoGlobal');
   estadoEl.className='estado-global '+estadoG.cls;
   document.getElementById('estadoLabel').textContent=estadoG.label;
@@ -700,6 +887,7 @@ function renderAll(){
 
   // Animar gauge
   const indPrincipal=indsPrim.find(r=>r.indicador_id==='personas_capacitadas_nucleo');
+  // Gauge muestra avance anual real (no cohorte) — es informativo, no semáforo
   const pctGauge=indPrincipal?(+indPrincipal.pct_meta_anual||0):avgPct;
   requestAnimationFrame(()=>setGauge(pctGauge));
 
@@ -894,41 +1082,78 @@ function buildHTML(tot,totPrev,inds,indsPrim,capTema,capMuni,asistSector,reunTip
 function buildKpiCard(ind, inds, p, prevP){
   const val=+ind.valor_acumulado||0;
   const meta=+ind.meta_anual||0;
-  const pct=meta?val/meta:0;
-  const sem=semaforo(pct);
+  const pctAnual=meta?val/meta:0;
 
-  // delta vs período anterior
-  const indPrev=prevP?inds.filter(r=>r.periodo===prevP&&r.indicador_id===ind.indicador_id)[0]:null;
-  // necesitamos comparar con el acumulado previo desde la data histórica
-  // usamos valor_mes como referencia de cambio mensual
+  // pct_cohorte = avance vs lo esperado al corte del período (no vs meta anual completa)
+  // Esto es lo que define el semáforo — si vas al ritmo correcto para el mes en que estás
+  const pctCohorte=+ind.pct_cohorte||0;
+  const metaCohorte=+ind.meta_cohorte||0;
+
+  // Semáforo basado en ritmo al corte, no en % del año completo
+  const sem=semaforo(Math.min(pctCohorte, 1.5));
+
+  // Si supera la meta ANUAL completa (no solo el cohorte)
+  const metaAnualSuperada=meta>0&&val>=meta;
+
+  // Delta mensual
   const valMes=+ind.valor_mes||0;
   let deltaHTML='';
   if(valMes>0){
-    deltaHTML=`<span class="delta sube">+${fmt(valMes)}</span>`;
+    deltaHTML=`<span class="delta sube">+${fmt(valMes)} este mes</span>`;
   }
 
-  const pctEsperado=Math.min(+p.split('-')[1]/12, 1);
-  const wEsp=Math.min(pctEsperado*100,100);
-  const wReal=Math.min(pct*100,140);
+  // Barra visual: muestra avance anual (cap 100%) con ritmo esperado al corte
+  const wEsp=Math.min((metaCohorte/meta)*100, 100);
+  const wReal=Math.min(pctAnual*100, 100);
 
   const nombre=ind.indicador_nombre.replace('(proxy operativo)','').trim();
+  const unidad=ind.unidad||'';
+
+  // Texto inferior — muestra acumulado vs meta anual, nunca el %
+  let metaTxt='';
+  if(!meta){
+    metaTxt=`<span>Acum. <strong>${fmt(val)}</strong> ${esc(unidad)}</span><span style="color:var(--muted)">Sin meta anual</span>`;
+  } else if(metaAnualSuperada){
+    metaTxt=`<span>Acum. <strong>${fmt(val)}</strong> / meta <strong>${fmt(meta)}</strong> ${esc(unidad)}</span><span style="color:var(--al-dia);font-weight:700">✓ Meta anual alcanzada</span>`;
+  } else {
+    metaTxt=`<span>Acum. <strong>${fmt(val)}</strong> de <strong>${fmt(meta)}</strong> ${esc(unidad)}</span><span style="color:var(--muted)">Meta esperada al corte: ${fmt(metaCohorte,1)}</span>`;
+  }
+
+  // Nota para indicadores que superan la meta cohorte ampliamente
+  let notaPrudente='';
+  if(metaAnualSuperada){
+    notaPrudente=`<div class="kpi-nota-proxy">La meta anual ya fue superada. El programa puede haber concentrado actividad en este período o la meta fue definida como mínimo referencial.</div>`;
+  } else if(pctCohorte>2){
+    notaPrudente=`<div class="kpi-nota-proxy">El ritmo acumulado supera ampliamente lo esperado para este punto del año. Puede reflejar concentración de actividad o ajuste de meta.</div>`;
+  }
+
+  // Construir datos para modal
+  const modalData={
+    nombre, val, meta, pctAnual, pctCohorte, metaCohorte, valMes, unidad,
+    sem: sem.cls, semLabel: sem.label, mesNum: +p.split('-')[1],
+    superada: metaAnualSuperada,
+    indicador_id: ind.indicador_id||'',
+    // Historial de acumulados para mini gráfica en modal
+    historico: inds.filter(r=>r.indicador_id===ind.indicador_id)
+      .sort((a,b)=>+a.mes_num-+b.mes_num)
+      .map(r=>({mes:r.mes_nombre, acum:+r.valor_acumulado||0, cohorte:+r.meta_cohorte||0}))
+  };
 
   return `
-<article class="card kpi-card ${sem.cls}">
+<article class="card kpi-card ${sem.cls}" style="cursor:pointer" onclick="openKpiModal(${JSON.stringify(modalData).replace(/"/g,'&quot;')})">
   <div class="kpi-top">
     <div class="kpi-nombre">${esc(nombre)}</div>
     <span class="sem ${sem.cls}">${sem.label}</span>
   </div>
   <div class="kpi-valor" data-to="${val}">${fmt(val)}</div>${deltaHTML}
-  <div class="kpi-unidad">${esc(ind.unidad||'')} acumulados</div>
-  <div class="kpi-barra-wrap">
+  <div class="kpi-unidad">${esc(unidad)} acumulados al corte</div>
+  <div class="kpi-barra-wrap" title="Barra llena = ritmo esperado al corte · Barra azul = avance real">
     <div class="kpi-barra-esperado" style="width:${wEsp}%"></div>
     <div class="kpi-barra-real ${sem.cls}" style="width:${wReal}%"></div>
   </div>
-  <div class="kpi-meta-txt">
-    <span>Acum. <strong>${fmt(val)}</strong> de <strong>${fmt(meta)}</strong></span>
-    <span>${fmt(pct*100,0)}% del año</span>
-  </div>
+  <div class="kpi-meta-txt">${metaTxt}</div>
+  ${notaPrudente}
+  <div class="kpi-zoom-hint">Clic para ver detalle ↗</div>
 </article>`;
 }
 
@@ -936,33 +1161,62 @@ function buildKpiCard(ind, inds, p, prevP){
 function buildGrafAcum(indsPrim,p){
   const datos=indsPrim.filter(r=>r.meta_anual&&+r.meta_anual>0);
   if(!datos.length) return '<p class="panel-sub">Sin datos para este período.</p>';
-  const h=datos.length*52+20;
-  const W=500, barH=22, gap=52, pad=4;
+  const barH=22, gap=50, pad=2;
+  const h=datos.length*gap+pad*2+10;
+  const W=500, trackW=W-190, labelX=190;
   let svgBars='';
+  const colorMap={'al-dia':'#157a50','seguimiento':'#8a6200','rezago':'#c94747','sin-actividad':'#9aaac0'};
+
   datos.forEach((ind,i)=>{
     const y=i*gap+pad;
-    const pct=Math.min(+ind.pct_meta_anual||0,1.4);
-    const pctEsp=Math.min(+p.split('-')[1]/12,1);
-    const wReal=pct*(W-180);
-    const wEsp=pctEsp*(W-180);
-    const sem=semaforo(+ind.pct_meta_anual||0);
-    const colorMap={'al-dia':'#157a50',seguimiento:'#8a6200',rezago:'#c94747','sin-actividad':'#5a6a82'};
+    const pctAnualRaw=+ind.pct_meta_anual||0;
+    const pctCohorte=+ind.pct_cohorte||0;
+    const metaCohorte=+ind.meta_cohorte||0;
+    const metaAnual=+ind.meta_anual||0;
+    const metaSuperada=pctAnualRaw>=1;
+    // Barra visual: siempre cap en 100%
+    const pctVis=Math.min(pctAnualRaw,1);
+    const wReal=pctVis*trackW;
+    // Esperado = meta cohorte / meta anual (no simple mes/12)
+    const wEsp=metaAnual?(Math.min(metaCohorte/metaAnual,1)*trackW):0;
+    // Semáforo basado en ritmo al corte
+    const sem=semaforo(Math.min(pctCohorte,1.5));
     const col=colorMap[sem.cls]||'#2060b8';
-    const nombre=ind.indicador_nombre.replace('(proxy operativo)','').replace(' de agua y saneamiento','').trim();
-    const labelShort=nombre.length>28?nombre.slice(0,26)+'…':nombre;
+
+    // Label corto
+    const nombre=ind.indicador_nombre
+      .replace('(proxy operativo)','')
+      .replace(' de agua y saneamiento / CODEMA','')
+      .replace(' de agua y saneamiento','')
+      .replace('sector comercial / mercados finalizados','')
+      .trim();
+    const labelShort=nombre.length>26?nombre.slice(0,24)+'…':nombre;
+
+    // Etiqueta de porcentaje — texto prudente si superó meta
+    const pctLabel=metaSuperada?'Meta ✓':`${fmt(pctAnualRaw*100,0)}%`;
+    const pctColor=metaSuperada?'#157a50':col;
+
     svgBars+=`
-    <g class="bar-group" data-ind="${esc(ind.indicador_nombre)}" data-val="${fmt(+ind.valor_acumulado)}" data-meta="${fmt(+ind.meta_anual)}" data-pct="${fmt(pct*100,0)}%" data-sem="${sem.label}">
-      <text x="0" y="${y+barH/2+1}" dominant-baseline="central" style="font-size:11px;fill:var(--text-2,#2a4570);font-family:var(--font-body)">${esc(labelShort)}</text>
-      <!-- track -->
-      <rect x="180" y="${y}" width="${W-180}" height="${barH}" rx="4" fill="var(--line-soft,#ddeaf8)"/>
-      <!-- esperado -->
-      <rect x="180" y="${y}" width="${wEsp}" height="${barH}" rx="4" fill="none" stroke="#b0c8e8" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <!-- real -->
-      <rect x="180" y="${y}" width="${wReal}" height="${barH}" rx="4" fill="${col}" opacity=".85"/>
-      <!-- pct label -->
-      <text x="${180+wReal+6}" y="${y+barH/2+1}" dominant-baseline="central" style="font-size:10px;font-weight:700;fill:${col};font-family:var(--font-mono)">${fmt((+ind.pct_meta_anual||0)*100,0)}%</text>
+    <g class="bar-group" style="cursor:pointer"
+       data-ind="${esc(ind.indicador_nombre)}"
+       data-val="${fmt(+ind.valor_acumulado)} ${esc(ind.unidad||'')}"
+       data-meta="${fmt(+ind.meta_anual)} ${esc(ind.unidad||'')}"
+       data-pct="${metaSuperada?'✓ Meta anual alcanzada':'Avance anual: '+fmt(pctAnualRaw*100,0)+'% · Ritmo al corte: '+fmt(pctCohorte*100,0)+'%'}"
+       data-sem="${metaSuperada?'Al día':sem.label}">
+      <text x="0" y="${y+barH/2}" dominant-baseline="central"
+        style="font-size:10.5px;fill:#2a4570;font-family:'Sora',sans-serif">${esc(labelShort)}</text>
+      <rect x="${labelX}" y="${y}" width="${trackW}" height="${barH}" rx="5" fill="#ddeaf8"/>
+      <rect x="${labelX}" y="${y}" width="${wEsp}" height="${barH}" rx="5"
+        fill="none" stroke="#9ab8d8" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="${labelX}" y="${y}" width="${wReal}" height="${barH}" rx="5"
+        fill="${col}" opacity="${metaSuperada?0.75:0.85}"/>
+      ${metaSuperada?`<text x="${labelX+wReal-6}" y="${y+barH/2}" dominant-baseline="central" text-anchor="end"
+        style="font-size:9px;font-weight:700;fill:#fff;font-family:'JetBrains Mono',monospace">✓ META</text>`:''}
+      <text x="${labelX+wReal+7}" y="${y+barH/2}" dominant-baseline="central"
+        style="font-size:10px;font-weight:700;fill:${pctColor};font-family:'JetBrains Mono',monospace">${pctLabel}</text>
     </g>`;
   });
+
   return `<svg viewBox="0 0 ${W} ${h}" style="overflow:visible;width:100%">${svgBars}</svg>`;
 }
 
@@ -1077,8 +1331,9 @@ function buildAlertas(indsPrim, tot, totPrev, p){
   const alertas=[];
 
   indsPrim.filter(r=>r.meta_anual).forEach(ind=>{
-    const pct=+ind.pct_meta_anual||0;
-    const sem=semaforo(pct);
+    const pct=Math.min(+ind.pct_cohorte||0, 2);
+    const pctAnual=+ind.pct_meta_anual||0;
+    const sem=semaforo(Math.min(pct,1.5));
     const nombre=ind.indicador_nombre.replace('(proxy operativo)','').trim().replace(' de agua y saneamiento / CODEMA','');
 
     if(pct>=1.5){
@@ -1089,10 +1344,10 @@ function buildAlertas(indsPrim, tot, totPrev, p){
         txt:`<strong>${esc(nombre)}</strong> alcanzó su meta anual acumulada (${fmt(pct*100,0)}%). El ritmo es el correcto.`});
     } else if(sem.cls==='seguimiento'){
       alertas.push({cls:'seguimiento', icon:'👀',
-        txt:`<strong>${esc(nombre)}</strong> avanza en seguimiento — ${fmt(pct*100,0)}% de la meta anual. Mantener el ritmo para no quedar atrás.`});
+        txt:`<strong>${esc(nombre)}</strong> avanza en seguimiento — ${fmt(pctAnual*100,0)}% de la meta anual. Mantener el ritmo para no quedar atrás.`});
     } else if(sem.cls==='rezago'){
       alertas.push({cls:'rezago', icon:'⚠️',
-        txt:`<strong>${esc(nombre)}</strong> está en rezago con ${fmt(pct*100,0)}% del año cumplido. Priorizar en la próxima planificación operativa.`});
+        txt:`<strong>${esc(nombre)}</strong> está en rezago con ${fmt(pctAnual*100,0)}% de la meta anual acumulado. Priorizar en la próxima planificación operativa.`});
     } else if(sem.cls==='sin-actividad'){
       alertas.push({cls:'informacion', icon:'📋',
         txt:`<strong>${esc(nombre)}</strong> aún no registra avance acumulado. Sin actividad registrada en los meses reportados.`});
@@ -1119,7 +1374,7 @@ function buildTablaIndicadores(inds){
       <th>Este mes</th><th>Acumulado</th><th>Meta anual</th><th>Estado</th>
     </tr></thead>
     <tbody>${sorted.map(ind=>{
-      const pct=ind.meta_anual?(+ind.pct_meta_anual||0):null;
+      const pct=ind.meta_cohorte?(Math.min(+ind.pct_cohorte||0,1.5)):null;
       const sem=pct!==null?semaforo(pct):{cls:'sin-actividad',label:'Sin meta'};
       return `<tr>
         <td class="destacado">${esc(ind.indicador_nombre.replace('(proxy operativo)','').trim())}</td>
@@ -1155,10 +1410,157 @@ function attachTooltips(){
     });
     el.addEventListener('mouseleave',hideTip);
   });
+
+  // Click en panel de gráfica → modal zoom
+  document.querySelectorAll('.chart-host').forEach(host=>{
+    const panel=host.closest('.panel');
+    if(!panel) return;
+    const title=panel.querySelector('h3')?.textContent||'';
+    const sub=panel.querySelector('.panel-sub')?.textContent||'';
+    host.addEventListener('click',e=>{
+      if(e.target.closest('.bar-group')) return; // no doble
+      openChartModal(title, sub, host.innerHTML);
+    });
+  });
 }
+
+/* ── MODAL KPI ── */
+function openKpiModal(dataAttr){
+  let d;
+  if(typeof dataAttr === 'string'){
+    try{ d=JSON.parse(dataAttr.replace(/&quot;/g,'"')); }catch(e){ return; }
+  } else { d=dataAttr; }
+
+  document.getElementById('modalTitle').textContent=d.nombre||'Indicador';
+
+  const semCls=d.sem||'sin-actividad';
+  const pctAnualDisplay=d.pctAnual!=null?`${Math.round((d.pctAnual||0)*100)}%`:'—';
+  const pctCohorteDisplay=d.pctCohorte!=null?`${Math.round((d.pctCohorte||0)*100)}%`:'—';
+
+  // Mini gráfica histórica SVG
+  let histSVG='<p style="color:var(--muted);font-size:.82rem">Sin datos históricos disponibles.</p>';
+  if(d.historico&&d.historico.length>0){
+    const maxAcum=Math.max(...d.historico.map(h=>h.acum),d.meta||1);
+    const W=480, H=80, pad=30;
+    const barW=Math.min(60, (W-pad*2)/d.historico.length - 8);
+    const spacing=(W-pad*2)/d.historico.length;
+    const colores={'al-dia':'#157a50','seguimiento':'#8a6200','rezago':'#c94747','sin-actividad':'#9aaac0'};
+    const barCol=colores[semCls]||'#2060b8';
+    let bars='';
+    let metaLine='';
+
+    if(d.meta>0){
+      const yMeta=H - (d.meta/maxAcum)*(H-8);
+      metaLine=`<line x1="${pad}" y1="${yMeta}" x2="${W-pad}" y2="${yMeta}" stroke="#c94747" stroke-width="1" stroke-dasharray="5 3" opacity=".6"/>
+      <text x="${W-pad+3}" y="${yMeta+4}" style="font-size:9px;fill:#c94747;font-family:'JetBrains Mono',monospace">Meta</text>`;
+    }
+
+    d.historico.forEach((h,i)=>{
+      const x=pad+i*spacing+spacing/2-barW/2;
+      const barH_=maxAcum>0?Math.max((h.acum/maxAcum)*(H-8),2):2;
+      const y=H-barH_;
+      const isLatest=(i===d.historico.length-1);
+      bars+=`<rect x="${x}" y="${y}" width="${barW}" height="${barH_}" rx="3"
+        fill="${barCol}" opacity="${isLatest?1:.55}"/>
+        <text x="${x+barW/2}" y="${H+12}" text-anchor="middle"
+          style="font-size:9px;fill:#6685aa;font-family:'Sora',sans-serif">${(h.mes||'').slice(0,3)}</text>
+        <text x="${x+barW/2}" y="${y-4}" text-anchor="middle"
+          style="font-size:8px;font-weight:700;fill:${barCol};font-family:'JetBrains Mono',monospace;display:${h.acum>0?'block':'none'}">${h.acum}</text>`;
+    });
+
+    histSVG=`<svg viewBox="0 0 ${W} ${H+20}" style="width:100%;overflow:visible">
+      ${metaLine}${bars}
+    </svg>`;
+  }
+
+  const bodyHTML=`
+    <div class="modal-kpi-hero">
+      <div class="modal-kpi-val">${Math.round(d.val||0)}</div>
+      <div class="modal-kpi-unit">${d.unidad||''} acumulados</div>
+      <span class="sem ${semCls}" style="margin-left:8px">${d.semLabel||''}</span>
+    </div>
+
+    <div class="modal-stats">
+      <div class="modal-stat">
+        <div class="modal-stat-lbl">Meta anual total</div>
+        <div class="modal-stat-val">${d.meta?Math.round(d.meta):'Sin meta'} ${d.unidad||''}</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-lbl">Avance del año</div>
+        <div class="modal-stat-val">${pctAnualDisplay}</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-lbl">Meta esperada al corte</div>
+        <div class="modal-stat-val">${d.metaCohorte?d.metaCohorte.toFixed(1):'—'} ${d.unidad||''}</div>
+      </div>
+      <div class="modal-stat">
+        <div class="modal-stat-lbl">Ritmo al corte</div>
+        <div class="modal-stat-val">${pctCohorteDisplay} del esperado</div>
+      </div>
+    </div>
+
+    ${d.superada?`<div class="kpi-nota-proxy" style="margin-bottom:14px">
+      La meta anual ya fue alcanzada en este punto del año. El ritmo de avance supera lo planificado.
+    </div>`:''}
+
+    <div class="modal-hist">
+      <div class="modal-hist-title">Evolución acumulada del indicador</div>
+      ${histSVG}
+    </div>
+  `;
+
+  document.getElementById('modalBody').innerHTML=bodyHTML;
+  document.getElementById('kpiModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeKpiModal(e){
+  if(e.target===document.getElementById('kpiModal')) closeKpiModalDirect();
+}
+function closeKpiModalDirect(){
+  document.getElementById('kpiModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeKpiModalDirect(); });
 
 /* ── ARRANCAR ── */
 init();
+
+/* ═══════════════════════════════════════
+   MODAL ZOOM
+═══════════════════════════════════════ */
+
+
+function openChartModal(title, sub, svgOrHTML){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalSub').textContent=sub;
+  document.getElementById('modalBody').innerHTML=`<div style="padding:8px 0">${svgOrHTML}</div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModalDirect();
+}
+function closeModalDirect(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModalDirect(); });
+
 </script>
+
+<!-- MODAL ZOOM -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">—</div>
+        <div class="modal-sub" id="modalSub">—</div>
+      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
 </body>
 </html>
