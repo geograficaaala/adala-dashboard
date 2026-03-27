@@ -996,7 +996,7 @@ function semClsFromPct(p){
   if(p>=.8) return 'seguimiento';
   return 'rezago';
 }
-function semLabel(cls){ return {al-dia:'Al día', seguimiento:'En seguimiento', rezago:'Rezago', 'sin-actividad':'Sin actividad'}[cls]||cls; }
+function semLabel(cls){ var m={'al-dia':'Al día','seguimiento':'En seguimiento','rezago':'Rezago','sin-actividad':'Sin actividad'}; return m[cls]||cls; }
 function fmtVal(v,unit){
   if(unit==='litros') return v>=1000000 ? fmt(v/1000000,2)+' M lts' : v>=1000 ? fmt(v/1000,1)+'k lts' : fmt(v,0)+' lts';
   if(unit==='GTQ') return 'Q '+fmt(v,2);
