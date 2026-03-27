@@ -178,27 +178,101 @@ function renderKpis(){
   const rows = selectedIndicators();
   const el = document.getElementById('kpiGrid');
   if(!rows.length){ el.innerHTML = emptyBlock('No hay indicadores para el período seleccionado.'); return; }
+
+  // Historical data for sparklines: all periods for each indicator
+  const allPeriods = unique(state.data.indicadores.map(r => r.periodo)).sort();
+
   el.innerHTML = rows.map(r => {
     const cls = colorClass(r.semaforo);
-    const pct = Math.max(0, Math.min(100, Number(r.pct_cohorte || 0) * 100));
+    const pctCohorte = Number(r.pct_cohorte || 0);
+    const pctAnual   = Number(r.pct_meta_anual || 0);
+    const barW       = Math.max(0, Math.min(100, pctCohorte * 100));
+    const anualW     = Math.max(0, Math.min(100, pctAnual * 100));
+
+    // Spark: accumulated value over all periods for this indicator
+    const hist = allPeriods.map(p => {
+      const row = state.data.indicadores.find(x => x.indicador_id === r.indicador_id && x.periodo === p);
+      return row ? Number(row.valor_acumulado || 0) : null;
+    }).filter(v => v !== null);
+    const spark = kpiSparkline(hist, cls);
+
+    // Gap vs meta cohorte (how many units over/under)
+    const gap = Number(r.valor_acumulado || 0) - Number(r.meta_cohorte || 0);
+    const gapLabel = gap === 0 ? 'exacto'
+      : gap > 0 ? `+${fmtNum(gap)} sobre meta`
+      : `${fmtNum(gap)} bajo meta`;
+    const gapCls = gap >= 0 ? 'green' : (gap > -(Number(r.meta_cohorte||0)*0.2) ? 'yellow' : 'red');
+
+    // Contribution: what % of annual goal is already done
+    const annualDone = Math.round(pctAnual * 100);
+
     return `
-      <article class="card kpi-card ${cls}">
-        <div class="kpi-title">${escapeHtml(r.indicador_nombre)}</div>
-        <div class="kpi-main">
-          <div class="kpi-value">${fmtNum(r.valor_acumulado)}</div>
-          <div class="kpi-unit">${escapeHtml(r.unidad || '')}</div>
+      <article class="card kpi-card ${cls}" style="padding:18px 16px 14px;cursor:pointer"
+        onclick="document.getElementById('indicatorSelect').value='${r.indicador_id}';state.selectedIndicator='${r.indicador_id}';renderTrend();"
+        title="Clic para ver tendencia de este indicador">
+        <div class="kpi-top">
+          <div class="kpi-label">${escapeHtml(r.indicador_nombre)}</div>
+          <span class="chip ${cls}">${semaforoLabel(r.semaforo)}</span>
         </div>
-        <span class="badge ${cls}">${semaforoLabel(r.semaforo)}</span>
-        <div class="micro">
-          <div><div class="label">Mes</div><div class="val">${fmtNum(r.valor_mes)}</div></div>
-          <div><div class="label">Meta cohorte</div><div class="val">${fmtNum(r.meta_cohorte)}</div></div>
-          <div><div class="label">Meta anual</div><div class="val">${fmtNum(r.meta_anual)}</div></div>
-          <div><div class="label">Avance cohorte</div><div class="val">${fmtPct(r.pct_cohorte)}</div></div>
+
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin:10px 0 4px">
+          <div>
+            <div style="font-family:var(--font-mono);font-size:1.9rem;font-weight:500;line-height:1;letter-spacing:-.02em;color:var(--text)">${fmtNum(r.valor_acumulado)}</div>
+            <div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:3px">${escapeHtml(r.unidad || '')} acumulados</div>
+          </div>
+          <div style="flex-shrink:0">${spark}</div>
         </div>
-        <div class="progress"><div class="bar ${cls}" style="width:${pct}%"></div></div>
+
+        <div style="margin:10px 0 6px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+            <span style="font-size:.71rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Avance cohorte</span>
+            <span style="font-family:var(--font-mono);font-size:.88rem;font-weight:500;color:var(--text)">${fmtPct(r.pct_cohorte)}</span>
+          </div>
+          <div class="progress" style="height:6px;margin-top:0">
+            <span style="display:block;height:100%;border-radius:999px;width:${barW}%;background:linear-gradient(90deg,${cls==='green'?'var(--green-mid),#45c687':cls==='yellow'?'#b88a00,#e0b423':cls==='red'?'#c94747,#ea7b7b':'var(--sky),var(--blue-mid)'});transition:width .7s cubic-bezier(.4,0,.2,1)"></span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px">
+          <div style="padding:7px 9px;border-radius:9px;background:var(--surface);border:1px solid var(--line-soft)">
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Este mes</div>
+            <div style="font-family:var(--font-mono);font-size:.96rem;font-weight:500;color:var(--text);margin-top:2px">${fmtNum(r.valor_mes)} <span style="font-size:.7rem;color:var(--muted)">${escapeHtml(r.unidad||'')}</span></div>
+          </div>
+          <div style="padding:7px 9px;border-radius:9px;background:var(--surface);border:1px solid var(--line-soft)">
+            <div style="font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em">Meta cohorte</div>
+            <div style="font-family:var(--font-mono);font-size:.96rem;font-weight:500;color:var(--text);margin-top:2px">${fmtNum(r.meta_cohorte)} <span style="font-size:.7rem;color:var(--muted)">${escapeHtml(r.unidad||'')}</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:9px;padding-top:8px;border-top:1px solid var(--line-soft)">
+          <span style="font-size:.75rem;color:var(--${gapCls==='green'?'green':'gold'}${gapCls==='red'?'':''};font-weight:700" class="kpi-gap-${gapCls}">${escapeHtml(gapLabel)}</span>
+          <span style="font-size:.72rem;color:var(--muted)">${annualDone}% meta anual</span>
+        </div>
       </article>
     `;
   }).join('');
+}
+
+function kpiSparkline(values, cls){
+  if(!values || values.length < 2) return '';
+  const w = 72, h = 36;
+  const maxV = Math.max(...values, 0.001);
+  const pts = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * w;
+    const y = h - (v / maxV) * (h - 4) - 2;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const color = cls === 'green' ? '#1d9e68' : cls === 'yellow' ? '#d0a000' : cls === 'red' ? '#d15b5b' : '#38b6e8';
+  const fillPts = `0,${h} ${pts} ${w},${h}`;
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" style="display:block;overflow:visible">
+    <defs><linearGradient id="sg_${cls}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity=".25"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity=".02"/>
+    </linearGradient></defs>
+    <polygon points="${fillPts}" fill="url(#sg_${cls})"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${pts.split(' ').at(-1).split(',')[0]}" cy="${pts.split(' ').at(-1).split(',')[1]}" r="3" fill="${color}"/>
+  </svg>`;
 }
 
 function renderTrend(){
