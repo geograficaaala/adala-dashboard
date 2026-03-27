@@ -54,6 +54,22 @@
     }
     .topbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
     .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .month-pills{display:flex;gap:5px;align-items:center;background:rgba(255,255,255,.62);border:1px solid var(--line-soft);border-radius:999px;padding:4px 6px}
+    .month-pill{padding:5px 14px;border-radius:999px;border:none;cursor:pointer;font-family:var(--font-body);font-size:.78rem;font-weight:700;color:var(--muted);background:transparent;transition:all .2s ease;letter-spacing:.02em}
+    .month-pill:hover:not(:disabled){color:var(--blue-mid);background:var(--blue-pale)}
+    .month-pill.active{background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:#fff;box-shadow:0 2px 10px rgba(26,86,168,.35)}
+    .month-pill:disabled{opacity:.38;cursor:default}
+    .estado-global{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:999px;font-size:.78rem;font-weight:700;white-space:nowrap;border:1.5px solid transparent;transition:all .3s ease}
+    .estado-global .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;animation:pulse-dot 2.5s ease-in-out infinite}
+    @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.45}}
+    .estado-global.al-dia{background:var(--green-pale);color:var(--green);border-color:rgba(21,122,80,.2)}
+    .estado-global.al-dia .dot{background:var(--green)}
+    .estado-global.seguimiento{background:#fffbeb;color:var(--gold);border-color:rgba(122,85,0,.2)}
+    .estado-global.seguimiento .dot{background:var(--gold)}
+    .estado-global.rezago{background:#fff5f5;color:var(--red);border-color:rgba(143,28,28,.2)}
+    .estado-global.rezago .dot{background:var(--red)}
+    .estado-global.sin-actividad{background:var(--surface);color:var(--muted);border-color:var(--line)}
+    .estado-global.sin-actividad .dot{background:var(--muted)}
     .back{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 11px;border-radius:999px;
       background:rgba(255,255,255,.8);border:1px solid var(--line);text-decoration:none;
       color:var(--text-2);font-weight:600;font-size:.84rem;
@@ -132,7 +148,7 @@
     .goal-note{margin-top:12px;color:var(--muted);font-size:.78rem;line-height:1.65;padding-top:12px;border-top:1px dashed var(--line)}
 
     /* ── TOOLBAR ── */
-    .toolbar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
     .filter{padding:12px 14px}
     .filter label{display:block;font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.09em;margin-bottom:7px}
     .filter select,.filter .pill{width:100%;padding:9px 12px;border:1.5px solid var(--line);border-radius:var(--radius-xs);
@@ -475,6 +491,7 @@
 
 
     @media(max-width:1100px){.hero,.intro-grid,.grid-2,.grid-2-equal,.toolbar,.exec-hero-row,.exec-kpi-grid{grid-template-columns:1fr}.hero-shell{grid-template-columns:1fr}.intro-stack{grid-template-columns:1fr}.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}.exec-strip,.exec-row-2{grid-template-columns:repeat(2,1fr)}.exec-toolbar{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(2,1fr)}.hero-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:900px){.month-pills{order:3;width:100%;overflow:auto;padding:4px 6px}.topbar-left,.topbar-right{width:100%;justify-content:space-between}.topbar-right{gap:10px}}
     @media(max-width:640px){.kpis,.exec-kpi-grid,.exec-strip,.exec-row-2{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr}.hero-main{padding:22px 18px}.hero-main h1{font-size:1.8rem}.hero-tag-row{margin:14px 0 16px}.hero-brand{padding:14px}.intro-story h3,.intro-focus h3,.annual-panel h3{font-size:1.14rem}}
     @media(max-width:700px){.modal-box{max-width:100%;max-height:100vh;border-radius:0}.interp-grid{grid-template-columns:1fr}}
   </style>
@@ -485,9 +502,15 @@
   <div class="topbar">
     <div class="topbar-left">
       <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver a inicio</a>
-      
+      <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período">
+        <!-- generado por JS -->
+      </div>
     </div>
     <div class="topbar-right">
+      <div class="estado-global sin-actividad" id="estadoGlobalTopbar">
+        <span class="dot"></span>
+        <span id="estadoGlobalTopbarLabel">Cargando…</span>
+      </div>
       <div class="view-switcher" role="group">
         <button class="view-btn active" id="btnFull" onclick="switchView('full')">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
@@ -619,7 +642,6 @@
       </div>
     </section>
     <section class="toolbar">
-      <div class="card filter"><label for="periodSelect">Mes / período</label><select id="periodSelect"></select></div>
       <div class="card filter"><label for="zoneSelect">Zona</label><select id="zoneSelect"></select></div>
       <div class="card filter"><label for="indicatorSelect">Indicador para tendencia</label><select id="indicatorSelect"></select></div>
       <div class="card filter"><label>Último período válido detectado</label><div class="pill" id="latestPeriodPill">—</div></div>
@@ -780,6 +802,7 @@ function buildState(data){
 }
 
 function render(state){
+  renderTopbar(state);
   bindControls(state);
   renderHero(state);
   renderAnnualGoals(state);
@@ -793,6 +816,7 @@ function render(state){
   renderDiagnostic(state);
   try{ renderNewCharts(state); }catch(e){ console.warn('renderNewCharts:',e); }
   setTimeout(setupChartZoom, 300);
+  try{ renderExec(); }catch(e){ console.warn('renderExec:',e); }
 }
 
 function bindControls(state){
@@ -800,29 +824,82 @@ function bindControls(state){
   const zoneSelect=document.getElementById("zoneSelect");
   const indicatorSelect=document.getElementById("indicatorSelect");
 
-  periodSelect.innerHTML = state.periods.map(p=>`<option value="${periodKey(p)}">${escapeHtml(periodLabel(p))}</option>`).join("");
-  if(state.selectedPeriodKey) periodSelect.value = state.selectedPeriodKey;
+  if(periodSelect){
+    periodSelect.innerHTML = state.periods.map(p=>`<option value="${periodKey(p)}">${escapeHtml(periodLabel(p))}</option>`).join("");
+    if(state.selectedPeriodKey) periodSelect.value = state.selectedPeriodKey;
+    periodSelect.onchange = ()=>{
+      state.selectedPeriodKey = periodSelect.value;
+      execSelectedPeriodKey = state.selectedPeriodKey;
+      render(state);
+    };
+  }
 
-  zoneSelect.innerHTML = state.zones.map(z=>`<option value="${escapeHtml(z)}">${escapeHtml(z==="__all__"?"Todas las zonas":z)}</option>`).join("");
-  zoneSelect.value = state.selectedZone;
+  if(zoneSelect){
+    zoneSelect.innerHTML = state.zones.map(z=>`<option value="${escapeHtml(z)}">${escapeHtml(z==="__all__"?"Todas las zonas":z)}</option>`).join("");
+    zoneSelect.value = state.selectedZone;
+    zoneSelect.onchange = ()=>{
+      state.selectedZone = zoneSelect.value;
+      render(state);
+    };
+  }
 
-  indicatorSelect.innerHTML = state.indicators.map(i=>`<option value="${escapeHtml(i.id)}">${escapeHtml(i.name)}</option>`).join("");
-  if(state.selectedIndicatorId) indicatorSelect.value = state.selectedIndicatorId;
+  if(indicatorSelect){
+    indicatorSelect.innerHTML = state.indicators.map(i=>`<option value="${escapeHtml(i.id)}">${escapeHtml(i.name)}</option>`).join("");
+    if(state.selectedIndicatorId) indicatorSelect.value = state.selectedIndicatorId;
+    indicatorSelect.onchange = ()=>{
+      state.selectedIndicatorId = indicatorSelect.value;
+      render(state);
+    };
+  }
 
-  document.getElementById("latestPeriodPill").textContent = periodLabel(state.latestValid);
+  const latestPill = document.getElementById("latestPeriodPill");
+  if(latestPill) latestPill.textContent = periodLabel(state.latestValid);
+}
 
-  periodSelect.onchange = ()=>{
-    state.selectedPeriodKey = periodSelect.value;
-    render(state);
-  };
-  zoneSelect.onchange = ()=>{
-    state.selectedZone = zoneSelect.value;
-    render(state);
-  };
-  indicatorSelect.onchange = ()=>{
-    state.selectedIndicatorId = indicatorSelect.value;
-    render(state);
-  };
+function renderTopbar(state){
+  const monthPills=document.getElementById('monthPills');
+  if(monthPills){
+    const selected=getSelectedPeriod(state) || state.latestValid || state.periods[0] || null;
+    const activeYear=(selected && selected.anio) || (state.latestValid && state.latestValid.anio) || 2026;
+    const meses=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    monthPills.innerHTML='';
+    for(let month=1; month<=12; month++){
+      const found=state.periods.find(p=>Number(p.anio)===Number(activeYear) && Number(p.mes_num)===month);
+      const btn=document.createElement('button');
+      btn.className='month-pill'+(found && periodKey(found)===state.selectedPeriodKey ? ' active' : '');
+      btn.textContent=meses[month-1];
+      btn.disabled=!found;
+      if(found){
+        btn.onclick=()=>{
+          state.selectedPeriodKey=periodKey(found);
+          execSelectedPeriodKey=state.selectedPeriodKey;
+          render(state);
+        };
+      }
+      monthPills.appendChild(btn);
+    }
+  }
+
+  const badge=document.getElementById('estadoGlobalTopbar');
+  const badgeLabel=document.getElementById('estadoGlobalTopbarLabel');
+  if(badge && badgeLabel){
+    const period=getSelectedPeriod(state);
+    const sem=buildTopbarSemaforo(state, period);
+    badge.className='estado-global '+sem.cls;
+    badgeLabel.textContent=sem.label;
+  }
+}
+
+function buildTopbarSemaforo(state, period){
+  const metrics=getMetricsForSelection(state, period);
+  const ids=['materiales_generales','pet','vidrio','ingreso_bruto_total','participacion_actividades'];
+  const values=ids.map(id=>metrics[id]).filter(Boolean).map(m=>safeNumber(m.monthlyPct)).filter(v=>Number.isFinite(v));
+  if(!values.length) return {cls:'sin-actividad',label:'Sin actividad'};
+  const avg=values.reduce((a,b)=>a+b,0)/values.length;
+  if(avg>=1) return {cls:'al-dia',label:'Al día'};
+  if(avg>=0.85) return {cls:'seguimiento',label:'En seguimiento'};
+  if(avg>0) return {cls:'rezago',label:'Rezago'};
+  return {cls:'sin-actividad',label:'Sin actividad'};
 }
 
 function renderHero(state){
@@ -2337,7 +2414,13 @@ function renderExec(){
   if(sel){
     if(sel.options.length===0) sel.innerHTML=base.periods.map(function(p){return '<option value="'+periodKey(p)+'">'+escapeHtml(periodLabel(p))+'</option>';}).join('');
     sel.value=execSelectedPeriodKey;
-    sel.onchange=function(){ execSelectedPeriodKey=sel.value; renderExec(); };
+    sel.onchange=function(){
+      execSelectedPeriodKey=sel.value;
+      var syncState=buildState(currentData);
+      syncState.selectedPeriodKey=execSelectedPeriodKey;
+      renderTopbar(syncState);
+      renderExec();
+    };
   }
   var pill=document.getElementById('execLatestPill'); if(pill) pill.textContent=periodLabel(base.latestValid);
   var execState=Object.assign({},base,{selectedPeriodKey:execSelectedPeriodKey});
