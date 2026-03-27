@@ -697,156 +697,191 @@ async function loadAtitlan(cfg){
 }
 
 async function loadConservando(cfg){
-  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
-  const total = sortByMonth(cast(totalRaw));
-  const inds  = cast(indRaw);
-  const latest = total.find(r => String(r.es_ultimo_mes_con_datos||'').toLowerCase()==='true') || total[total.length-1] || {};
-  const latestPeriod = latest.periodo_clave;
-  const latestIndicators = inds.filter(r => r.periodo_clave===latestPeriod || String(r.es_ultimo_mes_con_datos||'').toLowerCase()==='true');
-  const score = avg(latestIndicators.map(r => Number(r.pct_vs_esperado||0)));
-  const keyMetrics = [
-    { label:'Jornadas',          meta: latest.meta_anual_jornadas, acum: latest.jornadas_acum,        unit:'jornadas', pct: Number(latest.pct_avance_anual_jornadas||0)*100,  metaLabel:`Meta anual: ${fmt(latest.meta_anual_jornadas)} jornadas` },
-    { label:'Aceite recolectado', meta: latest.meta_anual_aceite,   acum: latest.aceite_litros_acum,   unit:'litros',   pct: Number(latest.pct_avance_anual_aceite||0)*100,    metaLabel:`Meta anual: ${fmt(latest.meta_anual_aceite)} l` },
-    { label:'Agua protegida',     meta: latest.meta_anual_agua,     acum: latest.agua_protegida_acum,  unit:'litros',   pct: Number(latest.pct_avance_anual_agua||0)*100,      metaLabel:`Meta anual: ${fmt(latest.meta_anual_agua)} l` },
-    { label:'Jabones producidos', meta: latest.meta_anual_jabones,  acum: latest.jabones_producidos_acum, unit:'unidades', pct: Number(latest.pct_avance_anual_jabones||0)*100, metaLabel:`Meta anual: ${fmt(latest.meta_anual_jabones)} u` }
-  ];
-  return { ...cfg, latestLabel:`${safe(latest.mes)} ${safe(latest.anio)}`.trim(), periodKey:latestPeriod, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
-}
+  const aceiteAcum = 13417.828;
+  const aguaAcum = 13417828;
+  const jabonesProdAcum = 11450;
+  const jabonesVendAcum = 2180;
 
-async function loadFM(cfg){
-  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
-  const total = sortByMonth(cast(totalRaw));
-  const inds  = cast(indRaw);
-  const latest = total.find(r => String(r.es_ultimo_mes_real||'').toLowerCase()==='true') || total[total.length-1] || {};
-  const score  = avg(inds.map(r => Number(r.pct_esperado||0)));
-  const m = {}; inds.forEach(r => m[r.indicador_id] = r);
-  const pick = (...ids) => ids.map(id => m[id]).find(Boolean);
+  const metaAceite = 80000;
+  const metaAgua = 80000000;
+  const metaJabonesProd = 65040;
+  const metaJabonesVend = 51600;
 
-  const municipios = pick('municipios_capacitados');
-  const personas   = pick('personas_capacitadas');
-  const asist      = pick('asistencias_tecnicas');
-  const estudios   = pick('estudios_caracterizacion','estudios_caracterizacion_residuos','caracterizacion_residuos','estudios_residuos_solidos');
-  const pirdes     = pick('pirds_implementados','pirdes_implementados');
+  const pctAceite = (aceiteAcum / metaAceite) * 100;
+  const pctAgua = (aguaAcum / metaAgua) * 100;
+  const pctJabonesProd = (jabonesProdAcum / metaJabonesProd) * 100;
+  const pctJabonesVend = (jabonesVendAcum / metaJabonesVend) * 100;
 
-  const municipiosVal = Number(municipios?.valor_acumulado || 0);
-  const personasVal   = Number(personas?.valor_acumulado || 0);
-  const asistVal      = Number(asist?.valor_acumulado || 0);
-  const estudiosVal   = Number(estudios?.valor_acumulado || 0);
-  const pirdesVal     = Number(pirdes?.valor_acumulado || 0);
-
-  const pctFortalecimiento = Math.min((municipiosVal / 15) * 100, (personasVal / 75) * 100);
-  const pctAsistencia      = (asistVal / 3) * 100;
-  const pctResiduos        = estudios ? Math.min((estudiosVal / 2) * 100, (pirdesVal / 5) * 100) : (pirdesVal / 5) * 100;
+  const esperadoCorte = (2 / 12) * 100; // enero-febrero 2026
+  const score = avg([
+    (pctAceite / esperadoCorte) * 100,
+    (pctAgua / esperadoCorte) * 100,
+    (pctJabonesProd / esperadoCorte) * 100,
+    (pctJabonesVend / esperadoCorte) * 100
+  ]);
 
   const keyMetrics = [
     {
-      label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental.',
+      label:'80,000 litros de aceite usado de cocina recolectados.',
+      acumDisplay:`${fmt(aceiteAcum)} / ${fmt(metaAceite)} litros`,
+      pct:pctAceite,
+      pctDisplay:fmtPct(pctAceite),
+      barPct:pctAceite
+    },
+    {
+      label:'80,000,000 de litros de agua protegidos.',
+      acumDisplay:`${fmt(aguaAcum)} / ${fmt(metaAgua)} litros`,
+      pct:pctAgua,
+      pctDisplay:fmtPct(pctAgua),
+      barPct:pctAgua
+    },
+    {
+      label:'65,040 jabones producidos.',
+      acumDisplay:`${fmt(jabonesProdAcum)} / ${fmt(metaJabonesProd)} jabones`,
+      pct:pctJabonesProd,
+      pctDisplay:fmtPct(pctJabonesProd),
+      barPct:pctJabonesProd
+    },
+    {
+      label:'51,600 jabones vendidos anualmente.',
+      acumDisplay:`${fmt(jabonesVendAcum)} / ${fmt(metaJabonesVend)} jabones`,
+      pct:pctJabonesVend,
+      pctDisplay:fmtPct(pctJabonesVend),
+      barPct:pctJabonesVend
+    }
+  ];
+
+  return {
+    ...cfg,
+    latestLabel:'Febrero 2026',
+    periodKey:'2026-02',
+    score:score || 0,
+    scoreLabel:'Promedio vs esperado al corte',
+    metrics:keyMetrics,
+    sourceSummary:'Valor fijo · corte febrero 2026'
+  };
+}
+
+async function loadFM(cfg){
+  const municipiosVal = 6;
+  const personasVal = 52;
+  const asistVal = 2;
+  const estudiosVal = 2;
+  const pirdesVal = 2;
+
+  const pctFortalecimiento = Math.min((municipiosVal / 15) * 100, (personasVal / 75) * 100);
+  const pctAsistencia = (asistVal / 3) * 100;
+  const pctResiduos = Math.min((estudiosVal / 2) * 100, (pirdesVal / 5) * 100);
+
+  const esperadoCorte = (3 / 12) * 100; // enero-marzo 2026
+  const score = avg([
+    (pctFortalecimiento / esperadoCorte) * 100,
+    (pctAsistencia / esperadoCorte) * 100,
+    (pctResiduos / esperadoCorte) * 100
+  ]);
+
+  const keyMetrics = [
+    {
+      label:'Fortalecimiento. 15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
       acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
       pct:pctFortalecimiento,
       pctDisplay:fmtPct(pctFortalecimiento),
       barPct:pctFortalecimiento
     },
     {
-      label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento con fondos CODEDE.',
+      label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento (alcantarillado, tratamiento de aguas residuales y/o desechos sólidos) con fondos CODEDE.',
       acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
       pct:pctAsistencia,
       pctDisplay:fmtPct(pctAsistencia),
       barPct:pctAsistencia
     },
     {
-      label:'2 estudios de caracterización de residuos del sector comercial y mercados, y al menos 5 PIRDES implementados.',
-      acumDisplay:estudios
-        ? `${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`
-        : `${fmt(pirdesVal)} / 5 PIRDES`,
+      label:'2 nuevos estudios de caracterización de residuos y desechos sólidos del sector comercial y de mercados y al menos 5 PIRDES implementados.',
+      acumDisplay:`${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`,
       pct:pctResiduos,
       pctDisplay:fmtPct(pctResiduos),
       barPct:pctResiduos
     }
   ];
 
-  return { ...cfg, latestLabel:`${safe(latest.mes_label)} ${safe(latest.anio_reportado)}`.trim(), periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
+  return {
+    ...cfg,
+    latestLabel:'Marzo 2026',
+    periodKey:'2026-03',
+    score:score || 0,
+    scoreLabel:'Promedio vs esperado al corte',
+    metrics:keyMetrics,
+    sourceSummary:'Valor fijo · corte marzo 2026'
+  };
 }
 
 async function loadEPC(cfg){
-  const [totalRaw, indRaw] = await Promise.all([parseCsv(cfg.totalUrl), parseCsv(cfg.indUrl)]);
-  const total = cast(totalRaw).sort((a,b) => String(a.periodo_clave || '').localeCompare(String(b.periodo_clave || '')) || (Number(a.mes_num||0) - Number(b.mes_num||0)));
-  const inds  = cast(indRaw);
-  const latest = total.find(r => String(r.is_latest_data_month||'').toLowerCase()==='true') || total[total.length-1] || {};
-  const score  = avg(inds.map(r => Number(r.pct_vs_esperado||0)));
-  const m = {}; inds.forEach(r => m[r.indicator_id] = r);
+  const docentesVal = 121;
+  const docentesMeta = 121;
 
-  const META_DOCENTES = 121;
-  const META_ESTUDIANTES_MENSUAL = 3514;
-  const META_ESTUDIANTES_MESES = 8;
-  const META_JOVENES = 120;
-  const cohortes = [
-    {
-      nombre: 'Cohorte marzo',
-      inicio: '2026-03',
-      sesiones: [68, 53]
-    },
-    {
-      nombre: 'Cohorte julio',
-      inicio: '2026-07',
-      sesiones: []
-    }
-  ];
+  const mesesCumplidosEstudiantes = 1;
+  const mesesMetaEstudiantes = 8;
+  const estudiantesMetaMensual = 3514;
 
-  const docentesVal = Number(m.docentes_capacitados?.valor_acumulado || 0);
-  const pctDocentes = (docentesVal / META_DOCENTES) * 100;
+  const cohorteMarzoInicio = 68;
+  const cohorteMarzoActual = 53;
+  const metaJovenes = 120;
 
-  const mesesEPC = total.filter(r => {
-    const pk = String(r.periodo_clave || '');
-    return pk >= '2026-03' && pk <= '2026-10';
-  });
-  const mesesCumplidosEstudiantes = mesesEPC.filter(r => Number(r.estudiantes_epc_mes || 0) >= META_ESTUDIANTES_MENSUAL).length;
-  const pctEstudiantes = (mesesCumplidosEstudiantes / META_ESTUDIANTES_MESES) * 100;
+  const actividadesVal = 10;
+  const actividadesMeta = 128;
 
-  const cohorteActiva = [...cohortes].reverse().find(c => String(latest.periodo_clave || '') >= c.inicio && c.sesiones.length) || cohortes.find(c => c.sesiones.length) || cohortes[0];
-  const inscritosCohorte = Number(cohorteActiva?.sesiones?.[0] || 0);
-  const asistenciaSostenida = Number(cohorteActiva?.sesiones?.[cohorteActiva.sesiones.length - 1] || inscritosCohorte || 0);
-  const pctCohorte = inscritosCohorte > 0 ? (asistenciaSostenida / inscritosCohorte) * 100 : 0;
-  const cohorteDisplay = cohortes.map((c, i) => c.sesiones.length
-    ? `C${i+1} ${fmt(Number(c.sesiones[c.sesiones.length - 1] || 0))}/${fmt(Number(c.sesiones[0] || 0))}`
-    : `C${i+1} pendiente`
-  ).join(' · ');
+  const pctDocentes = (docentesVal / docentesMeta) * 100;
+  const pctEstudiantes = (mesesCumplidosEstudiantes / mesesMetaEstudiantes) * 100;
+  const pctCohorte = (cohorteMarzoActual / cohorteMarzoInicio) * 100;
+  const pctActividades = (actividadesVal / actividadesMeta) * 100;
 
-  const actividadesVal = Number(m.actividades_campo?.valor_acumulado || 0);
-  const actividadesMeta = Number(m.actividades_campo?.meta_anual || 0);
-  const pctActividades = actividadesMeta > 0 ? (actividadesVal / actividadesMeta) * 100 : Number(m.actividades_campo?.pct_meta_anual || 0) * 100;
+  const score = avg([
+    100, // docentes ya cumplidos al corte oficial
+    100, // 1 de 8 meses cumplidos al cierre de marzo
+    pctCohorte,
+    (actividadesVal / 16) * 100 // esperado al corte marzo según hoja oficial
+  ]);
 
   const keyMetrics = [
     {
-      label:'121 docentes capacitados durante la Fase 2 del programa EPC en 50 centros educativos de 13 municipios.',
-      acumDisplay:`${fmt(docentesVal)} / ${fmt(META_DOCENTES)} docentes`,
+      label:'121 docentes capacitados durante el desarrollo de la Fase 2 del programa EPC, de 50 centros educativos de los niveles Primaria Segundo Ciclo, Básico y Diversificado de los 13 municipios de la Cuenca del Lago de Atitlán.',
+      acumDisplay:`${fmt(docentesVal)} / ${fmt(docentesMeta)} docentes`,
       pct:pctDocentes,
       pctDisplay:fmtPct(pctDocentes),
       barPct:pctDocentes
     },
     {
-      label:'3,514 estudiantes alcanzados mensualmente en 50 escuelas durante los 8 meses de trabajo de EPC 2026.',
-      acumDisplay:`${mesesCumplidosEstudiantes} / ${META_ESTUDIANTES_MESES} meses con ${fmt(META_ESTUDIANTES_MENSUAL)} estudiantes`,
+      label:'3,514 estudiantes capacitados con el beneficio del programa Educando para Conservar 2026.',
+      acumDisplay:`${mesesCumplidosEstudiantes} / ${mesesMetaEstudiantes} meses con ${fmt(estudiantesMetaMensual)} estudiantes`,
       pct:pctEstudiantes,
-      pctDisplay:`${mesesCumplidosEstudiantes}/${META_ESTUDIANTES_MESES} meses`,
+      pctDisplay:`${mesesCumplidosEstudiantes}/${mesesMetaEstudiantes} meses`,
       barPct:pctEstudiantes
     },
     {
-      label:'120 jóvenes de 12 municipios formados en 5 módulos temáticos con seguimiento de asistencia sostenida por cohorte.',
-      acumDisplay:cohorteDisplay,
+      label:'120 jóvenes de 12 municipios formados en 5 módulos temáticos en temas de gestión ambiental, liderazgo y desarrollo de proyectos juveniles de emprendimiento con impacto social ambiental.',
+      acumDisplay:`Cohorte marzo ${fmt(cohorteMarzoActual)} / ${fmt(cohorteMarzoInicio)} · Cohorte julio pendiente`,
       pct:pctCohorte,
-      pctDisplay:`${fmtPct(pctCohorte)} cohorte activa`,
+      pctDisplay:`${fmtPct(pctCohorte)} asistencia sostenida`,
       barPct:pctCohorte
     },
     {
       label:'Actividades en campo',
-      acum:actividadesVal,
-      meta:actividadesMeta,
-      unit:'actividades',
-      pct:pctActividades
+      acumDisplay:`${fmt(actividadesVal)} / ${fmt(actividadesMeta)} actividades`,
+      pct:pctActividades,
+      pctDisplay:fmtPct(pctActividades),
+      barPct:pctActividades
     }
   ];
 
-  return { ...cfg, latestLabel:`${safe(latest.mes_label)} 2026`, periodKey:latest.periodo_clave, score:score||0, scoreLabel:'Promedio oficial vs esperado', metrics:keyMetrics, sourceSummary:'Kobo mensual' };
+  return {
+    ...cfg,
+    latestLabel:'Marzo 2026',
+    periodKey:'2026-03',
+    score:score || 0,
+    scoreLabel:'Promedio vs esperado al corte',
+    metrics:keyMetrics,
+    sourceSummary:'Valor fijo · corte marzo 2026'
+  };
 }
 
 /* ────────────────────────────────
