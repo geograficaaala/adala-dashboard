@@ -1,370 +1,1357 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Educando para Conservar · AALA</title>
-  <meta name="description" content="Dashboard de Educando para Conservar">
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <style>
-    :root{
-      --bg:#eef4fc; --surface:#f4f8fe; --card:#ffffff; --text:#0c1d3a; --text-2:#2a4570; --muted:#6685aa;
-      --line:#c5d8f0; --line-soft:#ddeaf8;
-      --blue:#1a56a8; --blue-mid:#2575cc; --blue-light:#4a90d9; --blue-soft:#d0e6f8; --blue-pale:#eaf3fd;
-      --sky:#38b6e8; --sky-soft:#d0f0fb;
-      --green:#157a50; --green-soft:#c5eed9; --green-pale:#eafaf2;
-      --gold:#7a5500; --gold-soft:#fef4cc;
-      --red:#8f1c1c; --red-soft:#fce8e8;
-      --shadow-sm:0 1px 4px rgba(10,35,80,.06),0 4px 16px rgba(10,35,80,.06);
-      --shadow:0 2px 12px rgba(10,35,80,.09),0 8px 32px rgba(10,35,80,.08);
-      --radius:18px; --radius-sm:11px;
-      --font-head:'Lora',Georgia,serif;
-      --font-body:'Sora',system-ui,sans-serif;
-      --font-mono:'JetBrains Mono',monospace;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Educando para Conservar · AALA</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --bg: #fdf8ee;
+  --surface: #fef9f0;
+  --card: #ffffff;
+  --text: #1e1608;
+  --text-2: #3d2e0a;
+  --muted: #7a6840;
+  --line: #e8d9b0;
+  --line-soft: #f0e6c8;
 
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:var(--font-body);
-      background:linear-gradient(160deg,#d8eaff 0%,#eef4fc 38%,#e4f3fb 68%,#f0f6ff 100%) fixed;
-      color:var(--text);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;
-    }
-    body::before{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background:
-        radial-gradient(ellipse 90% 70% at 0% -5%,rgba(37,117,204,.20) 0%,transparent 50%),
-        radial-gradient(ellipse 70% 60% at 100% 110%,rgba(56,182,232,.16) 0%,transparent 50%),
-        radial-gradient(ellipse 40% 30% at 82% 8%,rgba(100,200,240,.10) 0%,transparent 50%);
-    }
-    body::after{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,204,.06) 1px,transparent 0);
-      background-size:38px 38px;
-    }
+  /* Acento dorado EPC */
+  --accent: #7a4f00;
+  --accent-mid: #a06800;
+  --accent-light: #c8880a;
+  --accent-soft: #f5e0a0;
+  --accent-pale: #fdf5e0;
 
-    .wrap{max-width:1320px;margin:0 auto;padding:26px 20px 64px;position:relative;z-index:1}
+  /* Semáforo unificado */
+  --al-dia: #157a50;
+  --al-dia-soft: #c5eed9;
+  --al-dia-pale: #eafaf2;
+  --seguimiento: #7a6200;
+  --seguimiento-soft: #fef0c0;
+  --seguimiento-pale: #fffbeb;
+  --rezago: #8f1c1c;
+  --rezago-soft: #fce8e8;
+  --rezago-pale: #fff5f5;
+  --sin-actividad: #6b6050;
+  --sin-actividad-soft: #ede8de;
 
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-      position:sticky;top:0;z-index:200;
-      background:rgba(238,244,252,.90);backdrop-filter:blur(18px) saturate(1.6);
-      border-bottom:1px solid var(--line-soft);
-      margin-left:-20px;margin-right:-20px;padding:12px 20px;margin-top:-26px;margin-bottom:20px;
-    }
-    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .back{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 11px;border-radius:999px;
-      background:rgba(255,255,255,.8);border:1px solid var(--line);text-decoration:none;
-      color:var(--text-2);font-weight:600;font-size:.84rem;transition:all .2s ease;
-    }
-    .back:hover{background:var(--blue-pale);border-color:var(--blue-soft);color:var(--blue);transform:translateY(-1px)}
-    .back-arrow{
-      display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
-      background:var(--blue-soft);color:var(--blue);font-size:.75rem;font-weight:700;flex-shrink:0;
-    }
-    .program-pill{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
-      border:1px solid var(--line-soft);background:rgba(255,255,255,.75);
-      color:var(--blue-mid);font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-    }
+  /* Sombras cálidas */
+  --sh-sm: 0 1px 4px rgba(80,50,0,.05), 0 4px 16px rgba(80,50,0,.05);
+  --sh: 0 2px 12px rgba(80,50,0,.08), 0 8px 32px rgba(80,50,0,.07);
+  --sh-lg: 0 8px 40px rgba(80,50,0,.14), 0 2px 8px rgba(80,50,0,.05);
+  --sh-hover: 0 16px 48px rgba(80,50,0,.16), 0 4px 12px rgba(80,50,0,.08);
 
-    .card{
-      background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);
-      box-shadow:var(--shadow-sm);transition:transform .3s ease,box-shadow .3s ease,border-color .2s;
-    }
-    .card:hover{
-      transform:translateY(-3px);
-      box-shadow:0 16px 48px rgba(10,35,80,.16),0 4px 12px rgba(10,35,80,.08);
-      border-color:var(--blue-soft);
-    }
+  --radius: 18px;
+  --radius-sm: 11px;
+  --radius-xs: 7px;
 
-    .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:18px}
-    .hero-main{
-      padding:30px 34px 26px;
-      background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);
-      position:relative;overflow:hidden;
-    }
-    .hero-main::before{
-      content:'';position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;
-      background:radial-gradient(circle,rgba(56,182,232,.15) 0%,rgba(37,117,204,.07) 50%,transparent 70%);
-      pointer-events:none;
-    }
-    .hero-eyebrow{
-      display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;letter-spacing:.11em;
-      text-transform:uppercase;color:var(--blue-mid);margin-bottom:8px;
-    }
-    .hero-eyebrow::before{
-      content:'';display:inline-block;width:14px;height:2px;
-      background:linear-gradient(90deg,var(--sky),var(--blue-mid));border-radius:2px;
-    }
-    .hero-main h1{
-      font-family:var(--font-head);font-size:2.35rem;font-weight:600;line-height:1.08;
-      background:linear-gradient(135deg,var(--text) 40%,var(--blue-mid) 100%);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-      letter-spacing:-.02em;margin-bottom:10px;
-    }
-    .hero-main p{color:var(--text-2);max-width:680px;line-height:1.72;font-size:.92rem}
-    .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
-    .hero-stat{
-      padding:12px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,.7);
-      border:1.5px solid var(--line-soft);
-    }
-    .hero-stat small{
-      display:block;color:var(--muted);margin-bottom:4px;font-size:.68rem;font-weight:700;
-      text-transform:uppercase;letter-spacing:.07em;
-    }
-    .hero-stat strong{font-family:var(--font-mono);font-size:.95rem;font-weight:500;color:var(--text)}
-    .hero-side{
-      padding:22px 20px;display:flex;flex-direction:column;
-      background:linear-gradient(160deg,#eaf6fe 0%,#d8ecfc 50%,#e4f4fd 100%);
-    }
-    .hero-side-label{
-      font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;
-    }
-    .status-badge,.status-pill{
-      display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:var(--radius-sm);
-      font-weight:700;font-size:.84rem;border:1.5px solid transparent;
-    }
-    .status-badge::before,.status-pill::before{content:'●';font-size:.55em}
-    .status-green{background:var(--green-soft);color:var(--green);border-color:rgba(21,122,80,.2)}
-    .status-yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(122,85,0,.18)}
-    .status-red{background:var(--red-soft);color:var(--red);border-color:rgba(143,28,28,.18)}
-    .status-blue{background:var(--blue-soft);color:var(--blue-mid);border-color:rgba(37,117,204,.18)}
-    .status-muted{background:var(--surface);color:var(--muted);border-color:var(--line)}
-    .mini-list{display:grid;gap:7px;margin-top:2px}
-    .mini-item{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 12px;
-      border-radius:var(--radius-sm);background:rgba(255,255,255,.6);border:1.5px solid var(--line-soft);
-    }
-    .mini-item .muted{font-size:.82rem;color:var(--muted)}
-    .mini-item strong{font-family:var(--font-mono);font-size:.88rem;color:var(--blue-mid)}
+  --font-head: 'Lora', Georgia, serif;
+  --font-body: 'Sora', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
 
-    .intro-grid{display:grid;grid-template-columns:1.08fr 1fr;gap:16px;margin-bottom:18px}
-    .intro-card{padding:22px 24px}
-    .intro-copy p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:.92rem;text-align:justify}
-    .intro-copy p:last-child{margin-bottom:0}
-    .intro-copy strong{color:var(--blue-mid)}
-    .section-title{
-      font-family:var(--font-head);font-size:1.2rem;font-weight:600;letter-spacing:-.01em;margin-bottom:12px;
-    }
-    .annual-goals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-    .goal-card{
-      padding:12px 14px;border-radius:var(--radius-sm);background:var(--surface);
-      border:1.5px solid var(--line-soft);
-    }
-    .goal-card small{
-      display:block;color:var(--muted);margin-bottom:3px;font-size:.67rem;font-weight:700;
-      text-transform:uppercase;letter-spacing:.07em;
-    }
-    .goal-card strong{display:block;font-size:.93rem;line-height:1.35;margin-bottom:3px;color:var(--text)}
-    .goal-meta{font-size:.8rem;color:var(--muted);margin-bottom:7px;font-family:var(--font-mono)}
-    .goal-progress{font-size:.81rem;font-weight:700;color:var(--text-2)}
-    .goal-note{
-      margin-top:12px;color:var(--muted);font-size:.78rem;line-height:1.65;padding-top:12px;border-top:1px dashed var(--line);
-    }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+html { scroll-behavior: smooth }
+body {
+  font-family: var(--font-body);
+  background: linear-gradient(160deg, #fdf0cc 0%, #fdf8ee 38%, #fef9f0 68%, #fffef8 100%) fixed;
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 0% -5%, rgba(160,104,0,.16) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 50% at 100% 110%, rgba(200,136,10,.12) 0%, transparent 50%),
+    radial-gradient(ellipse 45% 35% at 75% 8%, rgba(220,170,50,.08) 0%, transparent 50%);
+}
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: radial-gradient(circle 1px at 1px 1px, rgba(160,104,0,.05) 1px, transparent 0);
+  background-size: 36px 36px;
+}
 
-    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
-    .filter{padding:12px 14px}
-    .filter label{
-      display:block;font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;
-      letter-spacing:.09em;margin-bottom:7px;
-    }
-    .filter select,.filter .pill{
-      width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:#fff;
-      color:var(--text);font-family:var(--font-body);font-size:.92rem;outline:none;
-    }
-    .pill{
-      display:flex;align-items:center;justify-content:center;
-      background:linear-gradient(135deg,var(--blue-pale),#fff);
-      font-weight:700;color:var(--blue-mid);
-    }
+/* ── TOPBAR ── */
+.topbar {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(253,248,238,.93);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 28px;
+}
+.back {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px 8px 10px; border-radius: 999px;
+  background: rgba(255,255,255,.85); border: 1px solid var(--line);
+  text-decoration: none; color: var(--text-2);
+  font-weight: 600; font-size: .82rem;
+  transition: all .2s ease; white-space: nowrap;
+}
+.back:hover { background: var(--accent-pale); border-color: var(--accent-soft); color: var(--accent); transform: translateY(-1px) }
+.back-arrow {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent);
+  font-size: .78rem; font-weight: 700; flex-shrink: 0;
+}
 
-    .kpi-section{margin-bottom:20px}
-    .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .kpi-card{
-      background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);
-      box-shadow:var(--shadow-sm);padding:18px;
-    }
-    .kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
-    .kpi-title{font-size:.84rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-    .kpi-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;line-height:1.15;color:var(--text)}
-    .kpi-detail{font-size:.88rem;color:var(--text-2);margin-top:4px}
-    .kpi-progress{margin-top:12px}
-    .kpi-progress-bar{
-      height:8px;border-radius:999px;background:var(--blue-pale);overflow:hidden;border:1px solid var(--line-soft);
-    }
-    .kpi-progress-bar span{
-      display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid));
-    }
+/* Pills de mes — con estados planificación / activo / futuro */
+.month-pills {
+  display: flex; gap: 4px; align-items: center;
+  background: rgba(255,255,255,.6);
+  border: 1px solid var(--line-soft);
+  border-radius: 999px; padding: 4px 6px;
+}
+.month-pill {
+  padding: 5px 13px; border-radius: 999px; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: .77rem; font-weight: 700;
+  color: var(--muted); background: transparent;
+  transition: all .2s ease; letter-spacing: .02em; position: relative;
+}
+.month-pill:hover:not(:disabled) { color: var(--accent-mid); background: var(--accent-pale) }
+.month-pill.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent-mid));
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(122,79,0,.35);
+}
+.month-pill.planificacion {
+  color: var(--muted); background: rgba(255,255,255,.5);
+  border: 1px dashed var(--line);
+  font-style: italic;
+}
+.month-pill.planificacion.active {
+  background: rgba(122,79,0,.12); color: var(--accent);
+  border: 1px dashed var(--accent-soft); font-style: italic;
+  box-shadow: none;
+}
+.month-pill:disabled { opacity: .32; cursor: default }
 
-    .table-card{padding:18px 20px;margin-bottom:20px}
-    table{width:100%;border-collapse:collapse}
-    th,td{
-      padding:12px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top;
-      font-size:.92rem;
-    }
-    th{
-      color:var(--muted);font-size:.77rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;
-    }
-    .small{font-size:.82rem;color:var(--muted)}
+/* Tip de planificación sobre pill */
+.pill-tip {
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,22,8,.88); color: #fff;
+  padding: 4px 8px; border-radius: 6px; font-size: .65rem;
+  white-space: nowrap; pointer-events: none; opacity: 0;
+  transition: opacity .15s; z-index: 10;
+}
+.month-pill.planificacion:hover .pill-tip { opacity: 1 }
 
-    .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .note-card{padding:20px 22px}
-    .note-block{
-      white-space:pre-wrap;line-height:1.72;color:var(--text-2);font-size:.92rem;
-      min-height:120px;
-    }
-    .method-card{
-      margin-top:16px;padding:20px 22px;
-      background:linear-gradient(135deg,#ffffff 0%,#f2f7ff 65%,#e7f3ff 100%);
-    }
+/* Badge estado global */
+.estado-global {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 999px;
+  font-size: .78rem; font-weight: 700; white-space: nowrap;
+  border: 1.5px solid transparent; transition: all .3s ease;
+}
+.estado-global .dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  animation: pdot 2.5s ease-in-out infinite;
+}
+@keyframes pdot { 0%,100%{opacity:1} 50%{opacity:.4} }
+.estado-global.al-dia { background: var(--al-dia-pale); color: var(--al-dia); border-color: rgba(21,122,80,.2) }
+.estado-global.al-dia .dot { background: var(--al-dia) }
+.estado-global.seguimiento { background: var(--seguimiento-pale); color: var(--seguimiento); border-color: rgba(122,98,0,.2) }
+.estado-global.seguimiento .dot { background: var(--seguimiento) }
+.estado-global.rezago { background: var(--rezago-pale); color: var(--rezago); border-color: rgba(143,28,28,.2) }
+.estado-global.rezago .dot { background: var(--rezago) }
+.estado-global.sin-actividad { background: var(--sin-actividad-soft); color: var(--sin-actividad); border-color: rgba(107,96,80,.2) }
+.estado-global.sin-actividad .dot { background: var(--sin-actividad) }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px }
 
-    @media (max-width:1120px){
-      .hero,.intro-grid,.notes-grid{grid-template-columns:1fr}
-      .hero-grid,.kpi-grid{grid-template-columns:repeat(2,1fr)}
-      .toolbar{grid-template-columns:1fr 1fr}
-    }
-    @media (max-width:720px){
-      .wrap{padding:20px 14px 48px}
-      .hero-main h1{font-size:2rem}
-      .hero-grid,.annual-goals-grid,.kpi-grid,.toolbar{grid-template-columns:1fr}
-      .table-card{overflow:auto}
-      th,td{min-width:120px}
-    }
-  </style>
+/* ── BANNER planificación (solo meses sin ciclo activo) ── */
+.banner-planif {
+  background: linear-gradient(135deg, var(--accent-pale), #fff9e8);
+  border: 1.5px solid var(--accent-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px 20px; margin-bottom: 16px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.banner-planif-icon { font-size: 1.4rem; flex-shrink: 0; line-height: 1 }
+.banner-planif-txt { font-size: .9rem; color: var(--text-2); line-height: 1.65 }
+.banner-planif-txt strong { color: var(--accent); }
+
+/* ── WRAP ── */
+.wrap { max-width: 1340px; margin: 0 auto; padding: 28px 24px 80px; position: relative; z-index: 1 }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1.5px solid var(--line-soft);
+  border-radius: var(--radius);
+  box-shadow: var(--sh-sm);
+  transition: transform .3s cubic-bezier(.25,.46,.45,.94), box-shadow .3s, border-color .2s;
+}
+.card:hover { transform: translateY(-3px); box-shadow: var(--sh-hover); border-color: var(--accent-soft) }
+
+/* ── HERO ── */
+.hero { display: grid; grid-template-columns: 1.6fr 1fr; gap: 16px; margin-bottom: 20px }
+.hero-main {
+  padding: 36px 40px 32px;
+  background: linear-gradient(135deg, #ffffff 0%, #fdf5e0 55%, #fae8b8 100%);
+  position: relative; overflow: hidden;
+}
+.hero-main::before {
+  content: '';
+  position: absolute; right: -80px; top: -80px;
+  width: 340px; height: 340px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,136,10,.12) 0%, rgba(122,79,0,.05) 50%, transparent 70%);
+  pointer-events: none;
+}
+.program-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .7rem; font-weight: 800; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--accent-mid); margin-bottom: 10px;
+}
+.program-eyebrow::before {
+  content: ''; display: block; width: 18px; height: 2px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent-mid));
+  border-radius: 2px;
+}
+.hero-main h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.9rem, 3vw, 2.7rem);
+  line-height: 1.1; letter-spacing: -.02em; margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--text) 40%, var(--accent-mid) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-narrative { font-size: .96rem; color: var(--text-2); line-height: 1.75; max-width: 58ch; margin-bottom: 20px }
+.hero-stats { display: flex; gap: 10px; flex-wrap: wrap }
+.hero-stat-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 14px; border-radius: 999px;
+  background: rgba(255,255,255,.75); border: 1.5px solid var(--line-soft);
+  font-size: .79rem; font-weight: 600; color: var(--text-2);
+  transition: all .2s;
+}
+.hero-stat-pill:hover { background: var(--accent-pale); border-color: var(--accent-soft); color: var(--accent) }
+.hero-stat-pill strong { font-family: var(--font-mono); color: var(--accent-mid); font-size: .84rem }
+
+/* HERO SIDE — ciclo EPC */
+.hero-side {
+  padding: 26px 22px;
+  background: linear-gradient(160deg, #fdf2d0 0%, #f8e8a8 50%, #faf0d0 100%);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.ciclo-label {
+  font-size: .69rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted);
+}
+/* Barra de ciclo — 8 meses de marzo a octubre */
+.ciclo-track {
+  display: flex; gap: 5px; align-items: center;
+}
+.ciclo-dot {
+  flex: 1; height: 28px; border-radius: 6px;
+  background: rgba(255,255,255,.5); border: 1.5px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .62rem; font-weight: 700; color: var(--muted);
+  transition: all .3s;
+}
+.ciclo-dot.cumplido {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  border-color: var(--accent); color: #fff;
+  box-shadow: 0 2px 8px rgba(122,79,0,.3);
+}
+.ciclo-dot.activo {
+  background: rgba(200,136,10,.18); border-color: var(--accent-light);
+  color: var(--accent); animation: ciclo-pulse 2s ease-in-out infinite;
+}
+@keyframes ciclo-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(200,136,10,.3) }
+  50%      { box-shadow: 0 0 0 4px rgba(200,136,10,.12) }
+}
+.ciclo-meses {
+  display: flex; gap: 5px; font-size: .6rem; color: var(--muted);
+  font-weight: 700; letter-spacing: .02em;
+}
+.ciclo-meses span { flex: 1; text-align: center }
+
+/* Gauge mini */
+.gauge-wrap { display: flex; flex-direction: column; align-items: center }
+.gauge-lbl-top { font-size: .68rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; text-align: center }
+.gauge-svg { display: block; overflow: visible }
+.gauge-track { fill: none; stroke: var(--line); stroke-width: 11; stroke-linecap: round }
+.gauge-fill {
+  fill: none; stroke: url(#gaugeGradEpc); stroke-width: 11; stroke-linecap: round;
+  stroke-dasharray: 251.2; stroke-dashoffset: 251.2;
+  transition: stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1);
+  transform: rotate(-90deg); transform-origin: 50px 50px;
+}
+.gauge-cval { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500; fill: var(--accent); text-anchor: middle; dominant-baseline: central }
+.gauge-clbl { font-size: .6rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; fill: var(--muted); text-anchor: middle; dominant-baseline: central }
+
+/* KPI ESTRATÉGICOS */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 13px; margin-bottom: 20px }
+.kpi-card {
+  padding: 20px 18px 18px;
+  border-top: 3px solid var(--line-soft);
+  position: relative; overflow: hidden; cursor: zoom-in;
+  transition: transform .25s cubic-bezier(.25,.46,.45,.94), box-shadow .25s, border-color .2s;
+}
+.kpi-card:hover { transform: translateY(-4px); box-shadow: var(--sh-lg) }
+.kpi-card.al-dia { border-top-color: var(--al-dia) }
+.kpi-card.seguimiento { border-top-color: var(--seguimiento) }
+.kpi-card.rezago { border-top-color: var(--rezago) }
+.kpi-card.sin-actividad { border-top-color: var(--sin-actividad) }
+
+.kpi-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 10px }
+.kpi-nombre { font-size: .71rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); line-height: 1.35 }
+.sem {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: .64rem; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
+  white-space: nowrap; flex-shrink: 0;
+}
+.sem::before { content: '●'; font-size: .55em }
+.sem.al-dia { background: var(--al-dia-soft); color: var(--al-dia) }
+.sem.seguimiento { background: var(--seguimiento-soft); color: var(--seguimiento) }
+.sem.rezago { background: var(--rezago-soft); color: var(--rezago) }
+.sem.sin-actividad { background: var(--sin-actividad-soft); color: var(--sin-actividad) }
+
+.kpi-valor {
+  font-family: var(--font-mono); font-size: 2rem; font-weight: 500;
+  line-height: 1; letter-spacing: -.03em; color: var(--text); margin-bottom: 3px;
+  transition: color .3s;
+}
+.kpi-unidad { font-size: .76rem; color: var(--muted); margin-bottom: 10px }
+
+/* Barra de ciclo para monthly_recurrent */
+.kpi-ciclo {
+  display: flex; gap: 3px; margin-bottom: 8px;
+}
+.kpi-ciclo-dot {
+  flex: 1; height: 5px; border-radius: 999px;
+  background: var(--line-soft);
+  transition: background .4s;
+}
+.kpi-ciclo-dot.done { background: linear-gradient(90deg, var(--accent-light), var(--accent)) }
+.kpi-ciclo-dot.now { background: var(--accent-soft); border: 1px solid var(--accent-light) }
+
+.kpi-meta-txt {
+  font-size: .73rem; color: var(--muted);
+  display: flex; justify-content: space-between;
+}
+.kpi-meta-txt strong { color: var(--text-2); font-weight: 600 }
+
+/* Barra dual para annual_cumulative */
+.kpi-barra-wrap {
+  position: relative; height: 6px; border-radius: 999px;
+  background: var(--line-soft); overflow: hidden; margin-bottom: 8px;
+}
+.kpi-barra-esp {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px;
+  background: repeating-linear-gradient(90deg, var(--line) 0, var(--line) 4px, transparent 4px, transparent 8px);
+}
+.kpi-barra-real {
+  position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-light), var(--accent));
+  transition: width .8s cubic-bezier(.4,0,.2,1);
+}
+.kpi-barra-real.al-dia { background: linear-gradient(90deg, #1d9e68, var(--al-dia)) }
+.kpi-barra-real.seguimiento { background: linear-gradient(90deg, #c8960a, var(--seguimiento)) }
+.kpi-barra-real.rezago { background: linear-gradient(90deg, #e05c5c, var(--rezago)) }
+
+/* SECCIÓN */
+.section { margin-bottom: 20px }
+.section-head {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 12px;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--line-soft);
+}
+.section-narrative {
+  font-family: var(--font-head); font-size: 1.2rem; font-weight: 600;
+  color: var(--text); line-height: 1.25; letter-spacing: -.01em;
+}
+.section-sub { font-size: .83rem; color: var(--muted); margin-top: 2px }
+
+.grid-2 { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px }
+.grid-2-eq { display: grid; grid-template-columns: 1fr 1fr; gap: 16px }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px }
+
+.panel { padding: 22px 24px }
+.panel-accent { border-top: 3px solid var(--accent-mid) }
+.panel h3 {
+  font-family: var(--font-head); font-size: 1rem; font-weight: 600;
+  color: var(--text); margin-bottom: 4px; letter-spacing: -.01em;
+}
+.panel-sub { font-size: .82rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5 }
+
+/* Diplomado — card especial */
+.diplomado-card {
+  background: linear-gradient(135deg, #fff9ec, #fdf0c8, #fae8a8);
+  border: 2px solid var(--accent-soft);
+  border-radius: var(--radius); padding: 24px 28px;
+  position: relative; overflow: hidden;
+}
+.diplomado-card::before {
+  content: '🎓';
+  position: absolute; right: 20px; top: 16px;
+  font-size: 2.8rem; opacity: .18;
+}
+.diplomado-title {
+  font-family: var(--font-head); font-size: 1.1rem; font-weight: 600;
+  color: var(--accent); margin-bottom: 4px;
+}
+.diplomado-sub { font-size: .82rem; color: var(--muted); margin-bottom: 16px }
+.diplomado-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px }
+.diplomado-stat {
+  padding: 12px 14px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.7); border: 1.5px solid var(--accent-soft);
+  text-align: center;
+}
+.diplomado-stat-val {
+  font-family: var(--font-mono); font-size: 1.5rem; font-weight: 500;
+  color: var(--accent); line-height: 1;
+}
+.diplomado-stat-lbl {
+  font-size: .66rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--muted); margin-top: 4px;
+}
+
+/* Actividades de campo — lista visual */
+.act-list { display: grid; gap: 8px }
+.act-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 14px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1.5px solid var(--line-soft);
+  transition: all .2s;
+}
+.act-item:hover { background: var(--accent-pale); border-color: var(--accent-soft); transform: translateX(3px) }
+.act-left { display: flex; align-items: center; gap: 10px }
+.act-icon { font-size: .95rem; width: 24px; text-align: center; flex-shrink: 0 }
+.act-nombre { font-size: .85rem; font-weight: 600; color: var(--text-2) }
+.act-val {
+  font-family: var(--font-mono); font-size: .9rem; font-weight: 500;
+  color: var(--accent); background: var(--accent-pale);
+  padding: 2px 10px; border-radius: 999px; flex-shrink: 0;
+}
+
+/* Narrativa del período */
+.narrativa-card {
+  background: linear-gradient(135deg, var(--accent-pale), rgba(255,255,255,.7));
+  border: 1.5px solid var(--accent-soft); border-radius: var(--radius);
+  padding: 24px 28px;
+}
+.narrativa-tag {
+  font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--accent-mid); margin-bottom: 8px;
+}
+.narrativa-texto {
+  font-family: var(--font-head); font-size: 1.02rem; line-height: 1.75;
+  color: var(--text-2); font-style: italic;
+}
+.narrativa-alerta {
+  margin-top: 14px; padding: 12px 16px;
+  background: rgba(255,255,255,.6); border-left: 3px solid var(--accent-light);
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  font-size: .85rem; color: var(--text-2); line-height: 1.65;
+}
+
+/* Alertas unificadas */
+.alertas-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-top: 4px }
+.alerta {
+  padding: 11px 15px; border-radius: var(--radius-sm);
+  border-left: 3px solid; font-size: .86rem; line-height: 1.6;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.alerta-icon { font-size: .9rem; flex-shrink: 0; margin-top: 1px }
+.alerta strong { font-weight: 600 }
+.alerta.al-dia { background: var(--al-dia-pale); border-color: var(--al-dia); color: #0d4d32 }
+.alerta.seguimiento { background: var(--seguimiento-pale); border-color: var(--seguimiento); color: #5a3e00 }
+.alerta.rezago { background: var(--rezago-pale); border-color: var(--rezago); color: #5c1212 }
+.alerta.informacion { background: var(--accent-pale); border-color: var(--accent-light); color: var(--accent) }
+@media (max-width: 700px) { .alertas-grid { grid-template-columns: 1fr } }
+
+/* Gráfica de barras */
+.chart-host { cursor: zoom-in }
+.chart-host:hover { outline: 2px solid var(--accent-soft); border-radius: var(--radius-sm) }
+
+/* Tabla */
+.tbl-wrap { overflow: auto; border-radius: var(--radius-sm); border: 1.5px solid var(--line-soft) }
+table { width: 100%; border-collapse: collapse; font-size: .82rem }
+th {
+  background: var(--surface); color: var(--accent-mid);
+  font-size: .67rem; font-weight: 700; text-transform: uppercase; letter-spacing: .09em;
+  padding: 9px 12px; border-bottom: 2px solid var(--line); text-align: left; white-space: nowrap;
+  position: sticky; top: 0;
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--line-soft); vertical-align: middle; white-space: nowrap }
+tr:last-child td { border-bottom: none }
+tbody tr { transition: background .15s }
+tbody tr:hover td { background: var(--accent-pale) }
+td.num { font-family: var(--font-mono); text-align: right }
+td.destacado { font-weight: 600; color: var(--text-2) }
+
+/* Divider */
+.divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 24px 0 16px;
+  color: var(--accent-mid); font-size: .68rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .1em;
+}
+.divider::before, .divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--line), transparent);
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed; z-index: 999;
+  background: rgba(30,22,8,.92); color: #fff;
+  padding: 9px 13px; border-radius: var(--radius-sm);
+  font-size: .8rem; line-height: 1.55; pointer-events: none;
+  opacity: 0; transition: opacity .15s;
+  max-width: 230px; backdrop-filter: blur(6px); box-shadow: var(--sh-lg);
+}
+.tooltip.visible { opacity: 1 }
+.tooltip strong { color: #fcd87a }
+.tooltip .t-sem { font-size: .68rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; margin-top: 3px }
+.tooltip .t-sem.al-dia { color: #6ee7b7 }
+.tooltip .t-sem.seguimiento { color: #fcd34d }
+.tooltip .t-sem.rezago { color: #fca5a5 }
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(20,14,2,.6);
+  backdrop-filter: blur(8px) saturate(1.3);
+  -webkit-backdrop-filter: blur(8px) saturate(1.3);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .28s cubic-bezier(.4,0,.2,1);
+}
+.modal-overlay.open { opacity: 1; pointer-events: all }
+.modal-box {
+  background: var(--card); border-radius: var(--radius);
+  box-shadow: 0 32px 80px rgba(20,14,2,.35), 0 8px 24px rgba(20,14,2,.15);
+  width: 100%; max-width: 760px; max-height: 88vh;
+  overflow: hidden; display: flex; flex-direction: column;
+  transform: scale(.94) translateY(12px);
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-overlay.open .modal-box { transform: scale(1) translateY(0) }
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 24px 14px; border-bottom: 1px solid var(--line-soft); flex-shrink: 0;
+}
+.modal-title { font-family: var(--font-head); font-size: 1.1rem; font-weight: 600; color: var(--text) }
+.modal-sub { font-size: .82rem; color: var(--muted); margin-top: 2px }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%; border: none;
+  background: var(--surface); color: var(--muted); font-size: 1.1rem;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s; flex-shrink: 0;
+}
+.modal-close:hover { background: var(--rezago-soft); color: var(--rezago) }
+.modal-body { padding: 24px; overflow-y: auto; flex: 1 }
+.modal-kpi-big { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px }
+.modal-valor-big { font-family: var(--font-mono); font-size: 3.5rem; font-weight: 500; line-height: 1; letter-spacing: -.04em; color: var(--text) }
+.modal-unidad-big { font-size: 1rem; color: var(--muted); font-weight: 500 }
+.modal-stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 14px }
+.modal-stat { padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface); border: 1.5px solid var(--line-soft); text-align: center }
+.modal-stat-val { font-family: var(--font-mono); font-size: 1.3rem; color: var(--text); font-weight: 500 }
+.modal-stat-lbl { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-top: 3px }
+.modal-barra-wrap { height: 10px; border-radius: 999px; background: var(--line-soft); overflow: hidden; margin: 14px 0 10px; position: relative }
+.modal-barra-esp { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; background: repeating-linear-gradient(90deg, var(--line) 0, var(--line) 4px, transparent 4px, transparent 8px) }
+.modal-barra-real { position: absolute; left: 0; top: 0; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent-light), var(--accent)); transition: width 1s cubic-bezier(.4,0,.2,1) }
+.modal-nota { padding: 11px 15px; border-radius: var(--radius-sm); background: var(--accent-pale); border-left: 3px solid var(--accent-light); font-size: .84rem; color: var(--text-2); line-height: 1.65; margin-top: 14px }
+
+/* Loading */
+.loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 60px; color: var(--muted) }
+.spinner { width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent-mid); animation: spin 1s linear infinite }
+@keyframes spin { to { transform: rotate(360deg) } }
+
+/* Animaciones entrada */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:none } }
+.s1 { animation: fadeUp .45s .05s ease both }
+.s2 { animation: fadeUp .45s .12s ease both }
+.s3 { animation: fadeUp .45s .19s ease both }
+.s4 { animation: fadeUp .45s .26s ease both }
+.s5 { animation: fadeUp .45s .33s ease both }
+.s6 { animation: fadeUp .45s .40s ease both }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .hero, .grid-2 { grid-template-columns: 1fr }
+  .kpi-grid { grid-template-columns: repeat(2,1fr) }
+  .grid-2-eq { grid-template-columns: 1fr }
+  .diplomado-stats { grid-template-columns: repeat(2,1fr) }
+}
+@media (max-width: 700px) {
+  .wrap { padding: 16px 14px 60px }
+  .hero-main { padding: 24px 20px 20px }
+  .topbar { padding: 8px 14px }
+  .kpi-grid { grid-template-columns: 1fr }
+}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="topbar-left">
-        <a class="back" href="./index.html">
-          <span class="back-arrow">←</span>
-          <span>Volver al portal</span>
-        </a>
-        <div class="program-pill">AALA · EPC</div>
+
+<div id="tooltip" class="tooltip"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modalTitle">—</div>
+        <div class="modal-sub" id="modalSub">—</div>
       </div>
-      <div class="topbar-right">
-        <div class="program-pill">Cierre oficial 08A</div>
-      </div>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a href="./index.html" class="back">
+    <span class="back-arrow">&#8592;</span>
+    Volver al inicio
+  </a>
+  <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
+  <div class="topbar-right">
+    <div class="estado-global sin-actividad" id="estadoGlobal">
+      <span class="dot"></span>
+      <span id="estadoLabel">Cargando…</span>
+    </div>
+  </div>
+</nav>
+
+<!-- CONTENIDO -->
+<main class="wrap" id="mainWrap">
+  <div class="loading" id="loadingState">
+    <div class="spinner"></div>
+    <span>Cargando datos del programa…</span>
+  </div>
+</main>
+
+<script>
+/* ═══════════════════════════════════════
+   RUTAS DE DATOS
+═══════════════════════════════════════ */
+const PATHS = {
+  total:       './data/educando_para_conservar/total_mes.csv',
+  indicadores: './data/educando_para_conservar/institucional_indicadores.csv',
+  metadata:    './data/educando_para_conservar/metadata_publicacion.csv',
+};
+
+/* Estado global */
+let state = { periodo: '', data: {} };
+
+/* ═══════════════════════════════════════
+   UTILIDADES
+═══════════════════════════════════════ */
+const fmt    = (n, d=0) => new Intl.NumberFormat('es-GT',{maximumFractionDigits:d,minimumFractionDigits:d}).format(+n||0);
+const fmtPct = (n) => `${fmt((+n||0)*100,0)}%`;
+const safe   = v => (v==null||v==='')?'—':String(v);
+const esc    = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const isTrue = v => String(v||'').toLowerCase()==='true';
+
+function parseCsv(url){
+  return new Promise((res,rej)=>{
+    Papa.parse(url,{download:true,header:true,skipEmptyLines:'greedy',
+      complete:r=>res((r.data||[]).map(row=>{
+        const o={};
+        for(const k of Object.keys(row)){
+          const v=row[k];
+          const n=Number(String(v).replace(/,/g,''));
+          o[k]=(v!==''&&!isNaN(n)&&v!==null)?n:v;
+        }
+        return o;
+      })),
+      error:rej
+    });
+  });
+}
+
+/* Semáforo unificado desde estatus del CSV */
+function statusFromEpc(estatus){
+  const m={verde:'al-dia',amarillo:'seguimiento',rojo:'rezago',gris:'sin-actividad'};
+  return m[String(estatus||'').toLowerCase()]||'sin-actividad';
+}
+function semLabel(cls){
+  return {
+    'al-dia':'Al día','seguimiento':'En seguimiento',
+    'rezago':'Rezago','sin-actividad':'Sin actividad'
+  }[cls]||'Sin actividad';
+}
+function semaforo(pct){
+  const p=+pct||0;
+  if(p===0) return 'sin-actividad';
+  if(p>=1)  return 'al-dia';
+  if(p>=.8) return 'seguimiento';
+  return 'rezago';
+}
+
+/* Counter animado */
+function animateCounter(el, to, dur=400){
+  const start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    el.textContent=fmt(to*ease, (to%1===0)?0:1);
+    if(p<1) requestAnimationFrame(step);
+    else el.textContent=fmt(to, (to%1===0)?0:1);
+  }
+  requestAnimationFrame(step);
+}
+
+/* Gauge */
+function setGauge(pct){
+  const el=document.getElementById('gaugeFill');
+  if(!el) return;
+  const offset=251.2-Math.min(+pct,1)*251.2;
+  el.style.strokeDashoffset=offset;
+  const vEl=document.getElementById('gaugeVal');
+  if(vEl) vEl.textContent=fmt(+pct*100,0)+'%';
+}
+
+/* Tooltip */
+const tip=document.getElementById('tooltip');
+function showTip(e,html){ tip.innerHTML=html; tip.classList.add('visible'); moveTip(e) }
+function moveTip(e){
+  const x=e.clientX+14, y=e.clientY-10;
+  tip.style.left=Math.min(x,window.innerWidth-240)+'px';
+  tip.style.top=Math.min(y,window.innerHeight-100)+'px';
+}
+function hideTip(){ tip.classList.remove('visible') }
+document.addEventListener('mousemove',e=>{ if(tip.classList.contains('visible')) moveTip(e) });
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+async function init(){
+  try{
+    const [total,indicadores,metadata]=await Promise.all(Object.values(PATHS).map(parseCsv));
+    state.data={total,indicadores,metadata:metadata[0]||{}};
+
+    const periodos=[...new Set(total.filter(r=>isTrue(r.tiene_datos_mes)).map(r=>r.periodo_clave))].sort();
+    state.periodo=periodos[periodos.length-1];
+
+    buildPills(total);
+    renderAll();
+    document.getElementById('loadingState')?.remove();
+  }catch(err){
+    console.error(err);
+    document.getElementById('mainWrap').innerHTML=
+      `<div class="loading"><p>Error al cargar los datos EPC. Verifica la ruta <code>./data/educando_para_conservar/</code></p></div>`;
+  }
+}
+
+/* ── Pills con estado planificación ── */
+const MESES=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+function buildPills(total){
+  const container=document.getElementById('monthPills');
+  container.innerHTML='';
+  const periodos=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06',
+                  '2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+
+  periodos.forEach(p=>{
+    const row=total.find(r=>r.periodo_clave===p);
+    const hasData=row&&isTrue(row.tiene_datos_mes);
+    const aporta=row&&isTrue(row.aporta_metas_epc);
+    const esPlanif=hasData&&!aporta;
+
+    const btn=document.createElement('button');
+    const mesIdx=+p.split('-')[1]-1;
+    btn.textContent=MESES[mesIdx];
+    btn.disabled=!hasData;
+
+    if(hasData){
+      btn.className='month-pill'+(esPlanif?' planificacion':'')+(p===state.periodo?' active':'');
+      if(esPlanif){
+        const tip=document.createElement('span');
+        tip.className='pill-tip';
+        tip.textContent='Mes de planificación';
+        btn.appendChild(tip);
+      }
+      btn.onclick=()=>{
+        state.periodo=p;
+        document.querySelectorAll('.month-pill').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        renderAll();
+      };
+    } else {
+      btn.className='month-pill';
+    }
+    container.appendChild(btn);
+  });
+}
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function renderAll(){
+  const {total,indicadores}=state.data;
+  const p=state.periodo;
+  const totRow=total.find(r=>r.periodo_clave===p)||{};
+  const aporta=isTrue(totRow.aporta_metas_epc);
+  const mesCiclo=+totRow.mes_ciclo_epc||0;
+
+  const inds=indicadores.filter(r=>r.periodo_clave===p);
+  const indsEst=inds.filter(r=>r.categoria==='estrategico').sort((a,b)=>(+a.orden_dashboard||99)-(+b.orden_dashboard||99));
+  const indsTact=inds.filter(r=>r.categoria==='tactico').sort((a,b)=>(+a.orden_dashboard||99)-(+b.orden_dashboard||99));
+
+  // Estado global: promedio de indicadores activos (no gris)
+  const activos=indsEst.filter(r=>r.estatus!=='gris'&&r.estatus!=='');
+  let estadoCls='sin-actividad';
+  if(aporta&&activos.length){
+    const avg=activos.reduce((s,r)=>{
+      const pctE=+r.pct_vs_esperado||0;
+      return s+Math.min(pctE,2);
+    },0)/activos.length;
+    estadoCls=semaforo(avg);
+  }
+  const estEl=document.getElementById('estadoGlobal');
+  estEl.className='estado-global '+estadoCls;
+  document.getElementById('estadoLabel').textContent=semLabel(estadoCls);
+
+  // Gauge: meses cumplidos del ciclo / 8
+  const pctGauge=mesCiclo/8;
+  setTimeout(()=>setGauge(pctGauge),100);
+
+  document.getElementById('mainWrap').innerHTML=
+    buildHTML(totRow,inds,indsEst,indsTact,p,aporta,mesCiclo);
+
+  // Animar contadores
+  setTimeout(()=>{
+    document.querySelectorAll('.kpi-valor[data-to]').forEach(el=>{
+      animateCounter(el,+el.dataset.to);
+    });
+  },150);
+
+  attachEvents();
+}
+
+/* ═══════════════════════════════════════
+   BUILD HTML
+═══════════════════════════════════════ */
+function buildHTML(tot,inds,indsEst,indsTact,p,aporta,mesCiclo){
+  const mesIdx=+p.split('-')[1]-1;
+  const mesLabel=MESES[mesIdx]+' '+p.split('-')[0];
+  const esPlanif=!aporta;
+
+  /* Narrativa hero */
+  const narrativas={
+    '2026-01':`Enero marcó el punto de partida. Revisamos y validamos el Plan Operativo Anual, ajustamos la estrategia pedagógica y definimos las herramientas del Diplomado Juvenil 2026. También realizamos la primera jornada de siembra de tul del año en Panajachel.`,
+    '2026-02':`Febrero fue el mes de llegar antes de empezar. Realizamos <strong>${fmt(+tot.centros_induccion_mes||0)}</strong> talleres de inducción en los centros EPC, capacitamos a <strong>${fmt(+tot.docentes_induccion_mes||0)}</strong> docentes y aplicamos diagnóstico inicial a <strong>${fmt(+tot.estudiantes_diagnostico_mes||0)}</strong> estudiantes. El diplomado juvenil sumó <strong>${fmt(+tot.diplomado_marzo_inscritos_mes||0)}</strong> jóvenes inscritos.`,
+    '2026-03':`Marzo fue el arranque del ciclo EPC 2026. El módulo 1 llegó a <strong>${fmt(+tot.centros_mes||0)}</strong> centros educativos con <strong>${fmt(+tot.docentes_mes||0)}</strong> docentes y <strong>${fmt(+tot.estudiantes_epc_mes||0)}</strong> estudiantes beneficiados en <strong>${fmt(+tot.municipios_mes||0)}</strong> municipios del lago.`,
+  };
+  const narrativa=narrativas[p]||`Seguimiento del período ${mesLabel} del Programa Educando para Conservar.`;
+
+  /* Hero stats */
+  const heroStats=aporta?[
+    {lbl:'Docentes', val:fmt(+tot.docentes_mes||0)},
+    {lbl:'Estudiantes', val:fmt(+tot.estudiantes_epc_mes||0)},
+    {lbl:'Centros', val:fmt(+tot.centros_mes||0)},
+    {lbl:'Municipios', val:fmt(+tot.municipios_mes||0)},
+  ]:[
+    {lbl:'Centros inductados', val:fmt(+tot.centros_induccion_mes||0)},
+    {lbl:'Docentes inductados', val:fmt(+tot.docentes_induccion_mes||0)},
+    {lbl:'Coordinaciones', val:fmt(+tot.coordinaciones_clave_mes||0)},
+  ];
+
+  /* Banner planificación */
+  const bannerPlanif=esPlanif?`
+  <div class="banner-planif">
+    <span class="banner-planif-icon">📅</span>
+    <div class="banner-planif-txt">
+      <strong>${MESES[mesIdx]} es un mes de planificación</strong> — no aporta a los KPIs recurrentes del ciclo EPC (marzo–octubre).
+      Los datos de este mes documentan la preparación del terreno para el ciclo pedagógico.
+    </div>
+  </div>`:'';
+
+  /* KPI cards */
+  const kpiHTML=indsEst.slice(0,4).map(ind=>buildKpiCard(ind,mesCiclo,p,aporta)).join('');
+
+  /* Ciclo EPC track — 8 meses */
+  const mesesCiclo=['Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'];
+  const cicloDotsTrack=mesesCiclo.map((m,i)=>{
+    const cls=i<mesCiclo?'cumplido':(i===mesCiclo&&aporta?'activo':'');
+    return `<div class="ciclo-dot ${cls}">${i<mesCiclo?'✓':''}</div>`;
+  }).join('');
+  const cicloMesesRow=mesesCiclo.map(m=>`<span>${m}</span>`).join('');
+
+  /* Actividades de campo */
+  const actividades=[
+    {icon:'🌿',nom:'Poda / mantenimiento de tul',val:+tot.act_tul_mes||0},
+    {icon:'🌳',nom:'Campañas de reforestación',val:+tot.act_reforestacion_mes||0},
+    {icon:'🎪',nom:'Ferias ambientales',val:+tot.act_ferias_mes||0},
+    {icon:'🎒',nom:'Giras educativas',val:+tot.act_giras_mes||0},
+    {icon:'🌱',nom:'Huertos escolares',val:+tot.act_huertos_mes||0},
+    {icon:'🧹',nom:'Campañas de limpieza',val:+tot.act_limpiezas_mes||0},
+    {icon:'🎨',nom:'Murales pedagógicos',val:+tot.act_murales_mes||0},
+  ].filter(a=>a.val>0);
+
+  const actHTML=actividades.length
+    ? `<div class="act-list">${actividades.map(a=>`
+      <div class="act-item">
+        <div class="act-left">
+          <span class="act-icon">${a.icon}</span>
+          <span class="act-nombre">${esc(a.nom)}</span>
+        </div>
+        <span class="act-val">${fmt(a.val)}</span>
+      </div>`).join('')}</div>`
+    : `<div class="alerta informacion"><span class="alerta-icon">📋</span><span>Sin actividades de campo registradas en este período.</span></div>`;
+
+  /* Diplomado */
+  const diplHTML=buildDiplomado(tot,p);
+
+  /* Gráfica tácticos */
+  const grafTactHTML=buildGrafTacticos(indsTact);
+
+  /* Narrativa del período (texto del CSV) */
+  const logros=String(tot.logros_texto||'');
+  const alertasTxt=String(tot.alertas_texto||'');
+  const narrativaCard=`
+  <div class="narrativa-card">
+    <div class="narrativa-tag">El programa reporta · ${mesLabel}</div>
+    <div class="narrativa-texto">${esc(logros)}</div>
+    ${alertasTxt?`<div class="narrativa-alerta">${esc(alertasTxt)}</div>`:''}
+  </div>`;
+
+  /* Alertas unificadas */
+  const alertasHTML=buildAlertas(indsEst,aporta,mesCiclo);
+
+  return `
+${bannerPlanif}
+
+<!-- HERO -->
+<section class="hero s1">
+  <article class="card hero-main">
+    <div class="program-eyebrow">Programa Educando para Conservar · AALA</div>
+    <h1>Sembrando conciencia ambiental en el lago</h1>
+    <p class="hero-narrative">${narrativa}</p>
+    <div class="hero-stats">
+      <span class="hero-stat-pill">Corte <strong>${mesLabel}</strong></span>
+      ${heroStats.map(s=>`<span class="hero-stat-pill"><strong>${s.val}</strong> ${esc(s.lbl)}</span>`).join('')}
+    </div>
+  </article>
+
+  <aside class="card hero-side s2">
+    <div class="ciclo-label">Ciclo EPC 2026 — avance mensual</div>
+    <div class="ciclo-track">${cicloDotsTrack}</div>
+    <div class="ciclo-meses">${cicloMesesRow}</div>
+
+    <div class="gauge-wrap" style="margin-top:10px">
+      <div class="gauge-lbl-top">Meses del ciclo cumplidos</div>
+      <svg class="gauge-svg" width="110" height="110" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="gaugeGradEpc" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#c8880a"/>
+            <stop offset="100%" stop-color="#7a4f00"/>
+          </linearGradient>
+        </defs>
+        <circle class="gauge-track" cx="50" cy="50" r="40"/>
+        <circle class="gauge-fill" id="gaugeFill" cx="50" cy="50" r="40"/>
+        <text class="gauge-cval" id="gaugeVal" x="50" y="44">0%</text>
+        <text class="gauge-clbl" x="50" y="60">del ciclo</text>
+      </svg>
     </div>
 
-    <section class="hero">
-      <article class="hero-main card">
-        <div class="hero-eyebrow">Programa 2026</div>
-        <h1>Educando para Conservar</h1>
-        <p id="heroSubtitle">Cargando información del programa...</p>
+    <div style="text-align:center;font-size:.75rem;color:var(--muted)">
+      <strong style="color:var(--accent-mid)">${mesCiclo}</strong> de 8 meses activos
+      ${aporta?'· Ciclo en curso':'· Aún no inicia el ciclo'}
+    </div>
+  </aside>
+</section>
 
-        <div class="hero-grid" id="heroStats">
-          <div class="hero-stat"><small>Cargando</small><strong>—</strong></div>
-        </div>
-      </article>
-
-      <aside class="hero-side card">
-        <div class="hero-side-label">Resumen ejecutivo</div>
-        <div id="heroStatus" class="status-badge status-muted">Sin evaluación</div>
-        <div class="mini-list" id="heroMiniList">
-          <div class="mini-item"><span class="muted">Cargando</span><strong>—</strong></div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="intro-grid">
-      <article class="card intro-card intro-copy">
-        <h2 class="section-title" id="heroPeriod">Educando para Conservar</h2>
-        <p>
-          Este tablero usa como <strong>fuente oficial de KPIs</strong> el cierre mensual consolidado de la hoja 08A.
-          La cobertura pedagógica se interpreta como cumplimiento mensual del estándar de docentes, centros,
-          municipios y estudiantes; las actividades de campo se leen como acumulado contra un esperado al corte;
-          y los hitos del diplomado se muestran con ventanas de exigibilidad para evitar falsos rezagos.
-        </p>
-        <p>
-          Los meses sin datos reales ya no se publican como si fueran cierres válidos. Por eso, el período por
-          defecto siempre debe abrir en el <strong>último mes efectivamente cargado</strong>, no en meses futuros vacíos.
-        </p>
-      </article>
-
-      <article class="card intro-card">
-        <h2 class="section-title">Lectura anual de metas</h2>
-        <div class="annual-goals-grid" id="annualGoalsGrid">
-          <div class="goal-card">
-            <small>Cargando</small>
-            <strong>Metas</strong>
-            <div class="goal-meta">—</div>
-            <div class="goal-progress">—</div>
-          </div>
-        </div>
-        <div class="goal-note" id="goalNote">Cargando criterio metodológico...</div>
-      </article>
-    </section>
-
-    <section class="toolbar">
-      <article class="card filter">
-        <label for="periodSelect">Período</label>
-        <select id="periodSelect"></select>
-      </article>
-
-      <article class="card filter">
-        <label>Programa</label>
-        <div class="pill">Educando para Conservar</div>
-      </article>
-
-      <article class="card filter">
-        <label>Fuente</label>
-        <div class="pill">Cierre mensual 08A</div>
-      </article>
-    </section>
-
-    <section class="kpi-section">
-      <h2 class="section-title" style="margin-bottom:12px">Indicadores estratégicos</h2>
-      <div class="kpi-grid" id="kpiGrid">
-        <div class="kpi-card">
-          <div class="kpi-title">Cargando</div>
-          <div class="kpi-value">—</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="card table-card">
-      <h2 class="section-title">Indicadores del período</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Indicador</th>
-            <th>Lectura</th>
-            <th>Valor mes</th>
-            <th>Acumulado</th>
-            <th>Esperado al corte</th>
-            <th>% vs esperado</th>
-            <th>Estatus</th>
-          </tr>
-        </thead>
-        <tbody id="indicatorTable">
-          <tr><td colspan="7">Cargando...</td></tr>
-        </tbody>
-      </table>
-    </section>
-
-    <section class="notes-grid">
-      <article class="card note-card">
-        <h2 class="section-title">Logros y alertas</h2>
-        <div class="note-block" id="logrosBox">Cargando...</div>
-        <div style="height:14px"></div>
-        <div class="note-block" id="alertasBox">Cargando...</div>
-      </article>
-
-      <article class="card note-card">
-        <h2 class="section-title">Fuente y criterio</h2>
-        <div class="note-block" id="fuenteBox">Cargando...</div>
-      </article>
-    </section>
-
-    <section class="card method-card">
-      <h2 class="section-title">Metodología de lectura</h2>
-      <div class="note-block" id="methodBox">Cargando...</div>
-    </section>
+<!-- KPIs ESTRATÉGICOS -->
+<section class="section s3">
+  <div class="section-head">
+    <div>
+      <div class="section-narrative">Indicadores estratégicos del ciclo</div>
+      <div class="section-sub">Meses del ciclo cumplidos por indicador · ${mesLabel}</div>
+    </div>
   </div>
+  <div class="kpi-grid">${kpiHTML}</div>
+</section>
 
-  <script src="./epc.js"></script>
+<!-- ACTIVIDADES + DIPLOMADO -->
+<div class="divider s4">Actividad del período</div>
+<section class="section s4">
+  <div class="grid-2">
+    <article class="card panel">
+      <h3>Actividades de campo</h3>
+      <p class="panel-sub">Acciones realizadas en territorio durante ${mesLabel}.</p>
+      ${actHTML}
+      ${+tot.estudiantes_actividades_campo_mes>0?`
+      <div class="alerta informacion" style="margin-top:10px">
+        <span class="alerta-icon">👥</span>
+        <span><strong>${fmt(+tot.estudiantes_actividades_campo_mes)}</strong> estudiantes participaron en actividades de campo este mes.</span>
+      </div>`:''}
+    </article>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      ${diplHTML}
+    </div>
+  </div>
+</section>
+
+<!-- INDICADORES TÁCTICOS -->
+<div class="divider s5">Indicadores tácticos acumulados</div>
+<section class="section s5">
+  <div class="grid-2">
+    <article class="card panel panel-accent">
+      <h3>¿Cómo vamos en el año?</h3>
+      <p class="panel-sub">Avance acumulado de actividades tácticas frente a la meta anual. Línea punteada = ritmo esperado al corte.</p>
+      <div class="chart-host" id="grafTact">${grafTactHTML}</div>
+    </article>
+    <article class="card panel">
+      <h3>Todos los indicadores al corte</h3>
+      <p class="panel-sub">Estratégicos y tácticos · ${mesLabel}.</p>
+      <div class="tbl-wrap">${buildTabla(indsEst,indsTact)}</div>
+    </article>
+  </div>
+</section>
+
+<!-- LECTURA -->
+<div class="divider s6">Lectura del período</div>
+<section class="section s6">
+  ${narrativaCard}
+  <div style="height:16px"></div>
+  <article class="card panel">
+    <h3>El programa nos dice</h3>
+    <p class="panel-sub">Señales clave de los indicadores en ${mesLabel}.</p>
+    <div class="alertas-grid">${alertasHTML}</div>
+  </article>
+</section>
+`;
+}
+
+/* ── KPI Card estratégico ── */
+function buildKpiCard(ind, mesCiclo, p, aporta){
+  const modelo=ind.modelo_medicion||'';
+  const estCls=statusFromEpc(ind.estatus);
+  const mesIdx=+p.split('-')[1]-1;
+
+  // Para monthly_recurrent: medir meses cumplidos del ciclo
+  if(modelo==='monthly_recurrent'){
+    const mesesCumplidos=+ind.meses_cumplidos||0;
+    const metaCiclo=+ind.meta_anual||8; // 8 meses del ciclo
+    const valMes=+ind.valor_mes||0;
+
+    // Dots del ciclo
+    const dots=Array.from({length:8},(_,i)=>
+      `<div class="kpi-ciclo-dot ${i<mesesCumplidos?'done':(i===mesesCumplidos&&aporta?'now':'')}"></div>`
+    ).join('');
+
+    return `
+<article class="card kpi-card ${estCls}" onclick="openKpiModal(${JSON.stringify({
+  nombre:ind.indicador_nombre, val:valMes, meta:+ind.meta_mes||0,
+  acum:mesesCumplidos, metaCiclo, unidad:ind.unidad||'',
+  sem:estCls, semLabel:semLabel(estCls), modelo,
+  mesNum:mesIdx+1, aporta
+})})">
+  <div class="kpi-top">
+    <div class="kpi-nombre">${esc(ind.indicador_nombre)}</div>
+    <span class="sem ${estCls}">${semLabel(estCls)}</span>
+  </div>
+  <div class="kpi-valor" data-to="${valMes}">${fmt(valMes)}</div>
+  <div class="kpi-unidad">${esc(ind.unidad||'')} este mes</div>
+  <div class="kpi-ciclo">${dots}</div>
+  <div class="kpi-meta-txt">
+    <span>Ciclo: <strong>${mesesCumplidos}/8</strong> meses</span>
+    <span>Meta mensual: ${fmt(+ind.meta_mes||0)}</span>
+  </div>
+</article>`;
+  }
+
+  // Para annual_cumulative_profiled y milestone_window
+  const val=+ind.valor_acumulado||0;
+  const meta=+ind.meta_anual||0;
+  const esperado=+ind.esperado_al_corte||0;
+  const pctAcum=meta?Math.min(val/meta,1):0;
+  const pctEsp=meta&&esperado?Math.min(esperado/meta,1):0;
+
+  return `
+<article class="card kpi-card ${estCls}" onclick="openKpiModal(${JSON.stringify({
+  nombre:ind.indicador_nombre, val, meta, acum:val,
+  unidad:ind.unidad||'', sem:estCls, semLabel:semLabel(estCls), modelo,
+  esperado, pctEsp, mesNum:mesIdx+1, aporta
+})})">
+  <div class="kpi-top">
+    <div class="kpi-nombre">${esc(ind.indicador_nombre)}</div>
+    <span class="sem ${estCls}">${semLabel(estCls)}</span>
+  </div>
+  <div class="kpi-valor" data-to="${val}">${fmt(val)}</div>
+  <div class="kpi-unidad">${esc(ind.unidad||'')} acumulados</div>
+  <div class="kpi-barra-wrap">
+    <div class="kpi-barra-esp" style="width:${Math.round(pctEsp*100)}%"></div>
+    <div class="kpi-barra-real ${estCls}" style="width:${Math.round(pctAcum*100)}%"></div>
+  </div>
+  <div class="kpi-meta-txt">
+    <span>Acum. <strong>${fmt(val)}</strong> de <strong>${fmt(meta)}</strong></span>
+    <span>${fmt(pctAcum*100,0)}% del año</span>
+  </div>
+</article>`;
+}
+
+/* ── Diplomado ── */
+function buildDiplomado(tot,p){
+  const inscritos=+tot.diplomado_marzo_inscritos_mes||0;
+  const asistentes=+tot.diplomado_marzo_asistentes_mes||0;
+  const jovenes=+tot.jovenes_formados_diplomado_mes||0;
+  const inscJun=+tot.diplomado_junio_inscritos_mes||0;
+
+  if(!inscritos&&!asistentes&&!jovenes&&!inscJun){
+    return `<article class="card panel" style="flex:1">
+      <h3>Diplomado Juvenil Ambiental</h3>
+      <p class="panel-sub">Formación de líderes juveniles del lago — cohorte 2026.</p>
+      <div class="alerta informacion">
+        <span class="alerta-icon">🎓</span>
+        <span>El diplomado inicia su ciclo activo en marzo. Los datos de inscripción se registrarán en el próximo período.</span>
+      </div>
+    </article>`;
+  }
+
+  return `<div class="diplomado-card">
+    <div class="diplomado-title">Diplomado Juvenil Ambiental</div>
+    <div class="diplomado-sub">Formación de líderes del lago · Cohorte 2026</div>
+    <div class="diplomado-stats">
+      ${inscritos?`<div class="diplomado-stat"><div class="diplomado-stat-val">${fmt(inscritos)}</div><div class="diplomado-stat-lbl">Inscritos</div></div>`:''}
+      ${asistentes?`<div class="diplomado-stat"><div class="diplomado-stat-val">${fmt(asistentes)}</div><div class="diplomado-stat-lbl">Asistentes acum.</div></div>`:''}
+      ${jovenes?`<div class="diplomado-stat"><div class="diplomado-stat-val">${fmt(jovenes)}</div><div class="diplomado-stat-lbl">Formados</div></div>`:''}
+      ${inscJun?`<div class="diplomado-stat"><div class="diplomado-stat-val">${fmt(inscJun)}</div><div class="diplomado-stat-lbl">Inscritos junio</div></div>`:''}
+    </div>
+  </div>`;
+}
+
+/* ── Gráfica tácticos horizontales ── */
+function buildGrafTacticos(indsTact){
+  const datos=indsTact.filter(r=>r.meta_anual&&+r.meta_anual>0);
+  if(!datos.length) return '<p class="panel-sub">Sin indicadores tácticos con meta definida para este período.</p>';
+
+  const W=480, trackW=W-185, labelX=185, barH=20, gap=46, pad=2;
+  const h=datos.length*gap+pad*2+10;
+  const colorMap={'al-dia':'#157a50','seguimiento':'#7a6200','rezago':'#c94747','sin-actividad':'#9a8c70'};
+
+  const bars=datos.map((ind,i)=>{
+    const val=+ind.valor_acumulado||0;
+    const meta=+ind.meta_anual||1;
+    const esp=+ind.esperado_al_corte||0;
+    const pctVis=Math.min(val/meta,1);
+    const pctEsp=Math.min(esp/meta,1);
+    const wReal=pctVis*trackW;
+    const wEsp=pctEsp*trackW;
+    const cls=statusFromEpc(ind.estatus);
+    const col=colorMap[cls]||'#a06800';
+    const lbl=String(ind.indicador_nombre||'').length>24?String(ind.indicador_nombre).slice(0,22)+'…':String(ind.indicador_nombre);
+    const y=i*gap+pad;
+    const pctLabel=val>=meta?'Meta ✓':`${fmt(pctVis*100,0)}%`;
+    const pctCol=val>=meta?'#157a50':col;
+
+    return `<g class="bar-group" style="cursor:pointer"
+      data-ind="${esc(ind.indicador_nombre)}"
+      data-val="${fmt(val)} ${esc(ind.unidad||'')}"
+      data-meta="${fmt(meta)} ${esc(ind.unidad||'')}"
+      data-pct="${val>=meta?'Meta superada':fmt(pctVis*100,0)+'% del año'}"
+      data-sem="${semLabel(cls)}">
+      <text x="0" y="${y+barH/2}" dominant-baseline="central"
+        style="font-size:10.5px;fill:#3d2e0a;font-family:'Sora',sans-serif">${esc(lbl)}</text>
+      <rect x="${labelX}" y="${y}" width="${trackW}" height="${barH}" rx="5" fill="#f0e6c8"/>
+      <rect x="${labelX}" y="${y}" width="${wEsp}" height="${barH}" rx="5"
+        fill="none" stroke="#c8b080" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <rect x="${labelX}" y="${y}" width="${wReal}" height="${barH}" rx="5" fill="${col}" opacity=".82"/>
+      ${val>=meta?`<text x="${labelX+wReal-6}" y="${y+barH/2}" dominant-baseline="central" text-anchor="end"
+        style="font-size:9px;font-weight:700;fill:#fff;font-family:'JetBrains Mono',monospace">✓</text>`:''}
+      ${val<meta?`<text x="${labelX+wReal+7}" y="${y+barH/2}" dominant-baseline="central"
+        style="font-size:10px;font-weight:700;fill:${pctCol};font-family:'JetBrains Mono',monospace">${pctLabel}</text>`:''}
+    </g>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${h}" style="overflow:visible;width:100%">${bars}</svg>`;
+}
+
+/* ── Alertas unificadas ── */
+function buildAlertas(indsEst, aporta, mesCiclo){
+  const alertas=[];
+
+  if(!aporta){
+    alertas.push({cls:'informacion',icon:'📅',
+      txt:`Este período es de <strong>planificación</strong>, no de actividad pedagógica. Los KPIs del ciclo EPC empiezan a medirse desde marzo.`});
+    return alertas.map(a=>`<div class="alerta ${a.cls}"><span class="alerta-icon">${a.icon}</span><span>${a.txt}</span></div>`).join('');
+  }
+
+  indsEst.forEach(ind=>{
+    const cls=statusFromEpc(ind.estatus);
+    const nom=ind.indicador_nombre;
+    if(cls==='al-dia'){
+      if(ind.modelo_medicion==='monthly_recurrent'){
+        alertas.push({cls:'al-dia',icon:'✅',
+          txt:`<strong>${esc(nom)}</strong> cumplió el estándar mensual. Ciclo sostenido: ${+ind.meses_cumplidos||0}/8 meses.`});
+      } else {
+        alertas.push({cls:'al-dia',icon:'✅',
+          txt:`<strong>${esc(nom)}</strong> va por encima del ritmo esperado al corte. Buen avance acumulado.`});
+      }
+    } else if(cls==='seguimiento'){
+      alertas.push({cls:'seguimiento',icon:'👀',
+        txt:`<strong>${esc(nom)}</strong> está cerca del ritmo esperado. Mantener la cadencia para no quedar atrás.`});
+    } else if(cls==='rezago'){
+      alertas.push({cls:'rezago',icon:'⚠️',
+        txt:`<strong>${esc(nom)}</strong> está por debajo del ritmo esperado. Priorizar en la próxima planificación operativa.`});
+    } else if(cls==='sin-actividad'&&ind.modelo_medicion==='milestone_window'){
+      alertas.push({cls:'informacion',icon:'🔵',
+        txt:`<strong>${esc(nom)}</strong> es un hito futuro. Se activará cuando llegue su ventana de exigibilidad.`});
+    }
+  });
+
+  if(!alertas.length){
+    alertas.push({cls:'al-dia',icon:'✅',txt:'No se detectan rezagos en los indicadores estratégicos del período.'});
+  }
+
+  return alertas.map(a=>
+    `<div class="alerta ${a.cls}"><span class="alerta-icon">${a.icon}</span><span>${a.txt}</span></div>`
+  ).join('');
+}
+
+/* ── Tabla completa ── */
+function buildTabla(indsEst, indsTact){
+  const todos=[...indsEst,...indsTact];
+  return `<table>
+    <thead><tr>
+      <th>Indicador</th><th>Categoría</th>
+      <th>Este mes</th><th>Acumulado</th><th>Meta anual</th><th>Estado</th>
+    </tr></thead>
+    <tbody>${todos.map(ind=>{
+      const cls=statusFromEpc(ind.estatus);
+      const catLabel=ind.categoria==='estrategico'
+        ?'<span class="sem al-dia" style="font-size:.6rem">Estratégico</span>'
+        :'<span class="sem sin-actividad" style="font-size:.6rem">Táctico</span>';
+      return `<tr>
+        <td class="destacado">${esc(ind.indicador_nombre)}</td>
+        <td>${catLabel}</td>
+        <td class="num">${fmt(+ind.valor_mes||0)}</td>
+        <td class="num"><strong>${fmt(+ind.valor_acumulado||0)}</strong></td>
+        <td class="num">${ind.meta_anual?fmt(+ind.meta_anual):'—'}</td>
+        <td><span class="sem ${cls}">${semLabel(cls)}</span></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+/* ── MODAL KPI ── */
+function openKpiModal(data){
+  const {nombre,val,meta,acum,metaCiclo,unidad,sem,semLabel:sLbl,modelo,esperado,pctEsp,mesNum,aporta}=data;
+  document.getElementById('modalTitle').textContent=nombre;
+  document.getElementById('modalSub').textContent=`Detalle del indicador · ${MESES[(mesNum||1)-1]} 2026`;
+
+  let bodyHTML='';
+  if(modelo==='monthly_recurrent'){
+    const dots=Array.from({length:8},(_,i)=>`
+      <div style="flex:1;height:20px;border-radius:5px;background:${i<acum?'var(--accent)':'var(--line-soft)'};
+        border:1.5px solid ${i<acum?'var(--accent)':'var(--line)'};
+        display:flex;align-items:center;justify-content:center;
+        font-size:10px;color:${i<acum?'#fff':'var(--muted)'};font-weight:700">
+        ${i<acum?'✓':''}
+      </div>`).join('');
+
+    bodyHTML=`
+      <div class="modal-kpi-big">
+        <span class="modal-valor-big">${fmt(val)}</span>
+        <span class="modal-unidad-big">${esc(unidad)} este mes</span>
+        <span class="sem ${sem}" style="margin-left:8px">${sLbl}</span>
+      </div>
+      <p style="font-size:.84rem;color:var(--muted);margin-bottom:12px">Progreso del ciclo EPC (8 meses, marzo–octubre)</p>
+      <div style="display:flex;gap:4px;margin-bottom:8px">${dots}</div>
+      <div style="text-align:center;font-size:.82rem;color:var(--muted);margin-bottom:16px">
+        <strong style="color:var(--accent)">${acum}</strong> de 8 meses del ciclo cumplidos
+      </div>
+      <div class="modal-stats-grid">
+        <div class="modal-stat">
+          <div class="modal-stat-val">${fmt(val)}</div>
+          <div class="modal-stat-lbl">Este mes</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-val">${fmt(meta||0)}</div>
+          <div class="modal-stat-lbl">Meta mensual</div>
+        </div>
+        <div class="modal-stat">
+          <div class="modal-stat-val">${acum}/8</div>
+          <div class="modal-stat-lbl">Meses ciclo</div>
+        </div>
+      </div>`;
+  } else {
+    const pctVis=meta?Math.min(acum/meta,1):0;
+    const pctE=+pctEsp||0;
+    bodyHTML=`
+      <div class="modal-kpi-big">
+        <span class="modal-valor-big">${fmt(acum)}</span>
+        <span class="modal-unidad-big">${esc(unidad)}</span>
+        <span class="sem ${sem}" style="margin-left:8px">${sLbl}</span>
+      </div>
+      <div class="modal-barra-wrap">
+        <div class="modal-barra-esp" style="width:${Math.round(pctE*100)}%"></div>
+        <div class="modal-barra-real" style="width:0%" id="modalBarraReal"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:16px">
+        <span>Ritmo esperado: ${fmt(pctE*100,0)}%</span>
+        <span>${fmt(pctVis*100,0)}% cumplido</span>
+      </div>
+      <div class="modal-stats-grid">
+        <div class="modal-stat"><div class="modal-stat-val">${fmt(acum)}</div><div class="modal-stat-lbl">Acumulado</div></div>
+        <div class="modal-stat"><div class="modal-stat-val">${meta?fmt(meta):'—'}</div><div class="modal-stat-lbl">Meta anual</div></div>
+        <div class="modal-stat"><div class="modal-stat-val">${esperado?fmt(+esperado):'—'}</div><div class="modal-stat-lbl">Esperado al corte</div></div>
+      </div>`;
+  }
+
+  document.getElementById('modalBody').innerHTML=bodyHTML;
+  document.getElementById('modalOverlay').classList.add('open');
+  setTimeout(()=>{
+    const barEl=document.getElementById('modalBarraReal');
+    if(barEl){
+      const pctVis=meta?Math.min(acum/+meta,1):0;
+      barEl.style.width=Math.round(pctVis*100)+'%';
+    }
+  },80);
+}
+
+function openChartModal(title,sub,html){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalSub').textContent=sub;
+  document.getElementById('modalBody').innerHTML=`<div style="padding:8px 0">${html}</div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal(e){ if(e.target===document.getElementById('modalOverlay')) closeModalDirect() }
+function closeModalDirect(){ document.getElementById('modalOverlay').classList.remove('open') }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModalDirect() });
+
+/* ── Eventos tooltips y clicks ── */
+function attachEvents(){
+  document.querySelectorAll('.bar-group').forEach(el=>{
+    el.addEventListener('mouseenter',e=>{
+      const semCls={
+        'Al día':'al-dia','En seguimiento':'seguimiento',
+        'Rezago':'rezago','Sin actividad':'sin-actividad'
+      }[el.dataset.sem||'']||'sin-actividad';
+      showTip(e,`<strong>${esc(el.dataset.ind||'')}</strong><br>
+        ${el.dataset.val?`Valor: <strong>${esc(el.dataset.val)}</strong><br>`:''}
+        ${el.dataset.meta?`Meta: ${esc(el.dataset.meta)}<br>`:''}
+        ${el.dataset.pct?`Avance: <strong>${esc(el.dataset.pct)}</strong><br>`:''}
+        <span class="t-sem ${semCls}">${esc(el.dataset.sem||'')}</span>`);
+    });
+    el.addEventListener('mouseleave',hideTip);
+  });
+
+  document.querySelectorAll('.chart-host').forEach(host=>{
+    const panel=host.closest('.panel');
+    if(!panel) return;
+    const title=panel.querySelector('h3')?.textContent||'';
+    const sub=panel.querySelector('.panel-sub')?.textContent||'';
+    host.addEventListener('click',()=>openChartModal(title,sub,host.innerHTML));
+  });
+}
+
+init();
+</script>
 </body>
 </html>
