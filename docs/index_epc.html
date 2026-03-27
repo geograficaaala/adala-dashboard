@@ -3,160 +3,365 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>EPC · Dashboard</title>
+  <title>Educando para Conservar · AALA</title>
   <meta name="description" content="Dashboard de Educando para Conservar">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <style>
     :root{
-      --bg:#eef4fc;
-      --card:#ffffff;
-      --line:#d6e3f3;
-      --text:#0c1d3a;
-      --muted:#6582a8;
-      --blue:#1a56a8;
-      --sky:#38b6e8;
-      --green:#157a50;
-      --yellow:#8a6500;
-      --red:#9d1b1b;
-      --gray:#6b7280;
-      --shadow:0 8px 24px rgba(10,35,80,.08);
-      --radius:18px;
+      --bg:#eef4fc; --surface:#f4f8fe; --card:#ffffff; --text:#0c1d3a; --text-2:#2a4570; --muted:#6685aa;
+      --line:#c5d8f0; --line-soft:#ddeaf8;
+      --blue:#1a56a8; --blue-mid:#2575cc; --blue-light:#4a90d9; --blue-soft:#d0e6f8; --blue-pale:#eaf3fd;
+      --sky:#38b6e8; --sky-soft:#d0f0fb;
+      --green:#157a50; --green-soft:#c5eed9; --green-pale:#eafaf2;
+      --gold:#7a5500; --gold-soft:#fef4cc;
+      --red:#8f1c1c; --red-soft:#fce8e8;
+      --shadow-sm:0 1px 4px rgba(10,35,80,.06),0 4px 16px rgba(10,35,80,.06);
+      --shadow:0 2px 12px rgba(10,35,80,.09),0 8px 32px rgba(10,35,80,.08);
+      --radius:18px; --radius-sm:11px;
+      --font-head:'Lora',Georgia,serif;
+      --font-body:'Sora',system-ui,sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
     }
 
-    *{box-sizing:border-box}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      background:linear-gradient(180deg,#eaf2fb 0%, #f4f8fd 100%);
-      color:var(--text);
+      font-family:var(--font-body);
+      background:linear-gradient(160deg,#d8eaff 0%,#eef4fc 38%,#e4f3fb 68%,#f0f6ff 100%) fixed;
+      color:var(--text);min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;
     }
-    .wrap{max-width:1200px;margin:0 auto;padding:28px}
-    .hero{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:28px;
-      margin-bottom:22px;
+    body::before{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:
+        radial-gradient(ellipse 90% 70% at 0% -5%,rgba(37,117,204,.20) 0%,transparent 50%),
+        radial-gradient(ellipse 70% 60% at 100% 110%,rgba(56,182,232,.16) 0%,transparent 50%),
+        radial-gradient(ellipse 40% 30% at 82% 8%,rgba(100,200,240,.10) 0%,transparent 50%);
     }
-    .eyebrow{
-      font-size:.8rem;
-      font-weight:700;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--blue);
-      margin-bottom:8px;
-    }
-    h1{margin:0 0 8px 0;font-size:2rem}
-    .sub{color:var(--muted);margin:0}
-    .toolbar{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin:18px 0 0;
-    }
-    select{
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      background:#fff;
-      color:var(--text);
-      font-size:14px;
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,204,.06) 1px,transparent 0);
+      background-size:38px 38px;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:16px;
-      margin-bottom:22px;
+    .wrap{max-width:1320px;margin:0 auto;padding:26px 20px 64px;position:relative;z-index:1}
+
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+      position:sticky;top:0;z-index:200;
+      background:rgba(238,244,252,.90);backdrop-filter:blur(18px) saturate(1.6);
+      border-bottom:1px solid var(--line-soft);
+      margin-left:-20px;margin-right:-20px;padding:12px 20px;margin-top:-26px;margin-bottom:20px;
     }
+    .topbar-left,.topbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .back{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 11px;border-radius:999px;
+      background:rgba(255,255,255,.8);border:1px solid var(--line);text-decoration:none;
+      color:var(--text-2);font-weight:600;font-size:.84rem;transition:all .2s ease;
+    }
+    .back:hover{background:var(--blue-pale);border-color:var(--blue-soft);color:var(--blue);transform:translateY(-1px)}
+    .back-arrow{
+      display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+      background:var(--blue-soft);color:var(--blue);font-size:.75rem;font-weight:700;flex-shrink:0;
+    }
+    .program-pill{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;
+      border:1px solid var(--line-soft);background:rgba(255,255,255,.75);
+      color:var(--blue-mid);font-size:.82rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+    }
+
     .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:18px;
+      background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);
+      box-shadow:var(--shadow-sm);transition:transform .3s ease,box-shadow .3s ease,border-color .2s;
     }
-    .kpi-title{font-size:.92rem;color:var(--muted);margin-bottom:8px}
-    .kpi-value{font-size:2rem;font-weight:800}
-    .kpi-meta{font-size:.9rem;color:var(--muted);margin-top:8px}
-    .badge{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:.8rem;
-      font-weight:700;
-      margin-top:10px;
+    .card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 16px 48px rgba(10,35,80,.16),0 4px 12px rgba(10,35,80,.08);
+      border-color:var(--blue-soft);
     }
-    .verde{background:#e9f8ef;color:var(--green)}
-    .amarillo{background:#fff6dc;color:var(--yellow)}
-    .rojo{background:#fdecec;color:var(--red)}
-    .gris{background:#eef2f7;color:var(--gray)}
-    .azul{background:#e8f2ff;color:var(--blue)}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.94rem;
+    .hero{display:grid;grid-template-columns:1.6fr 1fr;gap:16px;margin-bottom:18px}
+    .hero-main{
+      padding:30px 34px 26px;
+      background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);
+      position:relative;overflow:hidden;
     }
+    .hero-main::before{
+      content:'';position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;
+      background:radial-gradient(circle,rgba(56,182,232,.15) 0%,rgba(37,117,204,.07) 50%,transparent 70%);
+      pointer-events:none;
+    }
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;letter-spacing:.11em;
+      text-transform:uppercase;color:var(--blue-mid);margin-bottom:8px;
+    }
+    .hero-eyebrow::before{
+      content:'';display:inline-block;width:14px;height:2px;
+      background:linear-gradient(90deg,var(--sky),var(--blue-mid));border-radius:2px;
+    }
+    .hero-main h1{
+      font-family:var(--font-head);font-size:2.35rem;font-weight:600;line-height:1.08;
+      background:linear-gradient(135deg,var(--text) 40%,var(--blue-mid) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      letter-spacing:-.02em;margin-bottom:10px;
+    }
+    .hero-main p{color:var(--text-2);max-width:680px;line-height:1.72;font-size:.92rem}
+    .hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}
+    .hero-stat{
+      padding:12px 14px;border-radius:var(--radius-sm);background:rgba(255,255,255,.7);
+      border:1.5px solid var(--line-soft);
+    }
+    .hero-stat small{
+      display:block;color:var(--muted);margin-bottom:4px;font-size:.68rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:.07em;
+    }
+    .hero-stat strong{font-family:var(--font-mono);font-size:.95rem;font-weight:500;color:var(--text)}
+    .hero-side{
+      padding:22px 20px;display:flex;flex-direction:column;
+      background:linear-gradient(160deg,#eaf6fe 0%,#d8ecfc 50%,#e4f4fd 100%);
+    }
+    .hero-side-label{
+      font-size:.67rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+    }
+    .status-badge,.status-pill{
+      display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:var(--radius-sm);
+      font-weight:700;font-size:.84rem;border:1.5px solid transparent;
+    }
+    .status-badge::before,.status-pill::before{content:'●';font-size:.55em}
+    .status-green{background:var(--green-soft);color:var(--green);border-color:rgba(21,122,80,.2)}
+    .status-yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(122,85,0,.18)}
+    .status-red{background:var(--red-soft);color:var(--red);border-color:rgba(143,28,28,.18)}
+    .status-blue{background:var(--blue-soft);color:var(--blue-mid);border-color:rgba(37,117,204,.18)}
+    .status-muted{background:var(--surface);color:var(--muted);border-color:var(--line)}
+    .mini-list{display:grid;gap:7px;margin-top:2px}
+    .mini-item{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 12px;
+      border-radius:var(--radius-sm);background:rgba(255,255,255,.6);border:1.5px solid var(--line-soft);
+    }
+    .mini-item .muted{font-size:.82rem;color:var(--muted)}
+    .mini-item strong{font-family:var(--font-mono);font-size:.88rem;color:var(--blue-mid)}
+
+    .intro-grid{display:grid;grid-template-columns:1.08fr 1fr;gap:16px;margin-bottom:18px}
+    .intro-card{padding:22px 24px}
+    .intro-copy p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:.92rem;text-align:justify}
+    .intro-copy p:last-child{margin-bottom:0}
+    .intro-copy strong{color:var(--blue-mid)}
+    .section-title{
+      font-family:var(--font-head);font-size:1.2rem;font-weight:600;letter-spacing:-.01em;margin-bottom:12px;
+    }
+    .annual-goals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .goal-card{
+      padding:12px 14px;border-radius:var(--radius-sm);background:var(--surface);
+      border:1.5px solid var(--line-soft);
+    }
+    .goal-card small{
+      display:block;color:var(--muted);margin-bottom:3px;font-size:.67rem;font-weight:700;
+      text-transform:uppercase;letter-spacing:.07em;
+    }
+    .goal-card strong{display:block;font-size:.93rem;line-height:1.35;margin-bottom:3px;color:var(--text)}
+    .goal-meta{font-size:.8rem;color:var(--muted);margin-bottom:7px;font-family:var(--font-mono)}
+    .goal-progress{font-size:.81rem;font-weight:700;color:var(--text-2)}
+    .goal-note{
+      margin-top:12px;color:var(--muted);font-size:.78rem;line-height:1.65;padding-top:12px;border-top:1px dashed var(--line);
+    }
+
+    .toolbar{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+    .filter{padding:12px 14px}
+    .filter label{
+      display:block;font-size:.67rem;color:var(--muted);font-weight:700;text-transform:uppercase;
+      letter-spacing:.09em;margin-bottom:7px;
+    }
+    .filter select,.filter .pill{
+      width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;background:#fff;
+      color:var(--text);font-family:var(--font-body);font-size:.92rem;outline:none;
+    }
+    .pill{
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(135deg,var(--blue-pale),#fff);
+      font-weight:700;color:var(--blue-mid);
+    }
+
+    .kpi-section{margin-bottom:20px}
+    .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .kpi-card{
+      background:var(--card);border:1.5px solid var(--line-soft);border-radius:var(--radius);
+      box-shadow:var(--shadow-sm);padding:18px;
+    }
+    .kpi-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
+    .kpi-title{font-size:.84rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+    .kpi-value{font-family:var(--font-mono);font-size:1.5rem;font-weight:600;line-height:1.15;color:var(--text)}
+    .kpi-detail{font-size:.88rem;color:var(--text-2);margin-top:4px}
+    .kpi-progress{margin-top:12px}
+    .kpi-progress-bar{
+      height:8px;border-radius:999px;background:var(--blue-pale);overflow:hidden;border:1px solid var(--line-soft);
+    }
+    .kpi-progress-bar span{
+      display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid));
+    }
+
+    .table-card{padding:18px 20px;margin-bottom:20px}
+    table{width:100%;border-collapse:collapse}
     th,td{
-      padding:12px 10px;
-      border-bottom:1px solid var(--line);
-      text-align:left;
-      vertical-align:top;
+      padding:12px 10px;border-bottom:1px solid var(--line-soft);text-align:left;vertical-align:top;
+      font-size:.92rem;
     }
-    th{color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:.04em}
-    .small{font-size:.84rem;color:var(--muted)}
-    .section-title{margin:0 0 14px;font-size:1.1rem}
-    .note{
-      white-space:pre-wrap;
-      line-height:1.55;
-      color:#29476f;
+    th{
+      color:var(--muted);font-size:.77rem;text-transform:uppercase;letter-spacing:.07em;font-weight:700;
+    }
+    .small{font-size:.82rem;color:var(--muted)}
+
+    .notes-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .note-card{padding:20px 22px}
+    .note-block{
+      white-space:pre-wrap;line-height:1.72;color:var(--text-2);font-size:.92rem;
+      min-height:120px;
+    }
+    .method-card{
+      margin-top:16px;padding:20px 22px;
+      background:linear-gradient(135deg,#ffffff 0%,#f2f7ff 65%,#e7f3ff 100%);
     }
 
-    @media (max-width: 980px){
-      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:1120px){
+      .hero,.intro-grid,.notes-grid{grid-template-columns:1fr}
+      .hero-grid,.kpi-grid{grid-template-columns:repeat(2,1fr)}
+      .toolbar{grid-template-columns:1fr 1fr}
     }
-    @media (max-width: 640px){
-      .grid{grid-template-columns:1fr}
+    @media (max-width:720px){
+      .wrap{padding:20px 14px 48px}
+      .hero-main h1{font-size:2rem}
+      .hero-grid,.annual-goals-grid,.kpi-grid,.toolbar{grid-template-columns:1fr}
+      .table-card{overflow:auto}
+      th,td{min-width:120px}
     }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="back" href="./index.html">
+          <span class="back-arrow">←</span>
+          <span>Volver al portal</span>
+        </a>
+        <div class="program-pill">AALA · EPC</div>
+      </div>
+      <div class="topbar-right">
+        <div class="program-pill">Cierre oficial 08A</div>
+      </div>
+    </div>
+
     <section class="hero">
-      <div class="eyebrow">AALA · EPC</div>
-      <h1>Educando para Conservar</h1>
-      <p class="sub">Dashboard mensual basado en cierre oficial de indicadores 08A.</p>
-      <div class="toolbar">
+      <article class="hero-main card">
+        <div class="hero-eyebrow">Programa 2026</div>
+        <h1>Educando para Conservar</h1>
+        <p id="heroSubtitle">Cargando información del programa...</p>
+
+        <div class="hero-grid" id="heroStats">
+          <div class="hero-stat"><small>Cargando</small><strong>—</strong></div>
+        </div>
+      </article>
+
+      <aside class="hero-side card">
+        <div class="hero-side-label">Resumen ejecutivo</div>
+        <div id="heroStatus" class="status-badge status-muted">Sin evaluación</div>
+        <div class="mini-list" id="heroMiniList">
+          <div class="mini-item"><span class="muted">Cargando</span><strong>—</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="intro-grid">
+      <article class="card intro-card intro-copy">
+        <h2 class="section-title" id="heroPeriod">Educando para Conservar</h2>
+        <p>
+          Este tablero usa como <strong>fuente oficial de KPIs</strong> el cierre mensual consolidado de la hoja 08A.
+          La cobertura pedagógica se interpreta como cumplimiento mensual del estándar de docentes, centros,
+          municipios y estudiantes; las actividades de campo se leen como acumulado contra un esperado al corte;
+          y los hitos del diplomado se muestran con ventanas de exigibilidad para evitar falsos rezagos.
+        </p>
+        <p>
+          Los meses sin datos reales ya no se publican como si fueran cierres válidos. Por eso, el período por
+          defecto siempre debe abrir en el <strong>último mes efectivamente cargado</strong>, no en meses futuros vacíos.
+        </p>
+      </article>
+
+      <article class="card intro-card">
+        <h2 class="section-title">Lectura anual de metas</h2>
+        <div class="annual-goals-grid" id="annualGoalsGrid">
+          <div class="goal-card">
+            <small>Cargando</small>
+            <strong>Metas</strong>
+            <div class="goal-meta">—</div>
+            <div class="goal-progress">—</div>
+          </div>
+        </div>
+        <div class="goal-note" id="goalNote">Cargando criterio metodológico...</div>
+      </article>
+    </section>
+
+    <section class="toolbar">
+      <article class="card filter">
+        <label for="periodSelect">Período</label>
         <select id="periodSelect"></select>
+      </article>
+
+      <article class="card filter">
+        <label>Programa</label>
+        <div class="pill">Educando para Conservar</div>
+      </article>
+
+      <article class="card filter">
+        <label>Fuente</label>
+        <div class="pill">Cierre mensual 08A</div>
+      </article>
+    </section>
+
+    <section class="kpi-section">
+      <h2 class="section-title" style="margin-bottom:12px">Indicadores estratégicos</h2>
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card">
+          <div class="kpi-title">Cargando</div>
+          <div class="kpi-value">—</div>
+        </div>
       </div>
     </section>
 
-    <section class="grid" id="kpiGrid"></section>
-
-    <section class="card" style="margin-bottom:22px">
+    <section class="card table-card">
       <h2 class="section-title">Indicadores del período</h2>
       <table>
         <thead>
           <tr>
             <th>Indicador</th>
+            <th>Lectura</th>
             <th>Valor mes</th>
             <th>Acumulado</th>
-            <th>Meta anual</th>
             <th>Esperado al corte</th>
-            <th>% meta anual</th>
             <th>% vs esperado</th>
             <th>Estatus</th>
           </tr>
         </thead>
-        <tbody id="indicatorTable"></tbody>
+        <tbody id="indicatorTable">
+          <tr><td colspan="7">Cargando...</td></tr>
+        </tbody>
       </table>
     </section>
 
-    <section class="card">
-      <h2 class="section-title">Narrativa del cierre</h2>
-      <div id="notesBox" class="note">Cargando...</div>
+    <section class="notes-grid">
+      <article class="card note-card">
+        <h2 class="section-title">Logros y alertas</h2>
+        <div class="note-block" id="logrosBox">Cargando...</div>
+        <div style="height:14px"></div>
+        <div class="note-block" id="alertasBox">Cargando...</div>
+      </article>
+
+      <article class="card note-card">
+        <h2 class="section-title">Fuente y criterio</h2>
+        <div class="note-block" id="fuenteBox">Cargando...</div>
+      </article>
+    </section>
+
+    <section class="card method-card">
+      <h2 class="section-title">Metodología de lectura</h2>
+      <div class="note-block" id="methodBox">Cargando...</div>
     </section>
   </div>
 
