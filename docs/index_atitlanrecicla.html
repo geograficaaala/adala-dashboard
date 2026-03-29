@@ -898,68 +898,393 @@
       .rail-panel,.panel,.filter,.kpi{padding-left:16px;padding-right:16px}
     }
 
+  
+    /* === Ajustes visuales v3 === */
+    .header{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr);
+      align-items:center;
+      gap:24px;
+      min-height:88px;
+    }
+    .brand-mark{display:none !important;}
+    .header-stack{
+      margin-left:auto;
+      display:grid;
+      gap:10px;
+      min-width:0;
+      justify-items:end;
+    }
+    .header-utility{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+      gap:8px;
+      min-width:0;
+    }
+    .program-shell{display:block;}
+    .control-rail{display:none !important;}
+    .back,
+    .header .view-btn{
+      width:auto;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.12);
+      color:rgba(255,255,255,.88);
+      box-shadow:none;
+    }
+    .back:hover,
+    .header .view-btn:hover{
+      background:rgba(255,255,255,.18);
+      color:#fff;
+      border-color:rgba(255,255,255,.26);
+      transform:translateY(-1px);
+    }
+    .back-arrow{
+      background:rgba(255,255,255,.18);
+      color:#fff;
+    }
+    .view-switcher{
+      display:inline-flex;
+      flex-wrap:wrap;
+      gap:6px;
+      background:transparent;
+      border:none;
+      padding:0;
+    }
+    .view-btn.active{
+      background:rgba(255,255,255,.94);
+      color:#17314f;
+      border-color:transparent;
+      box-shadow:0 12px 24px rgba(20,66,108,.18);
+    }
+    .present-btn{
+      background:linear-gradient(135deg,#2e6a57 0%,#1f7b62 100%);
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 12px 24px rgba(46,106,87,.16);
+    }
+    .present-btn:hover{
+      color:#fff;
+      background:linear-gradient(135deg,#265a4b 0%,#1d6c57 100%);
+    }
+    .period-rack{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+      flex:1 1 560px;
+      justify-content:flex-end;
+    }
+    .period-rack-label{
+      font-size:.68rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.68);
+      white-space:nowrap;
+    }
+    .month-pills{
+      display:flex;
+      gap:6px;
+      align-items:center;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:999px;
+      padding:5px;
+      box-shadow:none;
+      overflow:auto;
+      max-width:100%;
+      scrollbar-width:none;
+    }
+    .month-pills::-webkit-scrollbar{display:none;}
+    .month-pill{
+      width:auto;
+      min-width:44px;
+      text-align:center;
+      padding:8px 12px;
+      border-radius:999px;
+      border:none;
+      background:transparent;
+      color:rgba(255,255,255,.74);
+      font-size:.8rem;
+      font-weight:700;
+      transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+    }
+    .month-pill:hover:not(:disabled){
+      background:rgba(255,255,255,.14);
+      color:#fff;
+      transform:translateY(-1px);
+    }
+    .month-pill.active{
+      background:rgba(255,255,255,.94);
+      color:#163a5f;
+      box-shadow:0 10px 18px rgba(6,24,42,.16);
+    }
+    .month-pill:disabled{
+      opacity:.28;
+      cursor:default;
+    }
+    .hero{
+      grid-template-columns:minmax(0,1.65fr) minmax(300px,.8fr);
+      gap:22px;
+    }
+    .hero-brand{
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:14px;
+      background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(243,247,245,.98) 100%);
+      border:1px solid #dfe9e5;
+      min-height:100%;
+    }
+    .hero-logo{
+      max-width:290px;
+      max-height:210px;
+      width:auto;
+      height:auto;
+      filter:drop-shadow(0 18px 35px rgba(6,24,42,.16));
+    }
+    .kpis{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:28px 30px;
+      align-items:start;
+    }
+    .kpi.card{
+      position:relative;
+      overflow:visible;
+      isolation:isolate;
+      min-height:245px;
+      padding:0 0 18px;
+      border:none;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      display:grid;
+      grid-template-rows:auto auto 1fr auto;
+      gap:16px;
+      opacity:0;
+      transform:translateY(18px);
+      animation:kpiReveal .62s cubic-bezier(.2,.7,.2,1) forwards;
+      animation-delay:var(--delay,0ms);
+      border-bottom:1px solid #dbe6e1;
+    }
+    .kpi.card:hover{
+      transform:translateY(-1px);
+      box-shadow:none;
+      border-color:#cfdcd6;
+    }
+    .kpi::before,
+    .kpi::after{
+      display:none !important;
+    }
+    .kpi-top{
+      display:block;
+      margin:0;
+    }
+    .kpi-label{
+      font-size:1.02rem;
+      font-weight:600;
+      letter-spacing:-.02em;
+      color:#5f6d81;
+      line-height:1.32;
+      text-transform:none;
+      max-width:18ch;
+      min-height:3.1em;
+    }
+    .kpi-state{display:none !important;}
+    .kpi-figure{
+      display:grid;
+      grid-template-columns:26px 1fr;
+      gap:18px;
+      align-items:end;
+      min-height:120px;
+    }
+    .kpi-pillar{
+      position:relative;
+      width:22px;
+      height:84px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+    }
+    .kpi-pillar-track{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:10px;
+      height:84px;
+      border-radius:999px;
+      background:var(--tone-soft,#d9ecf1);
+    }
+    .kpi-pillar-fill{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translateX(-50%);
+      width:10px;
+      height:0;
+      border-radius:999px;
+      background:var(--tone,#1c6084);
+      transition:height .92s cubic-bezier(.22,1,.36,1);
+      box-shadow:0 8px 18px rgba(18,42,66,.12);
+    }
+    .kpi-reading{
+      display:grid;
+      gap:5px;
+      align-content:end;
+    }
+    .kpi-value{
+      font-family:var(--font-body);
+      font-size:clamp(2.15rem,2.6vw,3.4rem);
+      font-weight:600;
+      letter-spacing:-.055em;
+      line-height:.94;
+      color:#091729;
+      white-space:normal;
+    }
+    .kpi-achieved{
+      font-size:1rem;
+      font-weight:700;
+      color:#091729;
+      line-height:1.2;
+    }
+    .kpi-reference{
+      font-size:.87rem;
+      color:#7a8699;
+      line-height:1.4;
+    }
+    .kpi-reference strong{
+      font-weight:600;
+      color:#5f6d81;
+    }
+    .kpi-readings{
+      display:grid;
+      gap:7px;
+      align-content:start;
+    }
+    .kpi-meta{
+      font-size:.88rem;
+      line-height:1.62;
+      color:#4c6478;
+    }
+    .kpi-meta strong{color:#17314f;}
+    .kpi-progress-line{
+      height:5px;
+      background:#e2ebe7;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:4px;
+    }
+    .kpi-progress-line span{
+      display:block;
+      height:100%;
+      width:0;
+      background:var(--tone,#1c6084);
+      transition:width .92s cubic-bezier(.22,1,.36,1);
+    }
+    .kpi.tone-green{--tone:#2e8f5e;--tone-soft:#d9f0e2;}
+    .kpi.tone-yellow{--tone:#c7982a;--tone-soft:#f4ead0;}
+    .kpi.tone-red{--tone:#c85f63;--tone-soft:#f5dfe1;}
+    .kpi.tone-blue{--tone:#1c6084;--tone-soft:#d9ecf1;}
+    .kpi.tone-muted{--tone:#7b8c99;--tone-soft:#e8eef0;}
+    .footer-brandline{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+    @media (max-width: 1500px){
+      .header{
+        grid-template-columns:1fr;
+      }
+      .header-stack{
+        justify-items:stretch;
+      }
+      .kpis{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+    @media (max-width: 1180px){
+      .header-utility{
+        justify-content:flex-start;
+      }
+      .period-rack{
+        flex-basis:100%;
+        justify-content:flex-start;
+      }
+      .hero{
+        grid-template-columns:1fr;
+      }
+      .kpis{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+    @media (max-width: 900px){
+      .header{
+        padding:12px 16px;
+        gap:12px;
+      }
+      .nav-tabs{
+        width:100%;
+      }
+      .view-switcher{
+        width:100%;
+      }
+      .kpis{
+        grid-template-columns:1fr;
+      }
+      .period-rack{
+        display:grid;
+        justify-content:stretch;
+      }
+      .month-pills{
+        width:100%;
+      }
+    }
+
   </style>
 </head>
 <body class="view-full">
+
 <header class="header">
   <a class="header-brand" href="./index.html">
-    <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-text">
       <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
       <span class="brand-title">Tablero dinámico institucional de avances</span>
     </span>
   </a>
-  <nav class="nav-tabs" aria-label="Navegación de la página">
-    <a class="nav-tab active" href="#resumen">Resumen</a>
-    <a class="nav-tab" href="#kpiGrid">Indicadores</a>
-    <a class="nav-tab" href="#zoneBarPanel">Comparativo</a>
-    <a class="nav-tab" href="#diagnosticPanel">Diagnóstico</a>
-  </nav>
+  <div class="header-stack">
+    <nav class="nav-tabs" aria-label="Navegación de la página">
+      <a class="nav-tab active" href="#resumen">Resumen</a>
+      <a class="nav-tab" href="#kpiGrid">Indicadores</a>
+      <a class="nav-tab" href="#zoneBarPanel">Comparativo</a>
+      <a class="nav-tab" href="#diagnosticPanel">Diagnóstico</a>
+    </nav>
+    <div class="header-utility">
+      <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+      <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
+        <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
+        <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
+      </div>
+      <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">Modo presentación</button>
+      <div class="period-rack">
+        <span class="period-rack-label">Período de lectura</span>
+        <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
+      </div>
+    </div>
+  </div>
 </header>
 <div id="vizTooltip"></div>
 <div class="wrap">
   <div class="program-shell">
-    <aside class="control-rail">
-      <section class="rail-panel">
-        <div class="rail-title">Navegación del programa</div>
-        <p class="rail-copy">Seleccione el mes de análisis y recorra el tablero dinámico de Atitlán Recicla sin perder el contexto del programa.</p>
-        <div class="rail-stack">
-          <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver a inicio</a>
-          <div class="estado-global sin-actividad" id="estadoGlobal" style="display:none">
-            <span class="dot"></span>
-            <span id="estadoLabel">Cargando…</span>
-          </div>
-        </div>
-      </section>
-      <section class="rail-panel">
-        <div class="rail-title">Período de lectura</div>
-        <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
-      </section>
-      <section class="rail-panel">
-        <div class="rail-title">Vistas disponibles</div>
-        <div class="rail-stack">
-          <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 3.5h11v7h-11z"/><path d="M6 13h4"/><path d="M8 10.5V13"/></svg>
-            Modo presentación
-          </button>
-          <div class="view-switcher" role="group">
-            <button class="view-btn active" id="btnFull" onclick="switchView('full')">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-              Tablero completo
-            </button>
-            <button class="view-btn" id="btnExec" onclick="switchView('exec')">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
-              Resumen ejecutivo
-            </button>
-            <a class="view-btn" href="./index_atitlanrecicla_reportes.html">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2h10v12H3z"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>
-              Generador de informes
-            </a>
-          </div>
-        </div>
-      </section>
-    </aside>
     <main class="program-main">
+
       <div id="resumen"></div>
 
   <!-- EXECUTIVE VIEW -->
@@ -1024,7 +1349,7 @@
             <div class="hero-grid" id="heroStats"></div>
           </div>
           <aside class="hero-brand">
-            <img class="hero-logo" src="./logosatitlan.png" alt="Logotipos de Atitlán Recicla y aliados">
+            <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
             <p class="hero-brand-note">Una iniciativa de la <strong>Asociación Amigos del Lago de Atitlán</strong> que articula gestión ambiental, autonomía económica y fortalecimiento territorial.</p>
           </aside>
         </div>
@@ -1135,7 +1460,6 @@
   <div class="footer-wrap">
     <section class="footer-brand">
       <div class="footer-brandline">
-        <span class="brand-mark" aria-hidden="true"></span>
         <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
       </div>
       <p class="footer-copy">
@@ -1440,6 +1764,46 @@ function renderAnnualGoals(state){
 }
 
 
+
+function splitDisplayValue(display){
+  const raw=String(display==null?'—':display).trim();
+  const match=raw.match(/^([^\d\-–]*)(-?\d[\d,]*(?:\.\d+)?)(.*)$/);
+  if(!match){
+    return {prefix:'', number:null, suffix:'', text:raw, decimals:0};
+  }
+  return {
+    prefix:match[1]||'',
+    number:parseFloat(String(match[2]).replace(/,/g,'')),
+    suffix:(match[3]||'').trim(),
+    text:raw,
+    decimals:((match[2].split('.')[1]||'').length)
+  };
+}
+
+function animateMetricValue(node){
+  if(!node) return;
+  const target=Number(node.dataset.value);
+  if(!Number.isFinite(target)) return;
+  const prefix=node.dataset.prefix||'';
+  const suffix=node.dataset.suffix||'';
+  const decimals=Number(node.dataset.decimals||0);
+  const start=performance.now();
+  const duration=950;
+  function step(now){
+    const t=Math.min(1,(now-start)/duration);
+    const eased=1-Math.pow(1-t,3);
+    const value=target*eased;
+    const formatted=new Intl.NumberFormat('en-US',{
+      minimumFractionDigits:decimals,
+      maximumFractionDigits:decimals
+    }).format(value);
+    node.textContent=(prefix+formatted+(suffix?(' '+suffix):'')).trim();
+    if(t<1) requestAnimationFrame(step);
+  }
+  node.textContent=(prefix+'0'+(suffix?(' '+suffix):'')).trim();
+  requestAnimationFrame(step);
+}
+
 function renderKpis(state){
   const period=getSelectedPeriod(state);
   const metrics=getMetricsForSelection(state, period);
@@ -1454,9 +1818,6 @@ function renderKpis(state){
     const row=metrics[id];
     if(!row) return;
     const card=document.createElement("article");
-    card.className="card kpi";
-    card.style.setProperty('--delay', `${index*70}ms`);
-
     let chipClass="muted", chipText="Sin dato", line1="—", line2="—", progressWidth=0;
     if(state.selectedZone==="__all__"){
       chipClass=semaforoClass(row.monthlyPct);
@@ -1472,28 +1833,47 @@ function renderKpis(state){
       progressWidth=Math.max(0,Math.min((row.sharePct||0)*100,100));
     }
 
+    const displayValue=formatByUnit(row.valor,row.unit);
+    const parts=splitDisplayValue(displayValue);
+    const referenceText=state.selectedZone==="__all__" ? 'Esperado' : 'Referencia del programa';
+    card.className=`card kpi tone-${chipClass}`;
+    card.style.setProperty('--delay', `${index*80}ms`);
+
     card.innerHTML=`
       <div class="kpi-top">
-        <div>
-          <div class="kpi-label">${escapeHtml(row.label)}</div>
-          <div class="kpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
-        </div>
-        <span class="kpi-state ${chipClass}">${escapeHtml(chipText)}</span>
+        <div class="kpi-label">${escapeHtml(row.label)}</div>
       </div>
-      <div class="kpi-meta">${state.selectedZone==="__all__" ? `Meta mensual de referencia: <strong>${escapeHtml(formatByUnit(row.meta,row.unit))}</strong>` : `Referencia del programa: <strong>${escapeHtml(formatByUnit(row.meta,row.unit))}</strong>`}</div>
+      <div class="kpi-figure">
+        <div class="kpi-pillar" aria-hidden="true">
+          <span class="kpi-pillar-track"></span>
+          <span class="kpi-pillar-fill" data-height="${Math.max(8,Math.min(progressWidth,100))}%"></span>
+        </div>
+        <div class="kpi-reading">
+          <div class="kpi-value" data-value="${parts.number!=null?parts.number:''}" data-prefix="${escapeHtml(parts.prefix)}" data-suffix="${escapeHtml(parts.suffix)}" data-decimals="${parts.decimals}">${escapeHtml(parts.text)}</div>
+          <div class="kpi-achieved">${escapeHtml(chipText)}</div>
+          <div class="kpi-reference">${escapeHtml(referenceText)} <strong>${escapeHtml(formatByUnit(row.meta,row.unit))}</strong></div>
+        </div>
+      </div>
       <div class="kpi-readings">
         <div class="kpi-meta">${line1}</div>
         <div class="kpi-meta">${line2}</div>
       </div>
-      <div class="progress"><span data-width="${progressWidth}"></span></div>
+      <div class="kpi-progress-line"><span data-width="${progressWidth}"></span></div>
     `;
     grid.appendChild(card);
   });
   if(!grid.children.length) grid.innerHTML=`<div class="empty">No se encontraron KPIs para el período seleccionado.</div>`;
   requestAnimationFrame(()=>{
-    grid.querySelectorAll('.progress > span').forEach((bar,i)=>{
+    grid.querySelectorAll('.kpi-pillar-fill').forEach((bar,i)=>{
+      const target=bar.dataset.height||'0%';
+      setTimeout(()=>{ bar.style.height=target; }, 80 + i*95);
+    });
+    grid.querySelectorAll('.kpi-progress-line > span').forEach((bar,i)=>{
       const target=bar.dataset.width||'0';
-      setTimeout(()=>{ bar.style.width=`${target}%`; }, 60 + i*90);
+      setTimeout(()=>{ bar.style.width=`${target}%`; }, 120 + i*95);
+    });
+    grid.querySelectorAll('.kpi-value[data-value]').forEach((node,i)=>{
+      setTimeout(()=>animateMetricValue(node), 160 + i*90);
     });
   });
 }
@@ -3064,7 +3444,7 @@ function buildPresentation(state){
             <p>Vista rápida del período para exponer resultados en reunión. KPIs clave, estado del programa y contexto territorial en una sola pantalla.</p>
           </div>
           <div class="presentation-brand-badge">
-            <img src="./logosatitlan.png" alt="Logotipos de Atitlán Recicla">
+            <img src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
             <small>Cooperativa de mujeres recicladoras · economía circular · cuenca del Lago de Atitlán</small>
           </div>
         </div>
