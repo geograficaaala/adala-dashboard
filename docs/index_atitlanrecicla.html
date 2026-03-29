@@ -666,41 +666,259 @@
     @media(max-width:1100px){.hero,.intro-grid,.grid-2,.grid-2-equal,.toolbar,.exec-hero-row,.exec-kpi-grid,.presentation-columns,.presentation-alerts{grid-template-columns:1fr}.hero-shell{grid-template-columns:1fr}.intro-stack{grid-template-columns:1fr}.exec-kpi-grid{grid-template-columns:repeat(2,1fr)}.exec-strip,.exec-row-2,.presentation-summary-grid,.presentation-metric-grid,.presentation-goal-grid{grid-template-columns:repeat(2,1fr)}.exec-toolbar{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:repeat(2,1fr)}.hero-grid{grid-template-columns:1fr 1fr}.presentation-title-row{grid-template-columns:1fr;display:grid}.presentation-brand-badge{justify-items:start;text-align:left}}
     @media(max-width:640px){.kpis,.exec-kpi-grid,.exec-strip,.exec-row-2{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr}.hero-main{padding:22px 18px}.hero-main h1{font-size:1.8rem}.hero-tag-row{margin:14px 0 16px}.hero-brand{padding:14px}.intro-story h3,.intro-focus h3,.annual-panel h3{font-size:1.14rem}}
     @media(max-width:700px){.modal-box{max-width:100%;max-height:100vh;border-radius:0}.interp-grid{grid-template-columns:1fr}.presentation-meta span{font-size:.78rem;padding:8px 12px}.presentation-btn{padding:9px 13px}}
+  
+
+    /* ── AALA institutional shell ───────────────────────────── */
+    body{
+      background:
+        radial-gradient(circle at 0% 0%, rgba(76,165,191,.12) 0%, transparent 28%),
+        radial-gradient(circle at 100% 100%, rgba(46,106,87,.08) 0%, transparent 24%),
+        linear-gradient(180deg,#f7faf7 0%,#f3f7f3 100%) fixed;
+      color:#17314f;
+    }
+    body::before{
+      background:
+        radial-gradient(ellipse 60% 45% at 10% 20%, rgba(28,96,132,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 40% at 80% 10%, rgba(76,165,191,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(46,106,87,.06) 0%, transparent 60%);
+    }
+    body::after{display:none}
+    .wrap{
+      width:min(1580px, calc(100vw - 32px));
+      max-width:none;
+      padding:26px 0 44px;
+    }
+    .header{
+      position:sticky;top:0;z-index:400;min-height:82px;display:flex;align-items:center;gap:18px;
+      padding:12px 28px;border-bottom:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(135deg, rgba(18,62,104,.96) 0%, rgba(23,84,129,.95) 48%, rgba(31,116,145,.93) 100%);
+      backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);
+      box-shadow:0 16px 40px rgba(13,39,67,.18);
+      animation:fadeDown .45s ease both;
+    }
+    .header-brand{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0}
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;position:relative;flex-shrink:0;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(76,165,191,.96) 0 18%, transparent 20%),
+        linear-gradient(160deg, #163a5f 0%, #1c6084 60%, #2e6a57 100%);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 8px 18px rgba(22,58,95,.18);
+    }
+    .brand-mark::before,.brand-mark::after{content:'';position:absolute;left:8px;right:8px;border-radius:999px;background:rgba(255,255,255,.88)}
+    .brand-mark::before{bottom:12px;height:4px;transform:rotate(-4deg)}
+    .brand-mark::after{bottom:7px;height:3px;opacity:.85;transform:rotate(3deg)}
+    .brand-text{display:grid;gap:1px;min-width:0}
+    .brand-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.74);font-weight:800;line-height:1.1}
+    .brand-title{font-size:1rem;font-weight:700;color:#fff;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav-tabs{
+      margin-left:auto;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;
+    }
+    .nav-tab{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      border-radius:999px;padding:10px 16px;border:none;font:700 .79rem/1 var(--font-body);
+      color:rgba(255,255,255,.78);background:transparent;white-space:nowrap;transition:all .2s ease;
+    }
+    .nav-tab:hover{background:rgba(255,255,255,.10);color:#fff}
+    .nav-tab.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
+
+    .program-shell{display:grid;grid-template-columns:260px minmax(0,1fr);gap:24px;align-items:start}
+    .program-main{min-width:0}
+    .control-rail{position:sticky;top:104px;display:grid;gap:14px}
+    .rail-panel{
+      background:rgba(255,255,255,.88);border:1px solid #dfe9e5;border-radius:28px;padding:18px;
+      box-shadow:0 14px 34px rgba(18,42,66,.08),0 4px 14px rgba(18,42,66,.05);
+      backdrop-filter:blur(10px);
+    }
+    .rail-title{font-size:.76rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#6b7f90;margin-bottom:10px}
+    .rail-copy{font-size:.9rem;line-height:1.72;color:#36516a;margin-bottom:8px}
+    .rail-stack{display:grid;gap:10px}
+    .back,.rail-link,.view-btn{
+      width:100%;justify-content:flex-start;text-decoration:none;padding:12px 14px;border-radius:16px;
+      border:1px solid #d9e6e1;background:linear-gradient(180deg,#ffffff 0%,#f8fbf9 100%);
+      box-shadow:none;color:#17314f;font-weight:700;font-size:.84rem;
+    }
+    .back:hover,.rail-link:hover,.view-btn:hover{transform:none;background:#f2f7f5;color:#17314f;border-color:#c9dad4}
+    .back-arrow{background:#d9ecf1;color:#163a5f}
+    .view-switcher{display:grid;gap:8px;background:transparent;border:none;padding:0;border-radius:0}
+    .view-btn.active{background:linear-gradient(135deg,#18466e 0%,#2a7b93 100%);color:#fff;border-color:transparent;box-shadow:0 12px 24px rgba(20,66,108,.16)}
+    .present-btn{background:linear-gradient(135deg,#2e6a57 0%,#1f7b62 100%);color:#fff;border-color:transparent;box-shadow:0 12px 24px rgba(46,106,87,.16)}
+    .present-btn:hover{color:#fff;background:linear-gradient(135deg,#265a4b 0%,#1d6c57 100%)}
+    .month-pills{
+      display:grid;gap:8px;align-items:stretch;background:transparent;border:none;border-radius:0;padding:0;box-shadow:none;
+    }
+    .month-pill{
+      width:100%;text-align:left;padding:11px 14px;border-radius:16px;border:1px solid #d9e6e1;
+      background:linear-gradient(180deg,#ffffff 0%,#f8fbf9 100%);color:#547089;font-size:.82rem;
+    }
+    .month-pill:hover:not(:disabled){background:#eef5f2;color:#17314f}
+    .month-pill.active{background:linear-gradient(135deg,#18466e 0%,#2b6b60 100%);color:#fff;border-color:transparent;box-shadow:0 14px 28px rgba(20,66,108,.18)}
+    .estado-global{width:100%;justify-content:center;padding:10px 14px;border-radius:16px}
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.94) 0%, rgba(247,250,248,.96) 100%);
+      border:1px solid #dfe9e5;border-radius:30px;box-shadow:0 14px 34px rgba(18,42,66,.08),0 4px 14px rgba(18,42,66,.05);
+      transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+    }
+    .card:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(18,42,66,.10),0 6px 16px rgba(18,42,66,.05);border-color:#cfe0d9}
+
+    .hero{grid-template-columns:minmax(0,1.55fr) minmax(280px,.88fr);gap:18px;margin-bottom:22px}
+    .hero-main{
+      padding:30px 32px 28px;
+      background:linear-gradient(135deg,#173b61 0%,#1e5677 52%,#5caebe 100%);
+      border:none;color:rgba(255,255,255,.92);overflow:hidden;position:relative;
+    }
+    .hero-main::before{content:'';position:absolute;inset:auto -10% -18% auto;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18) 0%,transparent 68%);filter:blur(2px)}
+    .hero-eyebrow,.section-kicker{color:rgba(255,255,255,.72)}
+    .hero-main h1{font-family:var(--font-body);font-size:clamp(2.25rem, 4vw, 4.1rem);font-weight:800;line-height:.97;letter-spacing:-.05em;color:#fff;background:none;-webkit-text-fill-color:unset;margin-bottom:14px}
+    .hero-main p,.hero-main .hero-lead,.hero-brand-note{color:rgba(255,255,255,.88)}
+    .hero-tag{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
+    .hero-tag::before{background:rgba(255,255,255,.75)}
+    .hero-grid{gap:12px}
+    .hero-stat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(8px)}
+    .hero-stat:hover{background:rgba(255,255,255,.16)}
+    .hero-stat small{color:rgba(255,255,255,.62)}
+    .hero-stat strong{color:#fff}
+    .hero-brand{background:linear-gradient(180deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.08) 100%);border:1px solid rgba(255,255,255,.16)}
+    .hero-logo{max-width:250px;filter:drop-shadow(0 18px 35px rgba(6,24,42,.22))}
+    .hero-side{padding:24px 20px;background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(243,247,245,.98) 100%)}
+    .hero-side-label{color:#6b7f90}
+    .status-badge{font-size:.9rem}
+
+    .intro-grid,.grid-2,.grid-2-equal{gap:18px}
+    .panel{padding:24px 24px 22px}
+    .panel h3,.section-head h2{font-family:var(--font-body);font-weight:800;letter-spacing:-.03em;color:#17314f}
+    .panel h3{font-size:1.35rem}
+    .section-head h2{font-size:1.4rem}
+    .section-kicker{display:inline-flex;align-items:center;gap:8px;padding:0;margin-bottom:10px;font-size:.76rem;letter-spacing:.12em;color:#2e6a57;text-transform:uppercase;font-weight:800}
+    .section-kicker::before{content:'';display:block;width:16px;height:2px;background:linear-gradient(90deg,#2e6a57,#4ca5bf);border-radius:999px}
+    .intro-copy p,.intro-story p,.goal-note,.interp,.panel p.sub,.mini-item .muted,.kpi-meta,.legend,.section-head p{color:#4c6478}
+    .toolbar{grid-template-columns:1.2fr 1fr 1fr 1fr;gap:14px;margin-bottom:22px}
+    .filter{padding:16px 18px}
+    .filter label{font-size:.72rem;letter-spacing:.11em;color:#6b7f90}
+    .filter select,.filter .pill{border-radius:14px;background:#f7faf8;border:1px solid #d8e6e0}
+    .pill{font-family:var(--font-body);font-weight:700;color:#1c6084;background:#edf5f3}
+
+    .kpis{gap:14px}
+    .kpi{padding:20px 18px 18px;border-top:4px solid #d5e2dc;background:linear-gradient(180deg,#ffffff 0%,#f8fbf9 100%)}
+    .kpi:hover{border-top-color:#1c6084}
+    .kpi-label{font-size:.7rem;letter-spacing:.12em;color:#6b7f90}
+    .kpi-value{font-size:2rem;color:#17314f;letter-spacing:-.04em}
+    .chip.blue{background:#d9ecf1;color:#1c6084}
+    .progress{height:6px;background:#dde8e4}
+    .progress>span{background:linear-gradient(90deg,#4ca5bf 0%,#1c6084 55%,#2e6a57 100%)}
+
+    .chart-wrap,.viz-wrap,.diagnostic,.alert-card,.zone-card,.goal-card,.mini-item,.objective-item{border-radius:20px}
+    .section-divider{margin:30px 0 18px;color:#2e6a57}
+    .section-divider::before,.section-divider::after{background:linear-gradient(90deg,transparent,#d5e2dc,transparent)}
+
+    .site-footer{
+      margin-top:34px;background:linear-gradient(145deg, #18324c 0%, #1b4f68 62%, #2b6b60 100%);color:rgba(255,255,255,.92);position:relative;overflow:hidden;
+    }
+    .site-footer::before{
+      content:'';position:absolute;inset:auto -10% -120px -10%;height:220px;
+      background:radial-gradient(60px 20px at 0 100%, rgba(255,255,255,.12) 50%, transparent 52%) repeat-x;
+      background-size:140px 90px;opacity:.55;pointer-events:none;
+    }
+    .footer-wrap{
+      width:min(1580px, calc(100vw - 32px));margin:0 auto;padding:34px 0 30px;
+      display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:28px;position:relative;z-index:1;
+    }
+    .footer-brand{display:grid;gap:12px;max-width:50ch}
+    .footer-brandline{display:flex;align-items:center;gap:12px}
+    .footer-title{font-size:1.1rem;font-weight:700;line-height:1.2}
+    .footer-copy{color:rgba(255,255,255,.8);font-size:.92rem;line-height:1.75}
+    .footer-col h3{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;color:rgba(255,255,255,.76)}
+    .footer-links{display:grid;gap:10px}
+    .footer-links a{color:#fff;text-decoration:none;font-size:.92rem;font-weight:600;opacity:.92;width:fit-content;display:inline-flex;align-items:center;gap:10px}
+    .social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.96);flex-shrink:0}
+    .social-icon svg{width:18px;height:18px;display:block}
+    .footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
+
+    @media (max-width: 1180px){
+      .program-shell{grid-template-columns:1fr}
+      .control-rail{position:relative;top:auto;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+      .control-rail > .rail-panel:first-child{grid-column:1 / -1}
+      .month-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media (max-width: 900px){
+      .header{padding:12px 16px;gap:12px}
+      .nav-tabs{margin-left:0;width:100%}
+      .header{flex-wrap:wrap}
+      .footer-wrap{grid-template-columns:1fr}
+      .control-rail{grid-template-columns:1fr}
+      .month-pills{grid-template-columns:1fr}
+      .hero{grid-template-columns:1fr}
+    }
+    @media (max-width: 640px){
+      .wrap{width:min(100vw - 20px, 1000px)}
+      .hero-main{padding:24px 20px 22px}
+      .rail-panel,.panel,.filter,.kpi{padding-left:16px;padding-right:16px}
+    }
+
   </style>
 </head>
 <body class="view-full">
+<header class="header">
+  <a class="header-brand" href="./index.html">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text">
+      <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
+      <span class="brand-title">Tablero dinámico institucional de avances</span>
+    </span>
+  </a>
+  <nav class="nav-tabs" aria-label="Navegación de la página">
+    <a class="nav-tab active" href="#resumen">Resumen</a>
+    <a class="nav-tab" href="#kpiGrid">Indicadores</a>
+    <a class="nav-tab" href="#zoneBarPanel">Comparativo</a>
+    <a class="nav-tab" href="#diagnosticPanel">Diagnóstico</a>
+  </nav>
+</header>
 <div id="vizTooltip"></div>
 <div class="wrap">
-  <div class="topbar">
-    <div class="topbar-left">
-      <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver a inicio</a>
-      <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
-      <div class="estado-global sin-actividad" id="estadoGlobal" style="display:none">
-        <span class="dot"></span>
-        <span id="estadoLabel">Cargando…</span>
-      </div>
-    </div>
-    <div class="topbar-right">
-      <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 3.5h11v7h-11z"/><path d="M6 13h4"/><path d="M8 10.5V13"/></svg>
-        Modo presentación
-      </button>
-      <div class="view-switcher" role="group">
-        <button class="view-btn active" id="btnFull" onclick="switchView('full')">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
-          Dashboard completo
-        </button>
-        <button class="view-btn" id="btnExec" onclick="switchView('exec')">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
-          Dashboard ejecutivo
-        </button>
-        <a class="view-btn" href="./index_atitlanrecicla_reportes.html">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2h10v12H3z"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>
-          Generador de informes
-        </a>
-      </div>
-    </div>
-  </div>
+  <div class="program-shell">
+    <aside class="control-rail">
+      <section class="rail-panel">
+        <div class="rail-title">Navegación del programa</div>
+        <p class="rail-copy">Seleccione el mes de análisis y cambie de vista sin salir del tablero dinámico de Atitlán Recicla.</p>
+        <div class="rail-stack">
+          <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver a inicio</a>
+          <div class="estado-global sin-actividad" id="estadoGlobal" style="display:none">
+            <span class="dot"></span>
+            <span id="estadoLabel">Cargando…</span>
+          </div>
+        </div>
+      </section>
+      <section class="rail-panel">
+        <div class="rail-title">Período de lectura</div>
+        <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
+      </section>
+      <section class="rail-panel">
+        <div class="rail-title">Vistas disponibles</div>
+        <div class="rail-stack">
+          <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2.5 3.5h11v7h-11z"/><path d="M6 13h4"/><path d="M8 10.5V13"/></svg>
+            Modo presentación
+          </button>
+          <div class="view-switcher" role="group">
+            <button class="view-btn active" id="btnFull" onclick="switchView('full')">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>
+              Tablero completo
+            </button>
+            <button class="view-btn" id="btnExec" onclick="switchView('exec')">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h5"/></svg>
+              Vista ejecutiva
+            </button>
+            <a class="view-btn" href="./index_atitlanrecicla_reportes.html">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 2h10v12H3z"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>
+              Generador de informes
+            </a>
+          </div>
+        </div>
+      </section>
+    </aside>
+    <main class="program-main">
+      <div id="resumen"></div>
 
   <!-- EXECUTIVE VIEW -->
   <div class="exec-only">
@@ -871,7 +1089,55 @@
     <div class="section-divider">Diagnóstico narrativo</div>
     <section class="section"><article class="card diagnostic" id="diagnosticPanel"></article></section>
   </div>
+    </main>
+  </div>
 </div>
+
+<footer class="site-footer">
+  <div class="footer-wrap">
+    <section class="footer-brand">
+      <div class="footer-brandline">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
+      </div>
+      <p class="footer-copy">
+        La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.
+      </p>
+    </section>
+
+    <section class="footer-col">
+      <h3>Contacto y sitio</h3>
+      <div class="footer-links">
+        <a href="https://amigosdeatitlan.org/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.7 2.8 4.1 5.8 4.1 9S14.7 18.2 12 21c-2.7-2.8-4.1-5.8-4.1-9S9.3 5.8 12 3z"></path></svg></span>
+          <span>Página web</span>
+        </a>
+        <a href="https://www.youtube.com/@asociacionamigosdellagodea2358" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.4-4.8z"></path><path d="M10 15.5v-7l6 3.5-6 3.5z" fill="#1b4f68"></path></svg></span>
+          <span>YouTube</span>
+        </a>
+        <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.4H16l.4-3h-2.9V8.7c0-.9.3-1.5 1.6-1.5h1.4V4.5c-.2 0-1-.1-2-.1-2 0-3.4 1.2-3.4 3.6v2.6H9v3h2.1V21h2.4z"></path></svg></span>
+          <span>Facebook</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="footer-col">
+      <h3>Redes</h3>
+      <div class="footer-links">
+        <a href="https://www.linkedin.com/in/aala-atitl%C3%A1n-3653a0325/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20h3.38V8.5zM5.25 7A1.97 1.97 0 1 0 5.2 3a1.97 1.97 0 0 0 .05 4zm5.28 13h3.38v-5.6c0-1.5.29-3 2.15-3 1.83 0 1.86 1.7 1.86 3.1V20h3.38v-6.2c0-3.05-.66-5.4-4.22-5.4-1.7 0-2.84.94-3.3 1.83h-.05V8.5h-3.2c.04.97 0 11.5 0 11.5z"></path></svg></span>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r="1"></circle></svg></span>
+          <span>Instagram</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</footer>
 
 <!-- CHART ZOOM MODAL -->
 <div class="zoom-overlay" id="chartZoomOverlay">
