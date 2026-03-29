@@ -864,7 +864,7 @@
     .metric-header,
     .metric-row {
       display: grid;
-      grid-template-columns: 2fr .95fr .8fr .85fr;
+      grid-template-columns: 2.2fr 1.05fr 1.05fr .8fr;
       gap: 10px;
       align-items: center;
     }
@@ -873,7 +873,7 @@
       border-bottom: 1px solid var(--line);
     }
     .metric-header span {
-      font-size: .68rem;
+      font-size: .64rem;
       letter-spacing: .09em;
       text-transform: uppercase;
       color: var(--muted);
@@ -1315,9 +1315,9 @@
         <div class="hero-logo-card">
           <img
             class="hero-logo"
-            src="../aala_logo.png"
+            src="./aala_logo.png"
             alt="Logo de Asociación Amigos del Lago de Atitlán"
-            onerror="if(!this.dataset.tryRoot){this.dataset.tryRoot='1';this.src='./aala_logo.png';}else if(!this.dataset.tryProject){this.dataset.tryProject='1';this.src='/AALA-dashboard/aala_logo.png';}else{this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 240%22%3E%3Crect width=%22320%22 height=%22240%22 rx=%2224%22 fill=%22%23eef5f2%22/%3E%3Ccircle cx=%2260%22 cy=%2254%22 r=%2220%22 fill=%22%234ca5bf%22 opacity=%22.22%22/%3E%3Cpath d=%22M30 168c36-34 74-52 114-52 39 0 76 18 114 52%22 fill=%22none%22 stroke=%22%231c6084%22 stroke-width=%2214%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M44 192c26-20 56-30 88-30 32 0 64 10 96 30%22 fill=%22none%22 stroke=%22%232e6a57%22 stroke-width=%229%22 stroke-linecap=%22round%22/%3E%3Ctext x=%2234%22 y=%2290%22 font-family=%22Arial,sans-serif%22 font-size=%2252%22 font-weight=%22700%22 fill=%22%23163a5f%22%3EAALA%3C/text%3E%3Ctext x=%2234%22 y=%22124%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23163a5f%22%3EAmigos del Lago de Atitl%C3%A1n%3C/text%3E%3C/svg%3E';}"
+            onerror="if(!this.dataset.tryProject){this.dataset.tryProject='1';this.src='/AALA-dashboard/aala_logo.png';}else if(!this.dataset.tryDocs){this.dataset.tryDocs='1';this.src='./docs/aala_logo.png';}else{this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 240%22%3E%3Crect width=%22320%22 height=%22240%22 rx=%2224%22 fill=%22%23eef5f2%22/%3E%3Ccircle cx=%2260%22 cy=%2254%22 r=%2220%22 fill=%22%234ca5bf%22 opacity=%22.22%22/%3E%3Cpath d=%22M30 168c36-34 74-52 114-52 39 0 76 18 114 52%22 fill=%22none%22 stroke=%22%231c6084%22 stroke-width=%2214%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M44 192c26-20 56-30 88-30 32 0 64 10 96 30%22 fill=%22none%22 stroke=%22%232e6a57%22 stroke-width=%229%22 stroke-linecap=%22round%22/%3E%3Ctext x=%2234%22 y=%2290%22 font-family=%22Arial,sans-serif%22 font-size=%2252%22 font-weight=%22700%22 fill=%22%23163a5f%22%3EAALA%3C/text%3E%3Ctext x=%2234%22 y=%22124%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23163a5f%22%3EAmigos del Lago de Atitl%C3%A1n%3C/text%3E%3C/svg%3E';}"
           >
         </div>
       </aside>
@@ -1625,12 +1625,10 @@ async function loadAtitlan(cfg){
   const total = sortByMonth(cast(totalRaw).filter(r => !r.zona || String(r.zona).toUpperCase() === 'TOTAL'));
   const inds  = cast(indRaw);
 
-  // Último mes con datos reales (total_materiales_qq > 0)
   const withData = total.filter(r => Number(r.total_materiales_qq || 0) > 0);
   const latest   = withData[withData.length - 1] || {};
   const latestMonth = Number(latest.mes_num || 0);
 
-  // Score (promedio de indicadores del último mes)
   const latestIndicators = inds.filter(r =>
     Number(r.mes_num) === latestMonth &&
     String(r.nivel_agregacion||'').toLowerCase() === 'programa'
@@ -1641,21 +1639,15 @@ async function loadAtitlan(cfg){
       .map(r => (Number(r.valor||0) / Number(r.meta_mensual||1)) * 100)
   );
 
-  // ACUMULADOS al último mes con datos
   const rowsConDatos = total.filter(r => Number(r.total_materiales_qq || 0) > 0);
   const acumMateriales = rowsConDatos.reduce((s, r) => s + Number(r.total_materiales_qq || 0), 0);
   const acumIngresos   = rowsConDatos.reduce((s, r) => s + Number(r.ingreso_bruto_total || 0), 0);
 
-  // Ingreso diario lideresa del último mes
   const ingresoLideresaRow = latestIndicators.find(r => r.indicador_id === 'ingreso_diario_lideresa');
   const ingresoLideresaVal = ingresoLideresaRow ? Number(ingresoLideresaRow.valor || 0) : Number(latest.ingreso_diario_lideresa || 0);
-  // Meta anual como referencia: meses transcurridos × meta mensual (GTQ/día promedio)
-  const mesesConDatos = rowsConDatos.length;
 
-  // Porcentajes de avance anual
   const pctMateriales = (acumMateriales / META_ANUAL_MATERIALES) * 100;
   const pctIngresos   = (acumIngresos   / META_ANUAL_INGRESOS)   * 100;
-  // Para lideresa: % del último mes vs meta mensual
   const pctLideresa   = ingresoLideresaRow
     ? (Number(ingresoLideresaRow.valor||0) / Number(ingresoLideresaRow.meta_mensual||META_DIARIA_LIDERESA)) * 100
     : 0;
@@ -1663,28 +1655,24 @@ async function loadAtitlan(cfg){
   const keyMetrics = [
     {
       label: 'Colecta de materiales reciclables',
-      meta: META_ANUAL_MATERIALES,
-      acum: acumMateriales,
-      unit: 'qq / 815 TM',
+      acumDisplay: `${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq / 815 toneladas métricas`,
       pct: pctMateriales,
-      metaLabel: `Meta anual: ${fmt(META_ANUAL_MATERIALES)} qq`
+      pctDisplay: `${fmtPct(pctMateriales)} de avance con respecto a meta anual`,
+      barPct: pctMateriales
     },
     {
       label: 'Ingresos brutos por comercialización',
-      meta: META_ANUAL_INGRESOS,
-      acum: acumIngresos,
-      unit: 'GTQ',
+      acumDisplay: `${fmt(acumIngresos)} / ${fmt(META_ANUAL_INGRESOS)} GTQ`,
       pct: pctIngresos,
-      metaLabel: `Meta anual: Q${fmt(META_ANUAL_INGRESOS)}`
+      pctDisplay: `${fmtPct(pctIngresos)} de avance con respecto a meta anual`,
+      barPct: pctIngresos
     },
     {
       label: 'Ingresos medios diarios por lideresas',
-      meta: META_DIARIA_LIDERESA,
-      acum: ingresoLideresaVal,
-      unit: 'GTQ/día',
+      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ / ${fmt(META_DIARIA_LIDERESA)} GTQ diarios`,
       pct: pctLideresa,
-      metaLabel: `Meta: Q${fmt(META_DIARIA_LIDERESA)}/día`,
-      isMensual: true
+      pctDisplay: `${fmtPct(pctLideresa)} de avance de este indicador con respecto al mes de corte`,
+      barPct: pctLideresa
     }
   ];
 
@@ -1695,8 +1683,7 @@ async function loadAtitlan(cfg){
     score: score || 0,
     scoreLabel: 'Cumplimiento promedio vs metas mensuales',
     metrics: keyMetrics,
-    sourceSummary: 'Google Sheets',
-    mesesConDatos
+    sourceSummary: 'Google Sheets'
   };
 }
 
@@ -1726,31 +1713,31 @@ async function loadConservando(cfg){
 
   const keyMetrics = [
     {
-      label:'80,000 litros de aceite usado de cocina recolectados.',
-      acumDisplay:`${fmt(aceiteAcum)} / ${fmt(metaAceite)} litros`,
+      label:'Litros de aceite usado de cocina recolectados.',
+      acumDisplay:`${fmt(aceiteAcum)} lt / ${fmt(metaAceite)} litros recolectados anualmente`,
       pct:pctAceite,
-      pctDisplay:fmtPct(pctAceite),
+      pctDisplay:`${fmtPct(pctAceite)} de avance con respecto a meta anual`,
       barPct:pctAceite
     },
     {
-      label:'80,000,000 de litros de agua protegidos.',
-      acumDisplay:`${fmt(aguaAcum)} / ${fmt(metaAgua)} litros`,
+      label:'Litros de agua protegidos.',
+      acumDisplay:`${fmt(aguaAcum)} lt / ${fmt(metaAgua)} litros de agua protegidos`,
       pct:pctAgua,
-      pctDisplay:fmtPct(pctAgua),
+      pctDisplay:`${fmtPct(pctAgua)} de avance con respecto a meta anual`,
       barPct:pctAgua
     },
     {
       label:'65,040 jabones producidos.',
-      acumDisplay:`${fmt(jabonesProdAcum)} / ${fmt(metaJabonesProd)} jabones`,
+      acumDisplay:`${fmt(jabonesProdAcum)} jabones producidos / ${fmt(metaJabonesProd)} jabones producidos anualmente`,
       pct:pctJabonesProd,
-      pctDisplay:fmtPct(pctJabonesProd),
+      pctDisplay:`${fmtPct(pctJabonesProd)} de avance con respecto a meta anual`,
       barPct:pctJabonesProd
     },
     {
       label:'51,600 jabones vendidos anualmente.',
-      acumDisplay:`${fmt(jabonesVendAcum)} / ${fmt(metaJabonesVend)} jabones`,
+      acumDisplay:`${fmt(jabonesVendAcum)} vendidos / ${fmt(metaJabonesVend)} jabones anualmente`,
       pct:pctJabonesVend,
-      pctDisplay:fmtPct(pctJabonesVend),
+      pctDisplay:`${fmtPct(pctJabonesVend)} de avance con respecto a meta anual`,
       barPct:pctJabonesVend
     }
   ];
@@ -1786,24 +1773,24 @@ async function loadFM(cfg){
 
   const keyMetrics = [
     {
-      label:'Fortalecimiento. 15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
+      label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
       acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
       pct:pctFortalecimiento,
-      pctDisplay:fmtPct(pctFortalecimiento),
+      pctDisplay:`${fmtPct(pctFortalecimiento)} de avance con respecto a meta anual`,
       barPct:pctFortalecimiento
     },
     {
       label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento (alcantarillado, tratamiento de aguas residuales y/o desechos sólidos) con fondos CODEDE.',
       acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
       pct:pctAsistencia,
-      pctDisplay:fmtPct(pctAsistencia),
+      pctDisplay:`${fmtPct(pctAsistencia)} de avance con respecto a meta anual`,
       barPct:pctAsistencia
     },
     {
       label:'2 nuevos estudios de caracterización de residuos y desechos sólidos del sector comercial y de mercados y al menos 5 PIRDES implementados.',
       acumDisplay:`${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`,
       pct:pctResiduos,
-      pctDisplay:fmtPct(pctResiduos),
+      pctDisplay:`${fmtPct(pctResiduos)} de avance con respecto a meta anual`,
       barPct:pctResiduos
     }
   ];
@@ -1820,50 +1807,49 @@ async function loadFM(cfg){
 }
 
 async function loadEPC(cfg){
-  const docentesVal = 121;
-  const docentesMeta = 121;
+  const docentesVisitasRealizadas = 2;
+  const docentesVisitasMeta = 7;
+  const docentesPorVisita = 121;
 
-  const mesesCumplidosEstudiantes = 1;
-  const mesesMetaEstudiantes = 8;
-  const estudiantesMetaMensual = 3514;
+  const estudiantesVisitasRealizadas = 1;
+  const estudiantesVisitasMeta = 7;
+  const estudiantesPorVisita = 3514;
 
   const cohorteMarzoInicio = 68;
   const cohorteMarzoActual = 53;
-  const metaJovenes = 120;
-
   const actividadesVal = 10;
   const actividadesMeta = 128;
 
-  const pctDocentes = (docentesVal / docentesMeta) * 100;
-  const pctEstudiantes = (mesesCumplidosEstudiantes / mesesMetaEstudiantes) * 100;
+  const pctDocentes = (docentesVisitasRealizadas / docentesVisitasMeta) * 100;
+  const pctEstudiantes = (estudiantesVisitasRealizadas / estudiantesVisitasMeta) * 100;
   const pctCohorte = (cohorteMarzoActual / cohorteMarzoInicio) * 100;
   const pctActividades = (actividadesVal / actividadesMeta) * 100;
 
   const score = avg([
-    100, // docentes ya cumplidos al corte oficial
-    100, // 1 de 8 meses cumplidos al cierre de marzo
+    100,
+    100,
     pctCohorte,
-    (actividadesVal / 16) * 100 // esperado al corte marzo según hoja oficial
+    (actividadesVal / 16) * 100
   ]);
 
   const keyMetrics = [
     {
-      label:'121 docentes capacitados durante el desarrollo de la Fase 2 del programa EPC, de 50 centros educativos de los niveles Primaria Segundo Ciclo, Básico y Diversificado de los 13 municipios de la Cuenca del Lago de Atitlán.',
-      acumDisplay:`${fmt(docentesVal)} / ${fmt(docentesMeta)} docentes`,
+      label:'Visita sostenida a docentes capacitados durante el desarrollo de la Fase 2 del programa EPC, de 50 centros educativos de los niveles Primaria Segundo Ciclo, Básico y Diversificado de los 13 municipios de la Cuenca del Lago de Atitlán.',
+      acumDisplay:`${docentesVisitasRealizadas} / ${docentesVisitasMeta} visitas sostenidas a ${fmt(docentesPorVisita)} docentes`,
       pct:pctDocentes,
-      pctDisplay:fmtPct(pctDocentes),
+      pctDisplay:`${fmtPct(pctDocentes)} de avance con respecto a meta anual`,
       barPct:pctDocentes
     },
     {
-      label:'3,514 estudiantes capacitados con el beneficio del programa Educando para Conservar 2026.',
-      acumDisplay:`${mesesCumplidosEstudiantes} / ${mesesMetaEstudiantes} meses con ${fmt(estudiantesMetaMensual)} estudiantes`,
+      label:'Visita sostenida a estudiantes capacitados con el beneficio del programa Educando para Conservar 2026.',
+      acumDisplay:`${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} visitas sostenidas a ${fmt(estudiantesPorVisita)} estudiantes`,
       pct:pctEstudiantes,
-      pctDisplay:`${mesesCumplidosEstudiantes}/${mesesMetaEstudiantes} meses`,
+      pctDisplay:`${fmtPct(pctEstudiantes)} de avance con respecto a meta anual`,
       barPct:pctEstudiantes
     },
     {
       label:'120 jóvenes de 12 municipios formados en 5 módulos temáticos en temas de gestión ambiental, liderazgo y desarrollo de proyectos juveniles de emprendimiento con impacto social ambiental.',
-      acumDisplay:`Cohorte marzo ${fmt(cohorteMarzoActual)} / ${fmt(cohorteMarzoInicio)} · Cohorte julio pendiente`,
+      acumDisplay:`Cohorte marzo ${fmt(cohorteMarzoActual)} / 68 · Cohorte julio pendiente`,
       pct:pctCohorte,
       pctDisplay:`${fmtPct(pctCohorte)} asistencia sostenida`,
       barPct:pctCohorte
@@ -1928,8 +1914,8 @@ function programCard(p){
       <div class="metric-list">
         <div class="metric-header">
           <span>Indicador</span>
-          <span>Acumulado / Meta</span>
-          <span>% Avance</span>
+          <span>Acumulado al presente mes / Meta anual</span>
+          <span>% de avance con respecto a meta anual</span>
           <span></span>
         </div>
         ${p.metrics.map(metricRow).join('')}
