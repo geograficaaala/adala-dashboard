@@ -64,7 +64,7 @@
     .hero-period-pill{display:inline-flex;align-items:center;gap:8px;margin:2px 0 16px;padding:8px 14px;border-radius:999px;background:var(--blue-pale);border:1px solid var(--blue-soft);color:var(--blue);font-size:.82rem;font-weight:800;letter-spacing:.02em}
     .hero-period-pill::before{content:'';width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--sky),var(--blue-mid));box-shadow:0 0 0 4px rgba(56,182,232,.12)}
     .hero-main .source-inline{margin-top:14px;font-size:.78rem;color:var(--muted);font-weight:600}
-    .program-logo-card{display:grid;place-items:center;padding:12px;border-radius:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+    .program-logo-card{display:grid;place-items:center;width:min(100%,430px);padding:20px 22px;border-radius:22px;background:#ffffff;border:1px solid rgba(208,220,236,.95);box-shadow:0 18px 40px rgba(8,22,45,.14)}
     .program-logo-card img{display:block;width:min(100%,320px);height:auto;object-fit:contain;filter:drop-shadow(0 8px 22px rgba(10,20,35,.18))}
 
     .wrap{width:min(1700px, calc(100vw - 24px));margin:0 auto;padding:26px 0 0;position:relative;z-index:1}
@@ -167,8 +167,8 @@
     }
   
     .hero-side.logo-only{display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(180deg,#173d66 0%,#1e587f 58%,#25786c 100%)}
-    .hero-side.logo-only .program-logo-card{width:100%;min-height:100%;background:transparent;border:none;padding:6px;box-shadow:none}
-    .hero-side.logo-only .program-logo-card img{width:min(100%,380px)}
+    .hero-side.logo-only .program-logo-card{width:min(100%,430px);min-height:auto;background:#ffffff;border:1px solid rgba(208,220,236,.95);padding:20px 22px;box-shadow:0 18px 40px rgba(8,22,45,.14)}
+    .hero-side.logo-only .program-logo-card img{width:min(100%,360px)}
 
     .prep-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
     .prep-card{padding:20px 18px;background:linear-gradient(180deg,#ffffff 0%,#eef6ff 100%);border:1.5px solid var(--line-soft);border-radius:16px;box-shadow:var(--shadow-sm);display:grid;gap:10px;min-height:198px;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
@@ -183,29 +183,42 @@
     .prep-progress{height:8px;border-radius:999px;background:#eaf2fb;overflow:hidden}
     .prep-progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2f7bff,#4fb6ff);border-radius:999px;box-shadow:0 8px 24px rgba(47,123,255,.26);transition:width .9s cubic-bezier(.2,.8,.2,1)}
 
-    .chart-card{padding:22px 22px 18px;background:linear-gradient(180deg,#ffffff 0%,#f2f8ff 100%)}
-    .chart-grid{display:grid;gap:12px}
-    .chart-row{display:grid;grid-template-columns:minmax(180px,280px) minmax(260px,1fr) minmax(120px,150px);gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease}
-    .chart-row:hover,.chart-row:focus-within{transform:translateY(-2px);box-shadow:0 12px 28px rgba(10,35,80,.12);border-color:var(--blue-soft)}
-    .chart-label-wrap{display:grid;gap:4px}
-    .chart-label{font-weight:800;color:#163459}
+    .chart-card{padding:22px;background:linear-gradient(180deg,#ffffff 0%,#f2f8ff 100%)}
+    .chart-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .chart-item{position:relative;padding:18px 18px 16px;border-radius:18px;background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%);border:1.5px solid var(--line-soft);box-shadow:var(--shadow-sm);display:grid;gap:14px;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+    .chart-item:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(10,35,80,.12);border-color:var(--blue-soft)}
+    .chart-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .chart-heading{display:grid;gap:5px}
+    .chart-label{font-weight:800;color:#163459;line-height:1.3}
     .chart-sub{font-size:.8rem;color:#6d88ac}
-    .chart-track{position:relative}
-    .chart-bar-btn{position:relative;width:100%;height:44px;border:none;border-radius:999px;background:#eaf2fb;cursor:default;overflow:hidden;padding:0 16px;text-align:left}
-    .chart-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:999px;background:linear-gradient(90deg,#2d73d8 0%,#46b2f0 100%);box-shadow:0 8px 22px rgba(45,115,216,.26);transition:width 1s cubic-bezier(.2,.8,.2,1)}
-    .chart-row.pending .chart-fill{background:linear-gradient(90deg,#b8c9dc 0%,#d7e3f0 100%)}
-    .chart-row.closed .chart-fill{background:linear-gradient(90deg,#87a8c8 0%,#bdd1e5 100%)}
-    .chart-bar-text{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.86rem;font-weight:800;color:#143357}
-    .chart-bar-text span:last-child{font-family:var(--font-mono)}
-    .chart-metrics{display:grid;gap:2px;justify-items:end;text-align:right}
-    .chart-metrics strong{font-family:var(--font-mono);font-size:1.05rem;color:#10284a}
-    .chart-metrics span{font-size:.78rem;color:#6b87aa}
-    .chart-tooltip{position:absolute;left:12px;right:12px;bottom:calc(100% + 10px);background:#14385c;color:#fff;border-radius:14px;padding:12px 14px;font-size:.82rem;line-height:1.45;box-shadow:0 18px 36px rgba(8,22,40,.22);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:5}
+    .chart-badge{display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+    .chart-badge.active{background:#e9f4ff;color:#1e5fab;border:1px solid #d3e8ff}
+    .chart-badge.closed{background:#edf3f9;color:#5d7a9a;border:1px solid #d8e4ef}
+    .chart-badge.pending{background:#f4f6f8;color:#76889b;border:1px solid #e3e9ef}
+    .chart-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(170px,.8fr);gap:14px;align-items:stretch}
+    .chart-primary{display:grid;gap:5px;align-content:start}
+    .chart-primary-label{font-size:.74rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7590b2}
+    .chart-primary-value{font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:#10284a;line-height:1.05}
+    .chart-primary-copy{font-size:.9rem;line-height:1.55;color:#516a8f}
+    .chart-side-metrics{display:grid;gap:10px}
+    .metric-chip{display:grid;gap:4px;padding:12px 13px;border-radius:14px;background:#eef5fc;border:1px solid #dce9f7}
+    .metric-chip span{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7190b2}
+    .metric-chip strong{font-family:var(--font-mono);font-size:1.05rem;color:#10284a}
+    .chart-track-wrap{position:relative}
+    .chart-track{position:relative;display:flex;align-items:center;gap:12px;min-height:46px;padding:0 14px;border-radius:14px;background:#edf4fb;border:1px solid #dbe8f6;overflow:hidden}
+    .chart-track.pending{background:repeating-linear-gradient(135deg,#f5f7fa 0 14px,#eef2f6 14px 28px);border-style:dashed;border-color:#d6e0ea}
+    .chart-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:12px;background:linear-gradient(90deg,#2d73d8 0%,#46b2f0 100%);box-shadow:0 8px 22px rgba(45,115,216,.24);transition:width 1s cubic-bezier(.2,.8,.2,1)}
+    .chart-item.closed .chart-fill{background:linear-gradient(90deg,#6f91ba 0%,#aac6e4 100%)}
+    .chart-track-note,.chart-track-pct{position:relative;z-index:2}
+    .chart-track-note{font-size:.85rem;font-weight:700;color:#17385c}
+    .chart-track-pct{margin-left:auto;font-family:var(--font-mono);font-size:.9rem;font-weight:800;color:#17385c}
+    .chart-item.pending .chart-track-note{color:#71859a}
+    .chart-item.pending .chart-track-pct{display:none}
+    .chart-tooltip{position:absolute;left:14px;right:14px;bottom:calc(100% + 8px);background:#14385c;color:#fff;border-radius:14px;padding:12px 14px;font-size:.82rem;line-height:1.45;box-shadow:0 18px 36px rgba(8,22,40,.22);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:6}
     .chart-tooltip strong{display:block;margin-bottom:4px;color:#fff}
-    .chart-row:hover .chart-tooltip,.chart-row:focus-within .chart-tooltip{opacity:1;transform:translateY(0)}
-    .chart-footnote{margin-top:14px;font-size:.85rem;color:#6985a8}
+    .chart-item:hover .chart-tooltip{opacity:1;transform:translateY(0)}
 
-    @media (max-width: 1160px){.prep-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-row{grid-template-columns:1fr;justify-items:stretch}.chart-metrics{justify-items:start;text-align:left}}
+    @media (max-width: 1160px){.prep-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}.chart-body{grid-template-columns:1fr}}
     @media (max-width: 780px){.prep-grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero-side.logo-only{min-height:260px}}
 
 </style>
@@ -351,8 +364,7 @@
       { key:'centros_induccion_mes', label:'Centros con inducción', window:'Preparación', unit:'centros', narrative:value => `${fmt(value)} centros con socialización del programa y alineación metodológica previa al inicio de visitas.` },
       { key:'estudiantes_diagnostico_mes', label:'Diagnóstico inicial', window:'Preparación', unit:'estudiantes', narrative:value => `${fmt(value)} estudiantes con diagnóstico inicial levantado para orientar la implementación pedagógica del programa.` },
       { key:'coordinaciones_clave_mes', label:'Reuniones clave', window:'Gestión', unit:'coordinaciones', narrative:value => `${fmt(value)} coordinaciones o reuniones clave registradas para articulación institucional y seguimiento mensual.` },
-      { key:'actividades_campo_mes', label:'Acciones de campo', window:'Referencia del mes', unit:'actividades', narrative:value => `${fmt(value)} actividades de campo documentadas en el corte, aun cuando no todas cuenten para la meta recurrente.` }
-    ];
+];
 
     const OP_ANNUAL_META = [
       { key:'act_reforestacion_mes', label:'Campaña de reforestación', annualTarget:20, window:'Junio a agosto', start:6, end:8 },
@@ -562,7 +574,7 @@
         window: cfg.window,
         tone,
         chip,
-        valueText: fmtPct(progress),
+        valueText: status==='pending' ? 'Programado' : fmtPct(progress),
         reference,
         line1,
         line2,
@@ -669,14 +681,16 @@
     function annualOperationalRows(row){
       return OP_ANNUAL_META.map(cfg => {
         const actual = cumulativeValueForPeriod(cfg.key, state.periodo);
-        const pct = cfg.annualTarget > 0 ? actual / cfg.annualTarget : 0;
+        const rawPct = cfg.annualTarget > 0 ? actual / cfg.annualTarget : 0;
         const status = annualOperationalStatus(cfg, row);
-        return { ...cfg, actual, pct, status };
+        const pct = status === 'pending' ? null : rawPct;
+        const visualPct = status === 'pending' ? 0 : clampPct(rawPct);
+        return { ...cfg, actual, rawPct, pct, visualPct, status };
       });
     }
 
     function annualOperationalTooltip(item){
-      const pctLabel = fmtPct(item.pct);
+      const pctLabel = item.pct == null ? 'Pendiente de activación' : fmtPct(item.pct);
       const statusText = item.status==='pending'
         ? `Aún desactivado. La ventana válida inicia en ${item.window.toLowerCase()}.`
         : item.status==='closed'
@@ -685,38 +699,81 @@
       return `<strong>${esc(item.label)}</strong>Acumulado registrado: ${fmt(item.actual)}<br>Meta anual: ${fmt(item.annualTarget)}<br>Avance acumulado al presente mes: ${esc(pctLabel)}<br>${esc(statusText)}`;
     }
 
+    function chartStatusMeta(item){
+      if(item.status === 'pending'){
+        return {
+          badge: 'Programado',
+          label: 'Ventana válida',
+          value: item.window,
+          detail: `Se activa cuando el período seleccionado entre en ${item.window.toLowerCase()}.`
+        };
+      }
+      if(item.status === 'closed'){
+        return {
+          badge: 'Ventana cerrada',
+          label: 'Avance final leído',
+          value: fmtPct(item.pct),
+          detail: `Se registró ${fmt(item.actual)} de ${fmt(item.annualTarget)} al cierre de su ventana operativa.`
+        };
+      }
+      return {
+        badge: 'Activo',
+        label: 'Avance acumulado',
+        value: fmtPct(item.pct),
+        detail: `${fmt(item.actual)} de ${fmt(item.annualTarget)} registrados al presente mes.`
+      };
+    }
+
     function operationalAnnualChartMarkup(row){
       const items = annualOperationalRows(row);
       return `
         <section class="section" id="grafica-operativos">
           <div class="section-head">
             <div>
-              <div class="section-title">Gráfica interactiva · avance acumulado al presente mes de indicadores operativos priorizados con respecto a meta anual</div>
+              <div class="section-title">Gráfica interactiva · avance acumulado al presente mes frente a meta anual</div>
             </div>
-            <div class="section-chip">Pasa el cursor sobre cada barra</div>
+            <div class="section-chip">Pasa el cursor para ver detalle</div>
           </div>
           <article class="card chart-card">
             <div class="chart-grid">
-              ${items.map(item => `
-                <div class="chart-row ${item.status}">
-                  <div class="chart-label-wrap">
-                    <div class="chart-label">${esc(item.label)}</div>
-                    <div class="chart-sub">${esc(item.window)}</div>
+              ${items.map(item => {
+                const meta = chartStatusMeta(item);
+                return `
+                <article class="chart-item ${item.status}">
+                  <div class="chart-item-top">
+                    <div class="chart-heading">
+                      <div class="chart-label">${esc(item.label)}</div>
+                      <div class="chart-sub">${esc(item.window)}</div>
+                    </div>
+                    <div class="chart-badge ${item.status}">${esc(meta.badge)}</div>
                   </div>
-                  <div class="chart-track">
-                    <button class="chart-bar-btn" type="button" aria-label="${esc(item.label)}: ${fmt(item.actual)} de ${fmt(item.annualTarget)}">
-                      <span class="chart-fill" data-width="${Math.max(0, Math.min(item.pct, 1)) * 100}"></span>
-                      <span class="chart-bar-text"><span>${fmt(item.actual)} de ${fmt(item.annualTarget)}</span><span>${fmtPct(item.pct)}</span></span>
-                    </button>
-                    <div class="chart-tooltip">${annualOperationalTooltip(item)}</div>
+                  <div class="chart-body">
+                    <div class="chart-primary">
+                      <div class="chart-primary-label">${esc(meta.label)}</div>
+                      <div class="chart-primary-value">${esc(meta.value)}</div>
+                      <div class="chart-primary-copy">${esc(meta.detail)}</div>
+                    </div>
+                    <div class="chart-side-metrics">
+                      <div class="metric-chip">
+                        <span>Acumulado</span>
+                        <strong>${fmt(item.actual)}</strong>
+                      </div>
+                      <div class="metric-chip">
+                        <span>Meta anual</span>
+                        <strong>${fmt(item.annualTarget)}</strong>
+                      </div>
+                    </div>
                   </div>
-                  <div class="chart-metrics">
-                    <strong>${fmt(item.actual)}</strong>
-                    <span>meta anual ${fmt(item.annualTarget)}</span>
+                  <div class="chart-track-wrap">
+                    <div class="chart-track ${item.status}">
+                      <span class="chart-fill" data-width="${item.visualPct * 100}"></span>
+                      ${item.status === 'pending' ? '<span class="chart-track-note">Aún no vigente para este mes</span>' : `<span class="chart-track-note">${fmt(item.actual)} de ${fmt(item.annualTarget)}</span><span class="chart-track-pct">${fmtPct(item.pct)}</span>`}
+                    </div>
                   </div>
-                </div>`).join('')}
+                  <div class="chart-tooltip">${annualOperationalTooltip(item)}</div>
+                </article>`;
+              }).join('')}
             </div>
-            <div class="chart-footnote">La gráfica toma los acumulados observados en <strong>total_mes.csv</strong> hasta el período seleccionado y los compara contra la meta anual que definiste para cada actividad.</div>
           </article>
         </section>`;
     }
@@ -785,7 +842,7 @@
         <section class="section" id="cobertura">
           <div class="section-head">
             <div>
-              <div class="section-title">Cobertura pedagógica del período</div>
+              <div class="section-title">Cobertura pedagógica del período (Desarrollo de módulos de material EPC)</div>
             </div>
           </div>
           <div class="kpis" id="coverageGrid">${coverageCards || '<div class="empty">No hay indicadores de cobertura para este corte.</div>'}</div>
@@ -796,7 +853,7 @@
         <section class="section" id="operativos">
           <div class="section-head">
             <div>
-              <div class="section-title">Avance acumulado al presente mes de indicadores operativos priorizados</div>
+              <div class="section-title">Avance en el cumplimiento de indicadores operativos priorizados sobre metas mensuales</div>
             </div>
             <div class="section-chip">Metas mensuales por actividad</div>
           </div>
