@@ -139,6 +139,29 @@
     .social-icon svg{width:18px;height:18px;display:block}
     .footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
 
+
+    .present-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);font:700 .82rem/1 var(--font-body);cursor:pointer;transition:all .2s ease}
+    .present-btn:hover{background:rgba(255,255,255,.18);color:#fff;transform:translateY(-1px)}
+    .present-btn.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
+    .present-btn .back-arrow{font-size:.92rem}
+
+    .footer-wrap{grid-template-columns:1.25fr .85fr .85fr minmax(120px,160px);align-items:start}
+    .footer-mark{justify-self:end;align-self:end;display:flex;justify-content:flex-end;width:100%;padding-right:2px}
+    .footer-mark img{display:block;width:min(138px,100%);height:auto;opacity:.92;filter:drop-shadow(0 10px 18px rgba(7,22,39,.2))}
+
+    .presentation-hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:950;display:none;align-items:center;gap:12px;padding:10px 16px;border-radius:999px;background:rgba(12,29,58,.88);color:#f6fbff;border:1px solid rgba(255,255,255,.14);box-shadow:0 14px 32px rgba(8,22,45,.24);backdrop-filter:blur(12px)}
+    .presentation-hint-title{font-weight:800;font-size:.82rem;letter-spacing:.02em}
+    .presentation-hint-count{font-family:var(--font-mono);font-size:.78rem;padding:5px 9px;border-radius:999px;background:rgba(255,255,255,.12)}
+    .presentation-hint-keys{font-size:.76rem;color:rgba(255,255,255,.78)}
+
+    body.presentation-mode{overflow:hidden}
+    body.presentation-mode .wrap{height:calc(100vh - 86px);overflow-y:auto;scroll-snap-type:y mandatory;padding:16px 0 24px}
+    body.presentation-mode .present-slide{min-height:calc(100vh - 118px);scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;justify-content:center}
+    body.presentation-mode .hero.present-slide{align-items:center}
+    body.presentation-mode .site-footer{display:none}
+    body.presentation-mode .presentation-hint{display:flex}
+    body.presentation-mode .header{position:sticky;top:0;z-index:980}
+
     .loading{display:flex;align-items:center;justify-content:center;gap:12px;padding:54px 18px;color:var(--muted)}
     .spinner{width:20px;height:20px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--blue-mid);animation:spin .8s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -156,6 +179,7 @@
       .hero-grid{grid-template-columns:1fr 1fr}
       .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
       .footer-wrap{grid-template-columns:1fr}
+      .footer-mark{justify-self:start;padding-right:0}
     }
     @media (max-width:900px){
       .header{padding:12px 16px;gap:12px}
@@ -166,8 +190,9 @@
       .hero-grid,.kpis{grid-template-columns:1fr}
     }
   
-    .hero-side.logo-only{display:flex;align-items:center;justify-content:center;padding:28px;background:linear-gradient(180deg,#173d66 0%,#1e587f 58%,#25786c 100%)}
-    .hero-side.logo-only .program-logo-card{width:min(100%,430px);min-height:auto;background:#ffffff;border:1px solid rgba(208,220,236,.95);padding:20px 22px;box-shadow:0 18px 40px rgba(8,22,45,.14)}
+    .hero-side.logo-only{display:flex;align-items:center;justify-content:center;padding:0;background:transparent;border:none;box-shadow:none}
+    .hero-side.logo-only:hover{transform:none;box-shadow:none}
+    .hero-side.logo-only .program-logo-card{width:min(100%,430px);min-height:auto;background:#ffffff;border:1px solid rgba(208,220,236,.95);padding:20px 22px;box-shadow:0 18px 40px rgba(8,22,45,.14);margin:0 auto}
     .hero-side.logo-only .program-logo-card img{width:min(100%,360px)}
 
     .prep-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
@@ -239,6 +264,7 @@
       </nav>
       <div class="header-utility">
         <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+        <button class="present-btn" id="presentationToggle" type="button" aria-pressed="false"><span class="back-arrow">&#10697;</span><span class="present-btn-label">Modo presentación</span></button>
         <div class="status-pill muted" id="estadoGlobal">Cargando corte</div>
         <div class="status-pill muted" id="periodoActivoPill">Corte de lectura</div>
         <div class="period-rack">
@@ -296,8 +322,17 @@
           </a>
         </div>
       </section>
+      <section class="footer-mark" aria-label="Sello institucional">
+        <img src="./chill_lago.png" alt="Símbolo institucional AALA" onerror="this.style.display='none'">
+      </section>
     </div>
   </footer>
+
+  <div class="presentation-hint" id="presentationHint" aria-live="polite" aria-hidden="true">
+    <span class="presentation-hint-title" id="presentationTitle">Resumen</span>
+    <span class="presentation-hint-count" id="presentationCount">1/1</span>
+    <span class="presentation-hint-keys">&#8592; &#8594; navegar · Esc salir</span>
+  </div>
 
   <script>
     const PATHS = {
@@ -653,7 +688,7 @@
 
       if(!cards) return '';
       return `
-        <section class="section" id="preparacion">
+        <section class="section present-slide" id="preparacion">
           <div class="section-head">
             <div>
               <div class="section-title">Indicadores complementarios del presente mes</div>
@@ -727,7 +762,7 @@
     function operationalAnnualChartMarkup(row){
       const items = annualOperationalRows(row);
       return `
-        <section class="section" id="grafica-operativos">
+        <section class="section present-slide" id="grafica-operativos">
           <div class="section-head">
             <div>
               <div class="section-title">Gráfica interactiva · avance acumulado al presente mes frente a meta anual</div>
@@ -794,6 +829,160 @@
       return match ? match.start : 13;
     }
 
+
+    let presentationMode = false;
+    let presentationIndex = 0;
+
+    function presentationSlides(){
+      return Array.from(document.querySelectorAll('.present-slide'));
+    }
+
+    function updatePresentationHint(){
+      const hint = document.getElementById('presentationHint');
+      const title = document.getElementById('presentationTitle');
+      const count = document.getElementById('presentationCount');
+      if(!hint || !title || !count) return;
+      const slides = presentationSlides();
+      if(!slides.length){
+        title.textContent = 'Resumen';
+        count.textContent = '0/0';
+        return;
+      }
+      presentationIndex = Math.max(0, Math.min(presentationIndex, slides.length - 1));
+      const active = slides[presentationIndex];
+      const heading = active?.querySelector('.section-title, h1');
+      title.textContent = heading ? heading.textContent.trim() : 'Resumen';
+      count.textContent = `${presentationIndex + 1}/${slides.length}`;
+      hint.setAttribute('aria-hidden', presentationMode ? 'false' : 'true');
+    }
+
+    function scrollToPresentationSlide(index, behavior='smooth'){
+      const slides = presentationSlides();
+      if(!slides.length) return;
+      presentationIndex = Math.max(0, Math.min(index, slides.length - 1));
+      slides[presentationIndex].scrollIntoView({ behavior, block:'start' });
+      updatePresentationHint();
+    }
+
+    async function setPresentationMode(nextMode){
+      presentationMode = Boolean(nextMode);
+      document.body.classList.toggle('presentation-mode', presentationMode);
+      const button = document.getElementById('presentationToggle');
+      const label = button?.querySelector('.present-btn-label');
+      if(button){
+        button.classList.toggle('active', presentationMode);
+        button.setAttribute('aria-pressed', presentationMode ? 'true' : 'false');
+      }
+      if(label) label.textContent = presentationMode ? 'Salir de presentación' : 'Modo presentación';
+
+      if(presentationMode){
+        try{
+          if(!document.fullscreenElement && document.documentElement.requestFullscreen){
+            await document.documentElement.requestFullscreen();
+          }
+        }catch(err){}
+        requestAnimationFrame(()=>scrollToPresentationSlide(presentationIndex, 'auto'));
+      }else{
+        try{
+          if(document.fullscreenElement && document.exitFullscreen){
+            await document.exitFullscreen();
+          }
+        }catch(err){}
+        updatePresentationHint();
+      }
+    }
+
+    function refreshPresentationState(){
+      const slides = presentationSlides();
+      if(presentationIndex >= slides.length) presentationIndex = Math.max(0, slides.length - 1);
+      updatePresentationHint();
+      if(presentationMode){
+        requestAnimationFrame(()=>scrollToPresentationSlide(presentationIndex, 'auto'));
+      }
+    }
+
+    function syncPresentationIndexToScroll(){
+      if(!presentationMode) return;
+      const wrap = document.getElementById('mainWrap');
+      const slides = presentationSlides();
+      if(!wrap || !slides.length) return;
+      const wrapTop = wrap.getBoundingClientRect().top;
+      let closest = 0;
+      let best = Infinity;
+      slides.forEach((slide, index)=>{
+        const dist = Math.abs(slide.getBoundingClientRect().top - wrapTop - 12);
+        if(dist < best){
+          best = dist;
+          closest = index;
+        }
+      });
+      if(closest !== presentationIndex){
+        presentationIndex = closest;
+        updatePresentationHint();
+      }
+    }
+
+    function handlePresentationKeys(event){
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if(tag === 'input' || tag === 'textarea' || tag === 'select' || document.activeElement?.isContentEditable) return;
+
+      if(event.key.toLowerCase() === 'p'){
+        event.preventDefault();
+        setPresentationMode(!presentationMode);
+        return;
+      }
+
+      if(!presentationMode) return;
+
+      if(['ArrowRight','ArrowDown','PageDown',' '].includes(event.key)){
+        event.preventDefault();
+        scrollToPresentationSlide(presentationIndex + 1);
+        return;
+      }
+      if(['ArrowLeft','ArrowUp','PageUp'].includes(event.key)){
+        event.preventDefault();
+        scrollToPresentationSlide(presentationIndex - 1);
+        return;
+      }
+      if(event.key === 'Home'){
+        event.preventDefault();
+        scrollToPresentationSlide(0);
+        return;
+      }
+      if(event.key === 'End'){
+        event.preventDefault();
+        scrollToPresentationSlide(presentationSlides().length - 1);
+        return;
+      }
+      if(event.key === 'Escape'){
+        event.preventDefault();
+        setPresentationMode(false);
+      }
+    }
+
+    function bindPresentationControls(){
+      const button = document.getElementById('presentationToggle');
+      const wrap = document.getElementById('mainWrap');
+
+      button?.addEventListener('click', ()=>setPresentationMode(!presentationMode));
+      wrap?.addEventListener('scroll', syncPresentationIndexToScroll, { passive:true });
+      document.addEventListener('keydown', handlePresentationKeys);
+      document.addEventListener('fullscreenchange', ()=>{
+        if(!document.fullscreenElement && presentationMode){
+          presentationMode = false;
+          document.body.classList.remove('presentation-mode');
+          const button = document.getElementById('presentationToggle');
+          const label = button?.querySelector('.present-btn-label');
+          button?.classList.remove('active');
+          button?.setAttribute('aria-pressed','false');
+          if(label) label.textContent = 'Modo presentación';
+          updatePresentationHint();
+        }
+      });
+      updatePresentationHint();
+    }
+
+
     function renderAll(){
       const row = periodRow();
       const meta = (state.data.metadata||[])[0] || {};
@@ -810,7 +999,7 @@
       const annualChart = operationalAnnualChartMarkup(row);
 
       document.getElementById('mainWrap').innerHTML = `
-        <section class="hero" id="resumen">
+        <section class="hero present-slide" id="resumen">
           <article class="card hero-main">
             <div class="hero-eyebrow">Programa · educación ambiental</div>
             <h1>Educando para Conservar</h1>
@@ -839,7 +1028,7 @@
           </article>
         </section>
 
-        <section class="section" id="cobertura">
+        <section class="section present-slide" id="cobertura">
           <div class="section-head">
             <div>
               <div class="section-title">Cobertura pedagógica del período (Desarrollo de módulos de material EPC)</div>
@@ -850,7 +1039,7 @@
 
         ${prepCards}
 
-        <section class="section" id="operativos">
+        <section class="section present-slide" id="operativos">
           <div class="section-head">
             <div>
               <div class="section-title">Avance en el cumplimiento de indicadores operativos priorizados sobre metas mensuales</div>
@@ -883,6 +1072,7 @@
         document.querySelectorAll('.kpi-value[data-value], .prep-value[data-value]').forEach((node,i)=>{
           if(node.dataset.value!=='') setTimeout(()=>animateMetricValue(node), 160 + i*90);
         });
+        refreshPresentationState();
       });
     }
 
@@ -898,6 +1088,7 @@
         state.periodo = periodos.length ? periodos[periodos.length-1].periodo_clave : '';
         buildPills(total);
         renderAll();
+        bindPresentationControls();
         document.getElementById('loadingState')?.remove();
       }catch(err){
         console.error(err);
