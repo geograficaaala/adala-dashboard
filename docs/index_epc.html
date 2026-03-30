@@ -537,6 +537,139 @@ body::after{background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,2
 @media (max-width:1120px){.story-grid,.dense-panels,.hero{grid-template-columns:1fr}.overview-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:760px){.wrap{padding:18px 14px 68px}.hero-main{padding:24px 18px 22px}.hero-pills{gap:8px}.story-grid,.dense-panels,.overview-grid,.kpi-grid{grid-template-columns:1fr}}
 
+
+
+/* HEADER HOMOGENEIZADO · BASE ATITLÁN RECICLA */
+.header{
+  position:sticky;top:0;z-index:400;min-height:82px;display:flex;align-items:center;gap:18px;
+  padding:12px 28px;border-bottom:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(135deg, rgba(18,62,104,.96) 0%, rgba(23,84,129,.95) 48%, rgba(31,116,145,.93) 100%);
+  backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);
+  box-shadow:0 16px 40px rgba(13,39,67,.18);
+}
+.header-brand{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0}
+.brand-mark{
+  width:42px;height:42px;border-radius:14px;position:relative;flex-shrink:0;
+  background:
+    radial-gradient(circle at 30% 28%, rgba(76,165,191,.96) 0 18%, transparent 20%),
+    linear-gradient(160deg, #163a5f 0%, #1c6084 60%, #2e6a57 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 8px 18px rgba(22,58,95,.18);
+}
+.brand-mark::before,.brand-mark::after{content:'';position:absolute;left:8px;right:8px;border-radius:999px;background:rgba(255,255,255,.88)}
+.brand-mark::before{bottom:12px;height:4px;transform:rotate(-4deg)}
+.brand-mark::after{bottom:7px;height:3px;opacity:.85;transform:rotate(3deg)}
+.brand-text{display:grid;gap:1px;min-width:0}
+.brand-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.74);font-weight:800;line-height:1.1}
+.brand-title{font-size:1rem;font-weight:700;color:#fff;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-stack{margin-left:auto;display:grid;gap:10px;min-width:0;flex:1}
+.nav-tabs{
+  margin-left:auto;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;width:fit-content;
+}
+.nav-tab{
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+  border-radius:999px;padding:10px 16px;border:none;font:700 .79rem/1 var(--font-body);
+  color:rgba(255,255,255,.78);background:transparent;white-space:nowrap;transition:all .2s ease;
+}
+.nav-tab:hover{background:rgba(255,255,255,.10);color:#fff}
+.nav-tab.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
+.header-utility{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+.header .back{
+  width:auto;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);
+  box-shadow:none;font-size:.84rem;text-decoration:none;
+}
+.header .back:hover{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.26);transform:translateY(-1px)}
+.header .back-arrow{background:rgba(255,255,255,.18);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.period-rack{display:flex;align-items:center;gap:10px;min-width:0;flex:1 1 560px;justify-content:flex-end}
+.period-rack-label{font-size:.68rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.68);white-space:nowrap}
+.header .month-pills{
+  display:flex;gap:6px;align-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;padding:5px;box-shadow:none;overflow:auto;max-width:100%;scrollbar-width:none;
+}
+.header .month-pills::-webkit-scrollbar{display:none}
+.header .month-pill{
+  width:auto;min-width:44px;text-align:center;padding:8px 12px;border-radius:999px;border:none;background:transparent;
+  color:rgba(255,255,255,.74);font-size:.8rem;font-weight:700;transition:background .2s ease,color .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.header .month-pill:hover:not(:disabled){background:rgba(255,255,255,.14);color:#fff;transform:translateY(-1px)}
+.header .month-pill.active{background:rgba(255,255,255,.94);color:#163a5f;box-shadow:0 10px 18px rgba(6,24,42,.16)}
+.header .month-pill.planif{border:1px dashed rgba(255,255,255,.22);font-style:italic}
+.header .month-pill.planif.active{background:rgba(255,255,255,.20);color:#fff;border:1px dashed rgba(255,255,255,.35);box-shadow:none}
+.header .month-pill:disabled{opacity:.28;cursor:default}
+.header .estado-global{
+  background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.18);min-height:40px;
+}
+.header .estado-global .dot{background:currentColor}
+.wrap{max-width:1320px;margin:0 auto;padding:28px 24px 72px;position:relative;z-index:1}
+
+/* KPI ANIMATION · BASE ATITLÁN RECICLA */
+.kpi-card{--tone:#1c6084;--tone-soft:#d9ecf1}
+.kpi-card.al-dia{--tone:#2e8f5e;--tone-soft:#d9f0e2}
+.kpi-card.seguimiento{--tone:#c7982a;--tone-soft:#f4ead0}
+.kpi-card.rezago{--tone:#c85f63;--tone-soft:#f5dfe1}
+.kpi-card.inactivo{--tone:#7b8c99;--tone-soft:#e8eef0}
+.kpi-card.static-card{cursor:default}
+.kpi-card.static-card:hover{transform:translateY(-4px)}
+.kpi-figure{
+  display:grid;grid-template-columns:26px 1fr;gap:18px;align-items:end;min-height:120px;margin-bottom:10px;
+}
+.kpi-pillar{
+  position:relative;width:22px;height:84px;display:flex;align-items:flex-end;justify-content:center;flex:0 0 22px;
+}
+.kpi-pillar-track{
+  position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10px;height:84px;border-radius:999px;background:var(--tone-soft,#d9ecf1);
+}
+.kpi-pillar-fill{
+  position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10px;height:0;border-radius:999px;background:var(--tone,#1c6084);
+  transition:height .92s cubic-bezier(.22,1,.36,1);box-shadow:0 8px 18px rgba(18,42,66,.12);
+}
+.kpi-reading{display:grid;gap:5px;align-content:end;min-width:0}
+.kpi-val{
+  font-family:var(--font-body);font-size:clamp(2.15rem,2.6vw,3.4rem);font-weight:600;letter-spacing:-.055em;line-height:.94;color:#091729;white-space:normal;
+  display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;
+}
+.kpi-unit-inline{font-size:1rem;font-weight:700;color:#5f6d81;letter-spacing:0}
+.kpi-achieved{font-size:1rem;font-weight:700;color:#091729;line-height:1.2}
+.kpi-reference{font-size:.87rem;color:#7a8699;line-height:1.4}
+.kpi-reference strong{font-weight:600;color:#5f6d81}
+.kpi-readings{display:grid;gap:7px;align-content:start}
+.kpi-meta{font-size:.88rem;line-height:1.62;color:#4c6478}
+.kpi-meta strong{color:#17314f}
+.kpi-progress-line{height:5px;background:#e2ebe7;border-radius:999px;overflow:hidden;margin-top:4px}
+.kpi-progress-line span{display:block;height:100%;width:0;background:var(--tone,#1c6084);transition:width .92s cubic-bezier(.22,1,.36,1)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin-bottom:20px}
+
+/* FOOTER HOMOGENEIZADO · BASE ATITLÁN RECICLA */
+.site-footer{margin-top:34px;background:linear-gradient(145deg,#18324c 0%,#1b4f68 62%,#2b6b60 100%);color:rgba(255,255,255,.92);position:relative;overflow:hidden}
+.site-footer::before{content:'';position:absolute;inset:auto -10% -120px -10%;height:220px;background:radial-gradient(60px 20px at 0 100%, rgba(255,255,255,.12) 50%, transparent 52%) repeat-x;background-size:140px 90px;opacity:.55;pointer-events:none}
+.footer-wrap{width:min(1700px, calc(100vw - 24px));margin:0 auto;padding:34px 0 30px;display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:28px;position:relative;z-index:1}
+.footer-brand{display:grid;gap:12px;max-width:50ch}
+.footer-brandline{display:flex;align-items:flex-start;gap:12px}
+.footer-title{font-size:1.1rem;font-weight:700;line-height:1.2}
+.footer-copy{color:rgba(255,255,255,.8);font-size:.92rem;line-height:1.75}
+.footer-col h3{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;color:rgba(255,255,255,.76)}
+.footer-links{display:grid;gap:10px}
+.footer-links a{color:#fff;text-decoration:none;font-size:.92rem;font-weight:600;opacity:.92;width:fit-content;display:inline-flex;align-items:center;gap:10px}
+.social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.96);flex-shrink:0}
+.social-icon svg{width:18px;height:18px;display:block}
+.footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
+
+@media (max-width: 1180px){
+  .header{padding:12px 18px;gap:14px;flex-wrap:wrap}
+  .header-stack{width:100%}
+  .nav-tabs{width:100%;margin-left:0}
+  .period-rack{flex-basis:100%;justify-content:flex-start}
+}
+@media (max-width: 900px){
+  .footer-wrap{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width: 640px){
+  .wrap{padding:22px 16px 64px}
+  .kpi-grid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -556,23 +689,26 @@ body::after{background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,2
   </div>
 </div>
 
-<header class="topbar">
+<header class="header">
   <a class="header-brand" href="./index.html">
+    <span class="brand-mark" aria-hidden="true"></span>
     <span class="brand-text">
       <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
       <span class="brand-title">Tablero dinámico institucional de avances</span>
     </span>
   </a>
-  <div class="header-toolbar">
-    <a href="./index.html" class="back">
-      <span class="back-arrow">&#8592;</span>
-      Volver al inicio
-    </a>
-    <div class="period-rack">
-      <span class="period-rack-label">Período de lectura</span>
-      <div class="month-pills" id="monthPills" role="group" aria-label="Período"></div>
-    </div>
-    <div class="topbar-right">
+  <div class="header-stack">
+    <nav class="nav-tabs" aria-label="Navegación de la página">
+      <a class="nav-tab active" href="#resumen">Resumen</a>
+      <a class="nav-tab" href="#cobertura">Cobertura</a>
+      <a class="nav-tab" href="#indicadores">Indicadores</a>
+    </nav>
+    <div class="header-utility">
+      <a href="./index.html" class="back"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+      <div class="period-rack">
+        <span class="period-rack-label">Período de lectura</span>
+        <div class="month-pills" id="monthPills" role="group" aria-label="Período"></div>
+      </div>
       <div class="estado-global inactivo" id="estadoGlobal">
         <span class="dot"></span>
         <span id="estadoLabel">Cargando</span>
@@ -599,19 +735,36 @@ body::after{background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,2
         La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.
       </p>
     </section>
+
     <section class="footer-col">
       <h3>Contacto y sitio</h3>
       <div class="footer-links">
-        <a href="https://amigosdeatitlan.org/" target="_blank" rel="noreferrer noopener"><span>Página web</span></a>
-        <a href="https://www.youtube.com/@asociacionamigosdellagodea2358" target="_blank" rel="noreferrer noopener"><span>YouTube</span></a>
-        <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener"><span>Facebook</span></a>
+        <a href="https://amigosdeatitlan.org/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.7 2.8 4.1 5.8 4.1 9S14.7 18.2 12 21c-2.7-2.8-4.1-5.8-4.1-9S9.3 5.8 12 3z"></path></svg></span>
+          <span>Página web</span>
+        </a>
+        <a href="https://www.youtube.com/@asociacionamigosdellagodea2358" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.4-4.8z"></path><path d="M10 15.5v-7l6 3.5-6 3.5z" fill="#1b4f68"></path></svg></span>
+          <span>YouTube</span>
+        </a>
+        <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.4H16l.4-3h-2.9V8.7c0-.9.3-1.5 1.6-1.5h1.4V4.5c-.2 0-1-.1-2-.1-2 0-3.4 1.2-3.4 3.6v2.6H9v3h2.1V21h2.4z"></path></svg></span>
+          <span>Facebook</span>
+        </a>
       </div>
     </section>
+
     <section class="footer-col">
       <h3>Redes</h3>
       <div class="footer-links">
-        <a href="https://www.linkedin.com/in/aala-atitl%C3%A1n-3653a0325/" target="_blank" rel="noreferrer noopener"><span>LinkedIn</span></a>
-        <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener"><span>Instagram</span></a>
+        <a href="https://www.linkedin.com/in/aala-atitl%C3%A1n-3653a0325/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20h3.38V8.5zm-1.69-5A1.96 1.96 0 1 0 5.25 7.4a1.96 1.96 0 0 0 0-3.9zM20.44 13.3c0-3.07-1.64-4.5-3.83-4.5a3.31 3.31 0 0 0-3 1.64V8.5h-3.24c.04 1.28 0 11.5 0 11.5h3.24v-6.42c0-.34.02-.68.13-.92a2.12 2.12 0 0 1 1.98-1.42c1.4 0 1.95 1.08 1.95 2.66V20H21v-6.7z"></path></svg></span>
+          <span>LinkedIn</span>
+        </a>
+        <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="3.8"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
+          <span>Instagram</span>
+        </a>
       </div>
     </section>
   </div>
@@ -623,25 +776,9 @@ const PATHS = {
   indicadores: './data/educando_para_conservar/institucional_indicadores.csv',
 };
 
-/* Datos del diplomado: las dos sesiones de marzo son 69 y 53 asistentes.
-   El CSV registra 122 = 69+53 acumulado del mes. Aquí los separamos. */
-const DIPL_CONFIG = {
-  META_COBERTURA: 60,
-  TOTAL_SESIONES: 6,
-  LABELS_SESIONES: ['6 mar','20 mar','10 abr','15 may','29 may','12 jun'],
-  POR_PERIODO: {
-    '2026-02': { inscritos: 68, sesiones: [] },
-    '2026-03': {
-      inscritos: 68,
-      sesiones: [
-        { label: 'Módulo 1 · 6 mar',  n: 69 },
-        { label: 'Módulo 2 · 20 mar', n: 53 },
-      ]
-    }
-  }
-};
-
 let state = { periodo: '', data: {} };
+
+
 
 const fmt    = (n, d=0) => new Intl.NumberFormat('en-US',{maximumFractionDigits:d,minimumFractionDigits:d}).format(+n||0);
 const esc    = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -818,9 +955,9 @@ function buildHTML(tot,inds,indsEst,indsTact,p,aporta,mesCiclo){
   </div>`:'';
 
   const NARR={
-    '2026-01':'Enero se destinó a la revisión del POA EPC 2026, ajuste de la estrategia pedagógica y preparación del calendario escolar del programa. También se desarrollaron actividades preparatorias para el Diplomado Juvenil y una jornada ambiental de apoyo en Panajachel.',
-    '2026-02':`Febrero se concentró en la preparación de los centros EPC. Se realizaron ${fmt(+tot.centros_induccion_mes||0)} talleres de inducción con ${fmt(+tot.docentes_induccion_mes||0)} docentes y un diagnóstico inicial con ${fmt(+tot.estudiantes_diagnostico_mes||0)} estudiantes. Se consolidó además la inscripción de ${fmt(68)} participantes para el Diplomado Juvenil.`,
-    '2026-03':`En marzo inició la implementación del ciclo EPC en los ${fmt(+tot.centros_mes||0)} centros educativos acompañados, con ${fmt(+tot.docentes_mes||0)} docentes, ${fmt(+tot.estudiantes_epc_mes||0)} estudiantes y presencia en ${fmt(+tot.municipios_mes||0)} municipios. El Diplomado Juvenil completó sus dos primeras sesiones.`
+    '2026-01':'Enero se destinó a la revisión del POA EPC 2026, ajuste de la estrategia pedagógica y preparación del calendario escolar del programa. También se desarrolló una jornada ambiental de apoyo en Panajachel como parte del arranque operativo del año.',
+    '2026-02':`Febrero se concentró en la preparación de los centros EPC. Se realizaron ${fmt(+tot.centros_induccion_mes||0)} talleres de inducción con ${fmt(+tot.docentes_induccion_mes||0)} docentes y un diagnóstico inicial con ${fmt(+tot.estudiantes_diagnostico_mes||0)} estudiantes.`,
+    '2026-03':`En marzo inició la implementación del ciclo EPC en los ${fmt(+tot.centros_mes||0)} centros educativos acompañados, con ${fmt(+tot.docentes_mes||0)} docentes, ${fmt(+tot.estudiantes_epc_mes||0)} estudiantes y presencia en ${fmt(+tot.municipios_mes||0)} municipios. También se registró despliegue territorial mediante actividades de campo por tipo.`
   };
   const desc=NARR[p]||`Seguimiento del período ${mesLbl} · Programa Educando para Conservar.`;
 
@@ -866,27 +1003,112 @@ function buildHTML(tot,inds,indsEst,indsTact,p,aporta,mesCiclo){
     </article>`;
   }).join('');
 
-  const kpiHTML=indsEst.map(ind=>buildKpiCard(ind,mesCiclo,aporta,mesIdx)).join('');
-  const diplHTML=buildDiplomado(p);
+  const totalActs = [
+    +tot.act_reforestacion_mes||0,
+    +tot.act_tul_mes||0,
+    +tot.act_ferias_mes||0,
+    +tot.act_huertos_mes||0,
+    +tot.act_giras_mes||0,
+    +tot.act_murales_mes||0,
+    +tot.act_centros_acopio_mes||0,
+    +tot.act_limpiezas_mes||0,
+    +tot.act_monitoreo_reforestadas_mes||0,
+    +tot.act_proyectos_gestion_mes||0,
+  ].reduce((a,b)=>a+b,0);
+  const totalStudents = +tot.estudiantes_epc_mes||+tot.estudiantes_diagnostico_mes||0;
 
-  const actItems=[
-    {nom:'Manejo y poda de tul',            val:+tot.act_tul_mes||0},
-    {nom:'Campañas de reforestación',        val:+tot.act_reforestacion_mes||0},
-    {nom:'Ferias ambientales',               val:+tot.act_ferias_mes||0},
-    {nom:'Giras educativas',                 val:+tot.act_giras_mes||0},
-    {nom:'Huertos escolares',                val:+tot.act_huertos_mes||0},
-    {nom:'Campañas de limpieza escolar',     val:+tot.act_limpiezas_mes||0},
-    {nom:'Murales pedagógicos',              val:+tot.act_murales_mes||0},
-    {nom:'Centros de acopio escolar',        val:+tot.act_centros_acopio_mes||0},
-  ].filter(a=>a.val>0);
+  const activityKpis = [
+    {
+      label:'Actividades de campo',
+      value:+tot.actividades_campo_mes||totalActs,
+      unit:'actividades',
+      chip:(+tot.actividades_campo_mes||totalActs)>0?'Con actividad':'Sin registro',
+      cls:(+tot.actividades_campo_mes||totalActs)>0?'al-dia':'inactivo',
+      reference:'Despliegue operativo del período',
+      meta1:`Total del período: <strong>${fmt(+tot.actividades_campo_mes||totalActs)} actividades</strong>`,
+      meta2:`Tipos registrados: <strong>${fmt([+tot.act_reforestacion_mes||0,+tot.act_tul_mes||0,+tot.act_ferias_mes||0,+tot.act_huertos_mes||0,+tot.act_giras_mes||0,+tot.act_murales_mes||0,+tot.act_centros_acopio_mes||0,+tot.act_limpiezas_mes||0,+tot.act_monitoreo_reforestadas_mes||0,+tot.act_proyectos_gestion_mes||0].filter(v=>v>0).length)}</strong>`,
+      progress: Math.min(100, Math.max(12, ((+tot.actividades_campo_mes||totalActs)>0?100:0)))
+    },
+    {
+      label:'Estudiantes en actividades de campo',
+      value:+tot.estudiantes_actividades_campo_mes||0,
+      unit:'estudiantes',
+      chip:(+tot.estudiantes_actividades_campo_mes||0)>0?'Con participación':'Sin registro',
+      cls:(+tot.estudiantes_actividades_campo_mes||0)>0?'al-dia':'inactivo',
+      reference:'Participación estudiantil en campo',
+      meta1:`Participación vs cobertura del período: <strong>${fmt(totalStudents?((+tot.estudiantes_actividades_campo_mes||0)/totalStudents)*100:0,1)}%</strong>`,
+      meta2:`Base pedagógica del período: <strong>${fmt(totalStudents)} estudiantes</strong>`,
+      progress: Math.min(100, Math.max((+tot.estudiantes_actividades_campo_mes||0)>0?12:0, totalStudents?((+tot.estudiantes_actividades_campo_mes||0)/totalStudents)*100:0))
+    },
+    {
+      label:'Campañas de limpieza escolar',
+      value:+tot.act_limpiezas_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_limpiezas_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_limpiezas_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_limpiezas_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_limpiezas_mes||0)>0?12:0, totalActs?((+tot.act_limpiezas_mes||0)/totalActs)*100:0))
+    },
+    {
+      label:'Giras educativas',
+      value:+tot.act_giras_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_giras_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_giras_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_giras_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_giras_mes||0)>0?12:0, totalActs?((+tot.act_giras_mes||0)/totalActs)*100:0))
+    },
+    {
+      label:'Ferias ambientales',
+      value:+tot.act_ferias_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_ferias_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_ferias_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_ferias_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_ferias_mes||0)>0?12:0, totalActs?((+tot.act_ferias_mes||0)/totalActs)*100:0))
+    },
+    {
+      label:'Manejo y poda de tul',
+      value:+tot.act_tul_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_tul_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_tul_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_tul_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_tul_mes||0)>0?12:0, totalActs?((+tot.act_tul_mes||0)/totalActs)*100:0))
+    },
+    {
+      label:'Campañas de reforestación',
+      value:+tot.act_reforestacion_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_reforestacion_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_reforestacion_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_reforestacion_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_reforestacion_mes||0)>0?12:0, totalActs?((+tot.act_reforestacion_mes||0)/totalActs)*100:0))
+    },
+    {
+      label:'Centros de acopio escolar',
+      value:+tot.act_centros_acopio_mes||0,
+      unit:'actividades',
+      chip:(+tot.act_centros_acopio_mes||0)>0?'Registrada':'Sin registro',
+      cls:(+tot.act_centros_acopio_mes||0)>0?'al-dia':'inactivo',
+      reference:'Actividad priorizada por tipo',
+      meta1:`Peso dentro del despliegue: <strong>${fmt(totalActs?((+tot.act_centros_acopio_mes||0)/totalActs)*100:0,1)}%</strong>`,
+      meta2:`Total de actividades por tipo: <strong>${fmt(totalActs)}</strong>`,
+      progress: Math.min(100, Math.max((+tot.act_centros_acopio_mes||0)>0?12:0, totalActs?((+tot.act_centros_acopio_mes||0)/totalActs)*100:0))
+    }
+  ];
 
-  const actHTML=actItems.length
-    ?`<div class="act-list">${actItems.map(a=>`<div class="act-row"><span class="act-nombre">${esc(a.nom)}</span><span class="act-count">${fmt(a.val)}</span></div>`).join('')}</div>
-      ${+tot.estudiantes_actividades_campo_mes>0?`<p style="font-size:.8rem;color:var(--muted);margin-top:10px">${fmt(+tot.estudiantes_actividades_campo_mes)} estudiantes participaron en actividades de campo durante ${mesLbl}.</p>`:''}`
-    :`<p style="font-size:.84rem;color:var(--inactivo)">Sin actividades de campo registradas en este período.</p>`;
-
-  const logros=String(tot.logros_texto||'').trim();
-  const alertaTxt=String(tot.alertas_texto||'').trim();
+  const kpiHTML=activityKpis.map(kpi=>buildActivityKpiCard(kpi)).join('');
 
   return `
 ${banner}
@@ -922,7 +1144,7 @@ ${banner}
     <p class="side-note"><strong>${Math.max(...['docentes_capacitados','centros_cobertura','municipios_actividad_pedagogica','estudiantes_epc'].map(id=>recurrentProgress(id,p).visits),0)}</strong> de ${TOTAL_VISITAS} visitas sostenidas registradas · ${aporta?'Seguimiento en curso':'Período preparatorio'}.</p>
     <div class="mini-list" style="margin-top:14px">
       <div class="mini-item"><span class="muted">Indicadores estratégicos</span><strong>${fmt(indsEst.length)}</strong></div>
-      <div class="mini-item"><span class="muted">Indicadores tácticos</span><strong>${fmt(indsTact.length)}</strong></div>
+      <div class="mini-item"><span class="muted">KPIs por tipo de actividad</span><strong>${fmt(activityKpis.length)}</strong></div>
       <div class="mini-item"><span class="muted">Estado del corte</span><strong>${semLbl(semCls((indsEst.find(r=>r.estatus)||{}).estatus, true))}</strong></div>
     </div>
   </aside>
@@ -936,8 +1158,8 @@ ${banner}
         <div class="section-sub">Lectura institucional y pedagógica del programa en ${mesLbl}.</div>
       </div>
     </div>
-    <p>Este tablero permite seguir el avance del programa <strong>Educando para Conservar</strong> a partir de visitas sostenidas, cobertura territorial, participación estudiantil, desempeño pedagógico y actividades complementarias del ciclo EPC. La lectura se organiza para que una persona visitante pueda comprender rápidamente qué se logró en el período, qué se ha acumulado al corte y dónde se concentran las prioridades de seguimiento.</p>
-    <p>La lógica de seguimiento distingue entre <strong>cumplimiento del período</strong> y <strong>avance acumulado del ciclo</strong>. Por eso los indicadores recurrentes se leen como una ruta sostenida de siete cortes, mientras que los indicadores tácticos y las actividades de campo muestran el comportamiento agregado del año y su relación con las metas oficiales.</p>
+    <p>Este tablero permite seguir el avance del programa <strong>Educando para Conservar</strong> a partir de visitas sostenidas, cobertura territorial, participación estudiantil y despliegue de actividades por tipo. La lectura se organiza para que una persona visitante pueda comprender rápidamente qué se logró en el período, qué se ha acumulado al corte y dónde se concentran las prioridades de seguimiento.</p>
+    <p>La lógica de seguimiento distingue entre <strong>cobertura pedagógica del período</strong> y <strong>despliegue operativo complementario</strong>. Por eso la cobertura se muestra arriba como lectura base del ciclo, mientras que los KPIs priorizados de abajo profundizan en el detalle de actividades de campo registradas en el mes.</p>
   </article>
   <article class="card story-panel accent">
     <div class="section-head" style="margin-bottom:12px;padding-bottom:10px">
@@ -948,69 +1170,53 @@ ${banner}
     </div>
     <div class="story-list">
       <div class="story-item"><div class="story-num">01</div><div><strong>Visitas sostenidas</strong><span>Docentes, estudiantes, centros y municipios se leen como una ruta sostenida de siete cortes. Cada visita completada equivale a una nueva porción del avance anual.</span></div></div>
-      <div class="story-item"><div class="story-num">02</div><div><strong>Indicadores estratégicos</strong><span>Las tarjetas priorizadas resumen el período activo, la meta mensual cuando existe y el avance acumulado del ciclo para orientar la lectura institucional.</span></div></div>
-      <div class="story-item"><div class="story-num">03</div><div><strong>Actividad pedagógica</strong><span>El diplomado juvenil, las actividades de campo y los indicadores tácticos ayudan a entender el despliegue territorial que acompaña al programa.</span></div></div>
+      <div class="story-item"><div class="story-num">02</div><div><strong>Cobertura pedagógica</strong><span>La primera banda resume los cuatro indicadores base del período y evita duplicarlos dentro de los KPIs priorizados.</span></div></div>
+      <div class="story-item"><div class="story-num">03</div><div><strong>Actividades por tipo</strong><span>Las tarjetas priorizadas muestran la composición del despliegue territorial del mes: limpieza, giras, ferias, tul, reforestación y otras acciones registradas.</span></div></div>
     </div>
   </article>
 </section>
 
 <div class="divider s3">Cobertura pedagógica del período</div>
-<section class="section section-band s3">
+<section class="section section-band s3" id="cobertura">
   <div class="overview-grid">${coverageCards}</div>
 </section>
 
 <div class="divider s4">Indicadores estratégicos priorizados</div>
-<section class="section s4">
+<section class="section s4" id="indicadores">
   <div class="section-head">
     <div>
-      <div class="section-title">Seguimiento institucional al corte</div>
-      <div class="section-sub">Los KPIs se actualizan con el período seleccionado y mantienen la lógica de visitas sostenidas de 1/7 a 7/7.</div>
+      <div class="section-title">KPIs operativos priorizados al corte</div>
+      <div class="section-sub">La sección se reconstruyó para priorizar actividades por tipo con el mismo patrón visual y de animación del tablero de Atitlán Recicla.</div>
     </div>
-    <div class="section-intro">Los colores del semáforo permiten identificar rápidamente cumplimiento, seguimiento, rezago o inactividad del indicador en el corte seleccionado.</div>
+    <div class="section-intro">Estos KPIs salen de <strong>total_mes.csv</strong> y complementan la cobertura pedagógica sin repetir docentes, estudiantes, centros y municipios.</div>
   </div>
   <div class="kpi-grid" id="kpiGridSection">${kpiHTML}</div>
-</section>
-
-<div class="divider s5">Actividad pedagógica y despliegue territorial</div>
-<section class="section s5">
-  <div class="dense-panels">
-    ${diplHTML}
-    <article class="card panel chart-panel">
-      <h3>Actividades de campo del período</h3>
-      <p class="panel-sub">Lectura operativa de las acciones desarrolladas en territorio durante <strong>${mesLbl}</strong>.</p>
-      ${actHTML}
-    </article>
-  </div>
-</section>
-
-<div class="divider s6">Tendencias, detalle y señales de seguimiento</div>
-<section class="section s6">
-  <div class="dense-panels" style="margin-bottom:16px">
-    <article class="card panel panel-accent chart-panel">
-      <h3>Avance acumulado de indicadores tácticos</h3>
-      <p class="panel-sub">Comparación entre el acumulado real y el ritmo esperado al corte para los indicadores tácticos con meta definida.</p>
-      <div class="chart-host" id="grafTact">${buildGrafTact(indsTact)}</div>
-    </article>
-    <article class="card panel chart-panel">
-      <h3>Estado de los indicadores</h3>
-      <p class="panel-sub">Señales clave del corte para interpretar cumplimiento, seguimiento, rezago o inactividad.</p>
-      <div class="alertas-grid">${buildAlertas(indsEst,aporta)}</div>
-      ${alertaTxt?`<div class="alertas-note">${esc(alertaTxt)}</div>`:''}
-    </article>
-  </div>
-  <div class="dense-panels">
-    <article class="card panel chart-panel">
-      <h3>Registro narrativo del período</h3>
-      <p class="panel-sub">Síntesis del informe mensual del programa para complementar la lectura cuantitativa.</p>
-      <div class="logros-txt">${logros?esc(logros):'Sin observaciones narrativas registradas para este período.'}</div>
-    </article>
-    <article class="card panel chart-panel">
-      <h3>Todos los indicadores al corte</h3>
-      <p class="panel-sub">Vista de respaldo con indicadores estratégicos y tácticos del período <strong>${mesLbl}</strong>.</p>
-      <div class="tbl-wrap">${buildTabla(indsEst,indsTact)}</div>
-    </article>
-  </div>
 </section>`;
+}
+
+function buildActivityKpiCard(item){
+  const value=+item.value||0;
+  const unit=item.unit||'';
+  const displayValue=fmt(value, Number.isInteger(value)?0:2) + (unit?` ${unit}`:'');
+  const parts=splitDisplayValue(displayValue);
+  const progress=Math.max(0, Math.min(+item.progress||0, 100));
+  return `<article class="card kpi-card static-card ${item.cls||'inactivo'}">
+    <div class="kpi-top"><div class="kpi-nombre">${esc(item.label)}</div><span class="sem ${item.cls||'inactivo'}">${esc(item.chip||'Sin registro')}</span></div>
+    <div class="kpi-figure">
+      <div class="kpi-pillar" aria-hidden="true"><span class="kpi-pillar-track"></span><span class="kpi-pillar-fill" data-height="${Math.max(value>0?12:0, progress)}%"></span></div>
+      <div class="kpi-reading">
+        <div class="kpi-val" data-value="${parts.number!=null?parts.number:''}" data-prefix="${esc(parts.prefix)}" data-suffix="${esc(parts.suffix)}" data-decimals="${parts.decimals}">${esc(parts.text)}</div>
+        <div class="kpi-achieved">${esc(item.reference||'Lectura del período')}</div>
+        <div class="kpi-reference">Corte mensual <strong>${esc(unit||'registro')}</strong></div>
+      </div>
+    </div>
+    <div class="kpi-readings">
+      <div class="kpi-meta">Resultado del período: <strong>${fmt(value, Number.isInteger(value)?0:2)} ${esc(unit)}</strong></div>
+      <div class="kpi-meta">${item.meta1||''}</div>
+      <div class="kpi-meta">${item.meta2||''}</div>
+    </div>
+    <div class="kpi-progress-line"><span data-width="${progress}"></span></div>
+  </article>`;
 }
 
 function buildKpiCard(ind, mesCiclo, aporta, mesIdx){
@@ -1069,64 +1275,6 @@ function buildKpiCard(ind, mesCiclo, aporta, mesIdx){
     </div>
     <div class="kpi-progress-line"><span data-width="${Math.max(0,Math.min(pctV*100,100))}"></span></div>
   </article>`;
-}
-
-function buildDiplomado(p){
-  const cfg=DIPL_CONFIG.POR_PERIODO[p];
-  if(!cfg||(!cfg.inscritos&&!cfg.sesiones.length)){
-    return `<article class="card panel">
-      <h3>Diplomado Juvenil · Gestión Ambiental</h3>
-      <p class="panel-sub">Ciclo 1 · marzo–junio 2026 · 6 sesiones · meta ${DIPL_CONFIG.META_COBERTURA} participantes</p>
-      <p style="font-size:.82rem;color:var(--inactivo)">Sin datos registrados para este período.</p>
-    </article>`;
-  }
-
-  const sesionesR=cfg.sesiones.length;
-  const sesTrack=Array.from({length:DIPL_CONFIG.TOTAL_SESIONES},(_,i)=>
-    `<div class="sesion-dot ${i<sesionesR?'hecha':'pendiente'}">${i<sesionesR?String(i+1):''}</div>`
-  ).join('');
-  const sesLbls=DIPL_CONFIG.LABELS_SESIONES.map(s=>`<span>${s}</span>`).join('');
-
-  /* Retención: S1 como referencia, las demás como % de S1 */
-  const s1=cfg.sesiones[0]?.n||0;
-  const sN=cfg.sesiones[cfg.sesiones.length-1]?.n||s1;
-  const retencion=s1>0?sN/s1:null;
-  const retColor=retencion===null?'var(--inactivo)':retencion>=.85?'var(--al-dia)':retencion>=.7?'var(--seguimiento)':'var(--rezago)';
-
-  const retFilas=cfg.sesiones.length>1?cfg.sesiones.map((s,i)=>{
-    const pct=s1>0?s.n/s1:0;
-    const col=i===0?'var(--accent)':pct>=.85?'var(--al-dia)':pct>=.7?'var(--seguimiento)':'var(--rezago)';
-    return `<div class="ret-row">
-      <span class="ret-lbl">${esc(s.label)}</span>
-      <div class="ret-bar-wrap"><div class="ret-bar" style="width:${Math.round(pct*100)}%;background:${col}"></div></div>
-      <span class="ret-val" style="color:${col}">${s.n}${i>0?` (${fmt(pct*100,0)}%)`:'  ref.'}</span>
-    </div>`;
-  }).join(''):'';
-
-  const pctCobertura=cfg.inscritos/DIPL_CONFIG.META_COBERTURA;
-
-  return `<div class="diplomado-wrap">
-    <div class="diplomado-titulo">Diplomado Juvenil · Gestión Ambiental</div>
-    <div class="diplomado-sub">Ciclo 1 · marzo–junio 2026 · Meta: ${DIPL_CONFIG.META_COBERTURA} participantes</div>
-    <div class="sesiones-track">${sesTrack}</div>
-    <div class="sesiones-labels">${sesLbls}</div>
-    <div class="dipl-metricas">
-      <div class="dipl-met">
-        <div class="dipl-met-val" style="${pctCobertura>=1?'color:var(--al-dia)':''}">${fmt(cfg.inscritos)}</div>
-        <div class="dipl-met-lbl">Inscritos / meta ${DIPL_CONFIG.META_COBERTURA}</div>
-      </div>
-      <div class="dipl-met">
-        <div class="dipl-met-val">${sesionesR}/${DIPL_CONFIG.TOTAL_SESIONES}</div>
-        <div class="dipl-met-lbl">Sesiones completadas</div>
-      </div>
-      <div class="dipl-met">
-        <div class="dipl-met-val" style="color:${retColor}">${retencion!==null?fmt(retencion*100,0)+'%':'&#8212;'}</div>
-        <div class="dipl-met-lbl">Retención S1&#8594;S2</div>
-      </div>
-    </div>
-    ${retFilas?`<div style="display:grid;gap:6px">${retFilas}</div>`:''}
-    ${retencion!==null&&retencion<.85?`<p class="ret-nota">La asistencia bajó ${fmt((1-retencion)*100,0)} puntos porcentuales entre la sesión 1 y la sesión 2. Referencia para seguimiento en módulo 3 (10 abr).</p>`:''}
-  </div>`;
 }
 
 function buildGrafTact(indsTact){
