@@ -183,10 +183,12 @@
     .tone-gray{background:linear-gradient(180deg,#fff 0%, #fafcfd 100%)}
 
     .chart-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .panel{padding:22px}
+    .panel{padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(248,252,251,.98) 100%)}
     .panel h3{font-size:1.32rem;line-height:1.15;margin-bottom:6px;color:var(--text)}
     .panel .sub{color:var(--text-2);margin-bottom:18px;text-align:justify}
-    .viz-wrap{position:relative;min-height:360px}
+    .viz-wrap{position:relative;min-height:380px;padding:12px 12px 8px;border-radius:22px;background:linear-gradient(180deg,rgba(246,250,252,.95) 0%,rgba(255,255,255,.98) 100%);border:1px solid rgba(23,49,79,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
+    .viz-wrap::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at 14% 12%, rgba(76,165,191,.08), transparent 34%), radial-gradient(circle at 88% 12%, rgba(198,152,63,.08), transparent 28%)}
+    .viz-wrap canvas{position:relative;z-index:1}
     canvas{max-width:100%}
     .panel-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
     .indicator-select{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text);font-family:var(--font-body);font-weight:700;min-width:260px}
@@ -214,26 +216,44 @@
     .footer-links a:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
     .social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center}
 
-    .presentation-overlay{position:fixed;inset:0;background:rgba(10,24,43,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:26px;z-index:300}
+    .presentation-overlay{position:fixed;inset:0;background:rgba(8,20,36,.72);backdrop-filter:blur(12px);display:none;align-items:stretch;justify-content:stretch;padding:0;z-index:300}
     .presentation-overlay.open{display:flex}
-    .presentation-shell{width:min(1180px,96vw);height:min(86vh,880px);background:#f8fbfe;border-radius:28px;box-shadow:0 28px 70px rgba(4,17,33,.35);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-    .presentation-top,.presentation-bottom{padding:14px 18px;background:#173e63;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .presentation-stage{padding:22px;overflow:auto;background:linear-gradient(180deg,#f7fafc 0%,#eef4fb 100%)}
-    .slide{display:none}
+    .presentation-shell{width:100vw;height:100vh;background:linear-gradient(180deg,#eff5fb 0%,#f9fcff 100%);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
+    .presentation-top,.presentation-bottom{padding:16px 24px;background:linear-gradient(135deg,#163b61 0%,#1c5f84 60%,#4ca5bf 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .presentation-stage{padding:0;overflow:hidden;background:linear-gradient(180deg,#f6fbff 0%,#edf5fb 100%);position:relative}
+    .slide{display:none;height:100%;overflow:auto;padding:34px 36px 40px;animation:fadeSlide .32s ease}
     .slide.active{display:block}
     .presentation-btn{border:none}
     .presentation-btn.secondary{background:rgba(255,255,255,.14)}
+    .presentation-hint{font-size:.82rem;color:rgba(255,255,255,.86)}
+    .presentation-stage .hero,.presentation-stage .chart-grid,.presentation-stage .diagnostic-grid{grid-template-columns:1fr 1fr}
+    .presentation-stage .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .presentation-stage .section{margin-top:0}
+    .presentation-stage .section-head h2{font-size:2.2rem}
+    .presentation-image-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .presentation-image-card{background:#fff;border:1px solid rgba(23,49,79,.08);border-radius:24px;padding:18px;box-shadow:0 16px 38px rgba(18,42,66,.08)}
+    .presentation-image-card h3{font-size:1.08rem;margin-bottom:8px;color:var(--text)}
+    .presentation-image-card p{font-size:.94rem;color:var(--text-2);margin-bottom:14px;text-align:justify}
+    .presentation-image-card img{width:100%;height:auto;border-radius:18px;border:1px solid rgba(23,49,79,.06);background:#f8fbff}
+    .presentation-summary-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+    .presentation-summary-list .summary-cell{background:#fff}
 
     .loading-state,.error-state{padding:32px;border-radius:22px;background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);text-align:center;color:var(--text-2)}
     .hidden{display:none!important}
 
     @keyframes fadeUp{to{opacity:1;transform:none}}
+    @keyframes fadeSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
     @media (max-width:1180px){
       .hero,.chart-grid,.diagnostic-grid,.footer-wrap{grid-template-columns:1fr}
       .hero-meta{grid-template-columns:repeat(2,1fr)}
       .kpi-grid,.summary-grid{grid-template-columns:1fr}
       .header-stack{align-items:flex-start}
       .header-utility{justify-content:flex-start}
+    }
+    @media (max-width:980px){
+      .presentation-stage .hero,.presentation-stage .chart-grid,.presentation-stage .diagnostic-grid,.presentation-image-grid,.presentation-summary-list{grid-template-columns:1fr}
+      .presentation-stage .kpi-grid{grid-template-columns:1fr}
+      .slide{padding:22px 18px 28px}
     }
     @media (max-width:760px){
       .wrap{padding:18px 14px 28px}
@@ -674,7 +694,7 @@
     <div class="presentation-stage" id="presentationStage"></div>
     <div class="presentation-bottom">
       <div id="presentationCounter">1 / 1</div>
-      <div>Conservando Atitlán</div>
+      <div class="presentation-hint">&#8592; y &#8594; para navegar · Esc para cerrar</div>
     </div>
   </div>
 </div>
@@ -1219,18 +1239,51 @@ function renderProgressChart(){
     data:{
       labels:metrics.map(m=>m.title),
       datasets:[
-        {label:'Acumulado real', data:metrics.map(m=>Number(m.progress.toFixed(2))), backgroundColor:'rgba(28,96,132,.88)', borderRadius:10, borderSkipped:false},
-        {label:'Esperado al corte', data:expectedPct.map(v=>Number(v.toFixed(2))), backgroundColor:'rgba(198,152,63,.35)', borderColor:'rgba(198,152,63,.9)', borderWidth:1.5, borderRadius:10, borderSkipped:false}
+        {
+          label:'Acumulado real',
+          data:metrics.map(m=>Number(m.progress.toFixed(2))),
+          borderRadius:999,
+          borderSkipped:false,
+          barThickness:18,
+          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(85,181,202,.86)',true)
+        },
+        {
+          label:'Esperado al corte',
+          data:expectedPct.map(v=>Number(v.toFixed(2))),
+          borderRadius:999,
+          borderSkipped:false,
+          barThickness:10,
+          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(234,218,185,.95)','rgba(206,160,70,.55)',true),
+          borderColor:'rgba(198,152,63,.95)',
+          borderWidth:1.2
+        }
       ]
     },
     options:{
       responsive:true,
       maintainAspectRatio:false,
       indexAxis:'y',
-      plugins:{legend:{position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}}, tooltip:{callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${fmtNumber(ctx.parsed.x,2)}%`}}},
+      interaction:{mode:'index', intersect:false},
+      animation:{duration:900, easing:'easeOutQuart'},
+      plugins:{
+        legend:{position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
+        tooltip:{
+          backgroundColor:'rgba(15,32,52,.94)',
+          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
+          callbacks:{
+            label:(ctx)=>`${ctx.dataset.label}: ${fmtNumber(ctx.parsed.x,2)}%`,
+            afterBody:(items)=>{
+              if(!items?.length) return '';
+              const i = items[0].dataIndex;
+              const gap = metrics[i].progress - expectedPct[i];
+              return `Brecha: ${gap >= 0 ? '+' : ''}${fmtNumber(gap,2)} puntos`;
+            }
+          }
+        }
+      },
       scales:{
-        x:{beginAtZero:true,max:100, grid:{color:'rgba(23,49,79,.08)'}, ticks:{color:'#6d8294', callback:(v)=>v+'%'}},
-        y:{grid:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}}
+        x:{beginAtZero:true,max:100, grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>v+'%'}},
+        y:{grid:{display:false}, border:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}}
       }
     }
   });
@@ -1241,16 +1294,58 @@ function renderTrendChart(){
   const option=TREND_OPTIONS.find(o=>o.id===indicatorId) || TREND_OPTIONS[0];
   const data = state.total.map(r=>toNum(r[indicatorId]));
   const labels = state.total.map(r=>monthShortLabel(r.periodo_clave));
+  const expectedSeries = goalSeriesForIndicator(indicatorId);
   getChart('trendChart',{
-    type:'line',
-    data:{labels, datasets:[{label:option.label, data, tension:.35, fill:true, borderColor:'#1c6084', backgroundColor:'rgba(76,165,191,.18)', borderWidth:3, pointBackgroundColor:'#173e63', pointBorderColor:'#fff', pointBorderWidth:2, pointRadius:4, pointHoverRadius:6}]},
+    data:{
+      labels,
+      datasets:[
+        {
+          type:'line',
+          label:option.label,
+          data,
+          tension:.38,
+          fill:true,
+          borderColor:'#1c6084',
+          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(112,194,215,.34)','rgba(112,194,215,.03)'),
+          borderWidth:3,
+          pointBackgroundColor:'#173e63',
+          pointBorderColor:'#fff',
+          pointBorderWidth:2,
+          pointRadius:4,
+          pointHoverRadius:7,
+          pointHoverBackgroundColor:'#fff',
+          pointHoverBorderColor:'#1c6084'
+        },
+        ...(expectedSeries ? [{
+          type:'line',
+          label:'Referencia esperada',
+          data:expectedSeries,
+          tension:0,
+          fill:false,
+          borderColor:'rgba(198,152,63,.92)',
+          borderDash:[7,6],
+          borderWidth:2,
+          pointRadius:0,
+          pointHoverRadius:0
+        }] : [])
+      ]
+    },
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>`${option.label}: ${formatTrendValue(ctx.parsed.y, option.unit)}`}}},
+      interaction:{mode:'index',intersect:false},
+      animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{
+        legend:{display:!!expectedSeries, position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
+        tooltip:{
+          backgroundColor:'rgba(15,32,52,.94)',
+          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
+          callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${formatTrendValue(ctx.parsed.y, option.unit)}`}
+        }
+      },
       scales:{
-        x:{grid:{display:false}, ticks:{color:'#6d8294'}},
-        y:{grid:{color:'rgba(23,49,79,.08)'}, ticks:{color:'#6d8294', callback:(v)=>formatAxisValue(v, option.unit)}}
+        x:{grid:{display:false}, border:{display:false}, ticks:{color:'#6d8294'}},
+        y:{grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>formatAxisValue(v, option.unit)}}
       }
     }
   });
@@ -1258,15 +1353,74 @@ function renderTrendChart(){
 
 function renderSoapChart(){
   const row=selectedRow();
-  const labels=['Jabón hotel producido','Jabón tocador producido','Jabón hotel vendido','Jabón tocador vendido'];
-  const values=[toNum(row?.jabones_hotel_producidos_mes),toNum(row?.jabones_tocador_producidos_mes),toNum(row?.jabones_hotel_vendidos_mes),toNum(row?.jabones_tocador_vendidos_mes)];
+  const producedHotel=toNum(row?.jabones_hotel_producidos_mes);
+  const producedTocador=toNum(row?.jabones_tocador_producidos_mes);
+  const soldHotel=toNum(row?.jabones_hotel_vendidos_mes);
+  const soldTocador=toNum(row?.jabones_tocador_vendidos_mes);
+  const labels=['Jabón hotel','Jabón tocador'];
+  const rates=[producedHotel ? (soldHotel/producedHotel)*100 : 0, producedTocador ? (soldTocador/producedTocador)*100 : 0];
   getChart('soapChart',{
-    type:'bar',
-    data:{labels, datasets:[{label:'Período actual', data:values, backgroundColor:['rgba(28,96,132,.9)','rgba(76,165,191,.9)','rgba(46,106,87,.9)','rgba(198,152,63,.9)'], borderRadius:12, borderSkipped:false}]},
+    data:{
+      labels,
+      datasets:[
+        {
+          type:'bar',
+          label:'Producido',
+          data:[producedHotel, producedTocador],
+          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(39,119,170,.92)','rgba(117,202,225,.88)'),
+          borderRadius:18,
+          borderSkipped:false,
+          maxBarThickness:46
+        },
+        {
+          type:'bar',
+          label:'Vendido',
+          data:[soldHotel, soldTocador],
+          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(67,138,101,.92)','rgba(145,212,171,.86)'),
+          borderRadius:18,
+          borderSkipped:false,
+          maxBarThickness:46
+        },
+        {
+          type:'line',
+          label:'Conversión venta/producción',
+          data:rates,
+          yAxisID:'y1',
+          tension:.32,
+          borderColor:'rgba(198,152,63,.95)',
+          backgroundColor:'rgba(198,152,63,.18)',
+          borderWidth:2.5,
+          pointRadius:5,
+          pointHoverRadius:7,
+          pointBackgroundColor:'#fff',
+          pointBorderColor:'rgba(198,152,63,.95)',
+          pointBorderWidth:2,
+          fill:false
+        }
+      ]
+    },
     options:{
-      responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}, tooltip:{callbacks:{label:(ctx)=>`${ctx.label}: ${fmtInteger(ctx.parsed.y)} jabones`}}},
-      scales:{x:{grid:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}}, y:{beginAtZero:true, grid:{color:'rgba(23,49,79,.08)'}, ticks:{color:'#6d8294', callback:(v)=>fmtInteger(v)}}}
+      responsive:true,
+      maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{
+        legend:{position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
+        tooltip:{
+          backgroundColor:'rgba(15,32,52,.94)',
+          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
+          callbacks:{
+            label:(ctx)=> ctx.dataset.yAxisID==='y1'
+              ? `${ctx.dataset.label}: ${fmtNumber(ctx.parsed.y,2)}%`
+              : `${ctx.dataset.label}: ${fmtInteger(ctx.parsed.y)} jabones`
+          }
+        }
+      },
+      scales:{
+        x:{grid:{display:false}, border:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}},
+        y:{beginAtZero:true, grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>fmtInteger(v)}},
+        y1:{beginAtZero:true, position:'right', grid:{drawOnChartArea:false}, border:{display:false}, ticks:{color:'#a17820', callback:(v)=>fmtNumber(v,0)+'%'}}
+      }
     }
   });
 }
@@ -1284,6 +1438,31 @@ function formatAxisValue(value, unit){
   if(unit==='GTQ') return 'Q ' + Number(value).toLocaleString('en-US');
   if(unit==='litros') return Number(value).toLocaleString('en-US');
   return Number(value).toLocaleString('en-US');
+}
+function makeGradient(chart, fromColor, toColor, horizontal=false){
+  const {ctx, chartArea} = chart || {};
+  if(!chartArea) return fromColor;
+  const g = horizontal ? ctx.createLinearGradient(chartArea.left,0,chartArea.right,0) : ctx.createLinearGradient(0,chartArea.top,0,chartArea.bottom);
+  g.addColorStop(0, fromColor);
+  g.addColorStop(1, toColor);
+  return g;
+}
+function goalSeriesForIndicator(indicatorId){
+  const monthlyGoalMap = {
+    litros_aceite_recolectados_mes: GOALS.aceiteAnual/12,
+    litros_agua_protegidos_mes: GOALS.aguaAnual/12,
+    jabones_producidos_mes: GOALS.jabonesProducidosMensual,
+    municipios_visitados_mes: GOALS.municipiosMetaMes
+  };
+  if(indicatorId==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
+  if(indicatorId==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave)) ? 1 : 0);
+  if(monthlyGoalMap[indicatorId]) return state.total.map(()=>monthlyGoalMap[indicatorId]);
+  return null;
+}
+function chartImageMarkup(id, title, sub){
+  const canvas = document.getElementById(id);
+  const src = canvas ? canvas.toDataURL('image/png') : '';
+  return `<article class="presentation-image-card"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(sub)}</p>${src ? `<img src="${src}" alt="${escapeHtml(title)}">` : ''}</article>`;
 }
 
 function renderDiagnostic(strategic, monthly){
@@ -1342,24 +1521,59 @@ function bindPresentation(){
 }
 function buildPresentationSlides(){
   const stage=document.getElementById('presentationStage');
-  const sections=[
-    {title:'Resumen del programa', node:document.getElementById('heroSection').cloneNode(true)},
-    {title:'KPIs estratégicos', node:document.getElementById('kpis-estrategicos').cloneNode(true)},
-    {title:'KPIs del período', node:document.getElementById('cumplimiento-periodo').cloneNode(true)},
-    {title:'Tendencias y diagnóstico', node:document.getElementById('tendencias').cloneNode(true)}
-  ];
+  const strategicGrid=document.getElementById('strategicGrid');
+  const monthlyGrid=document.getElementById('monthlyGrid');
+  const hero=document.getElementById('heroSection');
+  const summary=document.getElementById('periodSummary');
+  const prose=document.getElementById('diagnosticProse');
+  const list=document.getElementById('diagnosticList');
+  const slides=[];
+
+  const heroSlide=document.createElement('section');
+  heroSlide.className='slide active';
+  heroSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Modo presentación</div><h2>Resumen ejecutivo del programa</h2></div><p>Use las flechas del teclado para avanzar o retroceder entre las vistas clave del corte seleccionado.</p></div>`;
+  heroSlide.appendChild(hero.cloneNode(true));
+  slides.push(heroSlide);
+
+  const strategicSlide=document.createElement('section');
+  strategicSlide.className='slide';
+  strategicSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">KPIs estratégicos</div><h2>Metas estructurales al corte</h2></div><p>Esta vista concentra el avance anual acumulado y los semáforos de atención prioritaria.</p></div>`;
+  const strategicWrap=document.createElement('div');
+  strategicWrap.className='kpi-grid';
+  [...strategicGrid.children].forEach(node=>strategicWrap.appendChild(node.cloneNode(true)));
+  strategicSlide.appendChild(strategicWrap);
+  slides.push(strategicSlide);
+
+  const monthlySlide=document.createElement('section');
+  monthlySlide.className='slide';
+  monthlySlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">KPIs operativos</div><h2>Desempeño del período seleccionado</h2></div><p>Lectura rápida del comportamiento mensual con énfasis en cumplimiento operativo y contexto del corte.</p></div>`;
+  const monthlyWrap=document.createElement('div');
+  monthlyWrap.className='kpi-grid';
+  [...monthlyGrid.children].forEach(node=>monthlyWrap.appendChild(node.cloneNode(true)));
+  monthlySlide.appendChild(monthlyWrap);
+  slides.push(monthlySlide);
+
+  const visualSlide=document.createElement('section');
+  visualSlide.className='slide';
+  visualSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Visualizaciones</div><h2>Tendencias y lectura operativa</h2></div><p>Esta lámina resume la comparación acumulada al corte, la trayectoria mensual del indicador activo y la cadena de valor del jabón para el período de lectura.</p></div><div class="presentation-image-grid">${chartImageMarkup('progressChart','Avance acumulado vs esperado al corte','Comparación directa entre el avance real y lo esperado para cada indicador estratégico.')} ${chartImageMarkup('trendChart','Tendencia mensual del indicador','Serie histórica del indicador seleccionado con su línea de referencia cuando existe.')} ${chartImageMarkup('soapChart','Cadena de valor del jabón','Relación entre producción, venta y conversión para jabón hotel y jabón tocador.')} <article class="presentation-image-card"><h3>Resumen de la operación del período</h3><p>Valores contextuales para acompañar la lectura oral del corte seleccionado.</p><div class="presentation-summary-list"></div></article></div>`;
+  const summaryHost = visualSlide.querySelector('.presentation-summary-list');
+  [...summary.children].forEach(node=>summaryHost.appendChild(node.cloneNode(true)));
+  slides.push(visualSlide);
+
+  const diagSlide=document.createElement('section');
+  diagSlide.className='slide';
+  diagSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Diagnóstico</div><h2>Lectura interpretativa del corte</h2></div><p>Una síntesis narrativa para cerrar la presentación y orientar la conversación institucional.</p></div><div class="diagnostic-grid"></div>`;
+  const diagGrid=diagSlide.querySelector('.diagnostic-grid');
+  const proseCard=document.createElement('article');
+  proseCard.className='card panel';
+  const proseWrap=document.createElement('div'); proseWrap.className='prose'; proseWrap.innerHTML = prose.innerHTML; proseCard.appendChild(proseWrap);
+  const listCard=document.createElement('article'); listCard.className='card panel';
+  const listWrap=document.createElement('div'); listWrap.className='diagnostic-list'; listWrap.innerHTML = list.innerHTML; listCard.appendChild(listWrap);
+  diagGrid.appendChild(proseCard); diagGrid.appendChild(listCard);
+  slides.push(diagSlide);
+
   stage.innerHTML='';
-  sections.forEach((s,idx)=>{
-    const slide=document.createElement('section');
-    slide.className='slide'+(idx===0?' active':'');
-    const title=document.createElement('h2');
-    title.style.margin='0 0 16px';
-    title.style.color='var(--text)';
-    title.textContent=s.title;
-    slide.appendChild(title);
-    slide.appendChild(s.node);
-    stage.appendChild(slide);
-  });
+  slides.forEach(slide=>stage.appendChild(slide));
   state.slideIndex=0;
   syncSlideMeta();
 }
