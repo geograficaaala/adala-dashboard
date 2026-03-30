@@ -1248,6 +1248,61 @@
       }
     }
 
+  
+
+    /* --- Ajustes v4 solicitados --- */
+    .hero{grid-template-columns:minmax(0,1.62fr) minmax(300px,.72fr)!important;align-items:stretch}
+    .hero-shell{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important}
+    .hero-main{padding:32px 34px 28px!important}
+    .hero-brand{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;display:flex!important;align-items:center;justify-content:center;min-height:auto!important}
+    .hero-brand-note{display:none!important}
+    .hero-logo{max-width:235px!important;max-height:235px!important;width:auto!important;height:auto!important;filter:drop-shadow(0 10px 20px rgba(6,24,42,.10))!important}
+    .hero-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin-top:20px!important}
+    .hero-stat{min-height:92px!important;padding:14px 16px!important;display:flex!important;flex-direction:column;justify-content:space-between;align-items:flex-start!important}
+    .hero-stat small{margin-bottom:8px!important;line-height:1.45}
+    .hero-stat strong{display:block;font-size:1.18rem!important;line-height:1.1!important;word-break:break-word}
+    .toolbar-compact{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)!important;max-width:860px}
+    .trend-panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:12px;flex-wrap:wrap}
+    .trend-panel-tools{display:flex;justify-content:flex-end;align-items:flex-end;min-width:280px}
+    .trend-filter{padding:0!important;min-height:auto!important;background:transparent!important;border:none!important;box-shadow:none!important}
+    .trend-filter label{margin-bottom:8px!important}
+    .trend-filter select{min-width:290px;background:#fff!important}
+    .chart-wrap-elevated{padding:16px 14px 8px!important;background:linear-gradient(180deg,#ffffff 0%,#f8fcfc 100%)!important;border:1px solid #dfecef!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+    .intro-grid{grid-template-columns:minmax(0,1.16fr) minmax(0,.94fr)!important}
+    .intro-stack{display:grid;gap:18px;align-content:start}
+    .annual-section{margin-top:0}
+    .annual-panel-wide{padding:24px 24px 22px!important}
+    .annual-goals-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+    .goal-card{position:relative;overflow:hidden;padding:18px 18px 16px!important;min-height:210px;border-radius:24px!important;border-left:4px solid #1c6084!important;background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%)!important;display:grid!important;grid-template-rows:auto auto auto auto auto auto;gap:10px;opacity:0;transform:translateY(14px);animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--delay,0ms)}
+    .goal-card::after{content:'';position:absolute;right:-34px;top:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(28,96,132,.10) 0%,transparent 72%);opacity:.9}
+    .goal-card > *{position:relative;z-index:1}
+    .goal-card small{font-size:.72rem!important;letter-spacing:.11em!important;line-height:1.4}
+    .goal-card .goal-value{font-family:var(--font-mono);font-size:1.58rem;line-height:1.02;color:#17314f;letter-spacing:-.03em}
+    .goal-card .goal-caption{font-size:.78rem;font-weight:700;color:#6f8c94;text-transform:uppercase;letter-spacing:.07em}
+    .goal-card .goal-meta{font-size:.86rem;color:#4c6478;line-height:1.6}
+    .goal-card .goal-meta strong{color:#17314f}
+    .goal-card .progress{height:7px!important;margin-top:auto}
+    .kpi-reference{font-size:.78rem;color:#6f8c94;line-height:1.5}
+    .kpi-achieved{font-size:.84rem;font-weight:800;color:#17314f}
+    .kpi-readings{gap:8px!important}
+    .kpi-meta{font-size:.83rem!important}
+    .kpi-label{min-height:2.3em}
+    .hero-side{padding:22px 20px!important}
+    .chart{min-width:820px}
+    @media (max-width:1100px){
+      .annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+      .toolbar-compact{max-width:none}
+      .trend-panel-tools{min-width:0;width:100%}
+      .trend-filter select{width:100%;min-width:0}
+      .hero-brand{justify-content:flex-start}
+    }
+    @media (max-width:760px){
+      .annual-goals-grid{grid-template-columns:1fr!important}
+      .hero-shell{grid-template-columns:1fr!important}
+      .hero-logo{max-width:170px!important}
+      .trend-panel-head{align-items:stretch}
+    }
+
   </style>
 </head>
 <body class="view-full">
@@ -1340,7 +1395,7 @@
           <div class="hero-copy">
             <div class="hero-eyebrow">Cooperativa · economía circular</div>
             <h1>Cooperativa Atitlán Recicla</h1>
-            <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la primera cooperativa de mujeres recicladoras en Centroamérica. El dashboard se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
+            <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la primera cooperativa de mujeres recicladoras en Centroamérica. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
             <div class="hero-tag-row">
               <span class="hero-tag">13 municipios y 5 aldeas</span>
               <span class="hero-tag">64 socias fundadoras</span>
@@ -1350,7 +1405,6 @@
           </div>
           <aside class="hero-brand">
             <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
-            <p class="hero-brand-note">Una iniciativa de la <strong>Asociación Amigos del Lago de Atitlán</strong> que articula gestión ambiental, autonomía económica y fortalecimiento territorial.</p>
           </aside>
         </div>
       </div>
@@ -1374,7 +1428,7 @@
           <span>4 centros municipales vigentes</span>
         </div>
         <p>Actualmente trabajamos con 64 mujeres líderes en su comunidad quienes son socias fundadoras de la cooperativa Atitlán Recicla y más de 900 mujeres indirectas, integradas en 4 zonas de gestión, dentro de las cuales existen 9 centros de acopio gestionados por mujeres y 4 gestionados por trabajadores municipales, los cuales se encuentran vigentes y operando.</p>
-        <p>Del año 2028 a marzo 2026 se han recolectado 3,580 toneladas métricas de materiales reciclables, los cuales han sido clasificados, embalados y evacuados de la cuenca del Lago de Atitlán a empresas recicladoras para su manejo técnico y disposición final adecuada, aportando así a la economía circular.</p>
+        <p>De 2018 a marzo de 2026 se han recolectado 3,580 toneladas métricas de materiales reciclables, los cuales han sido clasificados, embalados y evacuados de la cuenca del Lago de Atitlán a empresas recicladoras para su manejo técnico y disposición final adecuada, aportando así a la economía circular.</p>
         <p>Atitlán Recicla es un referente dentro de la cuenca del Lago de Atitlán y a nivel nacional por sus buenas acciones y el trabajo tan loable que realizan las mujeres recicladoras y el equipo técnico en la gestión de los residuos de tipo reciclable.</p>
       </article>
       <div class="intro-stack">
@@ -1391,19 +1445,21 @@
             <p>CBC · ambev · Marcas Mundiales · Latitud R · SOCODEVI</p>
           </div>
         </article>
-        <article class="card panel annual-panel">
-          <div class="section-kicker">Metas 2026</div>
-          <h3>Metas anuales y avance acumulado real</h3>
-          <p class="sub" id="annualGoalsSubtitle">Meta anual total del programa al período seleccionado.</p>
-          <div class="annual-goals-grid" id="annualGoalsGrid"></div>
-          <div class="goal-note">Metas calculadas con base en las <strong>metas oficiales 2026</strong> y los <strong>11 meses reportables</strong>.</div>
-        </article>
+
       </div>
     </section>
-    <section class="toolbar">
+    <section class="section annual-section">
+      <article class="card panel annual-panel annual-panel-wide">
+        <div class="section-kicker">Metas 2026</div>
+        <h3>Metas anuales y avance acumulado real</h3>
+        <p class="sub" id="annualGoalsSubtitle">Meta anual total del programa al período seleccionado.</p>
+        <div class="annual-goals-grid" id="annualGoalsGrid"></div>
+        <div class="goal-note">Metas calculadas con base en las <strong>metas oficiales 2026</strong> y los <strong>11 meses reportables</strong>.</div>
+      </article>
+    </section>
+    <section class="toolbar toolbar-compact">
       <select id="periodSelect" hidden></select>
       <div class="card filter"><label for="zoneSelect">Zona</label><select id="zoneSelect"></select></div>
-      <div class="card filter"><label for="indicatorSelect">Indicador para tendencia</label><select id="indicatorSelect"></select></div>
       <div class="card filter"><label>Último período válido detectado</label><div class="pill" id="latestPeriodPill">—</div></div>
     </section>
     <section class="section">
@@ -1413,9 +1469,16 @@
     <div class="section-divider">Tendencia histórica y cumplimiento</div>
     <section class="section grid-2">
       <article class="card panel panel-accent chart-zoomable" id="trendChartPanel">
-        <h3>Tendencia mensual del indicador</h3>
-        <p class="sub" id="chartSubtitle">—</p>
-        <div class="chart-wrap" id="trendChart"></div>
+        <div class="trend-panel-head">
+          <div>
+            <h3>Tendencia mensual del indicador</h3>
+            <p class="sub" id="chartSubtitle">—</p>
+          </div>
+          <div class="trend-panel-tools">
+            <div class="filter trend-filter"><label for="indicatorSelect">Indicador para tendencia</label><select id="indicatorSelect"></select></div>
+          </div>
+        </div>
+        <div class="chart-wrap chart-wrap-elevated" id="trendChart"></div>
         <div class="legend"><span><i style="background:#267a46"></i>Valor real</span><span><i style="border-top:2px dashed #a0bca8;background:none"></i>Meta mensual</span></div>
       </article>
       <article class="card panel panel-accent">
@@ -1736,7 +1799,7 @@ function renderAnnualGoals(state){
   subtitle.textContent = `Acumulado real del programa frente a la meta anual total, con corte en ${periodLabel(period)}.`;
   grid.innerHTML = "";
 
-  ANNUAL_GOAL_IDS.forEach(id=>{
+  ANNUAL_GOAL_IDS.forEach((id,index)=>{
     const cfg = METRIC_CONFIG[id];
     if(!cfg) return;
     const annualGoal = safeNumber(cfg.meta) * 11;
@@ -1745,14 +1808,14 @@ function renderAnnualGoals(state){
     const cls = semaforoClassAnnual(pct);
 
     const card = document.createElement("div");
-    card.className = "goal-card";
+    card.className = `goal-card goal-tone-${cls}`;
+    card.style.setProperty('--delay', `${index*65}ms`);
     card.innerHTML = `
       <small>${escapeHtml(cfg.label)}</small>
-      <strong>Meta anual: ${escapeHtml(formatByUnit(annualGoal, cfg.unit))}</strong>
-      <div class="goal-meta">Acumulado real: ${escapeHtml(formatByUnit(accumulated, cfg.unit))}</div>
-      <div class="goal-progress">
-        <span class="chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</span>
-      </div>
+      <div class="goal-value">${escapeHtml(formatByUnit(accumulated, cfg.unit))}</div>
+      <div class="goal-caption">Acumulado real al corte</div>
+      <div class="goal-meta">Meta anual: <strong>${escapeHtml(formatByUnit(annualGoal, cfg.unit))}</strong></div>
+      <div class="goal-progress"><span class="chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</span></div>
       <div class="progress"><span style="width:${Math.max(0,Math.min(pct*100,100))}%"></span></div>
     `;
     grid.appendChild(card);
@@ -1810,8 +1873,8 @@ function renderKpis(state){
   const grid=document.getElementById("kpiGrid");
   const subtitle=document.getElementById("kpiSubtitle");
   subtitle.textContent = state.selectedZone==="__all__"
-    ? `Meta mensual y avance acumulado al corte para ${periodLabel(period)}.`
-    : `Lectura específica de ${getZoneLabel(state.selectedZone)} para ${periodLabel(period)}.`;
+    ? `Resultado real del período frente a su meta mensual en ${periodLabel(period)}.`
+    : `Aporte específico de ${getZoneLabel(state.selectedZone)} en ${periodLabel(period)}.`;
 
   grid.innerHTML="";
   KPI_IDS.forEach((id,index)=>{
@@ -1822,14 +1885,14 @@ function renderKpis(state){
     if(state.selectedZone==="__all__"){
       chipClass=semaforoClass(row.monthlyPct);
       chipText=semaforoText(row.monthlyPct);
-      line1=`Cumplimiento mensual: <strong>${escapeHtml(formatPercent(row.monthlyPct))}</strong>`;
-      line2=`Avance acumulado al corte: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong>`;
+      line1=`Resultado del período: <strong>${escapeHtml(formatByUnit(row.valor,row.unit))}</strong>`;
+      line2=`Meta mensual: <strong>${escapeHtml(formatByUnit(row.meta,row.unit))}</strong> · <strong>${escapeHtml(formatPercent(row.monthlyPct))}</strong> de cumplimiento`;
       progressWidth=Math.max(0,Math.min((row.monthlyPct||0)*100,100));
     }else{
       chipClass=shareClass(row.sharePct);
       chipText=shareText(row.sharePct);
-      line1=`Aporte de la zona al total del mes: <strong>${escapeHtml(formatPercent(row.sharePct))}</strong>`;
-      line2=`Aporte de la zona al acumulado del año: <strong>${escapeHtml(formatPercent(row.annualSharePct))}</strong>`;
+      line1=`Resultado de la zona: <strong>${escapeHtml(formatByUnit(row.valor,row.unit))}</strong>`;
+      line2=`Participación en el mes: <strong>${escapeHtml(formatPercent(row.sharePct))}</strong> · acumulado anual: <strong>${escapeHtml(formatPercent(row.annualSharePct))}</strong>`;
       progressWidth=Math.max(0,Math.min((row.sharePct||0)*100,100));
     }
 
@@ -1893,7 +1956,8 @@ function renderTrend(state){
   const labels=rows.map(r=>`${r.mes} ${r.anio}`);
   const values=rows.map(r=>safeNumber(r.valor));
   const refs=rows.map(r=>safeNumber(r.referencia));
-  panel.innerHTML=renderLineChart(labels, values, refs);
+  const activeIndex = rows.findIndex(r=>Number(r.mes_num)===Number(period.mes_num));
+  panel.innerHTML=renderLineChart(labels, values, refs, activeIndex);
 }
 
 function renderSemaforo(state){
@@ -2316,22 +2380,61 @@ function semaforoText(pct){ if(pct>=1) return "Verde"; if(pct>=0.85) return "Ama
 
 function monthName(n){ return ({1:"ENE",2:"FEB",3:"MAR",4:"ABR",5:"MAY",6:"JUN",7:"JUL",8:"AGO",9:"SEP",10:"OCT",11:"NOV",12:"DIC"}[n] || "—"); }
 
-function renderLineChart(labels,values,refs){
-  const width=900,height=320,pad=36;
+function renderLineChart(labels,values,refs,activeIndex){
+  const width=980, height=360;
+  const padL=68, padR=28, padT=26, padB=56;
   const all=[...values,...refs].filter(Number.isFinite);
-  const min=Math.min(...all,0),max=Math.max(...all,1),range=max-min||1;
-  const X=i=>pad+i*(width-pad*2)/Math.max(labels.length-1,1);
-  const Y=v=>height-pad-((v-min)/range)*(height-pad*2);
-  const pts1=values.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
-  const pts2=refs.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+  const min=Math.min(...all,0), max=Math.max(...all,1), range=max-min||1;
+  const plotW=width-padL-padR, plotH=height-padT-padB;
+  const X=i=>padL+i*plotW/Math.max(labels.length-1,1);
+  const Y=v=>padT+plotH-((v-min)/range)*plotH;
+  const actualPts=values.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  const refPts=refs.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  const areaPath = `M ${X(0)} ${padT+plotH} L ${values.map((v,i)=>`${X(i)} ${Y(v)}`).join(' L ')} L ${X(values.length-1)} ${padT+plotH} Z`;
   const yTicks=Array.from({length:5},(_,i)=>{
-    const v=min+((4-i)/4)*range;
-    const y=pad+i*(height-pad*2)/4;
-    return `<g><line x1="${pad}" x2="${width-pad}" y1="${y}" y2="${y}" stroke="#ddeaf8" stroke-width="1"/><text x="6" y="${y+4}" fill="#6685aa" font-size="10" font-family="Sora,sans-serif">${escapeHtml(compact(v))}</text></g>`;
-  }).join("");
-  const dots=values.map((v,i)=>{const cx=X(i),cy=Y(v);return`<circle cx="${cx}" cy="${cy}" r="5" fill="white" stroke="#2575cc" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="11" fill="transparent" style="cursor:pointer"><title>${escapeHtml(labels[i])}: ${escapeHtml(compact(v))}</title></circle>`;}).join("");
-  const xLabels=labels.map((l,i)=>`<text x="${X(i)}" y="${height-10}" text-anchor="middle" fill="#6685aa" font-size="11" font-family="Sora,sans-serif">${escapeHtml(shortLabel(l))}</text>`).join("");
-  return `<svg viewBox="0 0 ${width} ${height}" class="chart"><polyline fill="none" stroke="#94a3b8" stroke-width="3" stroke-dasharray="7 6" points="${pts2}"></polyline><polyline fill="none" stroke="#2563eb" stroke-width="4" points="${pts1}"></polyline>${yTicks}${xLabels}</svg>`;
+    const f=i/4;
+    const v=max-(f*range);
+    const y=padT+f*plotH;
+    return `<g><line x1="${padL}" x2="${width-padR}" y1="${y}" y2="${y}" stroke="#d9e7eb" stroke-width="1" stroke-dasharray="4 6"/><text x="${padL-12}" y="${y+4}" text-anchor="end" fill="#6f8c94" font-size="11" font-family="Sora,sans-serif">${escapeHtml(compact(v))}</text></g>`;
+  }).join('');
+  const xLabels=labels.map((l,i)=>`<text x="${X(i)}" y="${height-18}" text-anchor="middle" fill="#6f8c94" font-size="11" font-family="Sora,sans-serif" font-weight="600">${escapeHtml(shortLabel(l))}</text>`).join('');
+  const activeBand = activeIndex>=0 ? `<rect x="${X(activeIndex)-Math.max(plotW/Math.max(labels.length,6),34)/2}" y="${padT}" width="${Math.max(plotW/Math.max(labels.length,6),34)}" height="${plotH}" rx="14" fill="rgba(76,165,191,.10)"/>` : '';
+  const dots = values.map((v,i)=>{
+    const cx=X(i), cy=Y(v), isActive=i===activeIndex;
+    return `<g>
+      <circle cx="${cx}" cy="${cy}" r="${isActive?7:5}" fill="#ffffff" stroke="#1c6084" stroke-width="${isActive?3:2.4}"/>
+      <circle cx="${cx}" cy="${cy}" r="${isActive?15:12}" fill="transparent" style="cursor:pointer"><title>${escapeHtml(labels[i])}: ${escapeHtml(formatNumber(v))}</title></circle>
+      ${isActive?`<g><rect x="${cx-42}" y="${cy-34}" width="84" height="22" rx="11" fill="#173b61"/><text x="${cx}" y="${cy-19}" text-anchor="middle" fill="#fff" font-size="10.5" font-family="Sora,sans-serif" font-weight="700">${escapeHtml(compact(v))}</text></g>`:''}
+    </g>`;
+  }).join('');
+  const refDots = refs.map((v,i)=>`<circle cx="${X(i)}" cy="${Y(v)}" r="2.5" fill="#b3c9cf"/>`).join('');
+  const lastIndex = values.length-1;
+  const lastLabel = lastIndex>=0 ? `<g><rect x="${X(lastIndex)-58}" y="${Y(values[lastIndex])-48}" width="116" height="24" rx="12" fill="#ffffff" stroke="#d9e7eb"/><text x="${X(lastIndex)}" y="${Y(values[lastIndex])-32}" text-anchor="middle" fill="#17323a" font-size="11" font-family="Sora,sans-serif" font-weight="700">Real: ${escapeHtml(compact(values[lastIndex]))}</text></g>` : '';
+  return `<svg viewBox="0 0 ${width} ${height}" class="chart">
+    <defs>
+      <linearGradient id="trendArea" x1="0" x2="0" y1="0" y2="1">
+        <stop offset="0%" stop-color="#4ca5bf" stop-opacity="0.30"/>
+        <stop offset="100%" stop-color="#4ca5bf" stop-opacity="0.03"/>
+      </linearGradient>
+      <linearGradient id="trendLine" x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0%" stop-color="#2e6a57"/>
+        <stop offset="55%" stop-color="#1c6084"/>
+        <stop offset="100%" stop-color="#4ca5bf"/>
+      </linearGradient>
+      <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#143252" flood-opacity="0.12"/>
+      </filter>
+    </defs>
+    ${activeBand}
+    ${yTicks}
+    <path d="${areaPath}" fill="url(#trendArea)"/>
+    <polyline fill="none" stroke="#b2c5cb" stroke-width="3" stroke-dasharray="8 7" stroke-linecap="round" stroke-linejoin="round" points="${refPts}"></polyline>
+    <polyline fill="none" stroke="url(#trendLine)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#softShadow)" points="${actualPts}"></polyline>
+    ${refDots}
+    ${dots}
+    ${lastLabel}
+    ${xLabels}
+  </svg>`;
 }
 
 function renderTable(rows,cols,labels={},formatter=null){
