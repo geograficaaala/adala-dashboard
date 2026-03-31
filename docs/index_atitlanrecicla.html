@@ -1316,6 +1316,168 @@
 @media (max-width:1100px){.annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media (max-width:760px){.annual-goals-grid{grid-template-columns:1fr!important}}
 
+
+/* --- v5 hero refresh: conservando-style layout for Atitlán Recicla --- */
+.hero-main{
+  background:linear-gradient(135deg,#244d78 0%,#336792 55%,#69b4c8 100%) !important;
+  color:#ffffff !important;
+  box-shadow:0 22px 60px rgba(13,34,57,.16) !important;
+}
+.hero-main::before{
+  content:'';position:absolute;right:-100px;top:-90px;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16) 0%,rgba(255,255,255,.06) 36%,transparent 70%) !important;
+}
+.hero-main::after{
+  display:none !important;
+}
+.hero-shell{
+  grid-template-columns:minmax(0,1.55fr) minmax(300px,.82fr) !important;
+  gap:22px !important;
+  align-items:stretch !important;
+}
+.hero-eyebrow,
+.hero-main h1,
+.hero-main .hero-lead,
+.hero-main p,
+.hero-main strong,
+.hero-main small{
+  color:#ffffff !important;
+}
+.hero-main h1{
+  background:none !important;
+  -webkit-text-fill-color:#ffffff !important;
+  font-size:clamp(2.4rem,4.4vw,4.2rem) !important;
+  line-height:.96 !important;
+  margin-bottom:12px !important;
+}
+.hero-period-pill{
+  background:rgba(255,255,255,.14) !important;
+  border:1px solid rgba(255,255,255,.2) !important;
+  color:#ffffff !important;
+  box-shadow:none !important;
+}
+.hero-period-pill::before{
+  background:#9fe0ff !important;
+  box-shadow:0 0 0 4px rgba(159,224,255,.18) !important;
+}
+.hero-main .hero-lead{
+  font-size:1rem !important;
+  line-height:1.75 !important;
+  max-width:62ch !important;
+  color:rgba(255,255,255,.92) !important;
+}
+.hero-tag{
+  background:rgba(255,255,255,.12) !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  color:#ffffff !important;
+  box-shadow:none !important;
+}
+.hero-tag::before{
+  background:#c8f1e4 !important;
+}
+.hero-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:12px !important;
+}
+.hero-stat{
+  min-height:92px !important;
+  background:rgba(255,255,255,.10) !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  box-shadow:none !important;
+}
+.hero-stat small{
+  color:rgba(255,255,255,.72) !important;
+}
+.hero-stat strong{
+  color:#ffffff !important;
+  font-size:1.15rem !important;
+}
+.hero-brand{
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:space-between !important;
+  gap:16px !important;
+  min-height:100% !important;
+}
+.program-logo-card{
+  width:100% !important;
+  background:#ffffff !important;
+  border:1px solid rgba(255,255,255,.22) !important;
+  border-radius:26px !important;
+  padding:26px 20px !important;
+  min-height:280px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-shadow:0 14px 36px rgba(10,25,45,.12) !important;
+}
+.hero-logo{
+  width:min(100%,300px) !important;
+  max-width:100% !important;
+  height:auto !important;
+  filter:none !important;
+}
+.hero-side-hidden,
+.hero-side,
+.hero-side-label{
+  display:block !important;
+}
+.hero-side-hidden{
+  margin-top:0 !important;
+}
+#programStatus{
+  margin:0 0 12px 0 !important;
+}
+#programQuick{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:10px !important;
+}
+.hero-side-hidden .mini-item{
+  background:#ffffff !important;
+  border:1px solid rgba(208,220,236,.96) !important;
+  box-shadow:none !important;
+}
+.hero-side-hidden .mini-item .muted{
+  color:#5e7287 !important;
+  font-size:.88rem !important;
+}
+.hero-side-hidden .mini-item strong{
+  color:#2a6287 !important;
+  font-size:1rem !important;
+}
+.hero-side-hidden .status-badge{
+  display:inline-flex !important;
+  align-items:center !important;
+  padding:10px 16px !important;
+  border-radius:16px !important;
+  font-size:1rem !important;
+  font-weight:800 !important;
+  box-shadow:none !important;
+}
+.story-section .section-kicker{
+  color:var(--green) !important;
+}
+.story-section .section-kicker::before{
+  background:linear-gradient(90deg,var(--green),var(--blue-mid)) !important;
+}
+@media(max-width:1100px){
+  .hero-shell{grid-template-columns:1fr !important;}
+  .hero-main h1{font-size:clamp(2.1rem,7vw,3.2rem) !important;}
+  .program-logo-card{min-height:220px !important;}
+}
+@media(max-width:760px){
+  .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
+}
+@media(max-width:560px){
+  .hero-grid{grid-template-columns:1fr !important;}
+  .hero-main{padding:26px 20px 24px !important;}
+}
+
 </style>
 
 <style id="at-layout-polish-v3">
@@ -1470,7 +1632,7 @@
     </section>
     <section class="section story-section">
       <article class="card panel intro-story">
-        <div class="section-kicker">Texto explicativo de la cooperativa</div>
+        <div class="section-kicker">Cooperativa Atitlán Recicla</div>
         <h3>Cooperativa Atitlán Recicla</h3>
         <p><strong>Atitlán Recicla</strong> es una iniciativa de la Asociación Amigos del Lago de Atitlán, inició en agosto del año 2017 como proyecto con un enfoque social y ambiental, con el objetivo de fortalecer los procesos de manejo de residuos sólidos de tipo reciclable, en trece municipios y cinco aldeas del departamento de Sololá, contribuyendo a minimizar la contaminación del Lago de Atitlán, para mejorar la calidad de vida de los y las habitantes, en especial mujeres.</p>
         <p>Desde 2018 a la fecha ha brindado alternativas para fortalecer los planes integrales de residuos y desechos sólidos y ha implementado procesos adecuados para la gestión de residuos de tipo reciclable.</p>
