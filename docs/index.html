@@ -1701,6 +1701,15 @@ const PROGRAMS = [
     totalUrl: './data/educando_para_conservar/total_mes.csv',
     indUrl: './data/educando_para_conservar/institucional_indicadores.csv',
     loader: loadEPC
+  },
+  {
+    id: 'reforestacion',
+    name: 'Reforestando Atitlán',
+    source: 'Google Sheets',
+    dashboard: './index_reforestacion.html',
+    totalUrl: './data/reforestacion/total_mes.csv',
+    indUrl: './data/reforestacion/institucional_indicadores.csv',
+    loader: loadReforestacion
   }
 ];
 
@@ -1967,6 +1976,142 @@ async function loadEPC(cfg){
     scoreLabel:'Promedio vs esperado al corte',
     metrics:keyMetrics,
     sourceSummary:'Valor fijo · corte marzo 2026'
+  };
+}
+
+async function loadReforestacion(cfg){
+  const [totalRaw, indRaw, metaRaw] = await Promise.all([
+    parseCsv(cfg.totalUrl),
+    parseCsv(cfg.indUrl),
+    parseCsv('./data/reforestacion/metadata_publicacion.csv').catch(() => [])
+  ]);
+
+  const total = sortByMonth(cast(totalRaw));
+  const inds = cast(indRaw);
+  const meta = cast(metaRaw);
+
+  const latestMovement = [...total].reverse().find(r =>
+    Number(r.ha_monitoreadas_kpi_mes || 0) > 0 ||
+    Number(r.arboles_sembrados_kpi_mes || 0) > 0 ||
+    Number(r.aporte_sig_mes || 0) > 0 ||
+    Number(r.plantas_netas_mes || 0) > 0 ||
+    Number(r.especies_activas_mes || 0) > 0
+  ) || total[total.length - 1] || {};
+
+  const fallbackPeriod = String(meta[0]?.latest_period || '');
+  const periodKey = String(latestMovement.periodo_clave || fallbackPeriod || '—');
+  const latestLabel = latestMovement.mes_label && latestMovement.anio
+    ? `${safe(latestMovement.mes_label)} ${safe(latestMovement.anio)}`
+    : (meta[0]?.latest_month_label ? `${safe(meta[0].latest_month_label)} ${String(fallbackPeriod).slice(0,4)}` : 'Sin datos');
+
+  const latestIndicators = inds.filter(r => String(r.periodo_clave || '') === periodKey);
+  const pick = (subId) => latestIndicators.find(r => String(r.subindicador_id || '') === subId) || {};
+  const pctFromRow = (row, fallbackValue = 0, fallbackMeta = 0) => {
+    const pct = Number(row?.pct_meta_anual);
+    if (Number.isFinite(pct) && pct >= 0) return pct * 100;
+    const value = Number(fallbackValue || row?.valor_acumulado || 0);
+    const metaVal = Number(fallbackMeta || row?.meta_anual || 0);
+    return metaVal > 0 ? (value / metaVal) * 100 : 0;
+  };
+
+  const ha = pick('ha_monitoreadas');
+  const cart = pick('cartografia_cobertura');
+  const arboles = pick('arboles_sembrados');
+  const sig = pick('unidad_sig');
+  const plantas = pick('plantas_vivero');
+  const especies = pick('especies_nativas');
+
+  const haAcum = Number(ha.valor_acumulado || latestMovement.ha_monitoreadas_kpi_acum || 0);
+  const haMeta = Number(ha.meta_anual || latestMovement.meta_ha || 35);
+  const pctHa = pctFromRow(ha, haAcum, haMeta);
+
+  const cartAcum = Number(cart.valor_acumulado || latestMovement.pct_cartografia_acum || 0);
+  const pctCart = pctFromRow(cart, cartAcum, Number(cart.meta_anual || 1));
+
+  const arbolesAcum = Number(arboles.valor_acumulado || latestMovement.arboles_sembrados_acum || 0);
+  const arbolesMeta = Number(arboles.meta_anual || latestMovement.meta_arboles || 85000);
+  const pctArboles = pctFromRow(arboles, arbolesAcum, arbolesMeta);
+
+  const sigAcum = Number(sig.valor_acumulado || latestMovement.aporte_sig_acum || 0);
+  const sigMeta = Number(sig.meta_anual || latestMovement.meta_unidad_sig || 1);
+  const pctSig = pctFromRow(sig, sigAcum, sigMeta);
+
+  const plantasAcum = Number(plantas.valor_acumulado || latestMovement.plantas_netas_acum || 0);
+  const plantasMeta = Number(plantas.meta_anual || latestMovement.meta_plantas || 10000);
+  const pctPlantas = pctFromRow(plantas, plantasAcum, plantasMeta);
+
+  const especiesAcum = Number(especies.valor_acumulado || latestMovement.especies_acumuladas_proxy || 0);
+  const especiesMeta = Number(especies.meta_anual || latestMovement.meta_especies || 10);
+  const pctEspecies = pctFromRow(especies, especiesAcum, especiesMeta);
+
+  const pctMonitoreoIntegral = Math.min(pctHa, pctCart || 0);
+  const pctViveroIntegral = Math.min(pctPlantas, pctEspecies || 0);
+  const score = avg([pctMonitoreoIntegral, pctArboles, pctSig, pctViveroIntegral]);
+
+  const keyMetrics = [
+    {
+      label: '35 hectáreas monitoreadas de las reforestaciones realizadas en 2025 en Sololá y la Cuenca del Lago de Atitlán, con su respectiva cartografía durante el primer semestre de 2026.',
+      acumDisplay: `${fmt(haAcum, 2)} / ${fmt(haMeta)} ha monitoreadas`,
+      pct: pctMonitoreoIntegral,
+      pctDisplay: `${fmtPct(pctHa)} en hectáreas y ${fmtPct(pctCart)} en cartografía`,
+      barPct: pctMonitoreoIntegral,
+      subIndicators: [
+        {
+          label: 'Hectáreas monitoreadas',
+          valueDisplay: `${fmt(haAcum, 2)} / ${fmt(haMeta)} ha`,
+          barPct: pctHa
+        },
+        {
+          label: 'Cobertura cartográfica',
+          valueDisplay: `${fmtPct(pctCart)} / 100%`,
+          barPct: pctCart,
+          pending: pctCart === 0
+        }
+      ]
+    },
+    {
+      label: '85,000 árboles sembrados durante 2026 en el departamento de Sololá y la Cuenca del Lago de Atitlán.',
+      acumDisplay: `${fmt(arbolesAcum)} / ${fmt(arbolesMeta)} árboles`,
+      pct: pctArboles,
+      pctDisplay: `${fmtPct(pctArboles)} de avance con respecto a meta anual`,
+      barPct: pctArboles
+    },
+    {
+      label: '1 unidad de análisis SIG creada con especialización en cartografía forestal temática a través del eje de la CODEMA-Sololá.',
+      acumDisplay: `${fmt(sigAcum, 2)} / ${fmt(sigMeta, 0)} unidad SIG`,
+      pct: pctSig,
+      pctDisplay: `${fmtPct(pctSig)} de avance acumulado de consolidación`,
+      barPct: pctSig
+    },
+    {
+      label: '10,000 plantas forestales de 10 especies nativas producidas y sembradas en el vivero AALA durante 2026.',
+      acumDisplay: `${fmt(plantasAcum)} / ${fmt(plantasMeta)} plantas`,
+      pct: pctViveroIntegral,
+      pctDisplay: `${fmtPct(pctPlantas)} en plantas y ${fmtPct(pctEspecies)} en especies`,
+      barPct: pctViveroIntegral,
+      subIndicators: [
+        {
+          label: 'Plantas forestales',
+          valueDisplay: `${fmt(plantasAcum)} / ${fmt(plantasMeta)} plantas`,
+          barPct: pctPlantas
+        },
+        {
+          label: 'Especies nativas activas',
+          valueDisplay: `${fmt(especiesAcum)} / ${fmt(especiesMeta)} especies`,
+          barPct: pctEspecies
+        }
+      ]
+    }
+  ];
+
+  return {
+    ...cfg,
+    latestLabel,
+    periodKey,
+    score: score || 0,
+    scoreLabel: 'Cumplimiento promedio vs metas anuales',
+    metrics: keyMetrics,
+    sourceSummary: 'Google Sheets · Reforestación'
   };
 }
 
