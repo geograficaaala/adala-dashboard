@@ -3874,5 +3874,608 @@ document.addEventListener('DOMContentLoaded', function(){ setTimeout(setupChartZ
 document.body.classList.add('view-full');
 
 </script>
+
+<style id="income-enhance-styles">
+.chart-zoomable,.chart-zoomable *{cursor:default!important}
+.chart-zoomable::after{display:none!important}
+.zoom-overlay{display:none!important}
+
+.income-toolbar{margin-top:14px;margin-bottom:14px;grid-template-columns:repeat(6,minmax(0,1fr))}
+.income-grid{padding-top:0}
+.income-kpis{margin-top:8px;margin-bottom:18px}
+.footer-wrap{grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(220px,.7fr)) auto;align-items:start}
+.footer-mark{margin-left:auto;align-self:end;justify-self:end;display:flex;align-items:flex-end;justify-content:flex-end}
+.footer-mark img{width:148px;max-width:100%;height:auto;opacity:.96}
+.presentation-shortcuts{background:rgba(255,255,255,.16)!important;color:#fff!important}
+#incomeSection .section-head h2{margin-bottom:4px}
+#incomeSection .section-head p{max-width:72ch}
+#incomeSection .kpi-copy{min-height:72px}
+#incomeSection .tbl-wrap table td:first-child{font-weight:700;color:#17314f}
+#incomeSection .panel{min-height:100%}
+.goal-card.kpi{min-height:unset!important}
+.goal-card .kpi-copy{min-height:50px}
+.goal-note{display:none}
+@media(max-width:1150px){
+  .income-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .footer-wrap{grid-template-columns:1fr 1fr}
+  .footer-mark{grid-column:1/-1;justify-self:end}
+}
+@media(max-width:760px){
+  .income-toolbar{grid-template-columns:1fr}
+  .footer-wrap{grid-template-columns:1fr}
+  .footer-mark{justify-self:start}
+}
+
+</style>
+<script id="income-enhance-script">
+(function(){
+  function q(sel, root){ return (root||document).querySelector(sel); }
+  function qa(sel, root){ return Array.from((root||document).querySelectorAll(sel)); }
+
+  function ensureMunicipalKpi(){
+    if(typeof KPI_IDS !== 'undefined' && Array.isArray(KPI_IDS) && !KPI_IDS.includes('ingreso_bruto_municipalidades')){
+      const idx = KPI_IDS.indexOf('ingreso_bruto_mujeres');
+      if(idx >= 0) KPI_IDS.splice(idx + 1, 0, 'ingreso_bruto_municipalidades');
+      else KPI_IDS.push('ingreso_bruto_municipalidades');
+    }
+    if(typeof ANNUAL_GOAL_IDS !== 'undefined' && Array.isArray(ANNUAL_GOAL_IDS) && !ANNUAL_GOAL_IDS.includes('ingreso_bruto_municipalidades')){
+      ANNUAL_GOAL_IDS.push('ingreso_bruto_municipalidades');
+    }
+  }
+
+  function patchStaticDom(){
+    const heroLead=q('.hero-lead');
+    if(heroLead){
+      heroLead.innerHTML='Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.';
+    }
+    const supportStrip=q('.support-strip');
+    if(supportStrip) supportStrip.remove();
+    const footerWrap=q('.footer-wrap');
+    if(footerWrap && !q('.footer-mark', footerWrap)){
+      const mark=document.createElement('section');
+      mark.className='footer-mark';
+      mark.innerHTML='<img src="./chill_lago.png" alt="Chill Lago">';
+      footerWrap.appendChild(mark);
+    }
+    qa('.chart-zoomable').forEach(el=>el.classList.remove('chart-zoomable'));
+
+    const kpiSection=q('#kpiGrid')?.closest('.section');
+    const existing=q('#incomeSection');
+    if(kpiSection && !existing){
+      kpiSection.insertAdjacentHTML('afterend', `
+        <div class="section-divider">Ingresos y contribución a metas</div>
+        <section class="section" id="incomeSection">
+          <div class="section-head"><div><h2>KPIs de ingresos y aporte a metas</h2><p id="incomeSubtitle">Lectura filtrable del ingreso con detalle por territorio, material, municipio y recolector.</p></div></div>
+          <section class="toolbar toolbar-compact income-toolbar">
+            <div class="card filter"><label for="incomeSubjectSelect">Línea de ingreso</label><select id="incomeSubjectSelect"></select></div>
+            <div class="card filter"><label for="incomeTerritorySelect">Territorio</label><select id="incomeTerritorySelect"></select></div>
+            <div class="card filter"><label for="incomeMaterialSelect">Material</label><select id="incomeMaterialSelect"></select></div>
+            <div class="card filter"><label for="incomeMunicipioSelect">Municipio origen</label><select id="incomeMunicipioSelect"></select></div>
+            <div class="card filter"><label for="incomeRecolectorSelect">Recolector</label><select id="incomeRecolectorSelect"></select></div>
+            <div class="card filter"><label for="incomeBreakdownSelect">Desglose principal</label><select id="incomeBreakdownSelect"></select></div>
+          </section>
+          <div class="kpis income-kpis" id="incomeKpiGrid"></div>
+          <section class="section grid-2 income-grid">
+            <article class="card panel panel-accent">
+              <div class="trend-panel-head">
+                <div>
+                  <h3>Desglose del ingreso filtrado</h3>
+                  <p class="sub" id="incomeBreakdownSubtitle">Comparación por dimensión seleccionada.</p>
+                </div>
+              </div>
+              <div class="viz-wrap" id="incomeBreakdownChart"></div>
+              <div class="interp" id="incomeBreakdownInterp"></div>
+            </article>
+            <article class="card panel panel-accent">
+              <h3 id="incomeTableTitle">Detalle del filtro</h3>
+              <p class="sub" id="incomeTableSubtitle">Lectura tabular de la selección actual.</p>
+              <div id="incomeTable"></div>
+            </article>
+          </section>
+        </section>
+      `);
+    }
+  }
+
+  ensureMunicipalKpi();
+  patchStaticDom();
+
+  const INCOME_SUBJECTS={
+    ingreso_bruto_total:{label:'Ingreso bruto total',unit:'GTQ',goalMonthly:40727,summaryGetter:r=>safeNumber(r?.ingreso_bruto_total),detailGetter:r=>safeNumber(r?.ingreso_total_venta)},
+    ingreso_bruto_mujeres:{label:'Ingreso bruto mujeres',unit:'GTQ',goalMonthly:36655,summaryGetter:r=>safeNumber(r?.ingreso_bruto_lideresas),detailGetter:r=>String(r?.recolector||'').toLowerCase()==='lideresas'?safeNumber(r?.ingreso_total_venta):0},
+    ingreso_bruto_municipalidades:{label:'Ingreso bruto municipalidades',unit:'GTQ',goalMonthly:4073,summaryGetter:r=>safeNumber(r?.ingreso_bruto_municipalidad),detailGetter:r=>String(r?.recolector||'').toLowerCase()==='municipalidad'?safeNumber(r?.ingreso_total_venta):0},
+    ingreso_neto_cooperativa:{label:'Ingreso neto cooperativa',unit:'GTQ',goalMonthly:null,summaryGetter:r=>safeNumber(r?.ingreso_neto_cooperativa),detailGetter:r=>safeNumber(r?.ingreso_cooperativa)},
+    ingreso_neto_total_territorio:{label:'Ingreso neto territorio',unit:'GTQ',goalMonthly:null,summaryGetter:r=>safeNumber(r?.ingreso_neto_total_territorio),detailGetter:r=>safeNumber(r?.ingreso_total_venta)-safeNumber(r?.ingreso_cooperativa)},
+    pago_cooperativa_total:{label:'Pago a cooperativa',unit:'GTQ',goalMonthly:null,summaryGetter:r=>safeNumber(r?.pago_coop_lideresas)+safeNumber(r?.pago_coop_municipalidad),detailGetter:r=>safeNumber(r?.ingreso_cooperativa)}
+  };
+  const INCOME_BREAKDOWNS={
+    zona:'Zona',
+    territorio:'Territorio',
+    material:'Material',
+    municipio:'Municipio origen',
+    recolector:'Recolector'
+  };
+
+  function monthNumLoose(row){
+    const direct=Number(row?.mes_num);
+    if(Number.isFinite(direct)) return direct;
+    const raw=String(row?.mes||'').trim().toUpperCase();
+    const map={ENE:1,FEB:2,MAR:3,ABR:4,MAY:5,JUN:6,JUL:7,AGO:8,SEP:9,OCT:10,NOV:11,DIC:12};
+    return map[raw] || NaN;
+  }
+  function periodFromRow(row){
+    return {anio:Number(row?.anio), mes_num:monthNumLoose(row), mes:String(row?.mes||monthName(monthNumLoose(row))||'').trim().toUpperCase()};
+  }
+  function comparePeriod(a,b){ return (safeNumber(a.anio)-safeNumber(b.anio)) || (safeNumber(a.mes_num)-safeNumber(b.mes_num)); }
+  function periodLE(a,b){ return comparePeriod(a,b) <= 0; }
+  function keyOfPeriod(p){ return `${p?.anio}|${p?.mes_num}`; }
+  function labelLong(p){ return p ? `${({1:'Enero',2:'Febrero',3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',7:'Julio',8:'Agosto',9:'Septiembre',10:'Octubre',11:'Noviembre',12:'Diciembre'}[p.mes_num]||monthName(p.mes_num))} ${p.anio}` : 'Sin período'; }
+
+  function getDetailPeriods(){
+    if(!currentData) return [];
+    const seen=new Map();
+    (currentData.materialesRaw||[]).forEach(r=>{
+      const p=periodFromRow(r);
+      if(!Number.isFinite(p.anio) || !Number.isFinite(p.mes_num)) return;
+      seen.set(keyOfPeriod(p), p);
+    });
+    return Array.from(seen.values()).sort(comparePeriod);
+  }
+  function getBestDetailPeriod(selected){
+    const periods=getDetailPeriods();
+    if(!periods.length) return null;
+    const eligible=periods.filter(p=>periodLE(p, selected));
+    return eligible.length ? eligible[eligible.length-1] : periods[periods.length-1];
+  }
+  function getIncomeSubjectConfig(id){ return INCOME_SUBJECTS[id] || INCOME_SUBJECTS.ingreso_bruto_total; }
+  function incomeGoalAnnual(cfg){ return Number.isFinite(cfg.goalMonthly) ? cfg.goalMonthly*11 : null; }
+  function isDetailSelection(state){
+    return state.incomeMaterial!=='__all__' || state.incomeMunicipio!=='__all__' || state.incomeRecolector!=='__all__' || ['material','municipio','recolector'].includes(state.incomeBreakdown);
+  }
+  function getIncomeSummaryBaseRow(state, period){
+    if(state.incomeTerritory!=='__all__'){
+      return currentData.territorioMes.find(r=>r.anio===period?.anio && r.mes_num===period?.mes_num && String(r?.territorio||'')===state.incomeTerritory);
+    }
+    if(state.selectedZone!=='__all__') return getZoneRow(period, state.selectedZone);
+    return getTotalRow(period);
+  }
+  function getIncomeSummarySeriesRows(state, year, upToMonth){
+    let rows;
+    if(state.incomeTerritory!=='__all__'){
+      rows=(currentData.territorioMes||[]).filter(r=>r.anio===year && r.mes_num<=upToMonth && String(r?.territorio||'')===state.incomeTerritory);
+    }else if(state.selectedZone!=='__all__'){
+      rows=(currentData.zonaMes||[]).filter(r=>r.anio===year && r.mes_num<=upToMonth && sameZone(r,state.selectedZone));
+    }else{
+      rows=(currentData.totalMes||[]).filter(r=>r.anio===year && r.mes_num<=upToMonth);
+    }
+    return rows;
+  }
+  function sumSummarySubject(rows, subjectId){
+    const cfg=getIncomeSubjectConfig(subjectId);
+    return (rows||[]).reduce((acc,r)=>acc + cfg.summaryGetter(r), 0);
+  }
+  function getIncomeDetailRows(state, period){
+    if(!currentData || !period) return [];
+    let rows=(currentData.materialesRaw||[]).filter(r=>Number(r.anio)===Number(period.anio) && monthNumLoose(r)===Number(period.mes_num));
+    if(state.selectedZone!=='__all__') rows=rows.filter(r=>sameZoneMaterial(r, state.selectedZone));
+    if(state.incomeMaterial!=='__all__') rows=rows.filter(r=>String(r.material||'')===state.incomeMaterial);
+    if(state.incomeMunicipio!=='__all__') rows=rows.filter(r=>String(r.municipio_origen||'')===state.incomeMunicipio);
+    if(state.incomeRecolector!=='__all__') rows=rows.filter(r=>String(r.recolector||'')===state.incomeRecolector);
+    return rows;
+  }
+  function getIncomeDetailSeriesRows(state, period){
+    if(!currentData || !period) return [];
+    let rows=(currentData.materialesRaw||[]).filter(r=>Number(r.anio)===Number(period.anio) && monthNumLoose(r)<=Number(period.mes_num));
+    if(state.selectedZone!=='__all__') rows=rows.filter(r=>sameZoneMaterial(r, state.selectedZone));
+    if(state.incomeMaterial!=='__all__') rows=rows.filter(r=>String(r.material||'')===state.incomeMaterial);
+    if(state.incomeMunicipio!=='__all__') rows=rows.filter(r=>String(r.municipio_origen||'')===state.incomeMunicipio);
+    if(state.incomeRecolector!=='__all__') rows=rows.filter(r=>String(r.recolector||'')===state.incomeRecolector);
+    return rows;
+  }
+  function sumDetailSubject(rows, subjectId){
+    const cfg=getIncomeSubjectConfig(subjectId);
+    return (rows||[]).reduce((acc,r)=>acc + cfg.detailGetter(r), 0);
+  }
+  function getIncomeContext(state){
+    const period=getSelectedPeriod(state);
+    const subjectCfg=getIncomeSubjectConfig(state.incomeSubject);
+    const detailMode=isDetailSelection(state);
+    const detailPeriod=detailMode ? getBestDetailPeriod(period) : null;
+    const usingDetail=detailMode && detailPeriod;
+    const effectivePeriod=usingDetail ? detailPeriod : period;
+    const summaryBase=getIncomeSummaryBaseRow(state, period);
+    const summaryCurrent=subjectCfg.summaryGetter(summaryBase);
+    const summarySeries=sumSummarySubject(getIncomeSummarySeriesRows(state, period.anio, period.mes_num), state.incomeSubject);
+    const detailCurrent=usingDetail ? sumDetailSubject(getIncomeDetailRows(state, detailPeriod), state.incomeSubject) : null;
+    const detailSeries=usingDetail ? sumDetailSubject(getIncomeDetailSeriesRows(state, detailPeriod), state.incomeSubject) : null;
+    const currentValue=usingDetail ? detailCurrent : summaryCurrent;
+    const accumulated=usingDetail ? detailSeries : summarySeries;
+    const programTotalMonthCfg=getIncomeSubjectConfig(state.incomeSubject);
+    const programMonthValue=programTotalMonthCfg.summaryGetter(getTotalRow(effectivePeriod));
+    const programAccumulated=sumSummarySubject((currentData.totalMes||[]).filter(r=>r.anio===effectivePeriod?.anio && r.mes_num<=effectivePeriod?.mes_num), state.incomeSubject);
+    const goalMonthly=subjectCfg.goalMonthly;
+    const goalAnnual=incomeGoalAnnual(subjectCfg);
+    const monthlyPct=Number.isFinite(goalMonthly) && goalMonthly>0 ? currentValue/goalMonthly : null;
+    const annualPct=Number.isFinite(goalAnnual) && goalAnnual>0 ? accumulated/goalAnnual : null;
+    const shareMonth=programMonthValue>0 ? currentValue/programMonthValue : null;
+    const shareAnnual=programAccumulated>0 ? accumulated/programAccumulated : null;
+    const gapMonthly=Number.isFinite(goalMonthly) ? goalMonthly-currentValue : null;
+    let note='';
+    if(usingDetail && keyOfPeriod(detailPeriod)!==keyOfPeriod(period)){
+      note=`El detalle por material/municipio/recolector está publicado hasta ${labelLong(detailPeriod)}. Para esta lectura se usa ese último corte disponible.`;
+    }else if(usingDetail){
+      note=`La lectura detallada proviene de materiales_raw.csv con corte en ${labelLong(detailPeriod)}.`;
+    }else{
+      note=`La lectura usa total_mes.csv, zona_mes.csv y territorio_mes.csv con corte en ${labelLong(period)}.`;
+    }
+    return {
+      period,
+      effectivePeriod,
+      usingDetail,
+      note,
+      subjectCfg,
+      currentValue,
+      accumulated,
+      goalMonthly,
+      goalAnnual,
+      monthlyPct,
+      annualPct,
+      shareMonth,
+      shareAnnual,
+      gapMonthly,
+      summaryBase,
+      breakdownRows:getIncomeBreakdownRows(state, usingDetail ? detailPeriod : period, usingDetail),
+      tableRows:getIncomeTableRows(state, usingDetail ? detailPeriod : period, usingDetail)
+    };
+  }
+
+  function getIncomeBreakdownRows(state, period, useDetail){
+    const cfg=getIncomeSubjectConfig(state.incomeSubject);
+    const breakdown=state.incomeBreakdown;
+    let rows=[];
+    if(useDetail && ['material','municipio','recolector'].includes(breakdown)){
+      const detail=getIncomeDetailRows(state, period);
+      const keyMap={material:'material',municipio:'municipio_origen',recolector:'recolector'};
+      const key=keyMap[breakdown];
+      const groups=aggregate(detail,[key],{cantidad:'sum',gtq_total_pagados:'sum',ingreso_total_venta:'sum',ingreso_cooperativa:'sum'});
+      rows=groups.map(r=>({
+        label:String(r[key]||'Sin etiqueta'),
+        value: breakdown==='recolector' || state.incomeSubject!=='ingreso_neto_total_territorio'
+          ? (breakdown==='recolector' && state.incomeSubject==='ingreso_bruto_mujeres' ? (String(r[key]).toLowerCase()==='lideresas'?safeNumber(r.ingreso_total_venta):0)
+            : breakdown==='recolector' && state.incomeSubject==='ingreso_bruto_municipalidades' ? (String(r[key]).toLowerCase()==='municipalidad'?safeNumber(r.ingreso_total_venta):0)
+            : state.incomeSubject==='ingreso_neto_cooperativa' || state.incomeSubject==='pago_cooperativa_total' ? safeNumber(r.ingreso_cooperativa)
+            : state.incomeSubject==='ingreso_neto_total_territorio' ? safeNumber(r.ingreso_total_venta)-safeNumber(r.ingreso_cooperativa)
+            : safeNumber(r.ingreso_total_venta))
+          : safeNumber(r.ingreso_total_venta)
+      }));
+    }else if(breakdown==='zona'){
+      rows=getZonaRows(state, period)
+        .filter(r=>state.selectedZone==='__all__' || sameZone(r, state.selectedZone))
+        .map(r=>({label:String(r.zona||'—'), value:cfg.summaryGetter(r)}));
+    }else{
+      rows=getTerritoryRows(state, period)
+        .filter(r=>state.selectedZone==='__all__' || sameZone(r, state.selectedZone))
+        .map(r=>({label:String(r.territorio||'—'), value:cfg.summaryGetter(r)}));
+    }
+    return rows.filter(r=>safeNumber(r.value)>0).sort((a,b)=>safeNumber(b.value)-safeNumber(a.value)).slice(0,10);
+  }
+
+  function getIncomeTableRows(state, period, useDetail){
+    const rows=getIncomeBreakdownRows(state, period, useDetail);
+    const total=rows.reduce((acc,r)=>acc+safeNumber(r.value),0) || 1;
+    return rows.map(r=>({detalle:r.label,valor:r.value,participacion:safeNumber(r.value)/total}));
+  }
+
+  function incomeChipClass(v){
+    if(v==null) return 'muted';
+    if(v>=1) return 'green';
+    if(v>=0.85) return 'yellow';
+    if(v>0) return 'red';
+    return 'muted';
+  }
+  function incomeChipText(v, type){
+    if(v==null) return 'Sin meta oficial';
+    return type==='share' ? `${formatPercent(v)} del programa` : `${formatPercent(v)} de meta`;
+  }
+  function renderIncomeKpiCard(def, idx){
+    const parts=splitDisplayValue(def.valueText);
+    const chipClass=def.chipClass||'muted';
+    const pillWidth=Math.max(8, Math.min(Number(def.progressPct||0)*100, 100));
+    return `<article class="card kpi tone-${chipClass}" style="--delay:${idx*70}ms">
+      <div class="kpi-top"><div class="kpi-label">${escapeHtml(def.label)}</div></div>
+      <div class="kpi-figure">
+        <div class="kpi-pillar" aria-hidden="true"><span class="kpi-pillar-track"></span><span class="kpi-pillar-fill" style="height:${pillWidth}%"></span></div>
+        <div class="kpi-reading">
+          <div class="kpi-value" data-value="${parts.number!=null?parts.number:''}" data-prefix="${escapeHtml(parts.prefix)}" data-suffix="${escapeHtml(parts.suffix)}" data-decimals="${parts.decimals}">${escapeHtml(parts.text)}</div>
+          <div class="kpi-meta">${def.metaTitle||''}</div>
+          <div class="kpi-ref">${def.refText||''}</div>
+        </div>
+      </div>
+      <div class="chip ${chipClass}">${escapeHtml(def.chipText||'')}</div>
+      <div class="kpi-copy">${def.copy||''}</div>
+      <div class="progress"><span style="width:${Math.max(0,Math.min(pillWidth,100))}%"></span></div>
+    </article>`;
+  }
+
+  function renderIncomeSection(state){
+    const grid=q('#incomeKpiGrid');
+    if(!grid) return;
+    const ctx=getIncomeContext(state);
+    const cfg=ctx.subjectCfg;
+    const cards=[];
+    cards.push({
+      label:`Resultado filtrado · ${cfg.label}`,
+      valueText:formatByUnit(ctx.currentValue, cfg.unit),
+      metaTitle:'Valor observado en la selección actual',
+      refText:ctx.usingDetail ? `Corte efectivo: ${labelLong(ctx.effectivePeriod)}` : `Corte efectivo: ${labelLong(ctx.period)}`,
+      chipClass:incomeChipClass(ctx.monthlyPct),
+      chipText:incomeChipText(ctx.monthlyPct,'goal'),
+      progressPct:ctx.monthlyPct || ctx.shareMonth || 0,
+      copy:`${escapeHtml(ctx.note)}`
+    });
+    cards.push({
+      label:'Aporte a meta mensual',
+      valueText:ctx.monthlyPct!=null ? formatPercent(ctx.monthlyPct) : 'Sin meta oficial',
+      metaTitle:ctx.goalMonthly!=null ? `Meta mensual de referencia: ${escapeHtml(formatByUnit(ctx.goalMonthly, cfg.unit))}` : 'No existe meta mensual oficial publicada para esta línea',
+      refText:ctx.goalMonthly!=null ? `Brecha del mes: <strong>${escapeHtml(formatByUnit(Math.abs(ctx.gapMonthly||0), cfg.unit))}</strong>${(ctx.gapMonthly||0)>=0?' por alcanzar':' por encima de meta'}` : 'La lectura se concentra en participación y acumulado',
+      chipClass:incomeChipClass(ctx.monthlyPct),
+      chipText:incomeChipText(ctx.monthlyPct,'goal'),
+      progressPct:ctx.monthlyPct || 0,
+      copy:ctx.goalMonthly!=null ? `${escapeHtml(cfg.label)} aporta ${escapeHtml(formatPercent(ctx.monthlyPct||0))} de la meta esperada para el mes seleccionado.` : 'Esta línea no cuenta con meta mensual oficial; se conserva como lectura complementaria.'
+    });
+    cards.push({
+      label:'Participación del filtro en el programa',
+      valueText:ctx.shareMonth!=null ? formatPercent(ctx.shareMonth) : '—',
+      metaTitle:'Peso relativo del filtro dentro del programa en el período',
+      refText:`La selección representa <strong>${escapeHtml(formatPercent(ctx.shareMonth||0))}</strong> del total programático de ${escapeHtml(cfg.label)}.`,
+      chipClass:incomeChipClass(ctx.shareMonth),
+      chipText:incomeChipText(ctx.shareMonth,'share'),
+      progressPct:ctx.shareMonth || 0,
+      copy:'Útil para medir qué tanto aporta el territorio, material o recolector seleccionado al cumplimiento del programa.'
+    });
+    cards.push({
+      label:'Acumulado del filtro al corte',
+      valueText:formatByUnit(ctx.accumulated, cfg.unit),
+      metaTitle:'Suma acumulada hasta el período efectivo',
+      refText:`Período acumulado: <strong>${escapeHtml(labelLong(ctx.effectivePeriod))}</strong>`,
+      chipClass:incomeChipClass(ctx.annualPct!=null ? ctx.annualPct : ctx.shareAnnual),
+      chipText:ctx.annualPct!=null ? `${escapeHtml(formatPercent(ctx.annualPct))} de meta anual` : `${escapeHtml(formatPercent(ctx.shareAnnual||0))} del acumulado`,
+      progressPct:ctx.annualPct!=null ? ctx.annualPct : (ctx.shareAnnual||0),
+      copy:'Permite seguir cuánto ha aportado la selección actual al avance acumulado del año.'
+    });
+    cards.push({
+      label:'Aporte a meta anual',
+      valueText:ctx.annualPct!=null ? formatPercent(ctx.annualPct) : 'Sin meta oficial',
+      metaTitle:ctx.goalAnnual!=null ? `Meta anual de referencia: ${escapeHtml(formatByUnit(ctx.goalAnnual, cfg.unit))}` : 'No existe meta anual oficial publicada para esta línea',
+      refText:ctx.goalAnnual!=null ? `Acumulado real: <strong>${escapeHtml(formatByUnit(ctx.accumulated, cfg.unit))}</strong>` : `Participación acumulada: <strong>${escapeHtml(formatPercent(ctx.shareAnnual||0))}</strong>`,
+      chipClass:incomeChipClass(ctx.annualPct),
+      chipText:ctx.annualPct!=null ? `${escapeHtml(formatPercent(ctx.annualPct))} del año` : 'Sin meta oficial',
+      progressPct:ctx.annualPct || 0,
+      copy:ctx.goalAnnual!=null ? 'Este indicador responde directamente a la pregunta de cuánto aporta la selección a la meta anual de ingresos esperados.' : 'Al no existir meta anual oficial, la lectura se expresa como participación del acumulado.'
+    });
+    cards.push({
+      label:'Brecha o margen del mes',
+      valueText:ctx.goalMonthly!=null ? formatByUnit(Math.abs(ctx.gapMonthly||0), cfg.unit) : formatPercent(ctx.shareAnnual||0),
+      metaTitle:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? 'Valor aún pendiente para alcanzar la meta mensual' : 'Monto por encima de la meta mensual') : 'Participación acumulada del filtro dentro del programa',
+      refText:ctx.goalMonthly!=null ? `Lectura de brecha con base en la meta mensual de ${escapeHtml(cfg.label)}.` : `La selección explica <strong>${escapeHtml(formatPercent(ctx.shareAnnual||0))}</strong> del acumulado del programa.`,
+      chipClass:ctx.goalMonthly!=null ? incomeChipClass(ctx.monthlyPct) : incomeChipClass(ctx.shareAnnual),
+      chipText:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? 'Brecha pendiente' : 'Meta superada') : 'Participación anual',
+      progressPct:ctx.goalMonthly!=null ? ctx.monthlyPct || 0 : ctx.shareAnnual || 0,
+      copy:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? 'El filtro todavía no alcanza la referencia mensual.' : 'La selección ya superó la referencia mensual del indicador.') : 'Lectura complementaria para líneas sin meta oficial.'
+    });
+
+    grid.innerHTML=cards.map(renderIncomeKpiCard).join('');
+    qa('.kpi-value', grid).forEach(animateMetricValue);
+
+    const subtitle=q('#incomeSubtitle');
+    if(subtitle){
+      subtitle.textContent = ctx.note;
+    }
+    const breakSubtitle=q('#incomeBreakdownSubtitle');
+    if(breakSubtitle){
+      breakSubtitle.textContent = `Desglose principal por ${INCOME_BREAKDOWNS[state.incomeBreakdown].toLowerCase()} · ${ctx.subjectCfg.label}.`;
+    }
+    const interp=q('#incomeBreakdownInterp');
+    const chart=q('#incomeBreakdownChart');
+    const rows=ctx.breakdownRows;
+    if(!rows.length){
+      chart.innerHTML='<div class="empty">No hay detalle de ingresos para la combinación seleccionada.</div>';
+      interp.innerHTML='';
+    }else{
+      chart.innerHTML=renderIncomeHorizontalBars(rows, ctx.subjectCfg.unit);
+      const top=rows[0];
+      const total=rows.reduce((acc,r)=>acc+safeNumber(r.value),0)||1;
+      interp.innerHTML=`<strong>${escapeHtml(top.label)}</strong> concentra <strong>${escapeHtml(formatPercent(safeNumber(top.value)/total))}</strong> del ingreso filtrado.`;
+    }
+    const table=q('#incomeTable');
+    const tableTitle=q('#incomeTableTitle');
+    const tableSubtitle=q('#incomeTableSubtitle');
+    if(tableTitle) tableTitle.textContent=`Detalle del filtro · ${INCOME_BREAKDOWNS[state.incomeBreakdown]}`;
+    if(tableSubtitle) tableSubtitle.textContent=`Tabla resumida de ${ctx.subjectCfg.label} para la selección actual.`;
+    table.innerHTML = ctx.tableRows.length
+      ? renderTable(ctx.tableRows,['detalle','valor','participacion'],{detalle:'Detalle',valor:ctx.subjectCfg.label,participacion:'Participación'},(value,key)=> key==='valor'?formatByUnit(value,ctx.subjectCfg.unit):(key==='participacion'?formatPercent(value):value))
+      : '<div class="empty">No hay registros detallados para mostrar.</div>';
+  }
+
+  function renderIncomeHorizontalBars(rows, unit){
+    const width=980, height=Math.max(280, rows.length*44+70);
+    const padL=230, padR=44, padT=22, padB=34;
+    const max=Math.max(...rows.map(r=>safeNumber(r.value)),1);
+    const plotW=width-padL-padR;
+    const barH=24;
+    const gap=16;
+    const svgRows=rows.map((r,idx)=>{
+      const y=padT + idx*(barH+gap);
+      const w=(safeNumber(r.value)/max)*plotW;
+      return `
+        <g>
+          <text x="${padL-14}" y="${y+16}" text-anchor="end" fill="#5b7387" font-size="12" font-family="Sora,sans-serif" font-weight="700">${escapeHtml(r.label)}</text>
+          <rect x="${padL}" y="${y}" width="${plotW}" height="${barH}" rx="12" fill="#edf5f7"></rect>
+          <rect x="${padL}" y="${y}" width="${Math.max(w, 6)}" height="${barH}" rx="12" fill="url(#incomeBar)"></rect>
+          <text x="${Math.min(padL + w + 10, width - padR)}" y="${y+16}" fill="#17314f" font-size="12" font-family="Sora,sans-serif" font-weight="800">${escapeHtml(formatByUnit(r.value, unit))}</text>
+        </g>`;
+    }).join('');
+    return `<svg viewBox="0 0 ${width} ${height}" class="chart"><defs><linearGradient id="incomeBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2e6a57"></stop><stop offset="100%" stop-color="#4ca5bf"></stop></linearGradient></defs>${svgRows}</svg>`;
+  }
+
+  function populateIncomeControls(state){
+    const subjectSelect=q('#incomeSubjectSelect');
+    const territorySelect=q('#incomeTerritorySelect');
+    const materialSelect=q('#incomeMaterialSelect');
+    const municipioSelect=q('#incomeMunicipioSelect');
+    const recolectorSelect=q('#incomeRecolectorSelect');
+    const breakdownSelect=q('#incomeBreakdownSelect');
+    if(!subjectSelect) return;
+
+    subjectSelect.innerHTML=Object.entries(INCOME_SUBJECTS).map(([id,cfg])=>`<option value="${escapeHtml(id)}">${escapeHtml(cfg.label)}</option>`).join('');
+    subjectSelect.value=state.incomeSubject;
+
+    const period=getSelectedPeriod(state);
+    const territoryRows=(currentData?.territorioMes||[]).filter(r=>r.anio===period?.anio && r.mes_num===period?.mes_num && (state.selectedZone==='__all__' || sameZone(r,state.selectedZone)));
+    const territories=['__all__', ...uniqueBy(territoryRows.map(r=>String(r.territorio||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    if(!territories.includes(state.incomeTerritory)) state.incomeTerritory='__all__';
+    territorySelect.innerHTML=territories.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los territorios':v)}</option>`).join('');
+    territorySelect.value=state.incomeTerritory;
+
+    const detailPeriod=getBestDetailPeriod(period);
+    const detailRows=detailPeriod ? getIncomeDetailRows(Object.assign({},state,{incomeMaterial:'__all__',incomeMunicipio:'__all__',incomeRecolector:'__all__'}), detailPeriod) : [];
+    const materials=['__all__', ...uniqueBy(detailRows.map(r=>String(r.material||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    const municipios=['__all__', ...uniqueBy(detailRows.map(r=>String(r.municipio_origen||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    const recolectores=['__all__', ...uniqueBy(detailRows.map(r=>String(r.recolector||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    if(!materials.includes(state.incomeMaterial)) state.incomeMaterial='__all__';
+    if(!municipios.includes(state.incomeMunicipio)) state.incomeMunicipio='__all__';
+    if(!recolectores.includes(state.incomeRecolector)) state.incomeRecolector='__all__';
+    materialSelect.innerHTML=materials.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los materiales':v)}</option>`).join('');
+    municipioSelect.innerHTML=municipios.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los municipios':v)}</option>`).join('');
+    recolectorSelect.innerHTML=recolectores.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los recolectores':v)}</option>`).join('');
+    materialSelect.value=state.incomeMaterial;
+    municipioSelect.value=state.incomeMunicipio;
+    recolectorSelect.value=state.incomeRecolector;
+
+    breakdownSelect.innerHTML=Object.entries(INCOME_BREAKDOWNS).map(([id,label])=>`<option value="${escapeHtml(id)}">${escapeHtml(label)}</option>`).join('');
+    breakdownSelect.value=state.incomeBreakdown;
+
+    const bind=(el, key)=>{ if(!el) return; el.onchange=()=>{ state[key]=el.value; render(state); }; };
+    bind(subjectSelect,'incomeSubject');
+    bind(territorySelect,'incomeTerritory');
+    bind(materialSelect,'incomeMaterial');
+    bind(municipioSelect,'incomeMunicipio');
+    bind(recolectorSelect,'incomeRecolector');
+    bind(breakdownSelect,'incomeBreakdown');
+  }
+
+  const originalBuildState=buildState;
+  buildState=function(data){
+    const state=originalBuildState(data);
+    state.incomeSubject=state.incomeSubject || 'ingreso_bruto_total';
+    state.incomeTerritory=state.incomeTerritory || '__all__';
+    state.incomeMaterial=state.incomeMaterial || '__all__';
+    state.incomeMunicipio=state.incomeMunicipio || '__all__';
+    state.incomeRecolector=state.incomeRecolector || '__all__';
+    state.incomeBreakdown=state.incomeBreakdown || 'territorio';
+    return state;
+  };
+
+  const originalBindControls=bindControls;
+  bindControls=function(state){
+    originalBindControls(state);
+    populateIncomeControls(state);
+  };
+
+  const originalRender=render;
+  render=function(state){
+    originalRender(state);
+    renderIncomeSection(state);
+    const latestPill=q('#latestPeriodPill');
+    if(latestPill) latestPill.textContent=periodLabel(state.latestValid);
+  };
+
+  renderAnnualGoals=function(state){
+    const period=getSelectedPeriod(state);
+    const grid=document.getElementById('annualGoalsGrid');
+    const subtitle=document.getElementById('annualGoalsSubtitle');
+    if(subtitle) subtitle.textContent=`Acumulado real del programa frente a la meta anual total, con corte en ${periodLabel(period)}.`;
+    if(!grid) return;
+    grid.innerHTML='';
+    ANNUAL_GOAL_IDS.forEach((id,index)=>{
+      const cfg=METRIC_CONFIG[id]; if(!cfg) return;
+      const annualGoal=safeNumber(cfg.meta)*11;
+      const accumulated=sumMetricSeries(state,id,period.anio,'__all__',period.mes_num);
+      const pct=annualGoal ? accumulated/annualGoal : 0;
+      const cls=semaforoClassAnnual(pct);
+      const parts=splitDisplayValue(formatByUnit(accumulated,cfg.unit));
+      const card=document.createElement('article');
+      card.className=`goal-card card kpi tone-${cls}`;
+      card.style.setProperty('--delay', `${index*65}ms`);
+      card.innerHTML=`
+        <div class="kpi-top"><div class="kpi-label">${escapeHtml(cfg.label)}</div></div>
+        <div class="kpi-figure">
+          <div class="kpi-pillar"><span class="kpi-pillar-track"></span><span class="kpi-pillar-fill" style="height:${Math.max(8,Math.min(pct*100,100))}%"></span></div>
+          <div class="kpi-reading">
+            <div class="kpi-value" data-value="${parts.number!=null?parts.number:''}" data-prefix="${escapeHtml(parts.prefix)}" data-suffix="${escapeHtml(parts.suffix)}" data-decimals="${parts.decimals}">${escapeHtml(parts.text)}</div>
+            <div class="kpi-meta">Acumulado real al corte</div>
+            <div class="kpi-ref">Meta anual: <strong>${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</strong></div>
+          </div>
+        </div>
+        <div class="chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</div>
+        <div class="kpi-copy">Avance acumulado frente a la referencia anual del indicador.</div>
+        <div class="progress"><span style="width:${Math.max(0,Math.min(pct*100,100))}%"></span></div>`;
+      grid.appendChild(card);
+    });
+    qa('.kpi-value', grid).forEach(animateMetricValue);
+  };
+
+  setupChartZoom=function(){};
+  openChartZoom=function(){};
+  closeChartZoom=function(){};
+
+  const originalOpenPresentation=openPresentation;
+  openPresentation=function(){ originalOpenPresentation(); const meta=q('#presentationMeta'); if(meta && !q('.presentation-shortcuts', meta)){ meta.insertAdjacentHTML('beforeend','<span class="presentation-shortcuts">\u2190 \u2192 navegar · Inicio/Fin · Esc salir</span>'); } };
+
+  const originalBuildPresentation=buildPresentation;
+  buildPresentation=function(state){
+    originalBuildPresentation(state);
+    const track=q('#presentationTrack');
+    if(!track) return;
+    const ctx=getIncomeContext(state);
+    const existing=q('.presentation-slide.income-slide', track);
+    if(existing) existing.remove();
+    const slide=document.createElement('section');
+    slide.className='presentation-slide income-slide';
+    slide.innerHTML=`<div class="presentation-slide-inner">
+      <div class="presentation-kicker">Ingresos y aporte a metas</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Lectura ejecutiva de ingresos</h2>
+          <p>${escapeHtml(ctx.subjectCfg.label)} · ${escapeHtml(ctx.note)}</p>
+        </div>
+        <div class="presentation-brand-badge">
+          <img src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
+          <small>Usa las flechas del teclado para navegar entre láminas y Esc para salir.</small>
+        </div>
+      </div>
+      <div class="presentation-goal-grid" style="flex:0 0 auto;grid-template-columns:repeat(3,1fr)">
+        <article class="presentation-card"><small>Resultado del filtro</small><strong>${escapeHtml(formatByUnit(ctx.currentValue,ctx.subjectCfg.unit))}</strong><p>${escapeHtml(labelLong(ctx.effectivePeriod))}</p><span class="presentation-chip ${incomeChipClass(ctx.monthlyPct)}">${escapeHtml(incomeChipText(ctx.monthlyPct,'goal'))}</span></article>
+        <article class="presentation-card"><small>Aporte anual</small><strong>${escapeHtml(ctx.annualPct!=null?formatPercent(ctx.annualPct):formatPercent(ctx.shareAnnual||0))}</strong><p>${ctx.goalAnnual!=null?`Meta anual: ${escapeHtml(formatByUnit(ctx.goalAnnual,ctx.subjectCfg.unit))}`:'Participación del acumulado del programa'}</p><span class="presentation-chip ${incomeChipClass(ctx.annualPct!=null?ctx.annualPct:ctx.shareAnnual)}">${ctx.goalAnnual!=null?'Meta anual':'Acumulado'}</span></article>
+        <article class="presentation-card"><small>Participación del filtro</small><strong>${escapeHtml(formatPercent(ctx.shareMonth||0))}</strong><p>Peso de la selección dentro del programa en el período.</p><span class="presentation-chip ${incomeChipClass(ctx.shareMonth)}">Programa</span></article>
+      </div>
+      <div class="presentation-columns" style="flex:1;min-height:0">
+        <article class="presentation-visual-card"><h3>Desglose seleccionado</h3><p>${escapeHtml(INCOME_BREAKDOWNS[state.incomeBreakdown])}</p><div class="presentation-visual">${ctx.breakdownRows.length?renderIncomeHorizontalBars(ctx.breakdownRows.slice(0,6),ctx.subjectCfg.unit):'<div class="empty">Sin detalle</div>'}</div></article>
+        <article class="presentation-list-card"><h3>Detalle clave</h3><p>Top registros del filtro actual.</p><div class="presentation-list">${ctx.tableRows.slice(0,6).map((row,idx)=>`<div class="presentation-list-item"><div class="presentation-rank">${idx+1}</div><div><strong>${escapeHtml(row.detalle)}</strong><span>${escapeHtml(formatPercent(row.participacion))} del filtro</span></div><em>${escapeHtml(formatByUnit(row.valor,ctx.subjectCfg.unit))}</em></div>`).join('') || '<div class="presentation-alert-box green">No hay detalle para esta combinación.</div>'}</div></article>
+      </div>
+    </div>`;
+    track.appendChild(slide);
+    gotoPresentationSlide(Math.min(presentationIndex, track.children.length-1));
+  };
+
+  document.addEventListener('keydown', function(e){
+    const open=q('#presentationOverlay')?.classList.contains('open');
+    if(!open) return;
+    if(e.key==='Home'){ e.preventDefault(); gotoPresentationSlide(0); }
+    if(e.key==='End'){ e.preventDefault(); gotoPresentationSlide(q('#presentationTrack')?.children.length-1 || 0); }
+  });
+})();
+
+</script>
 </body>
 </html>
