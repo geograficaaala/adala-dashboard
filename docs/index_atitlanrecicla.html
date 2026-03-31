@@ -4207,7 +4207,7 @@ document.body.classList.add('view-full');
       kpiSection.insertAdjacentHTML('afterend', `
         <div class="section-divider">Ingresos y contribución a metas</div>
         <section class="section" id="incomeSection">
-          <div class="section-head"><div><h2>Indicadores de ingresos y aporte a metas</h2><p id="incomeSubtitle">Lectura filtrable del ingreso con detalle por territorio, material, municipio y recolector.</p></div></div>
+          <div class="section-head"><div><h2>Indicadores de ingresos y aporte a metas</h2><p id="incomeSubtitle">Lectura filtrable del ingreso con detalle por territorio, material, municipio y recolector. Todos los filtros del bloque afectan tarjetas, gráfico y tabla.</p></div></div>
           <section class="toolbar toolbar-compact income-toolbar">
             <div class="card filter"><label for="incomeSubjectSelect">Línea de ingreso</label><select id="incomeSubjectSelect"></select></div>
             <div class="card filter"><label for="incomeTerritorySelect">Territorio</label><select id="incomeTerritorySelect"></select></div>
@@ -4272,6 +4272,26 @@ document.body.classList.add('view-full');
     const target=normalizeIncomeText(territory);
     const candidates=[row?.territorio, row?.municipio_origen].map(normalizeIncomeText).filter(Boolean);
     return candidates.some(value=>value===target);
+  }
+  const INCOME_ZONE_LABELS={K:'Kaqchiquel',LL:'Las Lagunas',T:'Tzolojya',ZS:'Zona Sur'};
+  function incomeDetailTerritoryLabel(row){
+    return String(row?.municipio_origen || row?.territorio || 'Sin territorio')
+      .replace(/^[A-Z]{1,3}\s*-\s*/i,'')
+      .trim() || 'Sin territorio';
+  }
+  function incomeDetailZoneLabel(row){
+    const code=String(row?.zona_codigo || '').trim().toUpperCase();
+    return INCOME_ZONE_LABELS[code] || code || 'Sin zona';
+  }
+  function getIncomeDetailRowsForOptions(state, period, ignoreKey){
+    if(!currentData || !period) return [];
+    let rows=(currentData.materialesRaw||[]).filter(r=>Number(r.anio)===Number(period.anio) && monthNumLoose(r)===Number(period.mes_num));
+    if(state.selectedZone!=='__all__') rows=rows.filter(r=>sameZoneMaterial(r, state.selectedZone));
+    if(ignoreKey!=='incomeTerritory' && state.incomeTerritory!=='__all__') rows=rows.filter(r=>rowMatchesIncomeTerritory(r, state.incomeTerritory));
+    if(ignoreKey!=='incomeMaterial' && state.incomeMaterial!=='__all__') rows=rows.filter(r=>String(r.material||'')===state.incomeMaterial);
+    if(ignoreKey!=='incomeMunicipio' && state.incomeMunicipio!=='__all__') rows=rows.filter(r=>String(r.municipio_origen||'')===state.incomeMunicipio);
+    if(ignoreKey!=='incomeRecolector' && state.incomeRecolector!=='__all__') rows=rows.filter(r=>String(r.recolector||'')===state.incomeRecolector);
+    return rows;
   }
   function buildIncomeScopeLabel(state){
     const parts=[];
@@ -4422,21 +4442,24 @@ document.body.classList.add('view-full');
     const cfg=getIncomeSubjectConfig(state.incomeSubject);
     const breakdown=state.incomeBreakdown;
     let rows=[];
-    if(useDetail && ['material','municipio','recolector'].includes(breakdown)){
+    if(useDetail){
       const detail=getIncomeDetailRows(state, period);
-      const keyMap={material:'material',municipio:'municipio_origen',recolector:'recolector'};
-      const key=keyMap[breakdown];
-      const groups=aggregate(detail,[key],{cantidad:'sum',gtq_total_pagados:'sum',ingreso_total_venta:'sum',ingreso_cooperativa:'sum'});
-      rows=groups.map(r=>({
-        label:String(r[key]||'Sin etiqueta'),
-        value: breakdown==='recolector' || state.incomeSubject!=='ingreso_neto_total_territorio'
-          ? (breakdown==='recolector' && state.incomeSubject==='ingreso_bruto_mujeres' ? (String(r[key]).toLowerCase()==='lideresas'?safeNumber(r.ingreso_total_venta):0)
-            : breakdown==='recolector' && state.incomeSubject==='ingreso_bruto_municipalidades' ? (String(r[key]).toLowerCase()==='municipalidad'?safeNumber(r.ingreso_total_venta):0)
-            : state.incomeSubject==='ingreso_neto_cooperativa' || state.incomeSubject==='pago_cooperativa_total' ? safeNumber(r.ingreso_cooperativa)
-            : state.incomeSubject==='ingreso_neto_total_territorio' ? safeNumber(r.ingreso_total_venta)-safeNumber(r.ingreso_cooperativa)
-            : safeNumber(r.ingreso_total_venta))
-          : safeNumber(r.ingreso_total_venta)
-      }));
+      const labelFn = breakdown==='material'
+        ? (r=>String(r.material||'Sin etiqueta'))
+        : breakdown==='municipio'
+          ? (r=>String(r.municipio_origen||'Sin etiqueta'))
+          : breakdown==='recolector'
+            ? (r=>String(r.recolector||'Sin etiqueta'))
+            : breakdown==='zona'
+              ? (r=>incomeDetailZoneLabel(r))
+              : (r=>incomeDetailTerritoryLabel(r));
+      const grouped=new Map();
+      detail.forEach(row=>{
+        const label=labelFn(row);
+        const value=cfg.detailGetter(row);
+        grouped.set(label, (grouped.get(label)||0) + safeNumber(value));
+      });
+      rows=Array.from(grouped.entries()).map(([label,value])=>({label, value}));
     }else if(breakdown==='zona'){
       rows=getZonaRows(state, period)
         .filter(r=>state.selectedZone==='__all__' || sameZone(r, state.selectedZone))
@@ -4622,20 +4645,26 @@ document.body.classList.add('view-full');
     subjectSelect.value=state.incomeSubject;
 
     const period=getSelectedPeriod(state);
-    const territoryRows=(currentData?.territorioMes||[]).filter(r=>r.anio===period?.anio && r.mes_num===period?.mes_num && (state.selectedZone==='__all__' || sameZone(r,state.selectedZone)));
+    const territoryRows=(currentData?.territorioMes||[])
+      .filter(r=>r.anio===period?.anio && r.mes_num===period?.mes_num && (state.selectedZone==='__all__' || sameZone(r,state.selectedZone)));
     const territories=['__all__', ...uniqueBy(territoryRows.map(r=>String(r.territorio||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
     if(!territories.includes(state.incomeTerritory)) state.incomeTerritory='__all__';
     territorySelect.innerHTML=territories.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los territorios':v)}</option>`).join('');
     territorySelect.value=state.incomeTerritory;
 
     const detailPeriod=getBestDetailPeriod(period);
-    const detailRows=detailPeriod ? getIncomeDetailRows(Object.assign({},state,{incomeMaterial:'__all__',incomeMunicipio:'__all__',incomeRecolector:'__all__'}), detailPeriod) : [];
-    const materials=['__all__', ...uniqueBy(detailRows.map(r=>String(r.material||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
-    const municipios=['__all__', ...uniqueBy(detailRows.map(r=>String(r.municipio_origen||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
-    const recolectores=['__all__', ...uniqueBy(detailRows.map(r=>String(r.recolector||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    const materialRows=detailPeriod ? getIncomeDetailRowsForOptions(state, detailPeriod, 'incomeMaterial') : [];
+    const municipioRows=detailPeriod ? getIncomeDetailRowsForOptions(state, detailPeriod, 'incomeMunicipio') : [];
+    const recolectorRows=detailPeriod ? getIncomeDetailRowsForOptions(state, detailPeriod, 'incomeRecolector') : [];
+
+    const materials=['__all__', ...uniqueBy(materialRows.map(r=>String(r.material||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    const municipios=['__all__', ...uniqueBy(municipioRows.map(r=>String(r.municipio_origen||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+    const recolectores=['__all__', ...uniqueBy(recolectorRows.map(r=>String(r.recolector||'')).filter(Boolean), x=>x).sort((a,b)=>a.localeCompare(b,'es'))];
+
     if(!materials.includes(state.incomeMaterial)) state.incomeMaterial='__all__';
     if(!municipios.includes(state.incomeMunicipio)) state.incomeMunicipio='__all__';
     if(!recolectores.includes(state.incomeRecolector)) state.incomeRecolector='__all__';
+
     materialSelect.innerHTML=materials.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los materiales':v)}</option>`).join('');
     municipioSelect.innerHTML=municipios.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los municipios':v)}</option>`).join('');
     recolectorSelect.innerHTML=recolectores.map(v=>`<option value="${escapeHtml(v)}">${escapeHtml(v==='__all__'?'Todos los recolectores':v)}</option>`).join('');
