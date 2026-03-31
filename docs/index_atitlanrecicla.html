@@ -1395,7 +1395,8 @@
           <div class="hero-copy">
             <div class="hero-eyebrow">Cooperativa · economía circular</div>
             <h1>Cooperativa Atitlán Recicla</h1>
-            <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la primera cooperativa de mujeres recicladoras en Centroamérica. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
+            <div class="hero-period-pill" id="heroPeriodPill">—</div>
+            <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
             <div class="hero-tag-row">
               <span class="hero-tag">13 municipios y 5 aldeas</span>
               <span class="hero-tag">64 socias fundadoras</span>
@@ -1403,15 +1404,16 @@
             </div>
             <div class="hero-grid" id="heroStats"></div>
           </div>
-          <aside class="hero-brand">
-            <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
+          <aside class="hero-brand" aria-label="Identidad visual del programa">
+            <div class="program-logo-card">
+              <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
+            </div>
+            <div class="hero-side-hidden" aria-hidden="true">
+              <div id="programStatus"></div>
+              <div id="programQuick"></div>
+            </div>
           </aside>
         </div>
-      </div>
-      <div class="card hero-side">
-        <div class="hero-side-label">Estado del período seleccionado</div>
-        <div id="programStatus"></div>
-        <div class="mini-list" id="programQuick"></div>
       </div>
     </section>
     <section class="intro-grid">
@@ -1419,7 +1421,7 @@
         <div class="section-kicker">Texto explicativo de la cooperativa</div>
         <h3>Una estructura cooperativa creada para sostener el reciclaje en la cuenca</h3>
         <p><strong>Atitlán Recicla</strong> es una iniciativa de la Asociación Amigos del Lago de Atitlán, inició en agosto del año 2017 como proyecto con un enfoque social y ambiental, con el objetivo de fortalecer los procesos de manejo de residuos sólidos de tipo reciclable, en trece municipios y cinco aldeas del departamento de Sololá, contribuyendo a minimizar la contaminación del Lago de Atitlán, para mejorar la calidad de vida de los y las habitantes, en especial mujeres.</p>
-        <p>Desde 2018 a la fecha ha brindado alternativas para fortalecer los planes integrales de residuos y desechos sólidos y ha implementado procesos adecuados para la gestión de residuos de tipo reciclable. El proyecto actualmente es apoyado por <strong>CBC, ambev, Marcas Mundiales, Latitud R y SOCODEVI</strong>.</p>
+        <p>Desde 2018 a la fecha ha brindado alternativas para fortalecer los planes integrales de residuos y desechos sólidos y ha implementado procesos adecuados para la gestión de residuos de tipo reciclable. </p>
         <p>Como parte del crecimiento de Atitlán Recicla, se vio la necesidad de crear una estructura más sostenible a la actividad del reciclaje y fue por ello que se creó en el año 2021, la <strong>Cooperativa Integral de Comercialización Atitlán Recicla R.L.</strong>, siendo la primera Cooperativa de mujeres recicladoras en todo Centro América.</p>
         <div class="impact-ribbon">
           <span>64 mujeres socias fundadoras</span>
@@ -1439,10 +1441,6 @@
             <div class="objective-item"><div class="objective-n">01</div><div><strong>Reducir la contaminación</strong><span>Minimizar la contaminación del Lago de Atitlán mediante una gestión adecuada de residuos reciclables en la cuenca.</span></div></div>
             <div class="objective-item"><div class="objective-n">02</div><div><strong>Generar ingresos para mujeres</strong><span>Fortalecer la economía de las mujeres de la cuenca del Lago de Atitlán involucradas en el proyecto.</span></div></div>
             <div class="objective-item"><div class="objective-n">03</div><div><strong>Implementar un modelo verde e inclusivo</strong><span>Consolidar un emprendimiento sostenible que combine economía circular, liderazgo comunitario e inclusión.</span></div></div>
-          </div>
-          <div class="support-strip">
-            <small>Aliados actuales</small>
-            <p>CBC · ambev · Marcas Mundiales · Latitud R · SOCODEVI</p>
           </div>
         </article>
 
@@ -1774,16 +1772,24 @@ function renderHero(state){
     ? zoneRows.filter(r=>hasActivityAggregate(r)).length
     : getTerritoryRows(state, period).filter(r=>sameZone(r, state.selectedZone) && hasActivityAggregate(r)).length;
 
-  document.getElementById("heroStats").innerHTML = [
-    statCard("Período activo", periodLabel(period)),
-    statCard("Vista", zoneLabel),
-    statCard(state.selectedZone==="__all__"?"Zonas con reporte":"Territorios con reporte", String(heroZoneCount)),
-    statCard("Materiales del período", formatByUnit(metrics.materiales_generales?.valor, "qq"))
-  ].join("");
+  const heroStatsEl = document.getElementById("heroStats");
+  if(heroStatsEl){
+    heroStatsEl.innerHTML = [
+      statCard("Período activo", periodLabel(period)),
+      statCard("Vista", zoneLabel),
+      statCard(state.selectedZone==="__all__"?"Zonas con reporte":"Territorios con reporte", String(heroZoneCount)),
+      statCard("Materiales del período", formatByUnit(metrics.materiales_generales?.valor, "qq"))
+    ].join("");
+  }
+
+  const heroPill = document.getElementById("heroPeriodPill");
+  if(heroPill) heroPill.textContent = periodLabel(period);
 
   const status=buildProgramStatus(state, period);
-  document.getElementById("programStatus").innerHTML=`<div class="status-badge ${status.className}">${status.label}</div>`;
-  document.getElementById("programQuick").innerHTML=[
+  const statusEl = document.getElementById("programStatus");
+  if(statusEl) statusEl.innerHTML=`<div class="status-badge ${status.className}">${status.label}</div>`;
+  const quickEl = document.getElementById("programQuick");
+  if(quickEl) quickEl.innerHTML=[
     miniItem("PET del período", formatByUnit(metrics.pet?.valor,"qq")),
     miniItem("Vidrio del período", formatByUnit(metrics.vidrio?.valor,"qq")),
     miniItem("Ingreso bruto", formatByUnit(metrics.ingreso_bruto_total?.valor,"GTQ")),
@@ -3772,7 +3778,7 @@ function buildPresentation(state){
             <h3>Mensaje de cierre</h3>
             <p>En <strong>${escapeHtml(periodLabel(period))}</strong>, Atitlán Recicla reporta <strong>${escapeHtml(formatByUnit(metrics.materiales_generales?.valor,'qq'))}</strong> de materiales y <strong>${escapeHtml(formatByUnit(metrics.ingreso_bruto_total?.valor,'GTQ'))}</strong> de ingreso bruto total.</p>
             <p>${zoneRows.length ? `La zona con mayor volumen es <strong>${escapeHtml(zoneRows[0].zona||'—')}</strong>, mientras que ${materialGroup.length ? `el material dominante es <strong>${escapeHtml(materialGroup[0].material||'—')}</strong>.` : 'no se identificó un material dominante.'}` : 'No hay suficiente actividad territorial para destacar una zona líder.'}</p>
-            <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Cooperativa Atitlán Recicla · primera cooperativa de mujeres recicladoras en Centroamérica · ${escapeHtml(periodLabel(period))}</p>
+            <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Cooperativa Atitlán Recicla · tablero ejecutivo de operación, territorio e ingresos · ${escapeHtml(periodLabel(period))}</p>
           </div>
         </div>
       </div>
@@ -3904,6 +3910,54 @@ document.body.classList.add('view-full');
   .income-toolbar{grid-template-columns:1fr}
   .footer-wrap{grid-template-columns:1fr}
   .footer-mark{justify-self:start}
+}
+
+/* Layout refinements: income filters + hero portada */
+.income-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;align-items:stretch}
+.income-toolbar .filter{min-width:0}
+.income-toolbar .filter select{width:100%}
+.income-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+#incomeSection .section-head{padding-right:0}
+#incomeSection .section-head::after{max-width:none}
+
+.hero{grid-template-columns:minmax(0,1.7fr) minmax(280px,.72fr)!important;align-items:stretch;gap:18px;margin-bottom:22px}
+.hero-main{padding:32px 34px 28px!important;background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%)!important;border:1px solid rgba(208,220,236,.96)!important;box-shadow:0 18px 38px rgba(16,40,70,.10)!important;color:var(--text)!important}
+.hero-main::before{content:'';position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.15) 0%,rgba(37,117,204,.07) 50%,transparent 70%)!important;pointer-events:none}
+.hero-main::after{display:none!important}
+.hero-eyebrow{color:var(--blue-mid)!important}
+.hero-main h1{font-family:var(--font-head)!important;font-size:2.4rem!important;font-weight:600!important;line-height:1.08!important;letter-spacing:-.02em!important;color:var(--text)!important;background:linear-gradient(135deg,var(--text) 42%,var(--blue-mid) 100%)!important;-webkit-background-clip:text!important;-webkit-text-fill-color:transparent!important;background-clip:text!important;margin-bottom:8px!important}
+.hero-period-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:#eef5ff;border:1px solid #cfe0f5;color:#3463b8;font-weight:800;font-size:.82rem;margin-bottom:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.hero-period-pill::before{content:'';width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#38b6e8,#2575cc);box-shadow:0 0 0 4px rgba(56,182,232,.12)}
+.hero-main .hero-lead{font-size:.97rem!important;color:var(--text-2)!important;line-height:1.78!important;max-width:60ch!important}
+.hero-tag-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 18px!important}
+.hero-tag{background:#ffffff!important;border:1px solid rgba(208,220,236,.95)!important;color:#4b6785!important;box-shadow:0 8px 20px rgba(15,35,60,.06)!important}
+.hero-tag::before{background:linear-gradient(135deg,var(--green),var(--blue-mid))!important}
+.hero-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin-top:18px!important}
+.hero-stat{min-height:92px!important;padding:14px 16px!important;background:#fff!important;border:1px solid rgba(208,220,236,.96)!important;display:flex!important;flex-direction:column;justify-content:space-between;align-items:flex-start!important;box-shadow:none!important}
+.hero-stat small{color:var(--muted)!important}
+.hero-stat strong{color:var(--text)!important;font-size:1.18rem!important;line-height:1.1!important;word-break:break-word}
+.hero-brand{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:auto!important}
+.program-logo-card{width:min(100%,430px);min-height:auto;background:#ffffff;border:1px solid rgba(208,220,236,.95);border-radius:26px;padding:20px 22px;box-shadow:0 18px 40px rgba(8,22,45,.14);margin:0 auto}
+.hero-side-hidden{display:none!important}
+.hero-logo{display:block;width:min(100%,360px)!important;max-width:100%!important;height:auto!important;margin:0 auto!important;filter:none!important}
+.hero-side,.hero-side-label{display:none!important}
+.support-strip{display:none!important}
+@media(max-width:1150px){
+  .income-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .income-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .hero{grid-template-columns:1fr!important}
+  .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .hero-brand{justify-content:flex-start!important}
+}
+@media(max-width:760px){
+  .income-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .income-kpis{grid-template-columns:1fr!important}
+}
+@media(max-width:560px){
+  .income-toolbar{grid-template-columns:1fr!important}
+  .hero-main{padding:24px 20px 22px!important}
+  .hero-main h1{font-size:2rem!important}
+  .hero-grid{grid-template-columns:1fr!important}
 }
 
 </style>
