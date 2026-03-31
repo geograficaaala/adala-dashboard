@@ -1392,65 +1392,57 @@
   color:#ffffff !important;
   font-size:1.15rem !important;
 }
-.hero-brand{
-  background:transparent !important;
-  border:none !important;
-  box-shadow:none !important;
-  padding:0 !important;
+.hero-side{
+  padding:24px 22px !important;
+  background:linear-gradient(180deg,#f8fbfb 0%,#ffffff 100%) !important;
+  border:1.5px solid var(--line-soft) !important;
+  box-shadow:var(--shadow-sm) !important;
   display:flex !important;
   flex-direction:column !important;
-  justify-content:space-between !important;
   gap:16px !important;
   min-height:100% !important;
 }
-.program-logo-card{
-  width:100% !important;
-  background:#ffffff !important;
-  border:1px solid rgba(255,255,255,.22) !important;
-  border-radius:26px !important;
-  padding:26px 20px !important;
-  min-height:280px !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  box-shadow:0 14px 36px rgba(10,25,45,.12) !important;
+.logo-frame{
+  flex:1 !important;
+  background:linear-gradient(180deg,#f3f8fb 0%,#ffffff 100%) !important;
+  border:1px solid var(--line-soft) !important;
+  border-radius:24px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8) !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:28px 20px !important;
+  min-height:260px !important;
 }
-.hero-logo{
-  width:min(100%,300px) !important;
+.logo-frame img,.hero-logo{
+  width:min(100%,280px) !important;
   max-width:100% !important;
+  max-height:220px !important;
   height:auto !important;
+  object-fit:contain !important;
   filter:none !important;
 }
-.hero-side-hidden,
-.hero-side,
-.hero-side-label{
-  display:block !important;
-}
-.hero-side-hidden{
-  margin-top:0 !important;
-}
-#programStatus{
-  margin:0 0 12px 0 !important;
-}
-#programQuick{
+.hero-status{
   display:grid !important;
-  grid-template-columns:1fr !important;
+  grid-template-columns:1fr 1fr !important;
   gap:10px !important;
 }
-.hero-side-hidden .mini-item{
+#programStatus,#programQuick{
+  display:block !important;
+}
+.hero-side .mini-item{
   background:#ffffff !important;
   border:1px solid rgba(208,220,236,.96) !important;
   box-shadow:none !important;
 }
-.hero-side-hidden .mini-item .muted{
+.hero-side .mini-item .muted{
   color:#5e7287 !important;
   font-size:.88rem !important;
 }
-.hero-side-hidden .mini-item strong{
+.hero-side .mini-item strong{
   color:#2a6287 !important;
   font-size:1rem !important;
 }
-.hero-side-hidden .status-badge{
+.hero-side .status-badge{
   display:inline-flex !important;
   align-items:center !important;
   padding:10px 16px !important;
@@ -1466,9 +1458,7 @@
   background:linear-gradient(90deg,var(--green),var(--blue-mid)) !important;
 }
 @media(max-width:1100px){
-  .hero-shell{grid-template-columns:1fr !important;}
   .hero-main h1{font-size:clamp(2.1rem,7vw,3.2rem) !important;}
-  .program-logo-card{min-height:220px !important;}
 }
 @media(max-width:760px){
   .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}
@@ -1605,30 +1595,28 @@
   <div class="full-only">
     <section class="hero">
       <div class="card hero-main">
-        <div class="hero-shell">
-          <div class="hero-copy">
-            <div class="hero-eyebrow">Cooperativa · economía circular</div>
-            <h1>Cooperativa Atitlán Recicla</h1>
-            <div class="hero-period-pill" id="heroPeriodPill">—</div>
-            <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
-            <div class="hero-tag-row">
-              <span class="hero-tag">13 municipios y 5 aldeas</span>
-              <span class="hero-tag">64 socias fundadoras</span>
-              <span class="hero-tag">+900 mujeres indirectas</span>
-            </div>
-            <div class="hero-grid" id="heroStats"></div>
+        <div class="hero-copy">
+          <div class="hero-eyebrow">Cooperativa · economía circular</div>
+          <h1>Cooperativa Atitlán Recicla</h1>
+          <div class="hero-period-pill" id="heroPeriodPill">—</div>
+          <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
+          <div class="hero-tag-row">
+            <span class="hero-tag">13 municipios y 5 aldeas</span>
+            <span class="hero-tag">64 socias fundadoras</span>
+            <span class="hero-tag">+900 mujeres indirectas</span>
           </div>
-          <aside class="hero-brand" aria-label="Identidad visual del programa">
-            <div class="program-logo-card">
-              <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
-            </div>
-            <div class="hero-side-hidden" aria-hidden="true">
-              <div id="programStatus"></div>
-              <div id="programQuick"></div>
-            </div>
-          </aside>
+          <div class="hero-grid" id="heroStats"></div>
         </div>
       </div>
+      <aside class="card hero-side" aria-label="Identidad visual del programa">
+        <div class="logo-frame">
+          <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
+        </div>
+        <div class="hero-status">
+          <div id="programStatus"></div>
+          <div id="programQuick"></div>
+        </div>
+      </aside>
     </section>
     <section class="section story-section">
       <article class="card panel intro-story">
@@ -4151,18 +4139,13 @@ document.body.classList.add('view-full');
 .hero-stat{min-height:92px!important;padding:14px 16px!important;background:#fff!important;border:1px solid rgba(208,220,236,.96)!important;display:flex!important;flex-direction:column;justify-content:space-between;align-items:flex-start!important;box-shadow:none!important}
 .hero-stat small{color:var(--muted)!important}
 .hero-stat strong{color:var(--text)!important;font-size:1.18rem!important;line-height:1.1!important;word-break:break-word}
-.hero-brand{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:auto!important}
-.program-logo-card{width:min(100%,430px);min-height:auto;background:#ffffff;border:1px solid rgba(208,220,236,.95);border-radius:26px;padding:20px 22px;box-shadow:0 18px 40px rgba(8,22,45,.14);margin:0 auto}
-.hero-side-hidden{display:none!important}
-.hero-logo{display:block;width:min(100%,360px)!important;max-width:100%!important;height:auto!important;margin:0 auto!important;filter:none!important}
-.hero-side,.hero-side-label{display:none!important}
+.hero-logo{display:block;width:min(100%,280px)!important;max-width:100%!important;height:auto!important;margin:0 auto!important;filter:none!important}
 .support-strip{display:none!important}
 @media(max-width:1150px){
   .income-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))!important}
   .income-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}
   .hero{grid-template-columns:1fr!important}
   .hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  .hero-brand{justify-content:flex-start!important}
 }
 @media(max-width:760px){
   .income-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))!important}
