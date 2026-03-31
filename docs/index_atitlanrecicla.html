@@ -1303,7 +1303,20 @@
       .trend-panel-head{align-items:stretch}
     }
 
-  </style>
+  
+/* Layout cleanup: bloques verticales sin huecos */
+.story-section,.objectives-section,.annual-section{margin-top:0!important;margin-bottom:18px!important}
+.story-section .panel,.objectives-section .panel,.annual-section .panel{width:100%!important}
+.intro-grid{display:block!important;grid-template-columns:1fr!important;gap:0!important;margin-bottom:0!important}
+.intro-stack{display:block!important;gap:0!important}
+.story-section .intro-story h3{font-size:1.38rem!important}
+.objectives-section .objective-list{grid-template-columns:1fr!important}
+.objectives-section .objective-item{padding:14px 16px!important}
+.annual-goals-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+@media (max-width:1100px){.annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:760px){.annual-goals-grid{grid-template-columns:1fr!important}}
+
+</style>
 
 <style id="at-layout-polish-v3">
 /* Uso completo del ancho y sin bloques vacíos */
@@ -1455,36 +1468,37 @@
         </div>
       </div>
     </section>
-    <section class="intro-grid">
+    <section class="section story-section">
       <article class="card panel intro-story">
         <div class="section-kicker">Texto explicativo de la cooperativa</div>
-        <h3>Una estructura cooperativa creada para sostener el reciclaje en la cuenca</h3>
+        <h3>Cooperativa Atitlán Recicla</h3>
         <p><strong>Atitlán Recicla</strong> es una iniciativa de la Asociación Amigos del Lago de Atitlán, inició en agosto del año 2017 como proyecto con un enfoque social y ambiental, con el objetivo de fortalecer los procesos de manejo de residuos sólidos de tipo reciclable, en trece municipios y cinco aldeas del departamento de Sololá, contribuyendo a minimizar la contaminación del Lago de Atitlán, para mejorar la calidad de vida de los y las habitantes, en especial mujeres.</p>
-        <p>Desde 2018 a la fecha ha brindado alternativas para fortalecer los planes integrales de residuos y desechos sólidos y ha implementado procesos adecuados para la gestión de residuos de tipo reciclable. </p>
+        <p>Desde 2018 a la fecha ha brindado alternativas para fortalecer los planes integrales de residuos y desechos sólidos y ha implementado procesos adecuados para la gestión de residuos de tipo reciclable.</p>
         <p>Como parte del crecimiento de Atitlán Recicla, se vio la necesidad de crear una estructura más sostenible a la actividad del reciclaje y fue por ello que se creó en el año 2021, la <strong>Cooperativa Integral de Comercialización Atitlán Recicla R.L.</strong>, siendo la primera Cooperativa de mujeres recicladoras en todo Centro América.</p>
-        <div class="impact-ribbon">
-          <span>64 mujeres socias fundadoras</span>
-          <span>+900 mujeres indirectas</span>
-          <span>9 centros gestionados por mujeres</span>
-          <span>4 centros municipales vigentes</span>
+        <div class="chip-row">
+          <span class="stat-chip">64 mujeres socias fundadoras</span>
+          <span class="stat-chip">+900 mujeres indirectas</span>
+          <span class="stat-chip">9 centros gestionados por mujeres</span>
+          <span class="stat-chip">4 centros municipales vigentes</span>
         </div>
         <p>Actualmente trabajamos con 64 mujeres líderes en su comunidad quienes son socias fundadoras de la cooperativa Atitlán Recicla y más de 900 mujeres indirectas, integradas en 4 zonas de gestión, dentro de las cuales existen 9 centros de acopio gestionados por mujeres y 4 gestionados por trabajadores municipales, los cuales se encuentran vigentes y operando.</p>
-        <p>De 2018 a marzo de 2026 se han recolectado 3,580 toneladas métricas de materiales reciclables, los cuales han sido clasificados, embalados y evacuados de la cuenca del Lago de Atitlán a empresas recicladoras para su manejo técnico y disposición final adecuada, aportando así a la economía circular.</p>
+        <p>De 2018 a marzo 2026 se han recolectado 3,580 toneladas métricas de materiales reciclables, los cuales han sido clasificados, embalados y evacuados de la cuenca del Lago de Atitlán a empresas recicladoras para su manejo técnico y disposición final adecuada, aportando así a la economía circular.</p>
         <p>Atitlán Recicla es un referente dentro de la cuenca del Lago de Atitlán y a nivel nacional por sus buenas acciones y el trabajo tan loable que realizan las mujeres recicladoras y el equipo técnico en la gestión de los residuos de tipo reciclable.</p>
       </article>
-      <div class="intro-stack">
-        <article class="card panel intro-focus">
-          <div class="section-kicker">Objetivos de la cooperativa</div>
-          <h3>Propósito social, ambiental y económico</h3>
-          <div class="objective-list">
-            <div class="objective-item"><div class="objective-n">01</div><div><strong>Reducir la contaminación</strong><span>Minimizar la contaminación del Lago de Atitlán mediante una gestión adecuada de residuos reciclables en la cuenca.</span></div></div>
-            <div class="objective-item"><div class="objective-n">02</div><div><strong>Generar ingresos para mujeres</strong><span>Fortalecer la economía de las mujeres de la cuenca del Lago de Atitlán involucradas en el proyecto.</span></div></div>
-            <div class="objective-item"><div class="objective-n">03</div><div><strong>Implementar un modelo verde e inclusivo</strong><span>Consolidar un emprendimiento sostenible que combine economía circular, liderazgo comunitario e inclusión.</span></div></div>
-          </div>
-        </article>
-
-      </div>
     </section>
+
+    <section class="section objectives-section">
+      <article class="card panel intro-focus">
+        <div class="section-kicker">Objetivos de la cooperativa</div>
+        <h3>Propósito social, ambiental y económico</h3>
+        <div class="objective-list">
+          <div class="objective-item"><div class="objective-n">01</div><div><strong>Reducir la contaminación</strong><span>Minimizar la contaminación del Lago de Atitlán mediante una gestión adecuada de residuos reciclables en la cuenca.</span></div></div>
+          <div class="objective-item"><div class="objective-n">02</div><div><strong>Generar ingresos para mujeres</strong><span>Fortalecer la economía de las mujeres de la cuenca del Lago de Atitlán involucradas en el proyecto.</span></div></div>
+          <div class="objective-item"><div class="objective-n">03</div><div><strong>Implementar un modelo verde e inclusivo</strong><span>Consolidar un emprendimiento sostenible que combine economía circular, liderazgo comunitario e inclusión.</span></div></div>
+        </div>
+      </article>
+    </section>
+
     <section class="section annual-section">
       <article class="card panel annual-panel annual-panel-wide">
         <div class="section-kicker">Metas 2026</div>
@@ -4623,16 +4637,7 @@ document.body.classList.add('view-full');
   }
 
   function fillUnusedSpaces(){
-    const hero = document.querySelector('.hero');
-    if(hero) hero.style.gridTemplateColumns = '1fr';
-
-    const introStack = document.querySelector('.intro-stack');
-    const annualPanel = document.querySelector('.annual-section .annual-panel');
-    if(introStack && annualPanel && !introStack.contains(annualPanel)){
-      introStack.appendChild(annualPanel);
-      const annualSection = document.querySelector('.annual-section');
-      if(annualSection) annualSection.remove();
-    }
+    return;
   }
 
   function run(){
