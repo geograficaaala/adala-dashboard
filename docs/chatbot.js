@@ -697,37 +697,343 @@
     const style = document.createElement('style');
     style.id = 'aala-chatbot-styles';
     style.textContent = `
-      .aala-chatbot-root{position:fixed;right:22px;bottom:22px;z-index:1200;font-family:var(--font-body,'Sora',system-ui,sans-serif)}
-      .aala-chatbot-launcher{border:0;cursor:pointer;border-radius:999px;padding:14px 18px;background:linear-gradient(135deg,#163a5f 0%,#1c6084 55%,#2e6a57 100%);color:#fff;font-weight:700;box-shadow:0 18px 40px rgba(18,42,66,.22);display:inline-flex;align-items:center;gap:10px}
-      .aala-chatbot-launcher:hover{transform:translateY(-1px)}
-      .aala-chatbot-panel{width:min(420px,calc(100vw - 24px));height:min(72vh,720px);background:#fff;border:1px solid rgba(21,60,94,.10);border-radius:24px;box-shadow:0 22px 60px rgba(18,42,66,.18);overflow:hidden;display:none;flex-direction:column}
-      .aala-chatbot-root.is-open .aala-chatbot-panel{display:flex}
-      .aala-chatbot-root.is-open .aala-chatbot-launcher{display:none}
-      .aala-chatbot-head{padding:16px 18px;background:linear-gradient(135deg,rgba(22,58,95,.98) 0%,rgba(28,96,132,.96) 60%,rgba(46,106,87,.92) 100%);color:#fff;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-      .aala-chatbot-head h3{font-size:1rem;line-height:1.2;margin:0}
-      .aala-chatbot-head p{font-size:.78rem;opacity:.88;line-height:1.45;margin-top:4px}
-      .aala-chatbot-close{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:12px;width:36px;height:36px;font-size:20px;cursor:pointer}
-      .aala-chatbot-body{flex:1;overflow:auto;padding:14px;background:linear-gradient(180deg,#f7fbf9 0%,#f4f7fb 100%)}
-      .aala-chatbot-msg{max-width:92%;margin-bottom:12px;padding:12px 14px;border-radius:18px;box-shadow:0 8px 18px rgba(18,42,66,.06);line-height:1.55;font-size:.92rem;white-space:pre-wrap}
-      .aala-chatbot-msg.user{margin-left:auto;background:#17314f;color:#fff;border-bottom-right-radius:8px}
-      .aala-chatbot-msg.bot{margin-right:auto;background:#fff;color:#17314f;border:1px solid #e4edf0;border-bottom-left-radius:8px}
-      .aala-chatbot-msg-title{font-weight:700;margin-bottom:6px}
-      .aala-chatbot-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
-      .aala-chatbot-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:999px;background:#eef5f2;color:#2e6a57;font-size:.74rem;font-weight:700}
-      .aala-chatbot-suggestions{padding:0 14px 12px;display:flex;flex-wrap:wrap;gap:8px;background:linear-gradient(180deg,#f4f7fb 0%,#fff 60%)}
-      .aala-chatbot-suggestion{border:1px solid #d8e6e1;background:#fff;color:#17314f;border-radius:999px;padding:8px 12px;font-size:.78rem;cursor:pointer;line-height:1.35}
-      .aala-chatbot-suggestion:hover{background:#f0f6f2}
-      .aala-chatbot-form{padding:12px;border-top:1px solid #e4edf0;background:#fff;display:flex;gap:10px;align-items:flex-end}
-      .aala-chatbot-input{flex:1;min-height:48px;max-height:140px;resize:none;border:1px solid #d7e4df;border-radius:16px;padding:12px 14px;font:inherit;color:#17314f;outline:none;background:#fbfdfc}
-      .aala-chatbot-input:focus{border-color:#4ca5bf;box-shadow:0 0 0 4px rgba(76,165,191,.14)}
-      .aala-chatbot-send{border:0;border-radius:16px;background:#2e6a57;color:#fff;padding:12px 14px;font-weight:700;cursor:pointer;min-width:86px}
-      .aala-chatbot-send[disabled]{opacity:.6;cursor:not-allowed}
-      .aala-chatbot-status{padding:8px 14px 0;font-size:.76rem;color:#6b7f90;background:#f4f7fb}
-      .aala-chatbot-loader{display:inline-flex;gap:4px;align-items:center}
-      .aala-chatbot-loader span{width:6px;height:6px;border-radius:999px;background:#4ca5bf;display:inline-block;animation:aala-chatbot-pulse 1.2s infinite ease-in-out}
-      .aala-chatbot-loader span:nth-child(2){animation-delay:.15s}.aala-chatbot-loader span:nth-child(3){animation-delay:.3s}
-      @keyframes aala-chatbot-pulse{0%,80%,100%{transform:scale(.5);opacity:.45}40%{transform:scale(1);opacity:1}}
-      @media (max-width:720px){.aala-chatbot-root{right:12px;left:12px;bottom:12px}.aala-chatbot-panel{width:100%;height:min(76vh,680px)}.aala-chatbot-launcher{width:100%;justify-content:center}}
+      .aala-chatbot-root{
+        position:fixed;
+        right:24px;
+        bottom:24px;
+        z-index:1200;
+        font-family:var(--font-body,'Sora',system-ui,sans-serif)
+      }
+
+      .aala-chatbot-launcher{
+        width:64px;
+        height:64px;
+        border:0;
+        cursor:pointer;
+        border-radius:999px;
+        background:linear-gradient(135deg,#1b7f76 0%,#27a79d 100%);
+        color:#fff;
+        box-shadow:0 18px 36px rgba(10,56,73,.24);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:0;
+        transition:transform .18s ease, box-shadow .18s ease
+      }
+
+      .aala-chatbot-launcher:hover{
+        transform:translateY(-2px);
+        box-shadow:0 22px 42px rgba(10,56,73,.28)
+      }
+
+      .aala-chatbot-launcher span:first-child{
+        font-size:26px;
+        line-height:1
+      }
+
+      .aala-chatbot-launcher span:last-child{
+        display:none
+      }
+
+      .aala-chatbot-panel{
+        width:min(390px,calc(100vw - 28px));
+        height:min(680px,74vh);
+        background:#ffffff;
+        border:1px solid rgba(19,72,86,.10);
+        border-radius:22px;
+        box-shadow:0 24px 60px rgba(9,38,58,.18);
+        overflow:hidden;
+        display:none;
+        flex-direction:column
+      }
+
+      .aala-chatbot-root.is-open .aala-chatbot-panel{
+        display:flex
+      }
+
+      .aala-chatbot-root.is-open .aala-chatbot-launcher{
+        display:none
+      }
+
+      .aala-chatbot-head{
+        padding:16px 16px 12px;
+        background:#ffffff;
+        border-bottom:1px solid #e8eff2;
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:12px
+      }
+
+      .aala-chatbot-head-main{
+        display:flex;
+        align-items:center;
+        gap:12px;
+        min-width:0
+      }
+
+      .aala-chatbot-avatar{
+        width:42px;
+        height:42px;
+        border-radius:999px;
+        flex:0 0 42px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:18px;
+        font-weight:700;
+        color:#ffffff;
+        background:linear-gradient(135deg,#d88662 0%,#1b7f76 100%);
+        box-shadow:0 8px 20px rgba(27,127,118,.20)
+      }
+
+      .aala-chatbot-head h3{
+        font-size:1rem;
+        line-height:1.2;
+        margin:0;
+        color:#1b7f76;
+        font-weight:700
+      }
+
+      .aala-chatbot-head p{
+        font-size:.78rem;
+        color:#5f6f78;
+        line-height:1.45;
+        margin:4px 0 0
+      }
+
+      .aala-chatbot-head-actions{
+        display:flex;
+        align-items:center;
+        gap:8px
+      }
+
+      .aala-chatbot-close{
+        border:0;
+        background:#f1f5f7;
+        color:#47626c;
+        border-radius:10px;
+        width:34px;
+        height:34px;
+        font-size:20px;
+        cursor:pointer;
+        line-height:1
+      }
+
+      .aala-chatbot-close:hover{
+        background:#e7eef1
+      }
+
+      .aala-chatbot-status{
+        padding:8px 16px 0;
+        font-size:.75rem;
+        color:#78909a;
+        background:#ffffff
+      }
+
+      .aala-chatbot-body{
+        flex:1;
+        overflow:auto;
+        padding:14px 14px 10px;
+        background:linear-gradient(180deg,#f6f7f8 0%,#f2f5f7 100%)
+      }
+
+      .aala-chatbot-row{
+        display:flex;
+        align-items:flex-end;
+        gap:8px;
+        margin-bottom:12px
+      }
+
+      .aala-chatbot-row.user{
+        justify-content:flex-end
+      }
+
+      .aala-chatbot-mini-avatar{
+        width:30px;
+        height:30px;
+        border-radius:999px;
+        flex:0 0 30px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:.78rem;
+        font-weight:700;
+        color:#ffffff;
+        background:linear-gradient(135deg,#d88662 0%,#1b7f76 100%)
+      }
+
+      .aala-chatbot-msg{
+        max-width:84%;
+        padding:12px 14px;
+        border-radius:18px;
+        line-height:1.55;
+        font-size:.92rem;
+        white-space:pre-wrap;
+        word-break:break-word;
+        box-shadow:0 8px 18px rgba(18,42,66,.05)
+      }
+
+      .aala-chatbot-row.bot .aala-chatbot-msg{
+        background:#ffffff;
+        color:#17314f;
+        border:1px solid #e2eaee;
+        border-bottom-left-radius:8px
+      }
+
+      .aala-chatbot-row.user .aala-chatbot-msg{
+        background:#dff5f1;
+        color:#18424f;
+        border:1px solid #c5ebe4;
+        border-bottom-right-radius:8px
+      }
+
+      .aala-chatbot-msg-title{
+        font-weight:700;
+        margin-bottom:6px;
+        color:#1b7f76
+      }
+
+      .aala-chatbot-meta{
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+        margin-top:9px
+      }
+
+      .aala-chatbot-chip{
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        padding:4px 8px;
+        border-radius:999px;
+        background:#eef7f5;
+        color:#1b7f76;
+        font-size:.72rem;
+        font-weight:700
+      }
+
+      .aala-chatbot-suggestions{
+        padding:0 14px 12px;
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        background:linear-gradient(180deg,#f2f5f7 0%,#ffffff 60%)
+      }
+
+      .aala-chatbot-suggestion{
+        border:1px solid #d9e6eb;
+        background:#ffffff;
+        color:#35535f;
+        border-radius:999px;
+        padding:8px 12px;
+        font-size:.78rem;
+        cursor:pointer;
+        line-height:1.35
+      }
+
+      .aala-chatbot-suggestion:hover{
+        background:#f4faf8
+      }
+
+      .aala-chatbot-form{
+        padding:12px;
+        border-top:1px solid #e6edf0;
+        background:#ffffff;
+        display:flex;
+        gap:10px;
+        align-items:flex-end
+      }
+
+      .aala-chatbot-input{
+        flex:1;
+        min-height:46px;
+        max-height:130px;
+        resize:none;
+        border:1px solid #d9e5ea;
+        border-radius:16px;
+        padding:12px 14px;
+        font:inherit;
+        color:#17314f;
+        outline:none;
+        background:#fafcfd
+      }
+
+      .aala-chatbot-input:focus{
+        border-color:#34a79e;
+        box-shadow:0 0 0 4px rgba(52,167,158,.12)
+      }
+
+      .aala-chatbot-send{
+        border:0;
+        border-radius:14px;
+        background:#f0a63f;
+        color:#ffffff;
+        padding:12px 14px;
+        font-weight:700;
+        cursor:pointer;
+        min-width:84px;
+        box-shadow:0 10px 22px rgba(240,166,63,.24)
+      }
+
+      .aala-chatbot-send:hover{
+        filter:brightness(.98)
+      }
+
+      .aala-chatbot-send[disabled]{
+        opacity:.6;
+        cursor:not-allowed;
+        box-shadow:none
+      }
+
+      .aala-chatbot-loader{
+        display:inline-flex;
+        gap:4px;
+        align-items:center
+      }
+
+      .aala-chatbot-loader span{
+        width:6px;
+        height:6px;
+        border-radius:999px;
+        background:#34a79e;
+        display:inline-block;
+        animation:aala-chatbot-pulse 1.2s infinite ease-in-out
+      }
+
+      .aala-chatbot-loader span:nth-child(2){
+        animation-delay:.15s
+      }
+
+      .aala-chatbot-loader span:nth-child(3){
+        animation-delay:.3s
+      }
+
+      @keyframes aala-chatbot-pulse{
+        0%,80%,100%{transform:scale(.5);opacity:.45}
+        40%{transform:scale(1);opacity:1}
+      }
+
+      @media (max-width:720px){
+        .aala-chatbot-root{
+          right:12px;
+          left:12px;
+          bottom:12px
+        }
+
+        .aala-chatbot-panel{
+          width:100%;
+          height:min(78vh,700px)
+        }
+
+        .aala-chatbot-launcher{
+          margin-left:auto
+        }
+
+        .aala-chatbot-msg{
+          max-width:88%
+        }
+      }
     `;
     document.head.appendChild(style);
   }
@@ -735,6 +1041,7 @@
   function ensureRoot() {
     let root = document.getElementById(Config.APP.id);
     if (root) return root;
+
     root = document.createElement('div');
     root.id = Config.APP.id;
     root.className = 'aala-chatbot-root';
@@ -743,23 +1050,36 @@
         <span>💬</span>
         <span>${escapeHtml(Config.APP.name)}</span>
       </button>
+
       <section class="aala-chatbot-panel" aria-live="polite">
         <header class="aala-chatbot-head">
-          <div>
-            <h3>${escapeHtml(Config.APP.name)}</h3>
-            <p>${escapeHtml(Config.APP.subtitle)}</p>
+          <div class="aala-chatbot-head-main">
+            <div class="aala-chatbot-avatar">A</div>
+            <div>
+              <h3>${escapeHtml(Config.APP.name)}</h3>
+              <p>${escapeHtml(Config.APP.subtitle)}</p>
+            </div>
           </div>
-          <button type="button" class="aala-chatbot-close" aria-label="Cerrar chat">×</button>
+          <div class="aala-chatbot-head-actions">
+            <button type="button" class="aala-chatbot-close" aria-label="Cerrar chat">×</button>
+          </div>
         </header>
+
         <div class="aala-chatbot-status"></div>
         <div class="aala-chatbot-body"></div>
         <div class="aala-chatbot-suggestions"></div>
+
         <form class="aala-chatbot-form">
-          <textarea class="aala-chatbot-input" maxlength="${Number(Config.APP.inputMaxLength || 500)}" placeholder="${escapeHtml(Config.APP.placeholder)}"></textarea>
+          <textarea
+            class="aala-chatbot-input"
+            maxlength="${Number(Config.APP.inputMaxLength || 500)}"
+            placeholder="${escapeHtml(Config.APP.placeholder)}"
+          ></textarea>
           <button type="submit" class="aala-chatbot-send">Enviar</button>
         </form>
       </section>
     `;
+
     document.body.appendChild(root);
     return root;
   }
@@ -799,18 +1119,40 @@
   }
 
   function renderMessage(message) {
+    const row = document.createElement('div');
+    row.className = `aala-chatbot-row ${message.role}`;
+
     const item = document.createElement('div');
-    item.className = `aala-chatbot-msg ${message.role}`;
+    item.className = 'aala-chatbot-msg';
+
     const title = message.title ? `<div class="aala-chatbot-msg-title">${escapeHtml(message.title)}</div>` : '';
     const text = `<div>${escapeHtml(message.text)}</div>`;
+
     const chips = [];
     if (message.meta && message.meta.programId) chips.push(getProgramName(message.meta.programId));
-    if (message.meta && Array.isArray(message.meta.programs) && !message.meta.programId) message.meta.programs.slice(0, 5).forEach((programId) => chips.push(getProgramName(programId)));
+    if (message.meta && Array.isArray(message.meta.programs) && !message.meta.programId) {
+      message.meta.programs.slice(0, 5).forEach((programId) => chips.push(getProgramName(programId)));
+    }
     if (message.meta && message.meta.periodKey) chips.push(describePeriod(message.meta.periodKey));
     if (message.meta && message.meta.comparisonPeriodKey) chips.push(`vs ${describePeriod(message.meta.comparisonPeriodKey)}`);
-    const meta = chips.length ? `<div class="aala-chatbot-meta">${chips.map((chip) => `<span class="aala-chatbot-chip">${escapeHtml(chip)}</span>`).join('')}</div>` : '';
+
+    const meta = chips.length
+      ? `<div class="aala-chatbot-meta">${chips.map((chip) => `<span class="aala-chatbot-chip">${escapeHtml(chip)}</span>`).join('')}</div>`
+      : '';
+
     item.innerHTML = `${title}${text}${meta}`;
-    state.elements.body.appendChild(item);
+
+    if (message.role === 'bot') {
+      const avatar = document.createElement('div');
+      avatar.className = 'aala-chatbot-mini-avatar';
+      avatar.textContent = 'A';
+      row.appendChild(avatar);
+      row.appendChild(item);
+    } else {
+      row.appendChild(item);
+    }
+
+    state.elements.body.appendChild(row);
     scrollToBottom();
   }
 
