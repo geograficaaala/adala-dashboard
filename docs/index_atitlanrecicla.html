@@ -1304,6 +1304,45 @@
     }
 
   </style>
+
+<style id="at-layout-polish-v3">
+/* Uso completo del ancho y sin bloques vacíos */
+.hero{grid-template-columns:1fr!important;max-width:none!important}
+.hero-main{width:100%!important}
+.hero-shell{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:24px!important}
+.hero-brand{justify-content:center!important;align-self:stretch!important}
+
+.intro-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.95fr)!important;align-items:start!important}
+.intro-stack{display:grid!important;gap:18px!important;align-content:start!important}
+.intro-stack .annual-panel{margin-top:0!important}
+.intro-stack .annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.intro-stack .goal-card{min-height:180px!important}
+
+#incomeSection .section-head{align-items:end!important;gap:18px!important}
+#incomeSection .section-head > div{flex:1 1 auto!important;max-width:none!important}
+#incomeSection .section-head::after{content:'';flex:1 1 auto;height:3px;border-radius:999px;background:linear-gradient(90deg,var(--sky),rgba(56,182,232,.18) 60%,transparent 100%)}
+#incomeSection .section-head{border-bottom:none!important;padding-bottom:0!important;margin-bottom:14px!important}
+.income-toolbar.toolbar-compact{max-width:none!important;width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+.income-toolbar .filter{min-width:0!important}
+.income-toolbar .filter select{width:100%!important}
+#incomeSection .income-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:20px!important}
+#incomeSection .income-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;gap:20px!important}
+#incomeSection .panel{height:100%!important}
+
+@media (max-width:1180px){
+  .hero-shell{grid-template-columns:1fr!important}
+  .hero-brand{justify-content:flex-start!important}
+  .intro-grid{grid-template-columns:1fr!important}
+  .intro-stack .annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  #incomeSection .income-grid{grid-template-columns:1fr!important}
+}
+@media (max-width:760px){
+  .intro-stack .annual-goals-grid{grid-template-columns:1fr!important}
+  .income-toolbar.toolbar-compact{grid-template-columns:1fr!important}
+  #incomeSection .income-kpis{grid-template-columns:1fr!important}
+}
+</style>
+
 </head>
 <body class="view-full">
 
@@ -1931,7 +1970,7 @@ function renderKpis(state){
     `;
     grid.appendChild(card);
   });
-  if(!grid.children.length) grid.innerHTML=`<div class="empty">No se encontraron KPIs para el período seleccionado.</div>`;
+  if(!grid.children.length) grid.innerHTML=`<div class="empty">No se encontraron indicadores para el período seleccionado.</div>`;
   requestAnimationFrame(()=>{
     grid.querySelectorAll('.kpi-pillar-fill').forEach((bar,i)=>{
       const target=bar.dataset.height||'0%';
@@ -3550,7 +3589,7 @@ function buildPresentation(state){
         <div class="presentation-title-row">
           <div>
             <h2>Resumen ejecutivo de Atitlán Recicla</h2>
-            <p>Vista rápida del período para exponer resultados en reunión. KPIs clave, estado del programa y contexto territorial en una sola pantalla.</p>
+            <p>Vista rápida del período para exponer resultados en reunión. Indicadores clave, estado del programa y contexto territorial en una sola pantalla.</p>
           </div>
           <div class="presentation-brand-badge">
             <img src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
@@ -3569,10 +3608,10 @@ function buildPresentation(state){
       </div>
     </section>
 
-    <!-- SLIDE 2: KPIs de volumen (Materiales + PET) -->
+    <!-- SLIDE 2: Indicadores de volumen (Materiales + PET) -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
-        <div class="presentation-kicker">KPIs de volumen</div>
+        <div class="presentation-kicker">Indicadores de volumen</div>
         <div class="presentation-title-row">
           <div>
             <h2>Materiales y PET recolectado</h2>
@@ -3604,10 +3643,10 @@ function buildPresentation(state){
       </div>
     </section>
 
-    <!-- SLIDE 3: KPIs de vidrio e ingresos -->
+    <!-- SLIDE 3: Indicadores de vidrio e ingresos -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
-        <div class="presentation-kicker">KPIs de vidrio e ingresos</div>
+        <div class="presentation-kicker">Indicadores de vidrio e ingresos</div>
         <div class="presentation-title-row">
           <div>
             <h2>Vidrio recolectado e ingreso bruto</h2>
@@ -3639,10 +3678,10 @@ function buildPresentation(state){
       </div>
     </section>
 
-    <!-- SLIDE 4: KPIs de lideresas y participación -->
+    <!-- SLIDE 4: Indicadores de lideresas y participación -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
-        <div class="presentation-kicker">KPIs de lideresas y participación</div>
+        <div class="presentation-kicker">Indicadores de lideresas y participación</div>
         <div class="presentation-title-row">
           <div>
             <h2>Ingreso de lideresas y participación</h2>
@@ -3674,14 +3713,14 @@ function buildPresentation(state){
       </div>
     </section>
 
-    <!-- SLIDE 5: Panel completo de KPIs -->
+    <!-- SLIDE 5: Panel completo de indicadores -->
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Todos los KPIs</div>
+        <div class="presentation-kicker">Todos los indicadores</div>
         <div class="presentation-title-row">
           <div>
             <h2>Panel completo de indicadores</h2>
-            <p>Todos los KPIs del período en una vista consolidada. Conservan metas, semáforos y avance acumulado anual.</p>
+            <p>Todos los indicadores del período en una vista consolidada. Conservan metas, semáforos y avance acumulado anual.</p>
           </div>
         </div>
         <div class="presentation-metric-grid" style="flex:1;align-content:start">
@@ -3999,7 +4038,7 @@ document.body.classList.add('view-full');
       kpiSection.insertAdjacentHTML('afterend', `
         <div class="section-divider">Ingresos y contribución a metas</div>
         <section class="section" id="incomeSection">
-          <div class="section-head"><div><h2>KPIs de ingresos y aporte a metas</h2><p id="incomeSubtitle">Lectura filtrable del ingreso con detalle por territorio, material, municipio y recolector.</p></div></div>
+          <div class="section-head"><div><h2>Indicadores de ingresos y aporte a metas</h2><p id="incomeSubtitle">Lectura filtrable del ingreso con detalle por territorio, material, municipio y recolector.</p></div></div>
           <section class="toolbar toolbar-compact income-toolbar">
             <div class="card filter"><label for="incomeSubjectSelect">Línea de ingreso</label><select id="incomeSubjectSelect"></select></div>
             <div class="card filter"><label for="incomeTerritorySelect">Territorio</label><select id="incomeTerritorySelect"></select></div>
@@ -4560,5 +4599,55 @@ document.body.classList.add('view-full');
 })();
 
 </script>
+
+<script id="at-layout-polish-script-v3">
+(function(){
+  function replaceVisibleKpiLabels(root){
+    root = root || document.body;
+    if(!root) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node){
+        const p = node.parentNode;
+        if(!p) return NodeFilter.FILTER_REJECT;
+        const tag = (p.nodeName || '').toLowerCase();
+        if(['script','style','noscript'].includes(tag)) return NodeFilter.FILTER_REJECT;
+        if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        return /\bKPIs?\b/.test(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node=>{
+      node.nodeValue = node.nodeValue.replace(/\bKPIs\b/g,'Indicadores').replace(/\bKPI\b/g,'Indicador');
+    });
+  }
+
+  function fillUnusedSpaces(){
+    const hero = document.querySelector('.hero');
+    if(hero) hero.style.gridTemplateColumns = '1fr';
+
+    const introStack = document.querySelector('.intro-stack');
+    const annualPanel = document.querySelector('.annual-section .annual-panel');
+    if(introStack && annualPanel && !introStack.contains(annualPanel)){
+      introStack.appendChild(annualPanel);
+      const annualSection = document.querySelector('.annual-section');
+      if(annualSection) annualSection.remove();
+    }
+  }
+
+  function run(){
+    fillUnusedSpaces();
+    replaceVisibleKpiLabels(document.body);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+
+  const observer = new MutationObserver(()=>{ run(); });
+  const startObs = ()=>{ if(document.body) observer.observe(document.body, {childList:true, subtree:true}); };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', startObs); else startObs();
+})();
+</script>
+
 </body>
 </html>
