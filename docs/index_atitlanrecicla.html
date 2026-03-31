@@ -3996,6 +3996,31 @@ document.body.classList.add('view-full');
     recolector:'Recolector'
   };
 
+  function normalizeIncomeText(value){
+    return String(value||'')
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g,'')
+      .replace(/^[A-Z]{1,3}\s*-\s*/i,'')
+      .replace(/\s+/g,' ')
+      .trim()
+      .toLowerCase();
+  }
+  function rowMatchesIncomeTerritory(row, territory){
+    if(!territory || territory==='__all__') return true;
+    const target=normalizeIncomeText(territory);
+    const candidates=[row?.territorio, row?.municipio_origen].map(normalizeIncomeText).filter(Boolean);
+    return candidates.some(value=>value===target);
+  }
+  function buildIncomeScopeLabel(state){
+    const parts=[];
+    if(state.selectedZone!=='__all__') parts.push(`zona ${state.selectedZone}`);
+    if(state.incomeTerritory!=='__all__') parts.push(`territorio ${state.incomeTerritory}`);
+    if(state.incomeMaterial!=='__all__') parts.push(`material ${state.incomeMaterial}`);
+    if(state.incomeMunicipio!=='__all__') parts.push(`municipio ${state.incomeMunicipio}`);
+    if(state.incomeRecolector!=='__all__') parts.push(`recolector ${state.incomeRecolector}`);
+    return parts.length ? parts.join(' · ') : 'programa total';
+  }
+
   function monthNumLoose(row){
     const direct=Number(row?.mes_num);
     if(Number.isFinite(direct)) return direct;
@@ -4058,6 +4083,7 @@ document.body.classList.add('view-full');
     if(!currentData || !period) return [];
     let rows=(currentData.materialesRaw||[]).filter(r=>Number(r.anio)===Number(period.anio) && monthNumLoose(r)===Number(period.mes_num));
     if(state.selectedZone!=='__all__') rows=rows.filter(r=>sameZoneMaterial(r, state.selectedZone));
+    if(state.incomeTerritory!=='__all__') rows=rows.filter(r=>rowMatchesIncomeTerritory(r, state.incomeTerritory));
     if(state.incomeMaterial!=='__all__') rows=rows.filter(r=>String(r.material||'')===state.incomeMaterial);
     if(state.incomeMunicipio!=='__all__') rows=rows.filter(r=>String(r.municipio_origen||'')===state.incomeMunicipio);
     if(state.incomeRecolector!=='__all__') rows=rows.filter(r=>String(r.recolector||'')===state.incomeRecolector);
@@ -4067,6 +4093,7 @@ document.body.classList.add('view-full');
     if(!currentData || !period) return [];
     let rows=(currentData.materialesRaw||[]).filter(r=>Number(r.anio)===Number(period.anio) && monthNumLoose(r)<=Number(period.mes_num));
     if(state.selectedZone!=='__all__') rows=rows.filter(r=>sameZoneMaterial(r, state.selectedZone));
+    if(state.incomeTerritory!=='__all__') rows=rows.filter(r=>rowMatchesIncomeTerritory(r, state.incomeTerritory));
     if(state.incomeMaterial!=='__all__') rows=rows.filter(r=>String(r.material||'')===state.incomeMaterial);
     if(state.incomeMunicipio!=='__all__') rows=rows.filter(r=>String(r.municipio_origen||'')===state.incomeMunicipio);
     if(state.incomeRecolector!=='__all__') rows=rows.filter(r=>String(r.recolector||'')===state.incomeRecolector);
@@ -4202,16 +4229,18 @@ document.body.classList.add('view-full');
     if(!grid) return;
     const ctx=getIncomeContext(state);
     const cfg=ctx.subjectCfg;
+    const scopeLabel=buildIncomeScopeLabel(state);
+    const effectiveLabel=labelLong(ctx.effectivePeriod);
     const cards=[];
     cards.push({
       label:`Resultado filtrado · ${cfg.label}`,
       valueText:formatByUnit(ctx.currentValue, cfg.unit),
       metaTitle:'Valor observado en la selección actual',
-      refText:ctx.usingDetail ? `Corte efectivo: ${labelLong(ctx.effectivePeriod)}` : `Corte efectivo: ${labelLong(ctx.period)}`,
-      chipClass:incomeChipClass(ctx.monthlyPct),
-      chipText:incomeChipText(ctx.monthlyPct,'goal'),
-      progressPct:ctx.monthlyPct || ctx.shareMonth || 0,
-      copy:`${escapeHtml(ctx.note)}`
+      refText:ctx.usingDetail ? `Corte efectivo: ${effectiveLabel}` : `Corte efectivo: ${labelLong(ctx.period)}`,
+      chipClass:incomeChipClass(ctx.monthlyPct!=null ? ctx.monthlyPct : ctx.shareMonth),
+      chipText:incomeChipText(ctx.monthlyPct!=null ? ctx.monthlyPct : ctx.shareMonth,'goal'),
+      progressPct:ctx.monthlyPct!=null ? ctx.monthlyPct : (ctx.shareMonth || 0),
+      copy:`Muestra cuánto aportó <strong>${escapeHtml(scopeLabel)}</strong> a <strong>${escapeHtml(cfg.label)}</strong> en <strong>${escapeHtml(effectiveLabel)}</strong>. ${escapeHtml(ctx.note)}`
     });
     cards.push({
       label:'Aporte a meta mensual',
@@ -4221,7 +4250,7 @@ document.body.classList.add('view-full');
       chipClass:incomeChipClass(ctx.monthlyPct),
       chipText:incomeChipText(ctx.monthlyPct,'goal'),
       progressPct:ctx.monthlyPct || 0,
-      copy:ctx.goalMonthly!=null ? `${escapeHtml(cfg.label)} aporta ${escapeHtml(formatPercent(ctx.monthlyPct||0))} de la meta esperada para el mes seleccionado.` : 'Esta línea no cuenta con meta mensual oficial; se conserva como lectura complementaria.'
+      copy:ctx.goalMonthly!=null ? `Compara el resultado de <strong>${escapeHtml(scopeLabel)}</strong> contra la meta mensual oficial de <strong>${escapeHtml(cfg.label)}</strong>.` : `Esta línea se interpreta sin meta mensual; úsala como lectura descriptiva de <strong>${escapeHtml(scopeLabel)}</strong>.`
     });
     cards.push({
       label:'Participación del filtro en el programa',
@@ -4231,27 +4260,27 @@ document.body.classList.add('view-full');
       chipClass:incomeChipClass(ctx.shareMonth),
       chipText:incomeChipText(ctx.shareMonth,'share'),
       progressPct:ctx.shareMonth || 0,
-      copy:'Útil para medir qué tanto aporta el territorio, material o recolector seleccionado al cumplimiento del programa.'
+      copy:`Indica qué parte del <strong>${escapeHtml(cfg.label)}</strong> del programa explica <strong>${escapeHtml(scopeLabel)}</strong> en el período efectivo.`
     });
     cards.push({
       label:'Acumulado del filtro al corte',
       valueText:formatByUnit(ctx.accumulated, cfg.unit),
       metaTitle:'Suma acumulada hasta el período efectivo',
-      refText:`Período acumulado: <strong>${escapeHtml(labelLong(ctx.effectivePeriod))}</strong>`,
+      refText:`Período acumulado: <strong>${escapeHtml(effectiveLabel)}</strong>`,
       chipClass:incomeChipClass(ctx.annualPct!=null ? ctx.annualPct : ctx.shareAnnual),
       chipText:ctx.annualPct!=null ? `${escapeHtml(formatPercent(ctx.annualPct))} de meta anual` : `${escapeHtml(formatPercent(ctx.shareAnnual||0))} del acumulado`,
       progressPct:ctx.annualPct!=null ? ctx.annualPct : (ctx.shareAnnual||0),
-      copy:'Permite seguir cuánto ha aportado la selección actual al avance acumulado del año.'
+      copy:`Suma lo generado por <strong>${escapeHtml(scopeLabel)}</strong> desde enero hasta <strong>${escapeHtml(effectiveLabel)}</strong>.`
     });
     cards.push({
       label:'Aporte a meta anual',
       valueText:ctx.annualPct!=null ? formatPercent(ctx.annualPct) : 'Sin meta oficial',
       metaTitle:ctx.goalAnnual!=null ? `Meta anual de referencia: ${escapeHtml(formatByUnit(ctx.goalAnnual, cfg.unit))}` : 'No existe meta anual oficial publicada para esta línea',
       refText:ctx.goalAnnual!=null ? `Acumulado real: <strong>${escapeHtml(formatByUnit(ctx.accumulated, cfg.unit))}</strong>` : `Participación acumulada: <strong>${escapeHtml(formatPercent(ctx.shareAnnual||0))}</strong>`,
-      chipClass:incomeChipClass(ctx.annualPct),
+      chipClass:incomeChipClass(ctx.annualPct!=null ? ctx.annualPct : ctx.shareAnnual),
       chipText:ctx.annualPct!=null ? `${escapeHtml(formatPercent(ctx.annualPct))} del año` : 'Sin meta oficial',
       progressPct:ctx.annualPct || 0,
-      copy:ctx.goalAnnual!=null ? 'Este indicador responde directamente a la pregunta de cuánto aporta la selección a la meta anual de ingresos esperados.' : 'Al no existir meta anual oficial, la lectura se expresa como participación del acumulado.'
+      copy:ctx.goalAnnual!=null ? `Responde cuánto aporta <strong>${escapeHtml(scopeLabel)}</strong> al cumplimiento anual esperado de <strong>${escapeHtml(cfg.label)}</strong>.` : `Sin meta anual oficial, esta lectura muestra el peso acumulado de <strong>${escapeHtml(scopeLabel)}</strong> dentro del programa.`
     });
     cards.push({
       label:'Brecha o margen del mes',
@@ -4261,7 +4290,7 @@ document.body.classList.add('view-full');
       chipClass:ctx.goalMonthly!=null ? incomeChipClass(ctx.monthlyPct) : incomeChipClass(ctx.shareAnnual),
       chipText:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? 'Brecha pendiente' : 'Meta superada') : 'Participación anual',
       progressPct:ctx.goalMonthly!=null ? ctx.monthlyPct || 0 : ctx.shareAnnual || 0,
-      copy:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? 'El filtro todavía no alcanza la referencia mensual.' : 'La selección ya superó la referencia mensual del indicador.') : 'Lectura complementaria para líneas sin meta oficial.'
+      copy:ctx.goalMonthly!=null ? ((ctx.gapMonthly||0)>=0 ? `Muestra cuánto le falta a <strong>${escapeHtml(scopeLabel)}</strong> para llegar a la meta mensual.` : `Muestra cuánto supera <strong>${escapeHtml(scopeLabel)}</strong> la meta mensual.`) : `Lectura complementaria para entender el peso acumulado de <strong>${escapeHtml(scopeLabel)}</strong>.`
     });
 
     grid.innerHTML=cards.map(renderIncomeKpiCard).join('');
@@ -4285,13 +4314,13 @@ document.body.classList.add('view-full');
       chart.innerHTML=renderIncomeHorizontalBars(rows, ctx.subjectCfg.unit);
       const top=rows[0];
       const total=rows.reduce((acc,r)=>acc+safeNumber(r.value),0)||1;
-      interp.innerHTML=`<strong>${escapeHtml(top.label)}</strong> concentra <strong>${escapeHtml(formatPercent(safeNumber(top.value)/total))}</strong> del ingreso filtrado.`;
+      interp.innerHTML=`<strong>${escapeHtml(top.label)}</strong> concentra <strong>${escapeHtml(formatPercent(safeNumber(top.value)/total))}</strong> del ingreso filtrado para <strong>${escapeHtml(scopeLabel)}</strong>.`;
     }
     const table=q('#incomeTable');
     const tableTitle=q('#incomeTableTitle');
     const tableSubtitle=q('#incomeTableSubtitle');
     if(tableTitle) tableTitle.textContent=`Detalle del filtro · ${INCOME_BREAKDOWNS[state.incomeBreakdown]}`;
-    if(tableSubtitle) tableSubtitle.textContent=`Tabla resumida de ${ctx.subjectCfg.label} para la selección actual.`;
+    if(tableSubtitle) tableSubtitle.textContent=`Tabla resumida de ${ctx.subjectCfg.label} para ${scopeLabel}.`;
     table.innerHTML = ctx.tableRows.length
       ? renderTable(ctx.tableRows,['detalle','valor','participacion'],{detalle:'Detalle',valor:ctx.subjectCfg.label,participacion:'Participación'},(value,key)=> key==='valor'?formatByUnit(value,ctx.subjectCfg.unit):(key==='participacion'?formatPercent(value):value))
       : '<div class="empty">No hay registros detallados para mostrar.</div>';
