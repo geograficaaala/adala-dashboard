@@ -1399,7 +1399,8 @@
   box-shadow:var(--shadow-sm) !important;
   display:flex !important;
   flex-direction:column !important;
-  gap:16px !important;
+  align-items:stretch !important;
+  justify-content:center !important;
   min-height:100% !important;
 }
 .logo-frame{
@@ -1421,33 +1422,42 @@
   object-fit:contain !important;
   filter:none !important;
 }
-.hero-status{
-  display:grid !important;
-  grid-template-columns:1fr 1fr !important;
+.hero-quick-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
   gap:10px !important;
+  margin-top:14px !important;
 }
-#programStatus,#programQuick{
-  display:block !important;
+#programStatus{
+  flex-shrink:0 !important;
 }
-.hero-side .mini-item{
-  background:#ffffff !important;
-  border:1px solid rgba(208,220,236,.96) !important;
+#programQuick{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  gap:10px !important;
+  flex:1 !important;
+}
+#programQuick .mini-item{
+  background:rgba(255,255,255,.12) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
   box-shadow:none !important;
+  min-width:130px !important;
 }
-.hero-side .mini-item .muted{
-  color:#5e7287 !important;
-  font-size:.88rem !important;
+#programQuick .mini-item .muted{
+  color:rgba(255,255,255,.72) !important;
+  font-size:.82rem !important;
 }
-.hero-side .mini-item strong{
-  color:#2a6287 !important;
-  font-size:1rem !important;
+#programQuick .mini-item strong{
+  color:#ffffff !important;
+  font-size:.95rem !important;
 }
-.hero-side .status-badge{
+#programStatus .status-badge{
   display:inline-flex !important;
   align-items:center !important;
-  padding:10px 16px !important;
-  border-radius:16px !important;
-  font-size:1rem !important;
+  padding:8px 14px !important;
+  border-radius:14px !important;
+  font-size:.88rem !important;
   font-weight:800 !important;
   box-shadow:none !important;
 }
@@ -1606,15 +1616,15 @@
             <span class="hero-tag">+900 mujeres indirectas</span>
           </div>
           <div class="hero-grid" id="heroStats"></div>
+          <div class="hero-quick-row">
+            <div id="programStatus"></div>
+            <div id="programQuick"></div>
+          </div>
         </div>
       </div>
       <aside class="card hero-side" aria-label="Identidad visual del programa">
         <div class="logo-frame">
           <img class="hero-logo" src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
-        </div>
-        <div class="hero-status">
-          <div id="programStatus"></div>
-          <div id="programQuick"></div>
         </div>
       </aside>
     </section>
