@@ -888,6 +888,99 @@
       font: .8rem/1.45 var(--font-mono);
       color: var(--text-2);
     }
+    .metric-primary {
+      font: .8rem/1.45 var(--font-mono);
+      color: var(--text-2);
+    }
+    .metric-subgroup {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .metric-subindicator {
+      display: grid;
+      gap: 4px;
+      padding-left: 10px;
+      border-left: 2px solid var(--line);
+    }
+    .metric-subcopy {
+      font-size: .64rem;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .metric-subcopy strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .metric-subbar {
+      height: 5px;
+      border-radius: 999px;
+      background: var(--line-soft);
+      overflow: hidden;
+      width: min(180px, 72%);
+    }
+    .metric-subfill {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #d7a62a 0%, #bf8d20 100%);
+    }
+    .metric-subfill.pending {
+      width: 0 !important;
+      background: transparent;
+    }
+    .metric-row.metric-row-stack {
+      grid-template-columns: minmax(320px, 2.15fr) minmax(560px, 3.85fr);
+      column-gap: 24px;
+      align-items: start;
+    }
+    .metric-stack {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      width: 100%;
+    }
+    .metric-mainvalue {
+      font: .8rem/1.45 var(--font-mono);
+      color: var(--text-2);
+      font-weight: 500;
+    }
+    .metric-mainpct {
+      display: none;
+    }
+    .metric-mainbar {
+      height: 8px;
+      border-radius: 999px;
+      background: var(--line-soft);
+      overflow: hidden;
+      width: 100%;
+      max-width: 520px;
+    }
+    .metric-mainbar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+    }
+    .metric-row.metric-row-stack .metric-subgroup {
+      margin-top: 0;
+      gap: 10px;
+      max-width: 520px;
+    }
+    .metric-row.metric-row-stack .metric-subindicator {
+      gap: 5px;
+      padding-left: 10px;
+      border-left: 2px solid var(--line);
+    }
+    .metric-row.metric-row-stack .metric-subcopy {
+      font-size: .52rem;
+      line-height: 1.35;
+      color: var(--muted);
+    }
+    .metric-row.metric-row-stack .metric-subbar {
+      width: 100%;
+      max-width: 360px;
+      height: 5px;
+    }
     .bar {
       height: 8px;
       border-radius: 999px;
@@ -1315,9 +1408,9 @@
         <div class="hero-logo-card">
           <img
             class="hero-logo"
-            src="./docs/aala_logo.png"
+            src="docs/aala_logo.png"
             alt="Logo de Asociación Amigos del Lago de Atitlán"
-            onerror="if(!this.dataset.tryProject){this.dataset.tryProject='1';this.src='/AALA-dashboard/docs/aala_logo.png';}else if(!this.dataset.tryLocal){this.dataset.tryLocal='1';this.src='./aala_logo.png';}else{this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 240%22%3E%3Crect width=%22320%22 height=%22240%22 rx=%2224%22 fill=%22%23eef5f2%22/%3E%3Ccircle cx=%2260%22 cy=%2254%22 r=%2220%22 fill=%22%234ca5bf%22 opacity=%22.22%22/%3E%3Cpath d=%22M30 168c36-34 74-52 114-52 39 0 76 18 114 52%22 fill=%22none%22 stroke=%22%231c6084%22 stroke-width=%2214%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M44 192c26-20 56-30 88-30 32 0 64 10 96 30%22 fill=%22none%22 stroke=%22%232e6a57%22 stroke-width=%229%22 stroke-linecap=%22round%22/%3E%3Ctext x=%2234%22 y=%2290%22 font-family=%22Arial,sans-serif%22 font-size=%2252%22 font-weight=%22700%22 fill=%22%23163a5f%22%3EAALA%3C/text%3E%3Ctext x=%2234%22 y=%22124%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23163a5f%22%3EAmigos del Lago de Atitl%C3%A1n%3C/text%3E%3C/svg%3E';}"
+            onerror="if(!this.dataset.tryLocalDocs){this.dataset.tryLocalDocs='1';this.src='./docs/aala_logo.png';}else if(!this.dataset.trySibling){this.dataset.trySibling='1';this.src='./aala_logo.png';}else if(!this.dataset.tryProjectDocs){this.dataset.tryProjectDocs='1';this.src='/AALA-dashboard/docs/aala_logo.png';}else if(!this.dataset.tryProject){this.dataset.tryProject='1';this.src='/AALA-dashboard/aala_logo.png';}else{this.onerror=null;this.src='data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 320 240%22%3E%3Crect width=%22320%22 height=%22240%22 rx=%2224%22 fill=%22%23eef5f2%22/%3E%3Ccircle cx=%2260%22 cy=%2254%22 r=%2220%22 fill=%22%234ca5bf%22 opacity=%22.22%22/%3E%3Cpath d=%22M30 168c36-34 74-52 114-52 39 0 76 18 114 52%22 fill=%22none%22 stroke=%22%231c6084%22 stroke-width=%2214%22 stroke-linecap=%22round%22/%3E%3Cpath d=%22M44 192c26-20 56-30 88-30 32 0 64 10 96 30%22 fill=%22none%22 stroke=%22%232e6a57%22 stroke-width=%229%22 stroke-linecap=%22round%22/%3E%3Ctext x=%2234%22 y=%2290%22 font-family=%22Arial,sans-serif%22 font-size=%2252%22 font-weight=%22700%22 fill=%22%23163a5f%22%3EAALA%3C/text%3E%3Ctext x=%2234%22 y=%22124%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23163a5f%22%3EAmigos del Lago de Atitl%C3%A1n%3C/text%3E%3C/svg%3E';}"
           >
         </div>
       </aside>
@@ -1815,20 +1908,23 @@ async function loadEPC(cfg){
   const estudiantesVisitasMeta = 7;
   const estudiantesPorVisita = 3514;
 
-  const cohorteMarzoInicio = 68;
-  const cohorteMarzoActual = 53;
+  const cohortesTotales = 2;
+  const estudiantesPorCohorte = 60;
+  const momentosPorCohorte = 6;
+  const momentosDesarrolladosCohorteUno = 2;
+  const pctAvanceFormacion = (momentosDesarrolladosCohorteUno / momentosPorCohorte) * (100 / cohortesTotales);
+
   const actividadesVal = 10;
   const actividadesMeta = 128;
 
   const pctDocentes = (docentesVisitasRealizadas / docentesVisitasMeta) * 100;
   const pctEstudiantes = (estudiantesVisitasRealizadas / estudiantesVisitasMeta) * 100;
-  const pctCohorte = (cohorteMarzoActual / cohorteMarzoInicio) * 100;
   const pctActividades = (actividadesVal / actividadesMeta) * 100;
 
   const score = avg([
     100,
     100,
-    pctCohorte,
+    pctAvanceFormacion,
     (actividadesVal / 16) * 100
   ]);
 
@@ -1848,17 +1944,17 @@ async function loadEPC(cfg){
       barPct:pctEstudiantes
     },
     {
-      label:'120 jóvenes de 12 municipios formados en 5 módulos temáticos en temas de gestión ambiental, liderazgo y desarrollo de proyectos juveniles de emprendimiento con impacto social ambiental.',
-      acumDisplay:`Cohorte marzo ${fmt(cohorteMarzoActual)} / 68 · Cohorte julio pendiente`,
-      pct:pctCohorte,
-      pctDisplay:`${fmtPct(pctCohorte)} asistencia sostenida`,
-      barPct:pctCohorte
+      label:'120 jóvenes de 12 municipios, distribuidos en 2 cohortes de 60 estudiantes cada una, formados en 5 módulos temáticos y una actividad de presentación de proyectos por cohorte en temas de gestión ambiental y liderazgo juvenil.',
+      acumDisplay:`Avance en el desarrollo de la formación de estudiantes acumulada a la fecha: ${fmtPct(pctAvanceFormacion)}`,
+      pct:pctAvanceFormacion,
+      pctDisplay:`${fmtPct(pctAvanceFormacion)} de avance con respecto a meta anual`,
+      barPct:pctAvanceFormacion
     },
     {
       label:'Actividades en campo',
       acumDisplay:`${fmt(actividadesVal)} / ${fmt(actividadesMeta)} actividades`,
       pct:pctActividades,
-      pctDisplay:fmtPct(pctActividades),
+      pctDisplay:`${fmtPct(pctActividades)}`,
       barPct:pctActividades
     }
   ];
@@ -1886,12 +1982,38 @@ function metricRow(m){
   const acumLabel = m.acumDisplay || (m.isMensual
     ? `${fmt(m.acum, m.unit==='GTQ/día'?1:0)} ${m.unit}`
     : `${fmt(m.acum, 0)} / ${fmt(m.meta||0)} ${m.unit}`);
-  const pctLabel = m.pctDisplay || (hasPct ? fmtPct(barPct) : '—');
+  const pctLabel = (m.pctDisplay === null || m.pctDisplay === false)
+    ? ''
+    : (m.pctDisplay || (hasPct ? fmtPct(barPct) : '—'));
+  const subIndicators = Array.isArray(m.subIndicators)
+    ? `<div class="metric-subgroup">${m.subIndicators.map(item => {
+        const subHasPct = Number.isFinite(Number(item?.barPct));
+        const subWidth = subHasPct ? Math.max(0, Math.min(Number(item.barPct), 100)) : 0;
+        const subFillClass = item?.pending ? 'metric-subfill pending' : 'metric-subfill';
+        const valueMarkup = item?.valueDisplay ? `<strong>${item.valueDisplay}</strong>` : '';
+        return `<div class="metric-subindicator"><div class="metric-subcopy">${item?.label}: ${valueMarkup}</div><div class="metric-subbar"><span class="${subFillClass}" style="width:${subWidth}%"></span></div></div>`;
+      }).join('')}</div>`
+    : '';
+
+  if (Array.isArray(m.subIndicators) && m.subIndicators.length){
+    return `
+      <div class="metric-row metric-row-stack">
+        <div class="mname">${m.label}</div>
+        <div class="metric-stack">
+          <div class="metric-mainvalue">${acumLabel}</div>
+          ${pctLabel ? `<div class="metric-mainpct">${pctLabel}</div>` : ''}
+          <div class="metric-mainbar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
+          ${subIndicators}
+        </div>
+      </div>
+    `;
+  }
+
   return `
     <div class="metric-row">
       <div class="mname">${m.label}</div>
-      <div class="mnum">${acumLabel}</div>
-      <div class="mnum">${pctLabel}</div>
+      <div class="mnum"><div class="metric-primary">${acumLabel}</div></div>
+      <div class="mnum"><div class="metric-primary">${pctLabel}</div></div>
       <div class="bar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
     </div>
   `;
