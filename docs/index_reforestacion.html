@@ -771,27 +771,26 @@
     }
     .card:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(18,42,66,.10),0 6px 16px rgba(18,42,66,.05);border-color:#cfe0d9}
 
-    .hero{grid-template-columns:minmax(0,1.55fr) minmax(280px,.88fr);gap:18px;margin-bottom:22px}
+    .hero{grid-template-columns:1.65fr 1fr;gap:16px;margin-bottom:18px}
     .hero-main{
-      padding:30px 32px 28px;
-      background:linear-gradient(135deg,#173b61 0%,#1e5677 52%,#5caebe 100%);
-      border:none;color:rgba(255,255,255,.92);overflow:hidden;position:relative;
+      padding:30px 34px 26px;
+      background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);
+      position:relative;overflow:hidden;border:1.5px solid var(--line-soft);color:var(--text);
     }
-    .hero-main::before{content:'';position:absolute;inset:auto -10% -18% auto;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18) 0%,transparent 68%);filter:blur(2px)}
-    .hero-eyebrow,.section-kicker{color:rgba(255,255,255,.72)}
-    .hero-main h1{font-family:var(--font-body);font-size:clamp(2.25rem, 4vw, 4.1rem);font-weight:800;line-height:.97;letter-spacing:-.05em;color:#fff;background:none;-webkit-text-fill-color:unset;margin-bottom:14px}
-    .hero-main p,.hero-main .hero-lead,.hero-brand-note{color:rgba(255,255,255,.88)}
-    .hero-tag{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.16)}
-    .hero-tag::before{background:rgba(255,255,255,.75)}
-    .hero-grid{gap:12px}
-    .hero-stat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(8px)}
-    .hero-stat:hover{background:rgba(255,255,255,.16)}
-    .hero-stat small{color:rgba(255,255,255,.62)}
-    .hero-stat strong{color:#fff}
-    .hero-brand{background:linear-gradient(180deg,rgba(255,255,255,.14) 0%,rgba(255,255,255,.08) 100%);border:1px solid rgba(255,255,255,.16)}
-    .hero-logo{max-width:250px;filter:drop-shadow(0 18px 35px rgba(6,24,42,.22))}
-    .hero-side{padding:24px 20px;background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(243,247,245,.98) 100%)}
-    .hero-side-label{color:#6b7f90}
+    .hero-main::before{content:'';position:absolute;right:-70px;top:-70px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(56,182,232,.15) 0%,rgba(37,117,204,.07) 50%,transparent 70%);pointer-events:none}
+    .hero-eyebrow{color:var(--blue-mid)}
+    .hero-main h1{font-family:var(--font-head);font-size:2.4rem;font-weight:600;line-height:1.1;background:linear-gradient(135deg,var(--text) 40%,var(--blue-mid) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.02em;margin-bottom:10px}
+    .hero-main p,.hero-main .hero-lead,.hero-brand-note{color:var(--text-2)}
+    .hero-tag{background:rgba(255,255,255,.76);color:var(--text-2);border:1px solid var(--line-soft)}
+    .hero-tag::before{background:var(--sky)}
+    .hero-grid{gap:10px}
+    .hero-stat{background:rgba(255,255,255,.76);border:1.5px solid var(--line-soft)}
+    .hero-stat:hover{background:var(--blue-pale)}
+    .hero-stat small{color:var(--muted)}
+    .hero-stat strong{color:var(--text)}
+    .hero-logo{max-width:240px;filter:drop-shadow(0 12px 24px rgba(10,35,80,.12))}
+    .hero-side{padding:22px 20px;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#ffffff 0%,#f4f8fe 50%,#edf5ff 100%)}
+    .hero-side-label{color:var(--muted)}
     .status-badge{font-size:.9rem}
 
     .intro-grid,.grid-2,.grid-2-equal{gap:18px}
@@ -1483,12 +1482,12 @@
     .chip-row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 8px}
     .stat-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:var(--blue-pale);border:1px solid var(--blue-soft);color:var(--blue-mid);font-size:.8rem;font-weight:700}
     .stat-chip::before{content:'●';font-size:.65em;color:var(--green)}
-    .map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .map-grid{display:grid;grid-template-columns:1fr;gap:22px}
     .map-card{padding:18px 18px 16px}
     .map-card h3{margin-bottom:6px}
     .map-card p.sub{margin-bottom:12px}
-    .map-frame{position:relative;border:1.5px solid var(--line-soft);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#f8fbff 0%,#eef6fe 100%);min-height:420px}
-    .map-frame iframe{display:block;width:100%;height:420px;border:0;background:#fff}
+    .map-frame{position:relative;border:1.5px solid var(--line-soft);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#f8fbff 0%,#eef6fe 100%);min-height:760px}
+    .map-frame iframe{display:block;width:100%;height:760px;border:0;background:#fff}
     .map-actions{display:flex;justify-content:flex-end;margin-top:12px}
     .map-actions a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;text-decoration:none;font-weight:700;font-size:.84rem;box-shadow:0 8px 22px rgba(37,117,204,.24)}
     .map-actions a:hover{filter:brightness(1.03);transform:translateY(-1px)}
@@ -1501,72 +1500,16 @@
     }
     @media (max-width: 900px){
       .annual-goals-grid.reforest-grid{grid-template-columns:1fr!important}
-      .map-frame,.map-frame iframe{min-height:320px;height:320px}
+      .map-frame,.map-frame iframe{min-height:420px;height:420px}
     }
 
-  </style>
 
-<style id="at-layout-polish-v3">
-/* Uso completo del ancho y sin bloques vacíos */
-.hero{grid-template-columns:1fr!important;max-width:none!important}
-.hero-main{width:100%!important}
-.hero-shell{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:24px!important}
-.hero-brand{justify-content:center!important;align-self:stretch!important}
-
-.intro-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.95fr)!important;align-items:start!important}
-.intro-stack{display:grid!important;gap:18px!important;align-content:start!important}
-.intro-stack .annual-panel{margin-top:0!important}
-.intro-stack .annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
-.intro-stack .goal-card{min-height:180px!important}
-
-#incomeSection .section-head{align-items:end!important;gap:18px!important}
-#incomeSection .section-head > div{flex:1 1 auto!important;max-width:none!important}
-#incomeSection .section-head::after{content:'';flex:1 1 auto;height:3px;border-radius:999px;background:linear-gradient(90deg,var(--sky),rgba(56,182,232,.18) 60%,transparent 100%)}
-#incomeSection .section-head{border-bottom:none!important;padding-bottom:0!important;margin-bottom:14px!important}
-.income-toolbar.toolbar-compact{max-width:none!important;width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
-.income-toolbar .filter{min-width:0!important}
-.income-toolbar .filter select{width:100%!important}
-#incomeSection .income-kpis{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:20px!important}
-#incomeSection .income-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr)!important;gap:20px!important}
-#incomeSection .panel{height:100%!important}
-
-@media (max-width:1180px){
-  .hero-shell{grid-template-columns:1fr!important}
-  .hero-brand{justify-content:flex-start!important}
-  .intro-grid{grid-template-columns:1fr!important}
-  .intro-stack .annual-goals-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-  #incomeSection .income-grid{grid-template-columns:1fr!important}
-}
-@media (max-width:760px){
-  .intro-stack .annual-goals-grid{grid-template-columns:1fr!important}
-  .income-toolbar.toolbar-compact{grid-template-columns:1fr!important}
-  #incomeSection .income-kpis{grid-template-columns:1fr!important}
-}
-
-    /* --- Reforestación: ajustes de contenido y embebidos cartográficos --- */
-    .chip-row{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 8px}
-    .stat-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:var(--blue-pale);border:1px solid var(--blue-soft);color:var(--blue-mid);font-size:.8rem;font-weight:700}
-    .stat-chip::before{content:'●';font-size:.65em;color:var(--green)}
-    .map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-    .map-card{padding:18px 18px 16px}
-    .map-card h3{margin-bottom:6px}
-    .map-card p.sub{margin-bottom:12px}
-    .map-frame{position:relative;border:1.5px solid var(--line-soft);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#f8fbff 0%,#eef6fe 100%);min-height:420px}
-    .map-frame iframe{display:block;width:100%;height:420px;border:0;background:#fff}
-    .map-actions{display:flex;justify-content:flex-end;margin-top:12px}
-    .map-actions a{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;text-decoration:none;font-weight:700;font-size:.84rem;box-shadow:0 8px 22px rgba(37,117,204,.24)}
-    .map-actions a:hover{filter:brightness(1.03);transform:translateY(-1px)}
-    .map-note{margin-top:10px;color:var(--muted);font-size:.77rem;line-height:1.6}
-    .annual-goals-grid.reforest-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-    .hero-lead strong{color:inherit}
-    @media (max-width: 1180px){
-      .annual-goals-grid.reforest-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-      .map-grid{grid-template-columns:1fr}
-    }
-    @media (max-width: 900px){
-      .annual-goals-grid.reforest-grid{grid-template-columns:1fr!important}
-      .map-frame,.map-frame iframe{min-height:320px;height:320px}
-    }
+    #execBarPanel{display:none}
+    .exec-row-2{grid-template-columns:1fr}
+    .section.grid-2{display:none}
+    .map-card{padding:18px 18px 18px}
+    .map-card h3{font-size:1.9rem;line-height:1.2}
+    .map-card p.sub{font-size:1rem;line-height:1.6;color:var(--muted)}
 
   </style>
 
@@ -1593,7 +1536,7 @@
         <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
         <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
       </div>
-      <button class="view-btn present-btn" id="btnPresentation" onclick="window.print()">Modo presentación</button>
+      <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">Modo presentación</button>
       <div class="period-rack">
         <span class="period-rack-label">Período de lectura</span>
         <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
@@ -1743,7 +1686,7 @@
     </section>
 
     <div class="section-divider">Tendencia histórica y cumplimiento</div>
-    <section class="section grid-2">
+    <section class="section grid-2" aria-hidden="true" style="display:none">
       <article class="card panel panel-accent" id="avancePanel">
         <h3>Avance acumulado del año</h3>
         <p class="sub">Porcentaje de avance respecto a la meta anual por indicador estratégico.</p>
@@ -1772,7 +1715,8 @@
       </article>
     </section>
 
-    <section class="section" id="mapasSig">
+    
+<section class="section" id="mapasSig">
       <article class="card panel panel-accent">
         <div class="section-head">
           <div>
@@ -1801,6 +1745,7 @@
         <div class="map-note">Si algún navegador bloquea el embebido de uno de los mapas, usa el botón de apertura directa para verlo en pestaña nueva.</div>
       </article>
     </section>
+
 
     <section class="section">
       <article class="card panel panel-accent">
@@ -1862,6 +1807,26 @@
 </footer>
 
 
+
+
+</div>
+
+<div class="presentation-overlay" id="presentationOverlay" aria-hidden="true">
+  <div class="presentation-chrome">
+    <div class="presentation-meta" id="presentationMeta"></div>
+    <div class="presentation-actions">
+      <button class="presentation-btn" type="button" onclick="gotoPresentationSlide(presentationIndex-1)">&#8592; Anterior</button>
+      <button class="presentation-btn" type="button" onclick="gotoPresentationSlide(presentationIndex+1)">Siguiente &#8594;</button>
+      <button class="presentation-btn primary" type="button" onclick="closePresentation()">&#215; Cerrar</button>
+    </div>
+  </div>
+  <div class="presentation-stage-wrap">
+    <div class="presentation-stage">
+      <div class="presentation-track" id="presentationTrack"></div>
+    </div>
+    <div class="presentation-dots" id="presentationDots"></div>
+  </div>
+</div>
 
 <script>
 const DATA_URLS = {
@@ -2002,28 +1967,46 @@ function getRowsUpToSelected(){
   return idx >= 0 ? state.totalRows.slice(0, idx + 1) : state.totalRows;
 }
 
+const ACTIVE_YEAR = 2026;
+const ACTIVE_MONTH_MAX = 3;
+let presentationIndex = 0;
+
 function buildMonthControls(){
   const select = document.getElementById('periodSelect');
   const pills = document.getElementById('monthPills');
+  const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const rowMap = new Map(state.totalRows.map(r => [safeNumber(r.mes_num), r]));
   select.innerHTML = '';
   pills.innerHTML = '';
-  state.totalRows.forEach(row => {
-    const opt = document.createElement('option');
-    opt.value = row.periodo_clave;
-    opt.textContent = `${row.mes_label} ${row.anio}`;
-    if (row.periodo_clave === state.selectedPeriod) opt.selected = true;
-    select.appendChild(opt);
+
+  monthNames.forEach((label, idx) => {
+    const monthNum = idx + 1;
+    const row = rowMap.get(monthNum);
+    const period = row?.periodo_clave || `${ACTIVE_YEAR}-${String(monthNum).padStart(2,'0')}`;
+    const disabled = monthNum > ACTIVE_MONTH_MAX || !row;
+
+    if (row) {
+      const opt = document.createElement('option');
+      opt.value = period;
+      opt.textContent = `${label} ${ACTIVE_YEAR}`;
+      opt.disabled = disabled;
+      if (period === state.selectedPeriod) opt.selected = true;
+      select.appendChild(opt);
+    }
 
     const btn = document.createElement('button');
-    btn.className = 'month-pill' + (row.periodo_clave === state.selectedPeriod ? ' active' : '');
-    btn.textContent = monthShort(row.mes_label);
-    btn.addEventListener('click', () => setPeriod(row.periodo_clave));
+    btn.className = 'month-pill' + (period === state.selectedPeriod ? ' active' : '');
+    btn.textContent = monthShort(label);
+    btn.disabled = disabled;
+    if (!disabled) btn.addEventListener('click', () => setPeriod(period));
     pills.appendChild(btn);
   });
+
   select.onchange = e => setPeriod(e.target.value);
 }
 
 function setPeriod(period){
+  if (!state.totalRows.some(r => r.periodo_clave === period)) return;
   state.selectedPeriod = period;
   buildMonthControls();
   render();
@@ -2032,7 +2015,7 @@ function setPeriod(period){
 function renderHero(row){
   document.getElementById('heroPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
   document.getElementById('cutoffPill').textContent = `${row.mes_label} ${row.anio}`;
-  document.getElementById('latestPill').textContent = state.metadata?.latest_month_label ? `${state.metadata.latest_month_label} ${String(state.metadata.latest_period || '').slice(0,4)}` : `${row.mes_label} ${row.anio}`;
+  document.getElementById('latestPill').textContent = `Marzo 2026`;
   document.getElementById('sourcePill').textContent = row.fuente_texto || '08A + 10_KPI_Graficos';
 
   const stats = [
@@ -2087,7 +2070,7 @@ function renderKpis(row){
 function renderExecutive(row){
   const status = overallStatus(row);
   document.getElementById('execStatusBadge').textContent = status.label;
-  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último corte ${state.metadata?.latest_month_label || row.mes_label}`;
+  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último corte Marzo 2026`;
   document.getElementById('execPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
   document.getElementById('execKpiGrid').innerHTML = KPI_CONFIG.map(cfg => {
     const pct = clampPct(row[cfg.pctField]);
@@ -2228,6 +2211,201 @@ function renderBarChart(){
   document.getElementById('execBarInterp').textContent = interp;
 }
 
+
+function buildPresentationAlerts(row){
+  const alerts = [];
+  if (String(row.alertas_texto || '').trim()) alerts.push({type:'yellow', text: row.alertas_texto});
+  if (String(row.semaforo_sig).toLowerCase() === 'azul' || safeNumber(row.aporte_sig_acum) >= 0.6) alerts.push({type:'green', text:'El componente SIG ya presenta consolidación útil para cartografía temática y soporte al programa.'});
+  if (safeNumber(row.arboles_sembrados_acum) === 0) alerts.push({type:'blue', text:'La siembra anual todavía no inicia; el tablero muestra una línea base de primer trimestre.'});
+  if (safeNumber(row.plantas_netas_acum) < 2500) alerts.push({type:'yellow', text:'El vivero sigue en fase de acumulación temprana; conviene reforzar producción y trazabilidad del componente.'});
+  return alerts.length ? alerts : [{type:'green', text:'No se detectan alertas críticas en el período seleccionado.'}];
+}
+
+function buildPresentation(){
+  const row = getSelectedRow();
+  const rows = getRowsUpToSelected();
+  const status = overallStatus(row);
+  const track = document.getElementById('presentationTrack');
+  const meta = document.getElementById('presentationMeta');
+  if (!track || !meta) return;
+
+  const heroCards = [
+    {label:'Monitoreo acumulado', value:formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2), sub:`Meta anual: ${formatByUnit(row.meta_ha,'ha',2)}`},
+    {label:'Siembra acumulada', value:formatByUnit(row.arboles_sembrados_acum,'árboles'), sub:`Meta anual: ${formatByUnit(row.meta_arboles,'árboles')}`},
+    {label:'Unidad SIG', value:`${formatNumber(row.aporte_sig_acum,2)} / 1.00`, sub:'Meta institucional de consolidación'},
+    {label:'Vivero acumulado', value:formatByUnit(row.plantas_netas_acum,'plantas'), sub:`Meta anual: ${formatByUnit(row.meta_plantas,'plantas')}`}
+  ];
+  const alerts = buildPresentationAlerts(row);
+  const metricCards = KPI_CONFIG.map(cfg => {
+    const pct = clampPct(row[cfg.pctField]);
+    const cls = semaforoClass(row[cfg.semaforoField]);
+    const value = formatByUnit(row[cfg.valueField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined);
+    const metaValue = formatByUnit(row[cfg.metaField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined);
+    return `<article class="presentation-kpi-pair-card">
+      <div class="pkpi-header">
+        <div class="pkpi-label">${escapeHtml(cfg.title)}</div>
+        <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row[cfg.pctField]))} acumulado</span>
+      </div>
+      <div class="pkpi-value">${escapeHtml(value)}</div>
+      <div class="pkpi-meta">Meta anual: ${escapeHtml(metaValue)}</div>
+      <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${pct}%"></div></div>
+      <div class="pkpi-meta" style="margin-top:6px">Aporte del mes: <strong>${escapeHtml(formatByUnit(row[cfg.monthlyField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+    </article>`;
+  }).join('');
+
+  const timelineCards = rows.map(r => `<article class="presentation-card">
+    <small>${escapeHtml(r.mes_label)} ${escapeHtml(r.anio)}</small>
+    <strong>${escapeHtml(formatByUnit(r.ha_monitoreadas_kpi_acum,'ha',2))}</strong>
+    <p>Vivero acumulado: ${escapeHtml(formatByUnit(r.plantas_netas_acum,'plantas'))}</p>
+    <span class="presentation-chip ${semaforoClass(r.semaforo_sig)}">SIG ${escapeHtml(formatPercent(r.pct_meta_sig))}</span>
+  </article>`).join('');
+
+  meta.innerHTML = `
+    <span>Modo presentación</span>
+    <span>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</span>
+    <span>Reforestando Atitlán</span>
+    <span>${escapeHtml(status.label)}</span>`;
+
+  track.innerHTML = `
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">Narrativa visual del dashboard</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Resumen ejecutivo de Reforestando Atitlán</h2>
+            <p>Vista rápida del primer trimestre para exponer avances del programa. Mantiene el mismo lenguaje visual del modo presentación de Atitlán Recicla, pero con indicadores anuales de restauración forestal.</p>
+          </div>
+          <div class="presentation-brand-badge">
+            <img src="./reforestando_logo.png" alt="Logo de Reforestando Atitlán">
+            <small>Restauración forestal · monitoreo · vivero · laboratorio SIG · cuenca del Lago de Atitlán</small>
+          </div>
+        </div>
+        <div class="presentation-summary-grid">
+          ${heroCards.map(card=>`<article class="presentation-card"><small>${escapeHtml(card.label)}</small><strong>${escapeHtml(card.value)}</strong><p>${escapeHtml(card.sub)}</p></article>`).join('')}
+        </div>
+        <div class="presentation-highlight-strip">
+          <span>📍 Área de acción: <strong>Sololá y cuenca del Lago de Atitlán</strong></span>
+          <span>🗓️ Corte disponible: <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong></span>
+          <span>🧭 Estado del programa: <strong>${escapeHtml(status.label)}</strong></span>
+          <span>🌱 Especies activas: <strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))} / ${escapeHtml(formatNumber(row.meta_especies,0))}</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">Indicadores priorizados</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Lectura acumulada del programa</h2>
+            <p>Cada indicador se observa como avance acumulado del año frente a su meta anual. Las ventanas operativas siguen la lógica real del programa.</p>
+          </div>
+        </div>
+        <div class="presentation-kpi-pairs">
+          ${metricCards}
+        </div>
+      </div>
+    </section>
+
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">Trayectoria enero · marzo</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Ruta temprana del programa</h2>
+            <p>El primer trimestre sirve como línea base operativa: monitoreo activo desde febrero, consolidación SIG en avance y vivero en fase de acumulación inicial.</p>
+          </div>
+        </div>
+        <div class="presentation-metric-grid" style="grid-template-columns:repeat(3,1fr)">
+          ${timelineCards}
+        </div>
+        <div class="presentation-note" style="margin-top:18px">
+          <h3>Interpretación</h3>
+          <p>La siembra anual aún no se activa en el corte de marzo, por lo que el tablero concentra la lectura en monitoreo, cartografía, consolidación institucional SIG y acumulación del vivero.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">Alertas y cierre</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>Lecturas para cerrar la presentación</h2>
+            <p>Mensajes de seguimiento para orientar decisiones y coordinación operativa del trimestre.</p>
+          </div>
+        </div>
+        <div class="presentation-alerts" style="flex:1">
+          <div class="presentation-alert-stack">
+            ${alerts.map(alert=>`<div class="presentation-alert-box ${alert.type}">${escapeHtml(alert.text)}</div>`).join('')}
+          </div>
+          <div class="presentation-note">
+            <h3>Mensaje de cierre</h3>
+            <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, Reforestando Atitlán registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, una consolidación SIG de <strong>${escapeHtml(formatNumber(row.aporte_sig_acum,2))}</strong> y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas.</p>
+            <p>La cartografía acumulada reporta <strong>${escapeHtml(formatPercent(row.pct_cartografia_acum))}</strong> y el vivero muestra <strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))}</strong> especies activas como base para la temporada alta.</p>
+            <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Reforestando Atitlán · tablero ejecutivo de restauración forestal · ${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</p>
+          </div>
+        </div>
+      </div>
+    </section>`;
+  buildPresentationDots();
+  gotoPresentationSlide(Math.min(presentationIndex, track.children.length - 1));
+}
+
+function buildPresentationDots(){
+  const track = document.getElementById('presentationTrack');
+  const dots = document.getElementById('presentationDots');
+  if (!track || !dots) return;
+  dots.innerHTML = '';
+  Array.from(track.children).forEach((_, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'presentation-dot' + (idx === presentationIndex ? ' active' : '');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', `Ir a la diapositiva ${idx + 1}`);
+    btn.addEventListener('click', () => gotoPresentationSlide(idx));
+    dots.appendChild(btn);
+  });
+}
+
+function gotoPresentationSlide(index){
+  const track = document.getElementById('presentationTrack');
+  const dots = document.querySelectorAll('.presentation-dot');
+  if (!track) return;
+  const total = track.children.length;
+  if (!total) return;
+  presentationIndex = Math.max(0, Math.min(index, total - 1));
+  track.style.transform = `translateX(-${presentationIndex * 100}%)`;
+  dots.forEach((dot, idx) => dot.classList.toggle('active', idx === presentationIndex));
+}
+
+function openPresentation(){
+  if (!state.totalRows.length) return;
+  buildPresentation();
+  const overlay = document.getElementById('presentationOverlay');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  overlay.setAttribute('aria-hidden','false');
+  document.body.classList.add('presentation-open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePresentation(){
+  const overlay = document.getElementById('presentationOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('open');
+  overlay.setAttribute('aria-hidden','true');
+  document.body.classList.remove('presentation-open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  const overlay = document.getElementById('presentationOverlay');
+  if (!overlay || !overlay.classList.contains('open')) return;
+  if (e.key === 'Escape') closePresentation();
+  if (e.key === 'ArrowRight') gotoPresentationSlide(presentationIndex + 1);
+  if (e.key === 'ArrowLeft') gotoPresentationSlide(presentationIndex - 1);
+});
+
 function render(){
   const row = getSelectedRow();
   renderHero(row);
@@ -2247,11 +2425,16 @@ function render(){
       loadCsv(DATA_URLS.indicators),
       loadCsv(DATA_URLS.metadata)
     ]);
-    state.totalRows = totalRows.sort((a,b) => String(a.periodo_clave).localeCompare(String(b.periodo_clave)));
-    state.indicatorRows = indicatorRows;
+
+    const q1Rows = totalRows
+      .filter(r => safeNumber(r.anio) === ACTIVE_YEAR && safeNumber(r.mes_num) <= ACTIVE_MONTH_MAX)
+      .sort((a,b) => String(a.periodo_clave).localeCompare(String(b.periodo_clave)));
+
+    state.totalRows = q1Rows;
+    state.indicatorRows = indicatorRows.filter(r => safeNumber(r.anio || ACTIVE_YEAR) === ACTIVE_YEAR && safeNumber(r.mes_num || 0) <= ACTIVE_MONTH_MAX);
     state.metadata = metadataRows[0] || null;
     state.periods = state.totalRows.map(r => r.periodo_clave);
-    state.selectedPeriod = state.metadata?.latest_period || (state.totalRows.find(r => String(r.is_latest_data_month).toLowerCase() === 'true') || state.totalRows[state.totalRows.length-1])?.periodo_clave;
+    state.selectedPeriod = state.totalRows.find(r => safeNumber(r.mes_num) === ACTIVE_MONTH_MAX)?.periodo_clave || state.totalRows[state.totalRows.length-1]?.periodo_clave;
     buildMonthControls();
     render();
   } catch (err) {
