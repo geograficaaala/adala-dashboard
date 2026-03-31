@@ -1,0 +1,64 @@
+name: Publish Reforestacion
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 11 * * *"   # diario 05:20 Guatemala
+
+permissions:
+  contents: write
+
+jobs:
+  publish-reforestacion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create folders
+        run: |
+          mkdir -p data_raw/reforestacion
+          mkdir -p data_processed/reforestacion
+          mkdir -p docs/data/reforestacion
+
+      - name: Read Reforestacion sheet
+        env:
+          GOOGLE_CREDS_JSON: ${{ secrets.GOOGLE_CREDS_JSON }}
+          SHEET_ID_REFORESTACION: ${{ secrets.SHEET_ID_REFORESTACION }}
+        run: python scripts/read_reforestacion.py
+
+      - name: Transform Reforestacion data
+        run: python scripts/transform_reforestacion.py
+
+      - name: Commit published CSVs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/reforestacion/*.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Reforestacion dashboard CSVs"
+            git push
+          fi
+
+      - name: Upload raw CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-csv-reforestacion
+          path: data_raw/reforestacion/*
+
+      - name: Upload processed CSV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: processed-csv-reforestacion
+          path: data_processed/reforestacion/*.csv
