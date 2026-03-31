@@ -864,9 +864,9 @@
     .metric-header,
     .metric-row {
       display: grid;
-      grid-template-columns: 2.2fr 1.05fr 1.05fr .8fr;
-      gap: 10px;
-      align-items: center;
+      grid-template-columns: minmax(0, 2.2fr) minmax(220px, .95fr) minmax(320px, 1.25fr);
+      gap: 18px;
+      align-items: start;
     }
     .metric-header {
       padding-bottom: 8px;
@@ -887,6 +887,7 @@
     .metric-row .mnum {
       font: .8rem/1.45 var(--font-mono);
       color: var(--text-2);
+      align-self: start;
     }
     .metric-primary {
       font: .8rem/1.45 var(--font-mono);
@@ -930,8 +931,8 @@
       background: transparent;
     }
     .metric-row.metric-row-stack {
-      grid-template-columns: minmax(320px, 2.15fr) minmax(560px, 3.85fr);
-      column-gap: 24px;
+      grid-template-columns: minmax(0, 2.2fr) minmax(220px, .95fr) minmax(320px, 1.25fr);
+      column-gap: 18px;
       align-items: start;
     }
     .metric-stack {
@@ -939,6 +940,7 @@
       gap: 10px;
       align-content: start;
       width: 100%;
+      min-width: 0;
     }
     .metric-mainvalue {
       font: .8rem/1.45 var(--font-mono);
@@ -954,7 +956,7 @@
       background: var(--line-soft);
       overflow: hidden;
       width: 100%;
-      max-width: 520px;
+      max-width: none;
     }
     .metric-mainbar > span {
       display: block;
@@ -964,7 +966,7 @@
     .metric-row.metric-row-stack .metric-subgroup {
       margin-top: 0;
       gap: 10px;
-      max-width: 520px;
+      max-width: none;
     }
     .metric-row.metric-row-stack .metric-subindicator {
       gap: 5px;
@@ -978,7 +980,7 @@
     }
     .metric-row.metric-row-stack .metric-subbar {
       width: 100%;
-      max-width: 360px;
+      max-width: none;
       height: 5px;
     }
     .bar {
@@ -2144,9 +2146,9 @@ function metricRow(m){
     return `
       <div class="metric-row metric-row-stack">
         <div class="mname">${m.label}</div>
+        <div class="mnum"><div class="metric-primary">${acumLabel}</div></div>
         <div class="metric-stack">
-          <div class="metric-mainvalue">${acumLabel}</div>
-          ${pctLabel ? `<div class="metric-mainpct">${pctLabel}</div>` : ''}
+          ${pctLabel ? `<div class="metric-primary">${pctLabel}</div>` : ''}
           <div class="metric-mainbar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
           ${subIndicators}
         </div>
@@ -2183,7 +2185,6 @@ function programCard(p){
           <span>Indicador</span>
           <span>Acumulado al presente mes / Meta anual</span>
           <span>% de avance con respecto a meta anual</span>
-          <span></span>
         </div>
         ${p.metrics.map(metricRow).join('')}
       </div>
