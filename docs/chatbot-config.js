@@ -6,43 +6,70 @@
       id: 'atitlan_recicla',
       name: 'Atitlán Recicla',
       shortName: 'AR',
-      aliases: ['atitlan recicla', 'atitlán recicla', 'cooperativa atitlan recicla', 'cooperativa atitlán recicla', 'ar']
+      aliases: [
+        'atitlan recicla', 'atitlán recicla', 'cooperativa atitlan recicla',
+        'cooperativa atitlán recicla', 'cooperativa', 'ar', 'reciclaje',
+        'recicla', 'atitlan recilca', 'atitlan reclica', 'cooperatva',
+        'atitlan reciclar', 'lideresas', 'materiales reciclables', 'reciclado',
+        'recoleccion materiales', 'recolección materiales'
+      ]
     },
     conservando_atitlan: {
       id: 'conservando_atitlan',
       name: 'Conservando Atitlán',
       shortName: 'CA',
-      aliases: ['conservando atitlan', 'conservando atitlán', 'ca']
+      aliases: [
+        'conservando atitlan', 'conservando atitlán', 'ca',
+        'conservacion', 'conservación', 'aceite', 'jabones',
+        'aceite usado', 'conservado', 'conservando',
+        'recoleccion aceite', 'recolección aceite', 'agua protegida'
+      ]
     },
     educando_para_conservar: {
       id: 'educando_para_conservar',
       name: 'Educando para Conservar',
       shortName: 'EPC',
-      aliases: ['educando para conservar', 'epc']
+      aliases: [
+        'educando para conservar', 'epc', 'educacion', 'educación',
+        'educando', 'escuelas', 'docentes', 'estudiantes', 'pedagogico',
+        'pedagógico', 'educativo', 'centros educativos', 'colegios',
+        'niños', 'jovenes', 'jóvenes', 'programa educativo'
+      ]
     },
     fortalecimiento_municipal: {
       id: 'fortalecimiento_municipal',
       name: 'Fortalecimiento Municipal',
       shortName: 'FM',
-      aliases: ['fortalecimiento municipal', 'fm']
+      aliases: [
+        'fortalecimiento municipal', 'fm', 'municipal', 'municipalidad',
+        'municipalidades', 'municipios', 'fortalecimiento', 'capacitaciones',
+        'pirdes', 'pird', 'capacitacion', 'capacitación', 'gobiernos locales',
+        'asistencias', 'reuniones', 'estudios municipales'
+      ]
     },
     reforestacion: {
       id: 'reforestacion',
       name: 'Reforestando Atitlán',
       shortName: 'RA',
-      aliases: ['reforestacion', 'reforestación', 'reforestando atitlan', 'reforestando atitlán', 'ra']
+      aliases: [
+        'reforestacion', 'reforestación', 'reforestando atitlan',
+        'reforestando atitlán', 'ra', 'reforestar', 'reforestando',
+        'arboles', 'árboles', 'siembra', 'siembras', 'plantas',
+        'vivero', 'bosque', 'hectareas', 'hectáreas',
+        'hectareas monitoreadas', 'area intervenida', 'área intervenida',
+        'especies nativas', 'plantas nativas'
+      ]
     }
   };
 
   const APP = {
     id: 'aala-dashboard-chatbot',
     name: 'Asistente AALA',
-    subtitle: 'Consulta los CSV publicados del dashboard',
-    greeting: 'Hola. Puedo responder preguntas sobre los datos publicados en el dashboard institucional y en los programas de AALA.',
+    subtitle: 'Datos actualizados del dashboard',
     emptyState: 'Todavía no hay datos cargados para responder.',
-    loadingLabel: 'Cargando información actualizada...',
-    errorLabel: 'No pude cargar la información en este momento.',
-    placeholder: 'Escribe una pregunta sobre indicadores, meses, programas, metas o resultados...',
+    loadingLabel: 'Buscando en los datos...',
+    errorLabel: 'No pude cargar la información en este momento. Intenta recargar la página.',
+    placeholder: 'Pregunta sobre resultados, metas, alertas, comparaciones...',
     inputMaxLength: 500,
     historyLimit: 30,
     suggestionsLimit: 8
@@ -95,105 +122,131 @@
       'inventar cifras',
       'inventar metas',
       'afirmar datos que no aparezcan en los csv',
-      'responder como si hubiera leído fuentes externas'
+      'responder como si hubiera leido fuentes externas'
     ]
   };
 
   const INTENTS = {
-    resumen: ['resumen', 'resume', 'resumir', 'síntesis', 'sintesis', 'panorama', 'overview'],
-    comparacion: ['comparar', 'comparación', 'comparacion', 'versus', 'vs', 'diferencia'],
-    ultimo_mes: ['último mes', 'ultimo mes', 'mes más reciente', 'mes mas reciente', 'último periodo', 'ultimo periodo', 'periodo más reciente', 'periodo mas reciente'],
-    indicadores: ['indicador', 'indicadores', 'meta', 'metas', 'avance', 'cumplimiento', 'porcentaje'],
-    tendencia: ['tendencia', 'evolución', 'evolucion', 'cambio', 'histórico', 'historico'],
-    alerta: ['alerta', 'alertas', 'riesgo', 'riesgos', 'bajo meta', 'rezago'],
-    territorio: ['municipio', 'municipios', 'territorio', 'territorios', 'zona', 'zonas', 'sector', 'tema', 'material']
+    resumen: [
+      'resumen', 'resume', 'resumir', 'sintesis', 'sintesis',
+      'panorama', 'overview', 'analisis', 'analisis', 'analizar',
+      'estado', 'estado general', 'situacion', 'situacion',
+      'como va', 'como van', 'como esta', 'como estan',
+      'que tal va', 'que tal estan', 'cuentame', 'dime sobre', 'dime de',
+      'completo', 'detalle', 'detallado', 'informe', 'reporte',
+      'resultado', 'resultados', 'balance', 'desempeno',
+      'como le fue', 'como les fue', 'que paso', 'que pasa',
+      'cuales son', 'que tiene', 'que muestra', 'que dice',
+      'explicame', 'explicar', 'contame', 'cuéntame'
+    ],
+    comparacion: [
+      'comparar', 'comparacion', 'comparacion', 'versus', 'vs',
+      'diferencia', 'diferencias', 'frente a', 'contra',
+      'mejor', 'peor', 'cual es mejor', 'cual va mejor',
+      'comparame', 'comparame', 'entre programas', 'todos los programas',
+      'cual esta mejor', 'cual esta peor', 'ranking'
+    ],
+    ultimo_mes: [
+      'ultimo mes', 'ultimo mes', 'mes mas reciente', 'mes mas reciente',
+      'ultimo periodo', 'ultimo periodo', 'periodo mas reciente',
+      'mas reciente', 'reciente', 'actual', 'hoy', 'ahora', 'vigente'
+    ],
+    indicadores: [
+      'indicador', 'indicadores', 'meta', 'metas', 'avance',
+      'cumplimiento', 'porcentaje', 'kpi', 'objetivo', 'objetivos',
+      'llegaron', 'alcanzaron', 'cumplieron', 'lograron',
+      'cuanto llevan', 'cuanto llevan', 'como van las metas',
+      'que porcentaje', 'cuanto falta', 'cuanto lograron'
+    ],
+    tendencia: [
+      'tendencia', 'evolucion', 'evolucion', 'cambio', 'historico',
+      'historico', 'comparado con', 'mes anterior', 'vs mes anterior',
+      'subio', 'subio', 'bajo', 'bajo', 'aumento', 'aumento',
+      'disminuyo', 'disminuyo', 'crecio', 'cayo', 'mejoro', 'empeoro',
+      'progreso', 'retroceso', 'subi', 'baj'
+    ],
+    alerta: [
+      'alerta', 'alertas', 'riesgo', 'riesgos', 'bajo meta',
+      'rezago', 'problema', 'problemas', 'preocupacion', 'preocupacion',
+      'rojo', 'amarillo', 'semaforo', 'semaforo',
+      'que esta mal', 'que va mal', 'donde hay problemas',
+      'que hay que mejorar', 'no esta llegando', 'atrasado', 'atrasados',
+      'debajo', 'por debajo', 'incumplimiento', 'no cumple', 'no cumplieron',
+      'fallando', 'falla', 'critico', 'critica'
+    ],
+    territorio: [
+      'municipio', 'municipios', 'territorio', 'territorios',
+      'zona', 'zonas', 'sector', 'sectores', 'tema', 'temas',
+      'material', 'materiales', 'comunidad', 'comunidades',
+      'donde', 'en que municipio', 'por zona', 'por sector',
+      'por municipio', 'por material', 'desagregado', 'desglose'
+    ]
   };
 
   const SUGGESTED_QUESTIONS = [
     {
       id: 'q-global-resumen',
-      text: 'Dame un resumen ejecutivo del último mes disponible para todos los programas.',
+      text: 'Resumen de todos los programas',
       scope: 'all_programs',
       programId: null,
       intent: 'resumen'
     },
     {
       id: 'q-global-alertas',
-      text: '¿Qué programas o indicadores muestran alertas o rezagos en el período más reciente?',
+      text: '¿Qué indicadores están en alerta?',
       scope: 'all_programs',
       programId: null,
       intent: 'alerta'
     },
     {
-      id: 'q-global-comparacion',
-      text: 'Compárame el período más reciente entre todos los programas.',
-      scope: 'all_programs',
-      programId: null,
-      intent: 'comparacion'
-    },
-    {
       id: 'q-ar-resumen',
-      text: 'Resume Atitlán Recicla con base en el último período disponible.',
+      text: '¿Cómo va Atitlán Recicla?',
       scope: 'program',
       programId: 'atitlan_recicla',
       intent: 'resumen'
     },
     {
-      id: 'q-ar-materiales',
-      text: '¿Qué materiales destacan en Atitlán Recicla en el último período?',
-      scope: 'program',
-      programId: 'atitlan_recicla',
-      intent: 'territorio'
-    },
-    {
       id: 'q-ca-resumen',
-      text: 'Resume Conservando Atitlán con base en el último período disponible.',
+      text: '¿Cómo va Conservando Atitlán?',
       scope: 'program',
       programId: 'conservando_atitlan',
       intent: 'resumen'
     },
     {
       id: 'q-epc-resumen',
-      text: 'Resume Educando para Conservar con base en el último período disponible.',
+      text: '¿Cómo va Educando para Conservar?',
       scope: 'program',
       programId: 'educando_para_conservar',
       intent: 'resumen'
     },
     {
       id: 'q-fm-resumen',
-      text: 'Resume Fortalecimiento Municipal con base en el último período disponible.',
+      text: '¿Cómo va Fortalecimiento Municipal?',
       scope: 'program',
       programId: 'fortalecimiento_municipal',
       intent: 'resumen'
-    },
-    {
-      id: 'q-fm-sectores',
-      text: '¿Qué sectores o temas resaltan en Fortalecimiento Municipal en el último período?',
-      scope: 'program',
-      programId: 'fortalecimiento_municipal',
-      intent: 'territorio'
     },
     {
       id: 'q-refo-resumen',
-      text: 'Resume Reforestando Atitlán con base en el último período disponible.',
+      text: '¿Cómo va Reforestando Atitlán?',
       scope: 'program',
       programId: 'reforestacion',
       intent: 'resumen'
     },
     {
-      id: 'q-refo-indicadores',
-      text: '¿Cómo va Reforestando Atitlán respecto a sus indicadores más recientes?',
-      scope: 'program',
-      programId: 'reforestacion',
-      intent: 'indicadores'
+      id: 'q-global-comparacion',
+      text: 'Comparar todos los programas',
+      scope: 'all_programs',
+      programId: null,
+      intent: 'comparacion'
     }
   ];
 
   const FALLBACKS = {
-    noData: 'No encontré datos suficientes en los CSV publicados para responder esa pregunta con confianza.',
-    offTopic: 'Puedo ayudarte con preguntas sobre programas, indicadores, metas, períodos, territorios, materiales y resultados del dashboard.',
-    ambiguous: 'Puedo responder eso mejor si lo enfoco por programa, indicador o período.',
-    stale: 'Los datos dependen de los CSV publicados más recientemente en el dashboard.'
+    noData: 'No encontré información en el dashboard para responder eso con confianza. Puedes preguntarme por resultados, metas, alertas o tendencias de cualquiera de nuestros 5 programas.',
+    offTopic: 'Solo puedo ayudarte con datos de los programas de AALA: resultados, metas, indicadores y avances del dashboard. ¿Sobre qué programa quieres saber?',
+    ambiguous: 'Puedo explicarlo mejor si me dices por qué programa, indicador o mes quieres preguntar. ¿Empezamos por alguno?',
+    stale: 'Mis datos vienen de los CSV publicados más recientemente en el dashboard.'
   };
 
   function stripAccents(value) {
@@ -243,14 +296,14 @@
   function buildSystemInstruction() {
     const programList = Object.values(PROGRAMS).map((program) => program.name).join(', ');
     return [
-      'Eres un asistente de datos del dashboard AALA.',
-      'Solo puedes responder con base en los CSV publicados y cargados en la aplicación.',
-      'Debes priorizar el período más reciente disponible, salvo que la pregunta pida otro período.',
-      'Cuando la pregunta trate sobre un programa específico, menciona explícitamente el nombre del programa.',
-      'Cuando uses cifras o indicadores, menciona el período de referencia si está disponible.',
-      'Si no hay datos suficientes, dilo claramente y no inventes contenido.',
+      'Eres el asistente de datos de la Asociación AALA.',
+      'Respondes siempre en español, con tono cálido y profesional.',
+      'Solo respondes con base en los CSV publicados y cargados en la aplicación.',
+      'Prioriza siempre el período más reciente disponible.',
+      'Cuando menciones cifras, hazlas destacar. Sé concreto y evita frases vacías.',
+      'Si no hay datos suficientes, dilo con claridad.',
       `Programas disponibles: ${programList}.`,
-      'Puedes resumir, comparar, identificar alertas, describir tendencias y responder preguntas por territorio, material, sector o tema cuando esos datos existan.'
+      'Puedes resumir, comparar, identificar alertas, describir tendencias y responder por territorio, material o sector.'
     ].join(' ');
   }
 
