@@ -993,15 +993,52 @@
     return response;
   }
 
+  // Detecta el último período con datos reales para un programa.
+  // Si el período más reciente tiene todos ceros (tiene_datos_mes: false), retrocede.
+  function resolveEffectivePeriodWithData(programId, candidatePeriod) {
+    if (!candidatePeriod || !programId) return candidatePeriod;
+    try {
+      const program = Data.getProgram(programId);
+      if (!program) return candidatePeriod;
+      const monthlyRow = program.monthly.find(
+        (row) => row.period_key === candidatePeriod && row.dataset_kind === 'monthly_total'
+      ) || program.monthly.find((row) => row.period_key === candidatePeriod);
+      if (monthlyRow && monthlyRow.values && monthlyRow.values.tiene_datos_mes !== false) {
+        return candidatePeriod;
+      }
+      const periods = program.periods || [];
+      const idx = periods.indexOf(candidatePeriod);
+      for (let i = idx - 1; i >= 0; i--) {
+        const prev = periods[i];
+        const prevRow = program.monthly.find(
+          (row) => row.period_key === prev && row.dataset_kind === 'monthly_total'
+        ) || program.monthly.find((row) => row.period_key === prev);
+        if (prevRow && prevRow.values && prevRow.values.tiene_datos_mes !== false) {
+          return prev;
+        }
+      }
+    } catch (e) { /* usar período original */ }
+    return candidatePeriod;
+  }
+
   async function buildAnswer(question) {
     if (Config.MODEL.backendEnabled && Config.MODEL.endpoint) {
       try {
         const programId = detectProgram(question);
         const periodInfo = resolvePeriodInfo(question, programId);
+
+        // Si el usuario no pidió período explícito, buscar el último con datos reales
+        let effectivePeriod = periodInfo.effective;
+        if (!periodInfo.requested && programId) {
+          effectivePeriod = resolveEffectivePeriodWithData(programId, effectivePeriod);
+        }
+
+        // Siempre incluir todos los programas (programId null = todos)
+        // para que Groq pueda responder preguntas cruzadas
         const context = Data.buildContext({
-          programId,
-          periodKey: periodInfo.effective,
-          latestOnly: !periodInfo.requested,
+          programId: programId || null,
+          periodKey: periodInfo.requested ? effectivePeriod : null,
+          latestOnly: true,
           includeDetails: Config.DATA.includeDetailsByDefault,
           includeIndicators: Config.DATA.includeIndicatorsByDefault,
           includeMetadata: Config.DATA.includeMetadataByDefault,
