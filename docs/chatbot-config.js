@@ -100,12 +100,12 @@
   };
 
   const MODEL = {
-    mode: 'local_reasoning_ready',
-    backendEnabled: false,
-    endpoint: '',
+    mode: 'ai_backend',
+    backendEnabled: true,
+    endpoint: 'https://aala-chatbo.sgeograficaaala.workers.dev',
     timeoutMs: 30000,
-    temperature: 0.2,
-    maxTokens: 700
+    temperature: 0.3,
+    maxTokens: 1024
   };
 
   const RESPONSE_POLICY = {
