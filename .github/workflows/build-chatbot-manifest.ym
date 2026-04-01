@@ -1,0 +1,52 @@
+name: Build Chatbot Manifest
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Publish Conservando Atitlan
+      - Publish Educando para Conservar
+      - Publish Fortalecimiento Municipal
+      - Publish Reforestacion
+      - Test read Google Sheets
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+jobs:
+  build-chatbot-manifest:
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build chatbot manifest
+        run: python scripts/build_chatbot_manifest.py
+
+      - name: Commit chatbot manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/data/chatbot_manifest.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update chatbot manifest"
+            git push
+          fi
