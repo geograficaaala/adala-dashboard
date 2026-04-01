@@ -9,11 +9,12 @@
     return;
   }
 
+  // ─── Etiquetas legibles para campos de datos ─────────────────────────────
   const FIELD_LABELS = {
     total_materiales_qq: 'materiales reciclables recolectados',
     materiales_lideresas_qq: 'materiales de lideresas',
     materiales_municipalidad_qq: 'materiales de municipalidad',
-    ingreso_bruto_total: 'ingresos brutos totales',
+    ingreso_bruto_total: 'ingresos brutos',
     ingreso_neto_total_territorio: 'ingreso neto del territorio',
     ingreso_neto_cooperativa: 'ingreso neto de la cooperativa',
     mujeres_activas: 'mujeres activas',
@@ -62,23 +63,49 @@
   };
 
   const MONTH_NAMES = {
-    '01': 'Enero',
-    '02': 'Febrero',
-    '03': 'Marzo',
-    '04': 'Abril',
-    '05': 'Mayo',
-    '06': 'Junio',
-    '07': 'Julio',
-    '08': 'Agosto',
-    '09': 'Septiembre',
-    '10': 'Octubre',
-    '11': 'Noviembre',
-    '12': 'Diciembre'
+    '01': 'enero', '02': 'febrero', '03': 'marzo', '04': 'abril',
+    '05': 'mayo', '06': 'junio', '07': 'julio', '08': 'agosto',
+    '09': 'septiembre', '10': 'octubre', '11': 'noviembre', '12': 'diciembre'
   };
 
-  const GREETINGS = ['hola', 'buenas', 'buen día', 'buen dia', 'que tal', 'qué tal', 'hello', 'hey'];
-  const THANKS = ['gracias', 'muchas gracias', 'thanks'];
-  const OFFTOPIC_HINTS = ['chiste', 'meme', 'novio', 'novia', 'sexo', 'bitcoin', 'futbol', 'fútbol', 'horoscopo', 'horóscopo', 'presidente', 'gobierno'];
+  // Saludos — amplio, cubriendo casuales, informales y errores de tipeo
+  const GREETINGS = [
+    'hola', 'holas', 'ola', 'buenas', 'buen dia', 'buen día',
+    'buenos dias', 'buenos días', 'buenas tardes', 'buenas noches',
+    'buenas mañanas', 'que tal', 'qué tal', 'que hay', 'qué hay',
+    'como estas', 'como estás', 'cómo estas', 'cómo estás',
+    'como te va', 'cómo te va', 'como andas', 'cómo andas',
+    'todo bien', 'todo bn', 'todo bueno', 'hello', 'hi', 'hey',
+    'good morning', 'good afternoon', 'good evening',
+    'saludos', 'muy buenas', 'bienvenido', 'inicio', 'empezar',
+    'comenzar', 'start', 'quiero empezar', 'por donde empiezo',
+    'ayuda', 'help', 'que puedes hacer', 'qué puedes hacer',
+    'que haces', 'qué haces', 'para que sirves', 'para qué sirves',
+    'como funciona', 'cómo funciona', 'no se', 'no sé',
+    'no se que preguntar', 'no sé qué preguntar'
+  ];
+
+  const THANKS = [
+    'gracias', 'muchas gracias', 'muy amable', 'te lo agradezco',
+    'mil gracias', 'thanks', 'thank you', 'thx', 'ty',
+    'ok gracias', 'okey gracias', 'perfecto gracias', 'listo gracias',
+    'entendido gracias', 'ya entendi', 'ya entendí', 'ya vi',
+    'listo', 'ok listo', 'okey', 'okay', 'perfecto', 'excelente',
+    'de acuerdo', 'entendido', 'copiado', 'genial', 'muy bien',
+    'buenisimo', 'buenísimo', 'chido', 'chevere', 'chévere'
+  ];
+
+  const OFFTOPIC_HINTS = [
+    'chiste', 'meme', 'novio', 'novia', 'sexo', 'amor',
+    'bitcoin', 'crypto', 'criptomoneda', 'futbol', 'fútbol',
+    'beisbol', 'béisbol', 'deportes', 'partido futbol',
+    'horoscopo', 'horóscopo', 'zodiaco', 'presidente', 'gobierno',
+    'politica', 'política', 'elecciones', 'receta de cocina',
+    'comida favorita', 'restaurante', 'pelicula', 'película',
+    'cancion', 'canción', 'musica nueva', 'trabajo busco',
+    'precio dolar', 'tipo de cambio'
+  ];
+
   const PERIOD_REGEX = /(20\d{2})[-\/ ]?(0[1-9]|1[0-2])/;
 
   const state = {
@@ -93,6 +120,7 @@
     requestToken: 0
   };
 
+  // ─── Utilidades de texto ──────────────────────────────────────────────────
   function stripAccents(value) {
     return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
@@ -113,6 +141,16 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  // Convierte markdown básico a HTML seguro para mensajes del bot
+  // Primero escapa HTML, luego aplica markdown (orden seguro)
+  function renderMarkdown(rawText) {
+    if (!rawText) return '';
+    return escapeHtml(rawText)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br>');
   }
 
   function clone(value) {
@@ -157,10 +195,19 @@
     return `${new Intl.NumberFormat('es-GT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num)}%`;
   }
 
+  // Retorna "marzo de 2026" (minúscula, natural)
   function describePeriod(periodKey) {
     if (!periodKey) return null;
     const [year, month] = String(periodKey).split('-');
-    return `${MONTH_NAMES[month] || month} ${year}`;
+    const monthName = MONTH_NAMES[month] || month;
+    return `${monthName} de ${year}`;
+  }
+
+  // Igual pero con inicial mayúscula: "Marzo de 2026"
+  function describePeriodCap(periodKey) {
+    const desc = describePeriod(periodKey);
+    if (!desc) return null;
+    return desc.charAt(0).toUpperCase() + desc.slice(1);
   }
 
   function humanizeKey(key) {
@@ -211,6 +258,7 @@
     return !/actualizar narrativa|revisar mes activo/i.test(clean);
   }
 
+  // ─── Acceso a datos ───────────────────────────────────────────────────────
   function getProgramName(programId) {
     return Config.getProgramLabel(programId) || programId || '';
   }
@@ -236,13 +284,19 @@
     return getManifest()?.valid_periods_global || [];
   }
 
+  // ─── Detección de intención del usuario ──────────────────────────────────
   function matchAny(text, words) {
     const normalized = normalizeText(text);
     return words.some((word) => normalized.includes(normalizeText(word)));
   }
 
   function isGreeting(text) {
-    return matchAny(text, GREETINGS);
+    // Verifica lista de saludos
+    if (matchAny(text, GREETINGS)) return true;
+    // Texto muy corto sin palabras de programa/datos = probable saludo
+    const normalized = normalizeText(text);
+    const hasDataSignal = /programa|indicador|meta|avance|periodo|mes|material|municipio|resultado|dashboard|aala|recicla|reforesta|educa|conserva|municipal/.test(normalized);
+    return normalized.length <= 12 && !hasDataSignal;
   }
 
   function isThanks(text) {
@@ -265,7 +319,7 @@
     const periods = programId ? Data.listPeriods(programId) : getGlobalValidPeriods();
     if (!periods.length) return null;
 
-    if (/ultimo|último|reciente|actual|vigente|mas reciente|más reciente/.test(normalized)) {
+    if (/ultimo|último|reciente|actual|vigente|mas reciente|más reciente|hoy|ahora/.test(normalized)) {
       return periods[periods.length - 1] || null;
     }
 
@@ -278,18 +332,19 @@
       junio: '06', jun: '06',
       julio: '07', jul: '07',
       agosto: '08', ago: '08',
-      septiembre: '09', setiembre: '09', sep: '09',
+      septiembre: '09', setiembre: '09', sep: '09', set: '09',
       octubre: '10', oct: '10',
       noviembre: '11', nov: '11',
       diciembre: '12', dic: '12'
     };
     const yearMatch = normalized.match(/20\d{2}/);
-    const year = yearMatch ? yearMatch[0] : null;
-    if (!year) return null;
+    const year = yearMatch ? yearMatch[0] : new Date().getFullYear().toString();
     for (const [token, month] of Object.entries(monthMap)) {
       if (normalized.includes(token)) {
         const candidate = `${year}-${month}`;
         if (periods.includes(candidate)) return candidate;
+        // Si menciona el mes pero no está disponible, retorna null para activar aviso
+        return null;
       }
     }
     return null;
@@ -301,6 +356,22 @@
     const candidate = explicitNamedPeriod || requestedRawPeriod || null;
     const validPeriods = programId ? Data.listPeriods(programId) : getGlobalValidPeriods();
     const latestValid = validPeriods[validPeriods.length - 1] || getCutoffPeriod() || null;
+
+    // Detectar si el usuario pidió un mes específico que no está disponible
+    const normalized = normalizeText(text);
+    const mentionedMonth = Object.keys({
+      enero: '01', febrero: '02', marzo: '03', abril: '04', mayo: '05', junio: '06',
+      julio: '07', agosto: '08', septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
+    }).find((m) => normalized.includes(m));
+
+    if (!candidate && mentionedMonth) {
+      // El usuario mencionó un mes pero no existe en los datos
+      const yearMatch = normalized.match(/20\d{2}/);
+      const year = yearMatch ? yearMatch[0] : new Date().getFullYear().toString();
+      const monthMap = { enero: '01', febrero: '02', marzo: '03', abril: '04', mayo: '05', junio: '06', julio: '07', agosto: '08', septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12' };
+      const requestedKey = `${year}-${monthMap[mentionedMonth]}`;
+      return { requested: requestedKey, effective: latestValid, invalid: true, validPeriods, latestValid };
+    }
 
     if (!candidate) {
       return { requested: null, effective: latestValid, invalid: false, validPeriods, latestValid };
@@ -315,23 +386,47 @@
 
   function detectIntent(text) {
     const normalized = normalizeText(text);
-    if (/compar|versus| vs |diferencia|frente a/.test(normalized)) return 'comparacion';
-    if (/falla|fallando|rezago|rezagos|alerta|alertas|debajo|bajo meta|no estan llegando|no están llegando|riesgo/.test(normalized)) return 'alerta';
-    if (/tendencia|evolucion|evolución|comparado con|vs mes anterior|mes anterior|cambio/.test(normalized)) return 'tendencia';
-    if (/territorio|territorios|municipio|municipios|zona|zonas|sector|sectores|tema|temas|material|materiales/.test(normalized)) return 'territorio';
-    if (/indicador|indicadores|meta|metas|cumplimiento|avance|como va|cómo va/.test(normalized)) return 'indicadores';
-    if (/resumen|resume|resumir|panorama|estado general|situacion|situación/.test(normalized)) return 'resumen';
+
+    // Comparación entre programas
+    if (/compar|versus| vs |diferencia|frente a|mejor que|peor que|ranking/.test(normalized)) return 'comparacion';
+
+    // Alertas y problemas
+    if (/falla|fallando|rezago|alerta|alertas|debajo|bajo meta|riesgo|en rojo|problema|problemas|no cumpl|incumpl|atrasad|critico|critica|que va mal|que esta mal/.test(normalized)) return 'alerta';
+
+    // Tendencia / evolución mes a mes
+    if (/tendencia|evolucion|evolución|comparado con|mes anterior|cambio|subio|subió|bajo|bajó|aumento|aumentó|disminuyo|disminuyó|crecio|creció|cayo|cayó|mejoro|mejoró|empeoro|empeoró/.test(normalized)) return 'tendencia';
+
+    // Territorio, material, sector
+    if (/territorio|municipio|zona|sector|material|materiales|comunidad|donde|desglose|desagregado|por municipio|por material|por zona/.test(normalized)) return 'territorio';
+
+    // Indicadores y metas
+    if (/indicador|indicadores|meta|metas|cumplimiento|avance|kpi|objetivo|cuanto llevan|cuánto llevan|cuanto falta|cuánto falta|cuanto lograron|que porcentaje/.test(normalized)) return 'indicadores';
+
+    // Resumen general — amplio, captura "análisis", "cómo va", "informe", etc.
+    if (/resumen|resume|resumir|panorama|analisis|análisis|estado|situacion|situación|como va|cómo va|como van|cómo van|como esta|cómo está|como están|cómo están|que tal|cuéntame|cuentame|dime|informe|reporte|resultado|balance|completo|detalle|que paso|que pasa|explicame|contame/.test(normalized)) return 'resumen';
+
     return 'search';
   }
 
   function looksOffTopic(text) {
     const normalized = normalizeText(text);
     if (!normalized) return false;
+
+    // Verificar pistas off-topic explícitas
     if (OFFTOPIC_HINTS.some((word) => normalized.includes(normalizeText(word)))) return true;
+
+    // Si menciona algo relacionado con AALA/datos, no es off-topic
+    const hasDataSignal = /programa|indicador|meta|avance|periodo|mes|material|municipio|resultado|dashboard|aala|recicla|reforesta|educa|conserva|municipal|atitlan|atitlán|lideresa|docente|estudiante|arbol|árbol|jabón|jabon|aceite|pierde|pird/.test(normalized);
+    if (hasDataSignal) return false;
+
+    // Buscar en datos — si hay hits, no es off-topic
     const searchHits = Data.search(text, { latestOnly: true, limit: 3 });
-    const program = Config.resolveProgramFromText(text);
-    const hasDashboardSignals = /programa|indicador|meta|avance|periodo|período|mes|material|municipio|resultado|dashboard|aala/.test(normalized);
-    return !hasDashboardSignals && !program && searchHits.length === 0;
+    if (searchHits.length > 0) return false;
+
+    // Texto muy largo sin señal de datos puede ser off-topic
+    if (normalized.length > 80 && !hasDataSignal) return true;
+
+    return false;
   }
 
   function getProgramScope(question) {
@@ -340,6 +435,7 @@
     return Data.getPrograms().map((item) => item.id);
   }
 
+  // ─── Acceso a filas de datos ──────────────────────────────────────────────
   function getMonthlyRow(programId, periodKey) {
     const program = getProgram(programId);
     if (!program) return null;
@@ -476,25 +572,39 @@
       });
   }
 
+  // ─── Construcción de respuestas con lenguaje humano ───────────────────────
+
+  // Genera la descripción de un indicador con números en negrita
   function buildIndicatorHumanSummary(row) {
     if (!row) return '';
     if (row.human_summary) return cleanNarrative(row.human_summary);
     if (row.values?.human_summary) return cleanNarrative(row.values.human_summary);
 
-    const indicatorName = row.indicator_name || row.indicator_id || 'El indicador';
+    const name = row.indicator_name || row.indicator_id || 'Este indicador';
     const value = row.value_month ?? row.values?.valor_mes ?? row.values?.valor ?? row.values?.valor_acumulado;
     const target = row.target_month ?? row.values?.meta_mes ?? row.values?.meta_mensual ?? row.target_year ?? row.values?.meta_anual;
     const pct = row.pct_vs_expected ?? row.values?.pct_vs_esperado ?? row.pct_meta_year ?? row.values?.pct_meta_anual;
     const unit = row.unit || row.values?.unidad || '';
     const status = normalizeIndicatorStatus(row.status);
 
-    const parts = [`${indicatorName} reporta ${formatValueWithUnit(value, unit, row.indicator_id) || formatNumber(value) || 'sin dato visible'}`];
-    if (target != null) parts.push(`frente a una meta de ${formatValueWithUnit(target, unit, row.indicator_id)}`);
-    if (pct != null) parts.push(`equivale a ${formatPercent(Math.abs(pct) <= 1.5 ? pct * 100 : pct)} del esperado`);
-    if (status === 'rojo') parts.push('y hoy aparece como alerta');
-    if (status === 'amarillo') parts.push('y conviene darle seguimiento cercano');
-    if (status === 'verde') parts.push('y muestra un comportamiento favorable');
-    return `${parts.join(' ')}.`;
+    const formattedValue = formatValueWithUnit(value, unit, row.indicator_id) || formatNumber(value);
+    const formattedTarget = target != null ? formatValueWithUnit(target, unit, row.indicator_id) : null;
+    const formattedPct = pct != null ? formatPercent(Math.abs(pct) <= 1.5 ? pct * 100 : pct) : null;
+
+    // Si el valor es cero o nulo, dar un mensaje más natural
+    if (value == null || toNumber(value) === 0) {
+      return `**${sentenceCase(name)}** aún no reporta actividad en este período.`;
+    }
+
+    const parts = [`**${sentenceCase(name)}**: **${formattedValue}**`];
+    if (formattedTarget) parts.push(`(meta: ${formattedTarget}${formattedPct ? `, **${formattedPct}** de avance` : ''})`);
+
+    let statusNote = '';
+    if (status === 'rojo') statusNote = ' — requiere atención.';
+    else if (status === 'amarillo') statusNote = ' — merece seguimiento.';
+    else if (status === 'verde') statusNote = ' — va bien.';
+
+    return `${parts.join(' ')}${statusNote}`;
   }
 
   function pickContextNotes(programId) {
@@ -505,17 +615,20 @@
     return notes.map((note) => cleanNarrative(note)).filter(Boolean);
   }
 
+  // Mensaje cuando el período pedido no está disponible — lenguaje natural
   function buildInvalidPeriodMessage(periodInfo, programId) {
     if (!periodInfo.invalid) return null;
-    const label = periodInfo.requested ? describePeriod(periodInfo.requested) || periodInfo.requested : 'ese período';
-    const latest = periodInfo.latestValid ? describePeriod(periodInfo.latestValid) : null;
-    const scope = programId ? `para ${getProgramName(programId)}` : 'para el chatbot';
-    const validRange = periodInfo.validPeriods.length
-      ? `Ahora mismo solo tengo habilitados ${humanList(periodInfo.validPeriods.map((item) => describePeriod(item)).filter(Boolean))}.`
-      : '';
-    return `${label} no está habilitado ${scope}. ${latest ? `Voy a responder con el corte válido más reciente, ${latest}.` : ''} ${validRange}`.trim();
+    const requestedLabel = periodInfo.requested ? describePeriod(periodInfo.requested) || periodInfo.requested : 'ese período';
+    const latestLabel = periodInfo.latestValid ? describePeriod(periodInfo.latestValid) : null;
+
+    let msg = `Todavía no tenemos datos de **${requestedLabel}**.`;
+    if (latestLabel) {
+      msg += ` Lo más reciente que tengo es **${latestLabel}**, así que te respondo con eso.`;
+    }
+    return msg;
   }
 
+  // Resumen completo de un programa — narrativa con números en negrita
   function buildProgramSummary(programId, periodKey) {
     const program = getProgram(programId);
     if (!program) return null;
@@ -528,50 +641,67 @@
     const contextNotes = pickContextNotes(programId);
     const monthly = getMonthlyRow(programId, effectivePeriod);
     const monthlyValues = monthly ? (monthly.values || {}) : {};
+    const periodLabel = describePeriod(effectivePeriod);
 
     const blocks = [];
+
+    // Intro: narrativa ejecutiva o métricas clave
     const executive = cleanNarrative(effectivePeriod === manifestProgram.latest_valid_period ? narratives.executive_summary : '');
     if (executive) {
       blocks.push(executive);
     } else if (metrics.length) {
-      blocks.push(`${getProgramName(programId)} en ${describePeriod(effectivePeriod)} muestra como lectura rápida ${metrics.map((item) => `${item.label}: ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`).join(', ')}.`);
-    }
-
-    if (metrics.length) {
-      blocks.push(`Lo más visible en este corte es ${humanList(metrics.slice(0, 3).map((item) => `${item.label} con ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`))}.`);
-    }
-
-    if (positives.length) {
-      blocks.push(`Lo que va mejor es lo siguiente: ${positives.join(' ')}`);
-    }
-
-    if (alerts.length) {
-      blocks.push(`Lo que más atención requiere es esto: ${alerts.join(' ')}`);
+      const metricTexts = metrics.slice(0, 3).map((item) =>
+        `**${item.label}**: **${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}**`
+      );
+      blocks.push(`En **${periodLabel}**, **${getProgramName(programId)}** reporta: ${metricTexts.join(' · ')}.`);
     } else {
-      blocks.push(`No veo alertas fuertes reportadas para ${getProgramName(programId)} en ${describePeriod(effectivePeriod)}.`);
+      blocks.push(`En **${periodLabel}**, **${getProgramName(programId)}** tiene datos cargados en el dashboard.`);
     }
 
-    if (effectivePeriod === manifestProgram.latest_valid_period) {
-      const goodText = Array.isArray(narratives.what_is_going_well) ? narratives.what_is_going_well.map(cleanNarrative).filter(Boolean) : [];
-      const attentionText = Array.isArray(narratives.what_needs_attention) ? narratives.what_needs_attention.map(cleanNarrative).filter(Boolean) : [];
-      if (!positives.length && goodText.length) blocks.push(`Entre los avances reportados destacan ${humanList(goodText.slice(0, 2))}.`);
-      if (!alerts.length && attentionText.length) blocks.push(`Aun así conviene dar seguimiento a ${humanList(attentionText.slice(0, 2))}.`);
+    // Lo que va bien
+    if (positives.length) {
+      blocks.push(`✅ **Lo que va bien:**\n${positives.join('\n')}`);
+    } else if (effectivePeriod === manifestProgram.latest_valid_period) {
+      const goodText = Array.isArray(narratives.what_is_going_well)
+        ? narratives.what_is_going_well.map(cleanNarrative).filter(Boolean)
+        : [];
+      if (goodText.length) {
+        blocks.push(`✅ **Lo que va bien:** ${humanList(goodText.slice(0, 2))}.`);
+      }
     }
 
-    if (monthlyValues.contexto_texto && !contextNotes.length) {
+    // Alertas y rezagos
+    if (alerts.length) {
+      blocks.push(`⚠️ **Lo que necesita atención:**\n${alerts.join('\n')}`);
+    } else if (effectivePeriod === manifestProgram.latest_valid_period) {
+      const attentionText = Array.isArray(narratives.what_needs_attention)
+        ? narratives.what_needs_attention.map(cleanNarrative).filter(Boolean)
+        : [];
+      if (attentionText.length) {
+        blocks.push(`⚠️ **Pendiente de seguimiento:** ${humanList(attentionText.slice(0, 2))}.`);
+      } else {
+        blocks.push(`Sin alertas fuertes registradas para este período.`);
+      }
+    } else {
+      blocks.push(`Sin alertas fuertes registradas para este período.`);
+    }
+
+    // Contexto adicional
+    if (contextNotes.length) {
+      blocks.push(`📌 ${contextNotes.join(' ')}`);
+    } else if (monthlyValues.contexto_texto) {
       const cleanContext = cleanNarrative(monthlyValues.contexto_texto);
-      if (cleanContext) blocks.push(`Contexto útil: ${cleanContext}`);
-    } else if (contextNotes.length) {
-      blocks.push(`Contexto útil: ${contextNotes.join(' ')}`);
+      if (cleanContext) blocks.push(`📌 ${cleanContext}`);
     }
 
     return {
-      title: `${getProgramName(programId)} · ${describePeriod(effectivePeriod) || 'Sin período'}`,
+      title: `${getProgramName(programId)} · ${describePeriodCap(effectivePeriod) || 'Último período'}`,
       text: blocks.filter(Boolean).join('\n\n'),
       meta: { programId, periodKey: effectivePeriod }
     };
   }
 
+  // Alertas entre uno o varios programas
   function buildAlertsAnswer(programIds, periodKey) {
     const parts = [];
     const metaPrograms = [];
@@ -583,26 +713,27 @@
       const alerts = getAlertRows(programId, effectivePeriod).slice(0, 3);
       if (!alerts.length) return;
       metaPrograms.push(programId);
-      const intro = `${getProgramName(programId)} en ${describePeriod(effectivePeriod)} tiene ${alerts.length} frente(s) que merecen seguimiento.`;
-      const detail = alerts.map((row) => buildIndicatorHumanSummary(row)).filter(Boolean).join(' ');
-      parts.push(`${intro} ${detail}`.trim());
+      const intro = `**${getProgramName(programId)}** (${describePeriod(effectivePeriod)}):`;
+      const detail = alerts.map((row) => buildIndicatorHumanSummary(row)).filter(Boolean).join('\n');
+      parts.push(`${intro}\n${detail}`);
     });
 
     if (!parts.length) {
       return {
         title: 'Alertas y rezagos',
-        text: 'Con el corte válido que hoy tiene cargado el chatbot, no veo alertas fuertes suficientes para afirmar que un programa esté en rojo general. Aun así, vale la pena revisar cada indicador puntual si quieres bajar a más detalle.',
+        text: 'No encontré alertas fuertes en los programas con datos disponibles. Todo parece estar dentro de rango por ahora — igual vale la pena revisar cada programa si quieres ver el detalle.',
         meta: { programs: programIds, periodKey: periodKey || null }
       };
     }
 
     return {
       title: 'Alertas y rezagos',
-      text: parts.join('\n\n'),
+      text: `Estos son los indicadores que merecen atención:\n\n${parts.join('\n\n')}`,
       meta: { programs: metaPrograms, periodKey: periodKey || null }
     };
   }
 
+  // Respuesta de indicadores para un programa
   function buildIndicatorsAnswer(programId, periodKey, question) {
     const effectivePeriod = periodKey || getProgram(programId)?.latest_period || null;
     const indicatorRows = getIndicatorRows(programId, effectivePeriod);
@@ -614,25 +745,30 @@
       const value = specific.values?.valor_mes ?? specific.values?.valor ?? specific.values?.valor_acumulado;
       const target = specific.values?.meta_mes ?? specific.values?.meta_mensual ?? specific.values?.meta_anual;
       const pct = specific.values?.pct_vs_esperado ?? specific.values?.pct_meta_anual;
+      const unit = specific.unit || specific.values?.unidad || '';
+
       const detailBits = [];
-      if (value != null) detailBits.push(`valor reportado ${formatValueWithUnit(value, specific.unit, specific.indicator_id)}`);
-      if (target != null) detailBits.push(`meta ${formatValueWithUnit(target, specific.unit, specific.indicator_id)}`);
-      if (pct != null) detailBits.push(`avance ${formatPercent(pct)}`);
+      if (value != null) detailBits.push(`Valor reportado: **${formatValueWithUnit(value, unit, specific.indicator_id) || formatNumber(value)}**`);
+      if (target != null) detailBits.push(`Meta: **${formatValueWithUnit(target, unit, specific.indicator_id)}**`);
+      if (pct != null) detailBits.push(`Avance: **${formatPercent(pct)}**`);
+
       return {
         title: `${specific.indicator_name || specific.indicator_id} · ${getProgramName(programId)}`,
-        text: `${humanSummary}${detailBits.length ? `\n\nEn números, el corte de ${describePeriod(effectivePeriod)} muestra ${detailBits.join(', ')}.` : ''}`,
+        text: `${humanSummary}${detailBits.length ? `\n\n${detailBits.join('  ·  ')}` : ''}`,
         meta: { programId, periodKey: effectivePeriod }
       };
     }
 
+    // Sin indicador específico: muestra los principales
     const top = indicatorRows.slice(0, 6).map((row) => buildIndicatorHumanSummary(row)).filter(Boolean);
     return {
       title: `Indicadores de ${getProgramName(programId)}`,
-      text: `Tomando ${describePeriod(effectivePeriod)} como referencia, esta es la lectura más útil que te puedo dar:\n\n${top.join('\n\n')}`,
+      text: `**${getProgramName(programId)}** en **${describePeriod(effectivePeriod)}**:\n\n${top.join('\n')}`,
       meta: { programId, periodKey: effectivePeriod }
     };
   }
 
+  // Comparación entre todos los programas
   function buildComparisonAnswer(periodKey) {
     const blocks = [];
     const programs = Data.getPrograms().map((item) => item.id);
@@ -646,11 +782,17 @@
       const alerts = getAlertRows(programId, effectivePeriod);
       const positives = getPositiveRows(programId, effectivePeriod);
       snapshots.push({ programId, effectivePeriod, metrics, alertsCount: alerts.length, positivesCount: positives.length });
+
       const metricText = metrics.length
-        ? metrics.map((item) => `${item.label}: ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`).join(' · ')
-        : 'sin métricas resumidas visibles';
-      const tone = alerts.length ? `${alerts.length} alerta(s) relevantes` : 'sin alertas fuertes visibles';
-      blocks.push(`${getProgramName(programId)} (${describePeriod(effectivePeriod)}): ${metricText}. En lectura rápida, queda ${tone}.`);
+        ? metrics.map((item) => `${item.label}: **${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}**`).join(' · ')
+        : 'sin métricas resumidas disponibles';
+
+      const toneIcon = alerts.length ? '⚠️' : '✅';
+      const toneText = alerts.length
+        ? `${alerts.length} indicador${alerts.length > 1 ? 'es' : ''} con seguimiento pendiente`
+        : 'sin alertas en este período';
+
+      blocks.push(`${toneIcon} **${getProgramName(programId)}** (${describePeriod(effectivePeriod)})\n${metricText}\n${toneText}`);
     });
 
     if (!snapshots.length) return null;
@@ -660,12 +802,16 @@
     const mostStable = [...snapshots].sort((a, b) => (a.alertsCount - b.alertsCount) || (b.positivesCount - a.positivesCount))[0];
 
     const closing = [];
-    if (mostAttention) closing.push(`El programa que hoy merece más seguimiento es ${getProgramName(mostAttention.programId)}.`);
-    if (mostStable) closing.push(`El que luce más estable en su corte válido es ${getProgramName(mostStable.programId)}.`);
+    if (mostAttention && mostAttention.alertsCount > 0) {
+      closing.push(`El programa que hoy requiere más seguimiento es **${getProgramName(mostAttention.programId)}**.`);
+    }
+    if (mostStable) {
+      closing.push(`El que luce más estable es **${getProgramName(mostStable.programId)}**.`);
+    }
 
     return {
       title: 'Comparación entre programas',
-      text: `${blocks.join('\n\n')}\n\n${closing.join(' ')}`,
+      text: `${blocks.join('\n\n')}${closing.length ? `\n\n${closing.join(' ')}` : ''}`,
       meta: { programs, periodKey: periodKey || null }
     };
   }
@@ -699,10 +845,10 @@
       .concat(program.monthly.filter((row) => row.period_key === effectivePeriod && row.primary_dimension_value));
     const grouped = aggregateDimensionRows(rows);
     if (!grouped.length) return null;
-    const text = grouped.map((item) => `${sentenceCase(item.label)}: ${formatNumber(item.total)} en ${humanizeKey(item.key)}`).join(' · ');
+    const text = grouped.map((item) => `**${sentenceCase(item.label)}**: **${formatNumber(item.total)}** en ${humanizeKey(item.key)}`).join('\n');
     return {
-      title: `Detalle territorial o temático de ${getProgramName(programId)}`,
-      text: `Para ${describePeriod(effectivePeriod)}, lo que más resalta es ${text}.`,
+      title: `Detalle de ${getProgramName(programId)}`,
+      text: `En **${describePeriod(effectivePeriod)}**, lo más destacado por zona o material:\n\n${text}`,
       meta: { programId, periodKey: effectivePeriod }
     };
   }
@@ -728,13 +874,16 @@
 
     const sentences = deltas.map((item) => {
       const direction = item.delta > 0 ? 'subió' : item.delta < 0 ? 'bajó' : 'se mantuvo';
-      const magnitude = item.delta === 0 ? formatValueWithUnit(item.currentValue, '', item.key) || formatNumber(item.currentValue) : formatValueWithUnit(Math.abs(item.delta), '', item.key) || formatNumber(Math.abs(item.delta));
-      return `${humanizeKey(item.key)} ${direction} ${item.delta === 0 ? `en ${magnitude}` : magnitude}`;
+      const arrow = item.delta > 0 ? '📈' : item.delta < 0 ? '📉' : '➡️';
+      const magnitude = item.delta === 0
+        ? formatValueWithUnit(item.currentValue, '', item.key) || formatNumber(item.currentValue)
+        : formatValueWithUnit(Math.abs(item.delta), '', item.key) || formatNumber(Math.abs(item.delta));
+      return `${arrow} **${humanizeKey(item.key)}** ${direction} **${item.delta === 0 ? magnitude : magnitude}** respecto al mes anterior`;
     });
 
     return {
       title: `Tendencia de ${getProgramName(programId)}`,
-      text: `Si comparo ${describePeriod(previousPeriod)} contra ${describePeriod(currentPeriod)}, veo que ${sentences.join(' · ')}.`,
+      text: `Comparando **${describePeriod(previousPeriod)}** con **${describePeriod(currentPeriod)}**:\n\n${sentences.join('\n')}`,
       meta: { programId, periodKey: currentPeriod, comparisonPeriodKey: previousPeriod }
     };
   }
@@ -757,30 +906,47 @@
   }
 
   function buildOffTopicAnswer() {
-    const cutoff = getCutoffPeriod();
     return {
       title: '',
-      text: `${Config.FALLBACKS.offTopic} ${cutoff ? `Ahorita además estoy limitado al corte válido ${describePeriod(cutoff)}.` : ''}`.trim(),
+      text: Config.FALLBACKS.offTopic,
       meta: {}
     };
   }
 
+  // Respuesta principal — lógica de enrutamiento de preguntas
   function buildLocalAnswer(question) {
     const text = String(question || '').trim();
     if (!text) {
       return { title: '', text: Config.FALLBACKS.ambiguous, meta: {} };
     }
+
+    // Saludos
     if (isGreeting(text)) {
       const cutoff = getCutoffPeriod();
+      const periodText = cutoff ? ` Los datos más recientes son de **${describePeriod(cutoff)}**.` : '';
       return {
         title: '',
-        text: `${Config.APP.greeting} ${cutoff ? `Estoy respondiendo con el corte válido de ${describePeriod(cutoff)}.` : ''} Puedes pedirme resúmenes, alertas, comparaciones, tendencias o detalle por programa.`,
+        text: `¡Hola! Soy el asistente de datos de AALA.${periodText} ¿Qué quieres saber? Puedes preguntarme por cualquiera de los 5 programas, alertas, metas o comparaciones.`,
+        meta: {},
+        suggestions: [
+          '¿Cómo van todos los programas este mes?',
+          '¿Qué indicadores están en alerta?',
+          '¿Cómo va Atitlán Recicla?',
+          'Compara todos los programas'
+        ]
+      };
+    }
+
+    // Agradecimientos
+    if (isThanks(text)) {
+      return {
+        title: '',
+        text: 'Con gusto. Si quieres puedo contarte sobre algún programa específico, mostrarte alertas o comparar resultados. ¿Qué más necesitas?',
         meta: {}
       };
     }
-    if (isThanks(text)) {
-      return { title: '', text: 'Con gusto. Si quieres, ahora puedo bajarlo a un programa, un indicador o un período específico.', meta: {} };
-    }
+
+    // Off-topic
     if (looksOffTopic(text)) {
       return buildOffTopicAnswer();
     }
@@ -792,6 +958,7 @@
     const invalidPeriodMessage = buildInvalidPeriodMessage(periodInfo, programId);
 
     let response = null;
+
     if (intent === 'comparacion') {
       response = buildComparisonAnswer(periodInfo.effective);
     } else if (intent === 'alerta') {
@@ -818,8 +985,9 @@
       response = { title: '', text: Config.FALLBACKS.noData, meta: { programId: programId || null, periodKey: periodInfo.effective || null } };
     }
 
+    // Aviso de período inválido al FINAL (no al inicio), en tono natural
     if (invalidPeriodMessage) {
-      response.text = `${invalidPeriodMessage}\n\n${response.text}`;
+      response.text = `${response.text}\n\n📅 ${invalidPeriodMessage}`;
     }
 
     return response;
@@ -863,12 +1031,13 @@
           }
         }
       } catch (error) {
-        console.warn('AALA Chatbot: fallback local activado', error);
+        console.warn('AALA Chatbot: backend no disponible, usando lógica local.', error);
       }
     }
     return buildLocalAnswer(question);
   }
 
+  // ─── Estilos ──────────────────────────────────────────────────────────────
   function injectStyles() {
     if (document.getElementById('aala-chatbot-styles')) return;
     const style = document.createElement('style');
@@ -1047,9 +1216,8 @@
         max-width:88%;
         padding:14px 15px;
         border-radius:20px;
-        line-height:1.62;
-        font-size:.95rem;
-        white-space:pre-wrap;
+        line-height:1.65;
+        font-size:.93rem;
         word-break:break-word;
         box-shadow:0 8px 18px rgba(18,42,66,.05)
       }
@@ -1065,14 +1233,22 @@
         background:#dff5f1;
         color:#18424f;
         border:1px solid #c5ebe4;
-        border-bottom-right-radius:8px
+        border-bottom-right-radius:8px;
+        white-space:pre-wrap
       }
 
       .aala-chatbot-msg-title{
         font-weight:700;
-        margin-bottom:6px;
+        margin-bottom:8px;
         color:#1b7f76;
-        font-size:.95rem
+        font-size:.92rem;
+        padding-bottom:6px;
+        border-bottom:1px solid #edf4f2
+      }
+
+      .aala-chatbot-msg-body strong{
+        font-weight:700;
+        color:#0f4a5c
       }
 
       .aala-chatbot-meta{
@@ -1092,6 +1268,31 @@
         color:#1b7f76;
         font-size:.72rem;
         font-weight:700
+      }
+
+      .aala-chatbot-inline-suggestions{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:12px
+      }
+
+      .aala-chatbot-inline-btn{
+        border:1px solid #c8e6e2;
+        background:#f0faf8;
+        color:#1b7f76;
+        border-radius:999px;
+        padding:7px 13px;
+        font-size:.8rem;
+        cursor:pointer;
+        line-height:1.3;
+        font-family:inherit;
+        transition:background .15s ease, border-color .15s ease
+      }
+
+      .aala-chatbot-inline-btn:hover{
+        background:#ddf2ee;
+        border-color:#a8d8d2
       }
 
       .aala-chatbot-suggestions{
@@ -1218,6 +1419,7 @@
     document.head.appendChild(style);
   }
 
+  // ─── DOM ──────────────────────────────────────────────────────────────────
   function ensureRoot() {
     let root = document.getElementById(Config.APP.id);
     if (root) return root;
@@ -1248,7 +1450,7 @@
 
         <div class="aala-chatbot-status"></div>
         <div class="aala-chatbot-body"></div>
-        <div class="aala-chatbot-suggestions"></div>
+        <div class="aala-chatbot-suggestions is-hidden"></div>
 
         <form class="aala-chatbot-form">
           <textarea
@@ -1304,10 +1506,15 @@
     }
 
     const cutoff = getCutoffPeriod();
-    const latestLabel = cutoff ? `Corte válido del bot: ${describePeriod(cutoff)}.` : 'Datos listos.';
-    state.elements.status.textContent = latestLabel;
+    // Lenguaje natural, sin jerga técnica
+    const statusLabel = cutoff ? `Datos actualizados a ${describePeriodCap(cutoff)}.` : 'Datos listos.';
+    state.elements.status.textContent = statusLabel;
   }
 
+  // Renderiza un mensaje en el chat
+  // - Mensajes del bot: soportan **negrita** y saltos de línea via renderMarkdown()
+  // - Mensajes del usuario: texto plano con escapeHtml()
+  // - Suggestions opcionales: botones inline clicables
   function renderMessage(message) {
     const row = document.createElement('div');
     row.className = `aala-chatbot-row ${message.role}`;
@@ -1315,22 +1522,38 @@
     const item = document.createElement('div');
     item.className = 'aala-chatbot-msg';
 
-    const title = message.title ? `<div class="aala-chatbot-msg-title">${escapeHtml(message.title)}</div>` : '';
-    const text = `<div>${escapeHtml(message.text)}</div>`;
+    const titleHtml = message.title
+      ? `<div class="aala-chatbot-msg-title">${escapeHtml(message.title)}</div>`
+      : '';
 
+    let bodyHtml;
+    if (message.role === 'bot') {
+      bodyHtml = `<div class="aala-chatbot-msg-body">${renderMarkdown(message.text)}</div>`;
+    } else {
+      bodyHtml = `<div class="aala-chatbot-msg-body">${escapeHtml(message.text).replace(/\n/g, '<br>')}</div>`;
+    }
+
+    // Chips de metadata (programa + período)
     const chips = [];
     if (message.meta && message.meta.programId) chips.push(getProgramName(message.meta.programId));
     if (message.meta && Array.isArray(message.meta.programs) && !message.meta.programId) {
       message.meta.programs.slice(0, 5).forEach((programId) => chips.push(getProgramName(programId)));
     }
-    if (message.meta && message.meta.periodKey) chips.push(describePeriod(message.meta.periodKey));
+    if (message.meta && message.meta.periodKey) chips.push(describePeriodCap(message.meta.periodKey));
     if (message.meta && message.meta.comparisonPeriodKey) chips.push(`vs ${describePeriod(message.meta.comparisonPeriodKey)}`);
 
-    const meta = chips.length
+    const metaHtml = chips.length
       ? `<div class="aala-chatbot-meta">${chips.map((chip) => `<span class="aala-chatbot-chip">${escapeHtml(chip)}</span>`).join('')}</div>`
       : '';
 
-    item.innerHTML = `${title}${text}${meta}`;
+    // Sugerencias inline (botones clicables dentro del globo)
+    const suggestionsBtns = Array.isArray(message.suggestions) && message.suggestions.length
+      ? `<div class="aala-chatbot-inline-suggestions">${message.suggestions.map((s) =>
+          `<button class="aala-chatbot-inline-btn" data-question="${escapeHtml(s)}">${escapeHtml(s)}</button>`
+        ).join('')}</div>`
+      : '';
+
+    item.innerHTML = `${titleHtml}${bodyHtml}${metaHtml}${suggestionsBtns}`;
 
     if (message.role === 'bot') {
       const avatar = document.createElement('div');
@@ -1346,8 +1569,14 @@
     scrollToBottom();
   }
 
-  function pushMessage(role, text, title, meta) {
-    const message = { role, text, title: title || '', meta: meta || {} };
+  function pushMessage(role, text, title, meta, suggestions) {
+    const message = {
+      role,
+      text,
+      title: title || '',
+      meta: meta || {},
+      suggestions: suggestions || []
+    };
     state.messages.push(message);
     if (state.messages.length > (Config.APP.historyLimit || 30)) state.messages.shift();
     renderMessage(message);
@@ -1362,49 +1591,35 @@
     state.elements.suggestions.classList.toggle('is-hidden', !!hidden);
   }
 
-  function renderSuggestions(programId) {
-    if (!Config.UX.showSuggestedQuestions) return;
-    if (state.hasUserInteracted) {
-      state.elements.suggestions.innerHTML = '';
-      setSuggestionsHidden(true);
-      return;
-    }
-    const suggestions = Config.getSuggestedQuestions(programId);
-    state.elements.suggestions.innerHTML = '';
-    suggestions.forEach((item) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'aala-chatbot-suggestion';
-      button.textContent = item.text;
-      button.addEventListener('click', () => {
-        if (item.programId) state.scopeProgramId = item.programId;
-        handleUserMessage(item.text);
-      });
-      state.elements.suggestions.appendChild(button);
-    });
-    setSuggestionsHidden(false);
-  }
-
-  function updateScopeFromQuestion(question) {
-    const programId = Config.resolveProgramFromText(question);
-    if (programId) state.scopeProgramId = programId;
-  }
-
   function autoGrowTextarea() {
     const el = state.elements.input;
     el.style.height = 'auto';
     el.style.height = `${Math.min(el.scrollHeight, 150)}px`;
   }
 
+  // Bienvenida — UN solo mensaje cálido con sugerencias inline
   function renderWelcomeMessages() {
     const cutoff = getCutoffPeriod();
-    pushMessage('bot', Config.APP.greeting, '', {});
-    if (state.dataLoaded) {
-      const cutoffText = cutoff
-        ? `Responderé usando únicamente el corte válido ${describePeriod(cutoff)} y los períodos habilitados para cada programa.`
-        : 'Responderé usando solo los CSV publicados y cargados en el dashboard.';
-      pushMessage('bot', `${cutoffText} Puedes preguntarme por resúmenes, alertas, comparaciones, indicadores o tendencias.`, 'Datos listos', {});
-    }
+    const periodLine = cutoff
+      ? `Los datos más recientes que manejo son de **${describePeriod(cutoff)}**.`
+      : '';
+
+    const welcomeText = [
+      '¡Hola! Soy el asistente de datos de AALA. 👋',
+      '',
+      'Puedo contarte cómo van nuestros **5 programas** en el lago Atitlán: resultados del mes, metas, alertas y tendencias. Solo trabajo con la información publicada en el dashboard — no invento cifras.',
+      periodLine,
+      '¿Por dónde empezamos?'
+    ].filter((line) => line !== '').join('\n');
+
+    const welcomeSuggestions = [
+      'Resumen de todos los programas',
+      '¿Qué indicadores están en alerta?',
+      '¿Cómo va Atitlán Recicla?',
+      '¿Cómo va Reforestando Atitlán?'
+    ];
+
+    pushMessage('bot', welcomeText, '', {}, welcomeSuggestions);
   }
 
   function resetConversation(options) {
@@ -1419,9 +1634,14 @@
     state.elements.input.style.height = 'auto';
     clearBody();
     renderWelcomeMessages();
-    renderSuggestions(null);
+    setSuggestionsHidden(true); // Los usamos inline ahora
     setBusy(false);
     if (!opts.keepClosed) setOpen(true);
+  }
+
+  function updateScopeFromQuestion(question) {
+    const programId = Config.resolveProgramFromText(question);
+    if (programId) state.scopeProgramId = programId;
   }
 
   async function handleUserMessage(question) {
@@ -1430,8 +1650,6 @@
 
     const requestToken = ++state.requestToken;
     state.hasUserInteracted = true;
-    setSuggestionsHidden(true);
-    state.elements.suggestions.innerHTML = '';
     updateScopeFromQuestion(text);
     pushMessage('user', text, '', {});
     if (Config.UX.clearInputOnSend) state.elements.input.value = '';
@@ -1441,7 +1659,13 @@
     try {
       const answer = await buildAnswer(text);
       if (requestToken !== state.requestToken) return;
-      pushMessage('bot', answer.text || Config.FALLBACKS.noData, answer.title || '', answer.meta || {});
+      pushMessage(
+        'bot',
+        answer.text || Config.FALLBACKS.noData,
+        answer.title || '',
+        answer.meta || {},
+        answer.suggestions || []
+      );
     } catch (error) {
       if (requestToken !== state.requestToken) return;
       console.error(error);
@@ -1471,6 +1695,18 @@
       if (event.key === 'Enter' && !event.shiftKey) {
         event.preventDefault();
         handleUserMessage(state.elements.input.value);
+      }
+    });
+
+    // Delegación de eventos para botones inline de sugerencias
+    state.elements.body.addEventListener('click', (event) => {
+      const btn = event.target.closest('.aala-chatbot-inline-btn');
+      if (!btn) return;
+      const question = btn.dataset.question;
+      if (question) {
+        // Bloquear el botón para evitar doble clic
+        btn.disabled = true;
+        handleUserMessage(question);
       }
     });
   }
