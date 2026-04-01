@@ -861,40 +861,72 @@
 
     .metric-list {
       display: grid;
-      gap: 10px;
+      gap: 0;
     }
     .metric-header,
     .metric-row {
       display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(220px, .95fr) minmax(320px, 1.25fr);
-      gap: 18px;
+      grid-template-columns: minmax(130px, 1fr) minmax(0, 1.4fr) minmax(0, 1.1fr);
+      gap: 14px;
       align-items: start;
     }
     .metric-header {
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--line);
+      margin-bottom: 2px;
     }
     .metric-header span {
-      font-size: .64rem;
+      font-size: .62rem;
       letter-spacing: .09em;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 800;
+      line-height: 1.3;
+    }
+    .metric-row {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .metric-row:last-child {
+      border-bottom: none;
     }
     .metric-row .mname {
-      font-size: .88rem;
+      font-size: .84rem;
       font-weight: 600;
       color: var(--text);
-    }
-    .metric-row .mnum {
-      font: .8rem/1.45 var(--font-mono);
-      color: var(--text-2);
-      align-self: start;
+      line-height: 1.55;
+      text-align: justify;
+      text-justify: inter-word;
+      padding-right: 4px;
     }
     .metric-primary {
-      font: .8rem/1.45 var(--font-mono);
+      font: .78rem/1.5 var(--font-mono);
       color: var(--text-2);
+      margin-bottom: 7px;
     }
+    .mcol-acum,
+    .mcol-pct {
+      display: grid;
+      align-content: start;
+      gap: 0;
+    }
+    .mbar {
+      height: 7px;
+      border-radius: 999px;
+      background: var(--line-soft);
+      overflow: hidden;
+      position: relative;
+    }
+    .mbar > span {
+      display: block;
+      height: 100%;
+      border-radius: inherit;
+      transition: width .9s cubic-bezier(.25,.46,.45,.94);
+      background: linear-gradient(90deg, var(--lake-light), var(--lake));
+    }
+    .mbar > span.over { background: linear-gradient(90deg, #3e9d73, var(--forest)); }
+    .mbar > span.warn { background: linear-gradient(90deg, #e8b94f, #c98f2f); }
+    .mbar > span.bad  { background: linear-gradient(90deg, #e07878, #c95555); }
     .metric-subgroup {
       margin-top: 10px;
       display: grid;
@@ -920,7 +952,7 @@
       border-radius: 999px;
       background: var(--line-soft);
       overflow: hidden;
-      width: min(180px, 72%);
+      width: 100%;
     }
     .metric-subfill {
       display: block;
@@ -932,61 +964,9 @@
       width: 0 !important;
       background: transparent;
     }
-    .metric-row.metric-row-stack {
-      grid-template-columns: minmax(0, 2.2fr) minmax(220px, .95fr) minmax(320px, 1.25fr);
-      column-gap: 18px;
-      align-items: start;
-    }
-    .metric-stack {
-      display: grid;
-      gap: 10px;
-      align-content: start;
-      width: 100%;
-      min-width: 0;
-    }
-    .metric-mainvalue {
-      font: .8rem/1.45 var(--font-mono);
-      color: var(--text-2);
-      font-weight: 500;
-    }
-    .metric-mainpct {
-      display: none;
-    }
-    .metric-mainbar {
-      height: 8px;
-      border-radius: 999px;
-      background: var(--line-soft);
-      overflow: hidden;
-      width: 100%;
-      max-width: none;
-    }
-    .metric-mainbar > span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-    }
-    .metric-row.metric-row-stack .metric-subgroup {
-      margin-top: 0;
-      gap: 10px;
-      max-width: none;
-    }
-    .metric-row.metric-row-stack .metric-subindicator {
-      gap: 5px;
-      padding-left: 10px;
-      border-left: 2px solid var(--line);
-    }
-    .metric-row.metric-row-stack .metric-subcopy {
-      font-size: .52rem;
-      line-height: 1.35;
-      color: var(--muted);
-    }
-    .metric-row.metric-row-stack .metric-subbar {
-      width: 100%;
-      max-width: none;
-      height: 5px;
-    }
+    /* legacy — kept for safety, not used in new layout */
     .bar {
-      height: 8px;
+      height: 7px;
       border-radius: 999px;
       background: var(--line-soft);
       overflow: hidden;
@@ -996,11 +976,11 @@
       height: 100%;
       border-radius: inherit;
       background: linear-gradient(90deg, var(--lake-light), var(--lake));
-      transition: width .8s cubic-bezier(.25,.46,.45,.94);
+      transition: width .9s cubic-bezier(.25,.46,.45,.94);
     }
     .bar > span.over { background: linear-gradient(90deg, #3e9d73, var(--forest)); }
-    .bar > span.warn { background: linear-gradient(90deg, #e0b04d, #c98f2f); }
-    .bar > span.bad  { background: linear-gradient(90deg, #db7b7b, #c95555); }
+    .bar > span.warn { background: linear-gradient(90deg, #e8b94f, #c98f2f); }
+    .bar > span.bad  { background: linear-gradient(90deg, #e07878, #c95555); }
 
     .program-footer {
       margin-top: 4px;
@@ -1310,6 +1290,11 @@
       .metric-header,
       .metric-row {
         grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .metric-header span:not(:first-child),
+      .mcol-pct {
+        display: none;
       }
       .section-card,
       .chart-card,
@@ -2408,7 +2393,7 @@ function metricRow(m){
   const pct = Number(m.pct);
   const barPct = Number.isFinite(Number(m.barPct)) ? Number(m.barPct) : pct;
   const hasPct = Number.isFinite(barPct);
-  const w = hasPct ? Math.min(Math.max(barPct, 0), 140) : 0;
+  const w = hasPct ? Math.min(Math.max(barPct, 0), 100) : 0;
   const cls = barClass(hasPct ? barPct : 0);
   const acumLabel = m.acumDisplay || (m.isMensual
     ? `${fmt(m.acum, m.unit==='GTQ/día'?1:0)} ${m.unit}`
@@ -2426,26 +2411,18 @@ function metricRow(m){
       }).join('')}</div>`
     : '';
 
-  if (Array.isArray(m.subIndicators) && m.subIndicators.length){
-    return `
-      <div class="metric-row metric-row-stack">
-        <div class="mname">${m.label}</div>
-        <div class="mnum"><div class="metric-primary">${acumLabel}</div></div>
-        <div class="metric-stack">
-          ${pctLabel ? `<div class="metric-primary">${pctLabel}</div>` : ''}
-          <div class="metric-mainbar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
-          ${subIndicators}
-        </div>
-      </div>
-    `;
-  }
-
   return `
     <div class="metric-row">
       <div class="mname">${m.label}</div>
-      <div class="mnum"><div class="metric-primary">${acumLabel}</div></div>
-      <div class="mnum"><div class="metric-primary">${pctLabel}</div></div>
-      <div class="bar">${hasPct ? `<span class="${cls}" style="width:${w}%"></span>` : ''}</div>
+      <div class="mcol-acum">
+        <div class="metric-primary">${acumLabel}</div>
+        <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
+        ${subIndicators}
+      </div>
+      <div class="mcol-pct">
+        <div class="metric-primary">${pctLabel}</div>
+        <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
+      </div>
     </div>
   `;
 }
