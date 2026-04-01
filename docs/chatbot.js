@@ -994,7 +994,22 @@
   }
 
   // Detecta el último período con datos reales para un programa.
-  // Si el período más reciente tiene todos ceros (tiene_datos_mes: false), retrocede.
+  // Detecta si un período tiene datos reales comprobando que al menos
+  // un campo numérico del row tenga valor mayor a cero.
+  function periodHasRealData(row) {
+    if (!row || !row.values) return false;
+    // is_latest_data_month lo setea enrichLatestMonthlyRow — no es confiable para históricos
+    // En cambio, verificamos si hay valores numéricos reales en el row
+    const IGNORE = /meta_|pct_|esperado|mes_num|anio|periodo|latest|is_|activo|aporta|zona/i;
+    return Object.entries(row.values).some(([k, v]) => {
+      if (IGNORE.test(k)) return false;
+      const n = parseFloat(v);
+      return Number.isFinite(n) && n > 0;
+    });
+  }
+
+  // Dado un programId y un período candidato, retrocede al último período
+  // con datos reales si el candidato está vacío (todos ceros).
   function resolveEffectivePeriodWithData(programId, candidatePeriod) {
     if (!candidatePeriod || !programId) return candidatePeriod;
     try {
@@ -1003,21 +1018,18 @@
       const monthlyRow = program.monthly.find(
         (row) => row.period_key === candidatePeriod && row.dataset_kind === 'monthly_total'
       ) || program.monthly.find((row) => row.period_key === candidatePeriod);
-      if (monthlyRow && monthlyRow.values && monthlyRow.values.tiene_datos_mes !== false) {
-        return candidatePeriod;
-      }
-      const periods = program.periods || [];
-      const idx = periods.indexOf(candidatePeriod);
-      for (let i = idx - 1; i >= 0; i--) {
+      // Si el período candidato tiene datos reales, usarlo
+      if (periodHasRealData(monthlyRow)) return candidatePeriod;
+      // Si no, retroceder hasta encontrar un período con datos reales
+      const periods = (program.periods || []).filter(p => p <= candidatePeriod);
+      for (let i = periods.length - 2; i >= 0; i--) {
         const prev = periods[i];
         const prevRow = program.monthly.find(
           (row) => row.period_key === prev && row.dataset_kind === 'monthly_total'
         ) || program.monthly.find((row) => row.period_key === prev);
-        if (prevRow && prevRow.values && prevRow.values.tiene_datos_mes !== false) {
-          return prev;
-        }
+        if (periodHasRealData(prevRow)) return prev;
       }
-    } catch (e) { /* usar período original */ }
+    } catch (e) { /* usar período original si falla */ }
     return candidatePeriod;
   }
 
