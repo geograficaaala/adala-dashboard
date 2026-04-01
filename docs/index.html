@@ -2061,10 +2061,10 @@ async function loadAtitlan(cfg){
 }
 
 async function loadConservando(cfg){
-  const aceiteAcum = 13417.828;
-  const aguaAcum = 13417828;
-  const jabonesProdAcum = 11450;
-  const jabonesVendAcum = 2180;
+  const aceiteAcum = 20470.828;
+  const aguaAcum = 20470828;
+  const jabonesProdAcum = 16980;
+  const jabonesVendAcum = 5080;
 
   const metaAceite = 80000;
   const metaAgua = 80000000;
@@ -2076,7 +2076,7 @@ async function loadConservando(cfg){
   const pctJabonesProd = (jabonesProdAcum / metaJabonesProd) * 100;
   const pctJabonesVend = (jabonesVendAcum / metaJabonesVend) * 100;
 
-  const esperadoCorte = (2 / 12) * 100; // enero-febrero 2026
+  const esperadoCorte = (3 / 12) * 100; // enero-marzo 2026
   const score = avg([
     (pctAceite / esperadoCorte) * 100,
     (pctAgua / esperadoCorte) * 100,
@@ -2117,12 +2117,12 @@ async function loadConservando(cfg){
 
   return {
     ...cfg,
-    latestLabel:'Febrero 2026',
-    periodKey:'2026-02',
+    latestLabel:'Marzo 2026',
+    periodKey:'2026-03',
     score:score || 0,
     scoreLabel:'Promedio vs esperado al corte',
     metrics:keyMetrics,
-    sourceSummary:'Valor fijo · corte febrero 2026'
+    sourceSummary:'Valor fijo · corte marzo 2026'
   };
 }
 
@@ -2180,7 +2180,7 @@ async function loadFM(cfg){
 }
 
 async function loadEPC(cfg){
-  const docentesVisitasRealizadas = 2;
+  const docentesVisitasRealizadas = 1;
   const docentesVisitasMeta = 7;
   const docentesPorVisita = 121;
 
