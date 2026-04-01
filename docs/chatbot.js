@@ -1041,16 +1041,23 @@
 
         // Si el usuario no pidió período explícito, buscar el último con datos reales
         let effectivePeriod = periodInfo.effective;
-        if (!periodInfo.requested && programId) {
-          effectivePeriod = resolveEffectivePeriodWithData(programId, effectivePeriod);
+        if (!periodInfo.requested) {
+          if (programId) {
+            // Con programa específico: retroceder al último mes con datos reales
+            effectivePeriod = resolveEffectivePeriodWithData(programId, effectivePeriod);
+          } else {
+            // Sin programa: pasar null para que el Worker reciba todos los períodos
+            // y pueda mostrar el más reciente con datos por cada programa
+            effectivePeriod = null;
+          }
         }
 
-        // Siempre incluir todos los programas (programId null = todos)
-        // para que Groq pueda responder preguntas cruzadas
+        // Incluir todos los programas y todos los períodos disponibles
+        // El Worker filtra y presenta solo los que tienen datos reales
         const context = Data.buildContext({
           programId: programId || null,
-          periodKey: periodInfo.requested ? effectivePeriod : null,
-          latestOnly: true,
+          periodKey: effectivePeriod || null,
+          latestOnly: false,
           includeDetails: Config.DATA.includeDetailsByDefault,
           includeIndicators: Config.DATA.includeIndicatorsByDefault,
           includeMetadata: Config.DATA.includeMetadataByDefault,
