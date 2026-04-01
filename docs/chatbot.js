@@ -10,68 +10,76 @@
   }
 
   const FIELD_LABELS = {
-    total_materiales_qq: 'Materiales totales',
-    materiales_lideresas_qq: 'Materiales de lideresas',
-    materiales_municipalidad_qq: 'Materiales de municipalidad',
-    ingreso_bruto_total: 'Ingreso bruto total',
-    ingreso_neto_total_territorio: 'Ingreso neto territorio',
-    ingreso_neto_cooperativa: 'Ingreso neto cooperativa',
-    mujeres_activas: 'Mujeres activas',
-    mujeres_actividades: 'Mujeres en actividades',
-    mujeres_comercializacion: 'Mujeres en comercialización',
-    mujeres_inscritas_total: 'Mujeres inscritas',
-    mujeres_nuevas_inscritas: 'Nuevas inscritas',
-    litros_aceite_recolectados_mes: 'Litros de aceite recolectados',
-    litros_agua_protegidos_mes: 'Litros de agua protegidos',
-    municipios_visitados_mes: 'Municipios visitados',
-    inmuebles_atendidos_mes: 'Inmuebles atendidos',
-    jabones_producidos_mes: 'Jabones producidos',
-    jabones_vendidos_mes: 'Jabones vendidos',
-    ingresos_ventas_q_mes: 'Ingresos por ventas',
-    publicaciones_redes_mes: 'Publicaciones en redes',
-    docentes_mes: 'Docentes participantes',
-    estudiantes_epc_mes: 'Estudiantes EPC',
-    centros_mes: 'Centros',
-    municipios_mes: 'Municipios',
-    actividades_campo_mes: 'Actividades de campo',
-    estudiantes_actividades_campo_mes: 'Estudiantes en actividades de campo',
-    propuestas_juveniles_mes: 'Propuestas juveniles',
-    capitales_semilla_mes: 'Capitales semilla',
-    coordinaciones_clave_mes: 'Coordinaciones clave',
-    eventos_capacitacion_mes: 'Eventos de capacitación',
-    personas_capacitadas_total_mes: 'Personas capacitadas',
-    personas_capacitadas_nucleo_mes: 'Personas capacitadas núcleo',
-    municipios_capacitacion_nucleo_mes: 'Municipios capacitación núcleo',
-    asistencias_nuevas_total_mes: 'Asistencias nuevas',
-    estudios_finalizados_total_mes: 'Estudios finalizados',
-    reuniones_codema_mes: 'Reuniones CODEMA',
-    mesas_tecnicas_departamentales_mes: 'Mesas técnicas departamentales',
-    mesas_tecnicas_municipales_mes: 'Mesas técnicas municipales',
-    pirdes_implementados_mes: 'PIRDES implementados',
-    arboles_sembrados_kpi_mes: 'Árboles sembrados',
-    arboles_sembrados_registrados_mes: 'Árboles sembrados registrados',
-    ha_monitoreadas_kpi_mes: 'Ha monitoreadas',
-    ha_monitoreadas_registradas_mes: 'Ha monitoreadas registradas',
-    area_intervenida_ha_mes: 'Área intervenida',
-    plantas_netas_mes: 'Plantas netas',
-    especies_activas_mes: 'Especies activas',
-    aporte_sig_mes: 'Aporte SIG',
-    eventos_monitoreo_mes: 'Eventos de monitoreo',
-    eventos_cartografia_mes: 'Eventos de cartografía'
+    total_materiales_qq: 'materiales reciclables recolectados',
+    materiales_lideresas_qq: 'materiales de lideresas',
+    materiales_municipalidad_qq: 'materiales de municipalidad',
+    ingreso_bruto_total: 'ingresos brutos totales',
+    ingreso_neto_total_territorio: 'ingreso neto del territorio',
+    ingreso_neto_cooperativa: 'ingreso neto de la cooperativa',
+    mujeres_activas: 'mujeres activas',
+    mujeres_actividades: 'mujeres en actividades',
+    mujeres_comercializacion: 'mujeres en comercialización',
+    mujeres_inscritas_total: 'mujeres inscritas',
+    mujeres_nuevas_inscritas: 'nuevas inscritas',
+    ingreso_diario_lideresa: 'ingreso diario por lideresa',
+    litros_aceite_recolectados_mes: 'litros de aceite recolectados',
+    litros_agua_protegidos_mes: 'litros de agua protegidos',
+    municipios_visitados_mes: 'municipios visitados',
+    inmuebles_atendidos_mes: 'inmuebles atendidos',
+    jabones_producidos_mes: 'jabones producidos',
+    jabones_vendidos_mes: 'jabones vendidos',
+    ingresos_ventas_q_mes: 'ingresos por ventas',
+    publicaciones_redes_mes: 'publicaciones en redes',
+    docentes_mes: 'docentes atendidos',
+    estudiantes_epc_mes: 'estudiantes beneficiados',
+    centros_mes: 'centros alcanzados',
+    municipios_mes: 'municipios con actividad pedagógica',
+    actividades_campo_mes: 'actividades de campo',
+    estudiantes_actividades_campo_mes: 'estudiantes en actividades de campo',
+    propuestas_juveniles_mes: 'propuestas juveniles',
+    capitales_semilla_mes: 'capitales semilla',
+    coordinaciones_clave_mes: 'coordinaciones clave',
+    eventos_capacitacion_mes: 'eventos de capacitación',
+    personas_capacitadas_total_mes: 'personas capacitadas',
+    personas_capacitadas_nucleo_mes: 'personas capacitadas en temas núcleo',
+    municipios_capacitacion_nucleo_mes: 'municipios con capacitación núcleo',
+    pirdes_nuevos_total_mes: 'PIRDES nuevos',
+    pirdes_actualizados_total_mes: 'PIRDES actualizados',
+    pirdes_aprobados_total_mes: 'PIRDES aprobados',
+    ha_monitoreadas_kpi_mes: 'ha monitoreadas',
+    arboles_sembrados_kpi_mes: 'árboles sembrados',
+    plantas_netas_mes: 'plantas netas',
+    area_intervenida_ha_mes: 'área intervenida',
+    especies_activas_mes: 'especies nativas activas'
   };
 
   const PROGRAM_HIGHLIGHTS = {
-    atitlan_recicla: ['total_materiales_qq', 'ingreso_bruto_total', 'ingreso_neto_total_territorio', 'mujeres_activas', 'mujeres_inscritas_total'],
-    conservando_atitlan: ['litros_aceite_recolectados_mes', 'litros_agua_protegidos_mes', 'municipios_visitados_mes', 'inmuebles_atendidos_mes', 'jabones_vendidos_mes'],
-    educando_para_conservar: ['docentes_mes', 'estudiantes_epc_mes', 'centros_mes', 'actividades_campo_mes', 'estudiantes_actividades_campo_mes'],
-    fortalecimiento_municipal: ['personas_capacitadas_total_mes', 'eventos_capacitacion_mes', 'asistencias_nuevas_total_mes', 'estudios_finalizados_total_mes', 'reuniones_codema_mes'],
-    reforestacion: ['arboles_sembrados_kpi_mes', 'ha_monitoreadas_kpi_mes', 'plantas_netas_mes', 'area_intervenida_ha_mes', 'especies_activas_mes']
+    atitlan_recicla: ['total_materiales_qq', 'ingreso_bruto_total', 'mujeres_activas', 'ingreso_neto_cooperativa'],
+    conservando_atitlan: ['litros_aceite_recolectados_mes', 'litros_agua_protegidos_mes', 'jabones_producidos_mes', 'jabones_vendidos_mes'],
+    educando_para_conservar: ['docentes_mes', 'estudiantes_epc_mes', 'centros_mes', 'actividades_campo_mes'],
+    fortalecimiento_municipal: ['eventos_capacitacion_mes', 'personas_capacitadas_total_mes', 'pirdes_aprobados_total_mes', 'asistencias_nuevas_total_mes'],
+    reforestacion: ['arboles_sembrados_kpi_mes', 'ha_monitoreadas_kpi_mes', 'plantas_netas_mes', 'area_intervenida_ha_mes']
   };
 
-  const PERIOD_REGEX = /(20\d{2})[-\/]?(0[1-9]|1[0-2])/;
-  const GREETINGS = ['hola', 'buenas', 'buen dia', 'buen día', 'hello', 'hey'];
-  const THANKS = ['gracias', 'thanks'];
-  const OFFTOPIC_HINTS = ['chiste', 'novia', 'novio', 'sexo', 'meme', 'horoscopo', 'horóscopo', 'bitcoin', 'futbol', 'fútbol', 'presidente', 'gobierno', 'religion', 'religión'];
+  const MONTH_NAMES = {
+    '01': 'Enero',
+    '02': 'Febrero',
+    '03': 'Marzo',
+    '04': 'Abril',
+    '05': 'Mayo',
+    '06': 'Junio',
+    '07': 'Julio',
+    '08': 'Agosto',
+    '09': 'Septiembre',
+    '10': 'Octubre',
+    '11': 'Noviembre',
+    '12': 'Diciembre'
+  };
+
+  const GREETINGS = ['hola', 'buenas', 'buen día', 'buen dia', 'que tal', 'qué tal', 'hello', 'hey'];
+  const THANKS = ['gracias', 'muchas gracias', 'thanks'];
+  const OFFTOPIC_HINTS = ['chiste', 'meme', 'novio', 'novia', 'sexo', 'bitcoin', 'futbol', 'fútbol', 'horoscopo', 'horóscopo', 'presidente', 'gobierno'];
+  const PERIOD_REGEX = /(20\d{2})[-\/ ]?(0[1-9]|1[0-2])/;
 
   const state = {
     initialized: false,
@@ -80,7 +88,9 @@
     scopeProgramId: null,
     messages: [],
     elements: {},
-    dataLoaded: false
+    dataLoaded: false,
+    hasUserInteracted: false,
+    requestToken: 0
   };
 
   function stripAccents(value) {
@@ -110,10 +120,6 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  function isFiniteNumber(value) {
-    return typeof value === 'number' && Number.isFinite(value);
-  }
-
   function toNumber(value) {
     if (typeof value === 'number') return Number.isFinite(value) ? value : null;
     if (typeof value === 'string' && value.trim() !== '') {
@@ -123,17 +129,38 @@
     return null;
   }
 
-  function formatNumber(value) {
+  function isFiniteNumber(value) {
+    return typeof value === 'number' && Number.isFinite(value);
+  }
+
+  function formatNumber(value, maxDigits) {
     const num = toNumber(value);
     if (num == null) return null;
-    const fractionDigits = Math.abs(num) >= 100 ? 0 : Math.abs(num) >= 10 ? 1 : 2;
-    return new Intl.NumberFormat('es-GT', { maximumFractionDigits: fractionDigits }).format(num);
+    const fractionDigits = typeof maxDigits === 'number'
+      ? maxDigits
+      : Math.abs(num) >= 100 ? 0 : Math.abs(num) >= 10 ? 1 : 2;
+    return new Intl.NumberFormat('es-GT', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: fractionDigits
+    }).format(num);
+  }
+
+  function formatCurrency(value) {
+    const num = toNumber(value);
+    if (num == null) return null;
+    return `Q${new Intl.NumberFormat('es-GT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(num)}`;
   }
 
   function formatPercent(value) {
     const num = toNumber(value);
     if (num == null) return null;
-    return `${new Intl.NumberFormat('es-GT', { maximumFractionDigits: 1 }).format(num)}%`;
+    return `${new Intl.NumberFormat('es-GT', { minimumFractionDigits: 0, maximumFractionDigits: 1 }).format(num)}%`;
+  }
+
+  function describePeriod(periodKey) {
+    if (!periodKey) return null;
+    const [year, month] = String(periodKey).split('-');
+    return `${MONTH_NAMES[month] || month} ${year}`;
   }
 
   function humanizeKey(key) {
@@ -144,66 +171,74 @@
       .replace(/_acum$/i, ' acumulado')
       .replace(/_/g, ' ')
       .replace(/\bqq\b/gi, 'qq')
-      .replace(/\bpct\b/gi, '%')
-      .replace(/\b[a-z]/g, (s) => s.toUpperCase());
+      .replace(/\bgtq\b/gi, 'GTQ')
+      .replace(/\b[a-záéíóúüñ]/g, (s) => s.toUpperCase());
   }
 
-  function titleCase(value) {
+  function sentenceCase(value) {
     const text = String(value || '').trim();
     if (!text) return '';
     return text.charAt(0).toUpperCase() + text.slice(1);
+  }
+
+  function humanList(items) {
+    const clean = items.filter(Boolean);
+    if (!clean.length) return '';
+    if (clean.length === 1) return clean[0];
+    if (clean.length === 2) return `${clean[0]} y ${clean[1]}`;
+    return `${clean.slice(0, -1).join(', ')} y ${clean[clean.length - 1]}`;
+  }
+
+  function summarizeText(text, maxLength) {
+    const clean = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!clean) return '';
+    if (!maxLength || clean.length <= maxLength) return clean;
+    return `${clean.slice(0, maxLength - 1).trim()}…`;
+  }
+
+  function cleanNarrative(text) {
+    const clean = String(text || '')
+      .replace(/\s*El chatbot debería[^.]*\.?/gi, '')
+      .replace(/\s*Actualizar narrativa[^.]*\.?/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    return clean;
+  }
+
+  function isUsefulContextNote(note) {
+    const clean = cleanNarrative(note);
+    if (!clean) return false;
+    return !/actualizar narrativa|revisar mes activo/i.test(clean);
   }
 
   function getProgramName(programId) {
     return Config.getProgramLabel(programId) || programId || '';
   }
 
+  function getManifest() {
+    return Data.getManifest ? Data.getManifest() : null;
+  }
+
+  function getProgram(programId) {
+    return Data.getProgram(programId);
+  }
+
+  function getProgramManifest(programId) {
+    const program = getProgram(programId);
+    return program ? (program.manifest || {}) : {};
+  }
+
+  function getCutoffPeriod() {
+    return getManifest()?.cutoff?.institutional_cutoff_period || null;
+  }
+
+  function getGlobalValidPeriods() {
+    return getManifest()?.valid_periods_global || [];
+  }
+
   function matchAny(text, words) {
     const normalized = normalizeText(text);
     return words.some((word) => normalized.includes(normalizeText(word)));
-  }
-
-  function detectProgram(text) {
-    const fromText = Config.resolveProgramFromText(text);
-    if (fromText) return fromText;
-    return state.scopeProgramId || null;
-  }
-
-  function detectPeriod(text, programId) {
-    const raw = String(text || '');
-    const match = raw.match(PERIOD_REGEX);
-    if (match) return `${match[1]}-${match[2]}`;
-    const normalized = normalizeText(raw);
-    const periods = Data.listPeriods(programId || undefined);
-    if (!periods.length) return null;
-    if (normalized.includes('ultimo') || normalized.includes('último') || normalized.includes('reciente') || normalized.includes('actual')) {
-      return periods[periods.length - 1] || null;
-    }
-    const monthMap = {
-      enero: '01', feb: '02', febrero: '02', mar: '03', marzo: '03', abr: '04', abril: '04', mayo: '05', may: '05', junio: '06', jun: '06', julio: '07', jul: '07', agosto: '08', ago: '08', septiembre: '09', setiembre: '09', sep: '09', oct: '10', octubre: '10', noviembre: '11', nov: '11', diciembre: '12', dic: '12'
-    };
-    const yearMatch = normalized.match(/20\d{2}/);
-    const year = yearMatch ? yearMatch[0] : null;
-    if (year) {
-      for (const [token, month] of Object.entries(monthMap)) {
-        if (normalized.includes(token)) {
-          const candidate = `${year}-${month}`;
-          if (periods.includes(candidate)) return candidate;
-        }
-      }
-    }
-    return null;
-  }
-
-  function detectIntent(text) {
-    const intents = Config.detectIntents(text);
-    if (intents.includes('comparacion')) return 'comparacion';
-    if (intents.includes('alerta')) return 'alerta';
-    if (intents.includes('tendencia')) return 'tendencia';
-    if (intents.includes('territorio')) return 'territorio';
-    if (intents.includes('indicadores')) return 'indicadores';
-    if (intents.includes('resumen') || intents.includes('ultimo_mes')) return 'resumen';
-    return 'search';
   }
 
   function isGreeting(text) {
@@ -214,58 +249,110 @@
     return matchAny(text, THANKS);
   }
 
+  function detectProgram(text) {
+    const fromText = Config.resolveProgramFromText(text);
+    return fromText || state.scopeProgramId || null;
+  }
+
+  function detectRawPeriod(text) {
+    const match = String(text || '').match(PERIOD_REGEX);
+    if (!match) return null;
+    return `${match[1]}-${match[2]}`;
+  }
+
+  function detectNamedPeriod(text, programId) {
+    const normalized = normalizeText(text);
+    const periods = programId ? Data.listPeriods(programId) : getGlobalValidPeriods();
+    if (!periods.length) return null;
+
+    if (/ultimo|último|reciente|actual|vigente|mas reciente|más reciente/.test(normalized)) {
+      return periods[periods.length - 1] || null;
+    }
+
+    const monthMap = {
+      enero: '01', ene: '01',
+      febrero: '02', feb: '02',
+      marzo: '03', mar: '03',
+      abril: '04', abr: '04',
+      mayo: '05', may: '05',
+      junio: '06', jun: '06',
+      julio: '07', jul: '07',
+      agosto: '08', ago: '08',
+      septiembre: '09', setiembre: '09', sep: '09',
+      octubre: '10', oct: '10',
+      noviembre: '11', nov: '11',
+      diciembre: '12', dic: '12'
+    };
+    const yearMatch = normalized.match(/20\d{2}/);
+    const year = yearMatch ? yearMatch[0] : null;
+    if (!year) return null;
+    for (const [token, month] of Object.entries(monthMap)) {
+      if (normalized.includes(token)) {
+        const candidate = `${year}-${month}`;
+        if (periods.includes(candidate)) return candidate;
+      }
+    }
+    return null;
+  }
+
+  function resolvePeriodInfo(text, programId) {
+    const requestedRawPeriod = detectRawPeriod(text);
+    const explicitNamedPeriod = detectNamedPeriod(text, programId);
+    const candidate = explicitNamedPeriod || requestedRawPeriod || null;
+    const validPeriods = programId ? Data.listPeriods(programId) : getGlobalValidPeriods();
+    const latestValid = validPeriods[validPeriods.length - 1] || getCutoffPeriod() || null;
+
+    if (!candidate) {
+      return { requested: null, effective: latestValid, invalid: false, validPeriods, latestValid };
+    }
+
+    if (validPeriods.includes(candidate)) {
+      return { requested: candidate, effective: candidate, invalid: false, validPeriods, latestValid };
+    }
+
+    return { requested: candidate, effective: latestValid, invalid: true, validPeriods, latestValid };
+  }
+
+  function detectIntent(text) {
+    const normalized = normalizeText(text);
+    if (/compar|versus| vs |diferencia|frente a/.test(normalized)) return 'comparacion';
+    if (/falla|fallando|rezago|rezagos|alerta|alertas|debajo|bajo meta|no estan llegando|no están llegando|riesgo/.test(normalized)) return 'alerta';
+    if (/tendencia|evolucion|evolución|comparado con|vs mes anterior|mes anterior|cambio/.test(normalized)) return 'tendencia';
+    if (/territorio|territorios|municipio|municipios|zona|zonas|sector|sectores|tema|temas|material|materiales/.test(normalized)) return 'territorio';
+    if (/indicador|indicadores|meta|metas|cumplimiento|avance|como va|cómo va/.test(normalized)) return 'indicadores';
+    if (/resumen|resume|resumir|panorama|estado general|situacion|situación/.test(normalized)) return 'resumen';
+    return 'search';
+  }
+
   function looksOffTopic(text) {
     const normalized = normalizeText(text);
     if (!normalized) return false;
     if (OFFTOPIC_HINTS.some((word) => normalized.includes(normalizeText(word)))) return true;
-    const intents = Config.detectIntents(text);
+    const searchHits = Data.search(text, { latestOnly: true, limit: 3 });
     const program = Config.resolveProgramFromText(text);
-    const period = detectPeriod(text, null);
-    const searchHits = Data.search(text, { latestOnly: false, limit: 3 });
-    return !intents.length && !program && !period && searchHits.length === 0;
+    const hasDashboardSignals = /programa|indicador|meta|avance|periodo|período|mes|material|municipio|resultado|dashboard|aala/.test(normalized);
+    return !hasDashboardSignals && !program && searchHits.length === 0;
   }
 
-  function getProgramScope(text) {
-    const programId = detectProgram(text);
+  function getProgramScope(question) {
+    const programId = detectProgram(question);
     if (programId) return [programId];
     return Data.getPrograms().map((item) => item.id);
   }
 
-  function getSnapshot(programId) {
-    return Data.getLatest(programId);
-  }
-
-  function getProgramData(programId) {
-    return Data.getProgram(programId);
-  }
-
-  function getLatestPeriod(programId) {
-    const snapshot = getSnapshot(programId);
-    return snapshot ? snapshot.latest_period : null;
-  }
-
-  function describePeriod(periodKey) {
-    if (!periodKey) return null;
-    const [year, month] = String(periodKey).split('-');
-    const months = {
-      '01': 'Enero', '02': 'Febrero', '03': 'Marzo', '04': 'Abril', '05': 'Mayo', '06': 'Junio',
-      '07': 'Julio', '08': 'Agosto', '09': 'Septiembre', '10': 'Octubre', '11': 'Noviembre', '12': 'Diciembre'
-    };
-    return `${months[month] || month} ${year}`;
-  }
-
-  function getMonthlyRecord(programId, periodKey) {
-    const program = getProgramData(programId);
+  function getMonthlyRow(programId, periodKey) {
+    const program = getProgram(programId);
     if (!program) return null;
     if (periodKey) {
-      const match = program.monthly.find((row) => row.period_key === periodKey);
-      return match || null;
+      return program.monthly.find((row) => row.period_key === periodKey && row.dataset_kind === 'monthly_total')
+        || program.monthly.find((row) => row.period_key === periodKey)
+        || null;
     }
     return program.latest_monthly[0] || null;
   }
 
   function getIndicatorRows(programId, periodKey) {
-    const program = getProgramData(programId);
+    const program = getProgram(programId);
     if (!program) return [];
     if (periodKey) return program.indicators.filter((row) => row.period_key === periodKey);
     return program.latest_indicators || [];
@@ -278,234 +365,308 @@
     return null;
   }
 
-  function getPreferredNumericFields(programId, monthlyValues) {
-    const preferred = PROGRAM_HIGHLIGHTS[programId] || [];
-    const result = [];
-    preferred.forEach((key) => {
-      const num = toNumber(monthlyValues[key]);
-      if (num != null) result.push({ key, value: num });
-    });
-    if (result.length >= 3) return result.slice(0, 4);
-    const ignored = new Set(['anio', 'mes_num', 'cohorte_mes_indice', 'mes_ciclo_epc']);
-    Object.entries(monthlyValues || {}).forEach(([key, value]) => {
-      if (result.some((item) => item.key === key)) return;
-      if (ignored.has(key)) return;
-      const num = toNumber(value);
-      if (num == null || num === 0) return;
-      if (/pct_|meta_|esperado_|indice|year|month|aporta|is_latest|tiene_datos|activo|fecha_|periodo|program/i.test(key)) return;
-      result.push({ key, value: num });
-    });
-    return result.slice(0, 4);
+  function formatValueWithUnit(value, unit, field) {
+    const num = toNumber(value);
+    if (num == null) return null;
+    const normalizedUnit = normalizeText(unit || '');
+    const key = normalizeText(field || '');
+    if (normalizedUnit === 'gtq' || /ingreso|venta|capital|q_mes|q$/.test(key)) return formatCurrency(num);
+    if (normalizedUnit === '%' || key.startsWith('pct')) return formatPercent(num);
+    return `${formatNumber(num)}${unit ? ` ${unit}` : ''}`;
   }
 
-  function findIndicatorByQuestion(question, indicatorRows) {
-    const normalized = normalizeText(question);
-    const ranked = indicatorRows
-      .map((row) => {
-        const indicatorText = normalizeText([row.indicator_name, row.indicator_id, row.values.indicador_grupo_nombre, row.values.subindicador_id].filter(Boolean).join(' '));
-        let score = 0;
-        normalized.split(' ').filter(Boolean).forEach((term) => {
-          if (term.length < 3) return;
-          if (indicatorText.includes(term)) score += 2;
-        });
-        return { score, row };
-      })
-      .filter((item) => item.score > 0)
-      .sort((a, b) => b.score - a.score);
+  function pickSummaryMetrics(programId, periodKey) {
+    const manifestProgram = getProgramManifest(programId);
+    const latestPeriod = manifestProgram.latest_valid_period || null;
+    if (periodKey && periodKey === latestPeriod && Array.isArray(manifestProgram.summary_metrics) && manifestProgram.summary_metrics.length) {
+      return manifestProgram.summary_metrics.slice(0, 4).map((item) => ({
+        field: item.field,
+        label: item.label || humanizeKey(item.field),
+        value: item.value
+      }));
+    }
+
+    const monthly = getMonthlyRow(programId, periodKey);
+    const values = monthly ? (monthly.values || {}) : {};
+    const preferred = PROGRAM_HIGHLIGHTS[programId] || [];
+    const metrics = [];
+
+    preferred.forEach((field) => {
+      const value = toNumber(values[field]);
+      if (value != null) metrics.push({ field, label: humanizeKey(field), value });
+    });
+
+    if (metrics.length >= 3) return metrics.slice(0, 4);
+
+    Object.entries(values).forEach(([field, value]) => {
+      if (metrics.some((item) => item.field === field)) return;
+      const numeric = toNumber(value);
+      if (numeric == null || numeric === 0) return;
+      if (/meta_|pct_|esperado_|anio|mes_num|periodo|latest|aporta|is_latest|activo/i.test(field)) return;
+      metrics.push({ field, label: humanizeKey(field), value: numeric });
+    });
+
+    return metrics.slice(0, 4);
+  }
+
+  function normalizeIndicatorStatus(status) {
+    const normalized = normalizeText(status || '');
+    if (normalized.includes('rojo') || normalized.includes('alerta')) return 'rojo';
+    if (normalized.includes('amarillo') || normalized.includes('riesgo')) return 'amarillo';
+    if (normalized.includes('verde') || normalized.includes('cumple') || normalized.includes('positivo')) return 'verde';
+    return normalized || null;
+  }
+
+  function findIndicatorByQuestion(question, rows) {
+    const normalizedQuestion = normalizeText(question);
+    const ranked = rows.map((row) => {
+      const haystack = normalizeText([
+        row.indicator_name,
+        row.indicator_id,
+        row.values?.indicador_nombre,
+        row.values?.subindicador_id,
+        row.values?.human_summary,
+        row.values?.note
+      ].filter(Boolean).join(' '));
+      let score = 0;
+      normalizedQuestion.split(' ').filter(Boolean).forEach((term) => {
+        if (term.length < 3) return;
+        if (haystack.includes(term)) score += 2;
+      });
+      return { row, score };
+    }).filter((item) => item.score > 0).sort((a, b) => b.score - a.score);
     return ranked[0] ? ranked[0].row : null;
   }
 
-  function normalizeStatus(value) {
-    return normalizeText(value || '');
-  }
-
-  function statusSeverity(status) {
-    const normalized = normalizeStatus(status);
-    if (!normalized) return 0;
-    if (normalized.includes('rojo') || normalized.includes('critico') || normalized.includes('crítico') || normalized.includes('rezago') || normalized.includes('bajo')) return 3;
-    if (normalized.includes('amarillo') || normalized.includes('riesgo') || normalized.includes('parcial')) return 2;
-    if (normalized.includes('verde') || normalized.includes('cumple') || normalized.includes('ok')) return 1;
-    return 1;
-  }
-
-  function extractAlerts(programId, periodKey) {
-    const indicators = getIndicatorRows(programId, periodKey);
-    const critical = indicators
-      .map((row) => ({
-        row,
-        severity: statusSeverity(row.status),
-        pct: toNumber(row.values.pct_vs_esperado ?? row.values.pct_meta_anual)
-      }))
-      .filter((item) => item.severity >= 2 || (item.pct != null && item.pct < 100))
-      .sort((a, b) => b.severity - a.severity || (a.pct ?? 999) - (b.pct ?? 999))
-      .slice(0, 4)
-      .map((item) => item.row);
-    const monthly = getMonthlyRecord(programId, periodKey);
-    const notes = [];
-    if (monthly && monthly.values.alertas_texto) notes.push(String(monthly.values.alertas_texto).trim());
-    return { indicators: critical, notes };
-  }
-
-  function summarizeProgram(programId, periodKey, question) {
-    const snapshot = getSnapshot(programId);
-    const effectivePeriod = periodKey || snapshot?.latest_period || null;
-    const monthly = getMonthlyRecord(programId, effectivePeriod);
-    const indicators = getIndicatorRows(programId, effectivePeriod);
-    if (!monthly && !indicators.length) return null;
-
-    const monthlyValues = monthly ? monthly.values : {};
-    const lines = [];
-    const title = `${getProgramName(programId)} · ${describePeriod(effectivePeriod) || 'Sin período'}`;
-
-    const highlightMetrics = getPreferredNumericFields(programId, monthlyValues)
-      .map((item) => `${humanizeKey(item.key)}: ${formatNumber(item.value)}`)
-      .slice(0, 4);
-
-    if (highlightMetrics.length) lines.push(`Lo más relevante fue ${highlightMetrics.join(' · ')}.`);
-
-    const topIndicators = indicators
-      .filter((row) => toNumber(row.values.valor_mes ?? row.values.valor_acumulado ?? row.values.valor) != null)
-      .slice(0, 4)
-      .map((row) => {
-        const value = row.values.valor_mes ?? row.values.valor_acumulado ?? row.values.valor;
-        const meta = row.values.meta_mes ?? row.values.meta_anual;
-        const pct = row.values.pct_vs_esperado ?? row.values.pct_meta_anual;
-        const parts = [`${row.indicator_name || row.indicator_id}: ${formatNumber(value)}${row.unit ? ` ${row.unit}` : ''}`];
-        if (meta != null) parts.push(`meta ${formatNumber(meta)}${row.unit ? ` ${row.unit}` : ''}`);
-        if (pct != null) parts.push(`${formatPercent(pct)} de avance`);
-        if (row.status) parts.push(`estatus ${String(row.status).toLowerCase()}`);
-        return parts.join(', ');
-      });
-    if (topIndicators.length) lines.push(`Indicadores destacados: ${topIndicators.join(' | ')}.`);
-
-    const alerts = extractAlerts(programId, effectivePeriod);
-    if (alerts.indicators.length) {
-      const text = alerts.indicators
-        .map((row) => `${row.indicator_name || row.indicator_id}${row.status ? ` (${String(row.status).toLowerCase()})` : ''}`)
-        .join(', ');
-      lines.push(`Temas que merecen atención: ${text}.`);
+  function getAlertRows(programId, periodKey) {
+    const manifestProgram = getProgramManifest(programId);
+    const latestPeriod = manifestProgram.latest_valid_period || null;
+    if ((!periodKey || periodKey === latestPeriod) && manifestProgram.indicators?.alerts) {
+      return clone(manifestProgram.indicators.alerts || []);
     }
-    if (monthlyValues.logros_texto) lines.push(`Logros reportados: ${String(monthlyValues.logros_texto).trim()}.`);
-    if (monthlyValues.alertas_texto && !alerts.notes.includes(String(monthlyValues.alertas_texto).trim())) lines.push(`Alertas reportadas: ${String(monthlyValues.alertas_texto).trim()}.`);
-    if (question && /fuente|origen|metodolog/i.test(normalizeText(question)) && monthlyValues.fuente_texto) {
-      lines.push(`Fuente reportada: ${String(monthlyValues.fuente_texto).trim()}.`);
+    return getIndicatorRows(programId, periodKey)
+      .filter((row) => {
+        const status = normalizeIndicatorStatus(row.status);
+        const pct = toNumber(row.values?.pct_vs_esperado ?? row.values?.pct_meta_anual);
+        return status === 'rojo' || status === 'amarillo' || (pct != null && pct < 100);
+      })
+      .sort((a, b) => {
+        const ap = toNumber(a.values?.pct_vs_esperado ?? a.values?.pct_meta_anual);
+        const bp = toNumber(b.values?.pct_vs_esperado ?? b.values?.pct_meta_anual);
+        return (ap ?? 999) - (bp ?? 999);
+      });
+  }
+
+  function getPositiveRows(programId, periodKey) {
+    const manifestProgram = getProgramManifest(programId);
+    const latestPeriod = manifestProgram.latest_valid_period || null;
+    if ((!periodKey || periodKey === latestPeriod) && manifestProgram.indicators?.positives) {
+      return clone(manifestProgram.indicators.positives || []);
+    }
+    return getIndicatorRows(programId, periodKey)
+      .filter((row) => {
+        const status = normalizeIndicatorStatus(row.status);
+        const pct = toNumber(row.values?.pct_vs_esperado ?? row.values?.pct_meta_anual);
+        return status === 'verde' || (pct != null && pct >= 100);
+      })
+      .sort((a, b) => {
+        const ap = toNumber(a.values?.pct_vs_esperado ?? a.values?.pct_meta_anual);
+        const bp = toNumber(b.values?.pct_vs_esperado ?? b.values?.pct_meta_anual);
+        return (bp ?? -999) - (ap ?? -999);
+      });
+  }
+
+  function buildIndicatorHumanSummary(row) {
+    if (!row) return '';
+    if (row.human_summary) return cleanNarrative(row.human_summary);
+    if (row.values?.human_summary) return cleanNarrative(row.values.human_summary);
+
+    const indicatorName = row.indicator_name || row.indicator_id || 'El indicador';
+    const value = row.value_month ?? row.values?.valor_mes ?? row.values?.valor ?? row.values?.valor_acumulado;
+    const target = row.target_month ?? row.values?.meta_mes ?? row.values?.meta_mensual ?? row.target_year ?? row.values?.meta_anual;
+    const pct = row.pct_vs_expected ?? row.values?.pct_vs_esperado ?? row.pct_meta_year ?? row.values?.pct_meta_anual;
+    const unit = row.unit || row.values?.unidad || '';
+    const status = normalizeIndicatorStatus(row.status);
+
+    const parts = [`${indicatorName} reporta ${formatValueWithUnit(value, unit, row.indicator_id) || formatNumber(value) || 'sin dato visible'}`];
+    if (target != null) parts.push(`frente a una meta de ${formatValueWithUnit(target, unit, row.indicator_id)}`);
+    if (pct != null) parts.push(`equivale a ${formatPercent(Math.abs(pct) <= 1.5 ? pct * 100 : pct)} del esperado`);
+    if (status === 'rojo') parts.push('y hoy aparece como alerta');
+    if (status === 'amarillo') parts.push('y conviene darle seguimiento cercano');
+    if (status === 'verde') parts.push('y muestra un comportamiento favorable');
+    return `${parts.join(' ')}.`;
+  }
+
+  function pickContextNotes(programId) {
+    const manifestProgram = getProgramManifest(programId);
+    const notes = Array.isArray(manifestProgram.narratives?.context_notes)
+      ? manifestProgram.narratives.context_notes.filter(isUsefulContextNote).slice(0, 2)
+      : [];
+    return notes.map((note) => cleanNarrative(note)).filter(Boolean);
+  }
+
+  function buildInvalidPeriodMessage(periodInfo, programId) {
+    if (!periodInfo.invalid) return null;
+    const label = periodInfo.requested ? describePeriod(periodInfo.requested) || periodInfo.requested : 'ese período';
+    const latest = periodInfo.latestValid ? describePeriod(periodInfo.latestValid) : null;
+    const scope = programId ? `para ${getProgramName(programId)}` : 'para el chatbot';
+    const validRange = periodInfo.validPeriods.length
+      ? `Ahora mismo solo tengo habilitados ${humanList(periodInfo.validPeriods.map((item) => describePeriod(item)).filter(Boolean))}.`
+      : '';
+    return `${label} no está habilitado ${scope}. ${latest ? `Voy a responder con el corte válido más reciente, ${latest}.` : ''} ${validRange}`.trim();
+  }
+
+  function buildProgramSummary(programId, periodKey) {
+    const program = getProgram(programId);
+    if (!program) return null;
+    const effectivePeriod = periodKey || program.latest_period;
+    const manifestProgram = program.manifest || {};
+    const narratives = manifestProgram.narratives || {};
+    const metrics = pickSummaryMetrics(programId, effectivePeriod);
+    const positives = getPositiveRows(programId, effectivePeriod).slice(0, 2).map(buildIndicatorHumanSummary).filter(Boolean);
+    const alerts = getAlertRows(programId, effectivePeriod).slice(0, 3).map(buildIndicatorHumanSummary).filter(Boolean);
+    const contextNotes = pickContextNotes(programId);
+    const monthly = getMonthlyRow(programId, effectivePeriod);
+    const monthlyValues = monthly ? (monthly.values || {}) : {};
+
+    const blocks = [];
+    const executive = cleanNarrative(effectivePeriod === manifestProgram.latest_valid_period ? narratives.executive_summary : '');
+    if (executive) {
+      blocks.push(executive);
+    } else if (metrics.length) {
+      blocks.push(`${getProgramName(programId)} en ${describePeriod(effectivePeriod)} muestra como lectura rápida ${metrics.map((item) => `${item.label}: ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`).join(', ')}.`);
+    }
+
+    if (metrics.length) {
+      blocks.push(`Lo más visible en este corte es ${humanList(metrics.slice(0, 3).map((item) => `${item.label} con ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`))}.`);
+    }
+
+    if (positives.length) {
+      blocks.push(`Lo que va mejor es lo siguiente: ${positives.join(' ')}`);
+    }
+
+    if (alerts.length) {
+      blocks.push(`Lo que más atención requiere es esto: ${alerts.join(' ')}`);
+    } else {
+      blocks.push(`No veo alertas fuertes reportadas para ${getProgramName(programId)} en ${describePeriod(effectivePeriod)}.`);
+    }
+
+    if (effectivePeriod === manifestProgram.latest_valid_period) {
+      const goodText = Array.isArray(narratives.what_is_going_well) ? narratives.what_is_going_well.map(cleanNarrative).filter(Boolean) : [];
+      const attentionText = Array.isArray(narratives.what_needs_attention) ? narratives.what_needs_attention.map(cleanNarrative).filter(Boolean) : [];
+      if (!positives.length && goodText.length) blocks.push(`Entre los avances reportados destacan ${humanList(goodText.slice(0, 2))}.`);
+      if (!alerts.length && attentionText.length) blocks.push(`Aun así conviene dar seguimiento a ${humanList(attentionText.slice(0, 2))}.`);
+    }
+
+    if (monthlyValues.contexto_texto && !contextNotes.length) {
+      const cleanContext = cleanNarrative(monthlyValues.contexto_texto);
+      if (cleanContext) blocks.push(`Contexto útil: ${cleanContext}`);
+    } else if (contextNotes.length) {
+      blocks.push(`Contexto útil: ${contextNotes.join(' ')}`);
     }
 
     return {
-      title,
-      text: lines.join(' '),
-      meta: {
-        programId,
-        periodKey: effectivePeriod,
-        sourceCount: 1 + indicators.length
-      }
+      title: `${getProgramName(programId)} · ${describePeriod(effectivePeriod) || 'Sin período'}`,
+      text: blocks.filter(Boolean).join('\n\n'),
+      meta: { programId, periodKey: effectivePeriod }
     };
   }
 
-  function comparePrograms(question, periodKey) {
-    const programIds = Data.getPrograms().map((item) => item.id);
-    const lines = [];
-    const comparisons = [];
+  function buildAlertsAnswer(programIds, periodKey) {
+    const parts = [];
+    const metaPrograms = [];
 
     programIds.forEach((programId) => {
-      const snapshot = getSnapshot(programId);
-      const effectivePeriod = periodKey || snapshot?.latest_period || null;
-      const monthly = getMonthlyRecord(programId, effectivePeriod);
-      if (!monthly) return;
-      const metrics = getPreferredNumericFields(programId, monthly.values)
-        .slice(0, 2)
-        .map((item) => `${humanizeKey(item.key)} ${formatNumber(item.value)}`);
-      const alerts = extractAlerts(programId, effectivePeriod);
-      comparisons.push({
-        programId,
-        periodKey: effectivePeriod,
-        alertCount: alerts.indicators.length,
-        metrics,
-        latestPeriod: effectivePeriod
-      });
+      const program = getProgram(programId);
+      if (!program) return;
+      const effectivePeriod = periodKey || program.latest_period;
+      const alerts = getAlertRows(programId, effectivePeriod).slice(0, 3);
+      if (!alerts.length) return;
+      metaPrograms.push(programId);
+      const intro = `${getProgramName(programId)} en ${describePeriod(effectivePeriod)} tiene ${alerts.length} frente(s) que merecen seguimiento.`;
+      const detail = alerts.map((row) => buildIndicatorHumanSummary(row)).filter(Boolean).join(' ');
+      parts.push(`${intro} ${detail}`.trim());
     });
 
-    if (!comparisons.length) return null;
-
-    comparisons.sort((a, b) => (b.alertCount - a.alertCount) || String(a.programId).localeCompare(String(b.programId), 'es'));
-    const periods = Array.from(new Set(comparisons.map((item) => item.periodKey).filter(Boolean)));
-    if (periods.length === 1) lines.push(`Comparación del período ${describePeriod(periods[0])}.`);
-    else lines.push(`Comparación con el período más reciente disponible en cada programa.`);
-
-    comparisons.forEach((item) => {
-      lines.push(`${getProgramName(item.programId)}: ${item.metrics.join(' · ')}${item.alertCount ? ` · ${item.alertCount} alerta(s) relevante(s)` : ''}.`);
-    });
-
-    const best = comparisons.find((item) => item.alertCount === 0) || comparisons[0];
-    const risk = comparisons.find((item) => item.alertCount > 0);
-    if (best) lines.push(`En lectura rápida, ${getProgramName(best.programId)} luce más estable en su corte reciente.`);
-    if (risk) lines.push(`El frente con más seguimiento pendiente es ${getProgramName(risk.programId)}.`);
-
-    return {
-      title: 'Comparación entre programas',
-      text: lines.join(' '),
-      meta: { periodKey: periods.length === 1 ? periods[0] : null, programs: comparisons.map((item) => item.programId) }
-    };
-  }
-
-  function answerAlerts(programIds, periodKey) {
-    const lines = [];
-    const findings = [];
-    programIds.forEach((programId) => {
-      const effectivePeriod = periodKey || getLatestPeriod(programId);
-      const alerts = extractAlerts(programId, effectivePeriod);
-      if (!alerts.indicators.length && !alerts.notes.length) return;
-      findings.push({ programId, effectivePeriod, alerts });
-    });
-    if (!findings.length) {
+    if (!parts.length) {
       return {
         title: 'Alertas y rezagos',
-        text: 'No vi alertas fuertes en los indicadores más recientes cargados; aun así conviene revisar los semáforos y notas metodológicas de cada programa.',
+        text: 'Con el corte válido que hoy tiene cargado el chatbot, no veo alertas fuertes suficientes para afirmar que un programa esté en rojo general. Aun así, vale la pena revisar cada indicador puntual si quieres bajar a más detalle.',
         meta: { programs: programIds, periodKey: periodKey || null }
       };
     }
-    findings.forEach((item) => {
-      const indicatorText = item.alerts.indicators.slice(0, 3).map((row) => `${row.indicator_name || row.indicator_id}${row.status ? ` (${String(row.status).toLowerCase()})` : ''}`).join(', ');
-      const notesText = item.alerts.notes.slice(0, 1).join(' ');
-      const chunks = [];
-      if (indicatorText) chunks.push(indicatorText);
-      if (notesText) chunks.push(notesText);
-      lines.push(`${getProgramName(item.programId)} en ${describePeriod(item.effectivePeriod)}: ${chunks.join(' · ')}.`);
-    });
+
     return {
       title: 'Alertas y rezagos',
-      text: lines.join(' '),
-      meta: { programs: findings.map((item) => item.programId), periodKey: periodKey || null }
+      text: parts.join('\n\n'),
+      meta: { programs: metaPrograms, periodKey: periodKey || null }
     };
   }
 
-  function answerIndicators(programId, periodKey, question) {
-    const effectivePeriod = periodKey || getLatestPeriod(programId);
-    const rows = getIndicatorRows(programId, effectivePeriod);
-    if (!rows.length) return null;
-    const specific = findIndicatorByQuestion(question, rows);
+  function buildIndicatorsAnswer(programId, periodKey, question) {
+    const effectivePeriod = periodKey || getProgram(programId)?.latest_period || null;
+    const indicatorRows = getIndicatorRows(programId, effectivePeriod);
+    if (!indicatorRows.length) return null;
+
+    const specific = findIndicatorByQuestion(question, indicatorRows);
     if (specific) {
-      const value = specific.values.valor_mes ?? specific.values.valor_acumulado ?? specific.values.valor;
-      const meta = specific.values.meta_mes ?? specific.values.meta_anual;
-      const pct = specific.values.pct_vs_esperado ?? specific.values.pct_meta_anual;
-      const parts = [`${getProgramName(programId)} en ${describePeriod(effectivePeriod)}: ${specific.indicator_name || specific.indicator_id} = ${formatNumber(value)}${specific.unit ? ` ${specific.unit}` : ''}`];
-      if (meta != null) parts.push(`meta ${formatNumber(meta)}${specific.unit ? ` ${specific.unit}` : ''}`);
-      if (pct != null) parts.push(`avance ${formatPercent(pct)}`);
-      if (specific.status) parts.push(`estatus ${String(specific.status).toLowerCase()}`);
-      return { title: 'Indicador consultado', text: `${parts.join(', ')}.`, meta: { programId, periodKey: effectivePeriod } };
+      const humanSummary = buildIndicatorHumanSummary(specific);
+      const value = specific.values?.valor_mes ?? specific.values?.valor ?? specific.values?.valor_acumulado;
+      const target = specific.values?.meta_mes ?? specific.values?.meta_mensual ?? specific.values?.meta_anual;
+      const pct = specific.values?.pct_vs_esperado ?? specific.values?.pct_meta_anual;
+      const detailBits = [];
+      if (value != null) detailBits.push(`valor reportado ${formatValueWithUnit(value, specific.unit, specific.indicator_id)}`);
+      if (target != null) detailBits.push(`meta ${formatValueWithUnit(target, specific.unit, specific.indicator_id)}`);
+      if (pct != null) detailBits.push(`avance ${formatPercent(pct)}`);
+      return {
+        title: `${specific.indicator_name || specific.indicator_id} · ${getProgramName(programId)}`,
+        text: `${humanSummary}${detailBits.length ? `\n\nEn números, el corte de ${describePeriod(effectivePeriod)} muestra ${detailBits.join(', ')}.` : ''}`,
+        meta: { programId, periodKey: effectivePeriod }
+      };
     }
-    const top = rows.slice(0, 6).map((row) => {
-      const value = row.values.valor_mes ?? row.values.valor_acumulado ?? row.values.valor;
-      const pct = row.values.pct_vs_esperado ?? row.values.pct_meta_anual;
-      const parts = [`${row.indicator_name || row.indicator_id}: ${formatNumber(value)}${row.unit ? ` ${row.unit}` : ''}`];
-      if (pct != null) parts.push(`${formatPercent(pct)}`);
-      if (row.status) parts.push(String(row.status).toLowerCase());
-      return parts.join(', ');
-    });
+
+    const top = indicatorRows.slice(0, 6).map((row) => buildIndicatorHumanSummary(row)).filter(Boolean);
     return {
       title: `Indicadores de ${getProgramName(programId)}`,
-      text: `Para ${describePeriod(effectivePeriod)}, los indicadores más visibles son ${top.join(' | ')}.`,
+      text: `Tomando ${describePeriod(effectivePeriod)} como referencia, esta es la lectura más útil que te puedo dar:\n\n${top.join('\n\n')}`,
       meta: { programId, periodKey: effectivePeriod }
+    };
+  }
+
+  function buildComparisonAnswer(periodKey) {
+    const blocks = [];
+    const programs = Data.getPrograms().map((item) => item.id);
+    const snapshots = [];
+
+    programs.forEach((programId) => {
+      const program = getProgram(programId);
+      if (!program) return;
+      const effectivePeriod = periodKey || program.latest_period;
+      const metrics = pickSummaryMetrics(programId, effectivePeriod).slice(0, 2);
+      const alerts = getAlertRows(programId, effectivePeriod);
+      const positives = getPositiveRows(programId, effectivePeriod);
+      snapshots.push({ programId, effectivePeriod, metrics, alertsCount: alerts.length, positivesCount: positives.length });
+      const metricText = metrics.length
+        ? metrics.map((item) => `${item.label}: ${formatValueWithUnit(item.value, '', item.field) || formatNumber(item.value)}`).join(' · ')
+        : 'sin métricas resumidas visibles';
+      const tone = alerts.length ? `${alerts.length} alerta(s) relevantes` : 'sin alertas fuertes visibles';
+      blocks.push(`${getProgramName(programId)} (${describePeriod(effectivePeriod)}): ${metricText}. En lectura rápida, queda ${tone}.`);
+    });
+
+    if (!snapshots.length) return null;
+
+    snapshots.sort((a, b) => (b.alertsCount - a.alertsCount) || (b.positivesCount - a.positivesCount));
+    const mostAttention = snapshots[0];
+    const mostStable = [...snapshots].sort((a, b) => (a.alertsCount - b.alertsCount) || (b.positivesCount - a.positivesCount))[0];
+
+    const closing = [];
+    if (mostAttention) closing.push(`El programa que hoy merece más seguimiento es ${getProgramName(mostAttention.programId)}.`);
+    if (mostStable) closing.push(`El que luce más estable en su corte válido es ${getProgramName(mostStable.programId)}.`);
+
+    return {
+      title: 'Comparación entre programas',
+      text: `${blocks.join('\n\n')}\n\n${closing.join(' ')}`,
+      meta: { programs, periodKey: periodKey || null }
     };
   }
 
@@ -514,149 +675,165 @@
     rows.forEach((row) => {
       const label = row.primary_dimension_value;
       if (!label) return;
-      const numericEntries = Object.entries(row.values || {}).map(([key, value]) => ({ key, value: toNumber(value) })).filter((item) => item.value != null && item.value !== 0);
+      const numericEntries = Object.entries(row.values || {})
+        .map(([key, value]) => ({ key, value: toNumber(value) }))
+        .filter((item) => item.value != null && item.value !== 0);
       if (!numericEntries.length) return;
       numericEntries.sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
-      const best = numericEntries[0];
-      if (!bucket.has(label)) bucket.set(label, { label, key: best.key, total: 0 });
+      const strongest = numericEntries[0];
+      if (!bucket.has(label)) {
+        bucket.set(label, { label, key: strongest.key, total: 0 });
+      }
       const item = bucket.get(label);
-      item.total += best.value;
-      if (Math.abs(best.value) > Math.abs(item.total)) item.key = best.key;
+      item.total += strongest.value;
+      item.key = strongest.key;
     });
     return Array.from(bucket.values()).sort((a, b) => Math.abs(b.total) - Math.abs(a.total)).slice(0, 5);
   }
 
-  function answerTerritory(programId, periodKey) {
-    const program = getProgramData(programId);
+  function buildTerritoryAnswer(programId, periodKey) {
+    const program = getProgram(programId);
     if (!program) return null;
     const effectivePeriod = periodKey || program.latest_period;
-    const rows = program.details.filter((row) => !effectivePeriod || row.period_key === effectivePeriod);
-    const monthlyRows = program.monthly.filter((row) => !effectivePeriod || row.period_key === effectivePeriod);
-    const joined = aggregateDimensionRows([...rows, ...monthlyRows].filter((row) => row.primary_dimension_value));
-    if (!joined.length) return null;
-    const text = joined.map((item) => `${titleCase(item.label)}: ${formatNumber(item.total)} en ${humanizeKey(item.key)}`).join(' | ');
+    const rows = program.details.filter((row) => row.period_key === effectivePeriod && row.primary_dimension_value)
+      .concat(program.monthly.filter((row) => row.period_key === effectivePeriod && row.primary_dimension_value));
+    const grouped = aggregateDimensionRows(rows);
+    if (!grouped.length) return null;
+    const text = grouped.map((item) => `${sentenceCase(item.label)}: ${formatNumber(item.total)} en ${humanizeKey(item.key)}`).join(' · ');
     return {
       title: `Detalle territorial o temático de ${getProgramName(programId)}`,
-      text: `En ${describePeriod(effectivePeriod)}, lo que más resalta es ${text}.`,
+      text: `Para ${describePeriod(effectivePeriod)}, lo que más resalta es ${text}.`,
       meta: { programId, periodKey: effectivePeriod }
     };
   }
 
-  function answerTrend(programId, periodKey) {
-    const currentPeriod = periodKey || getLatestPeriod(programId);
+  function buildTrendAnswer(programId, periodKey) {
+    const currentPeriod = periodKey || getProgram(programId)?.latest_period || null;
     const previousPeriod = getPreviousPeriod(programId, currentPeriod);
     if (!currentPeriod || !previousPeriod) return null;
-    const current = getMonthlyRecord(programId, currentPeriod);
-    const previous = getMonthlyRecord(programId, previousPeriod);
+
+    const current = getMonthlyRow(programId, currentPeriod);
+    const previous = getMonthlyRow(programId, previousPeriod);
     if (!current || !previous) return null;
+
     const keys = PROGRAM_HIGHLIGHTS[programId] || [];
     const deltas = keys.map((key) => {
-      const currentValue = toNumber(current.values[key]);
-      const previousValue = toNumber(previous.values[key]);
+      const currentValue = toNumber(current.values?.[key]);
+      const previousValue = toNumber(previous.values?.[key]);
       if (currentValue == null || previousValue == null) return null;
       return { key, currentValue, previousValue, delta: currentValue - previousValue };
     }).filter(Boolean).sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta)).slice(0, 4);
+
     if (!deltas.length) return null;
-    const lines = deltas.map((item) => {
+
+    const sentences = deltas.map((item) => {
       const direction = item.delta > 0 ? 'subió' : item.delta < 0 ? 'bajó' : 'se mantuvo';
-      const magnitude = item.delta === 0 ? formatNumber(item.currentValue) : formatNumber(Math.abs(item.delta));
+      const magnitude = item.delta === 0 ? formatValueWithUnit(item.currentValue, '', item.key) || formatNumber(item.currentValue) : formatValueWithUnit(Math.abs(item.delta), '', item.key) || formatNumber(Math.abs(item.delta));
       return `${humanizeKey(item.key)} ${direction} ${item.delta === 0 ? `en ${magnitude}` : magnitude}`;
     });
+
     return {
       title: `Tendencia de ${getProgramName(programId)}`,
-      text: `Comparando ${describePeriod(previousPeriod)} con ${describePeriod(currentPeriod)}, ${lines.join(' · ')}.`,
+      text: `Si comparo ${describePeriod(previousPeriod)} contra ${describePeriod(currentPeriod)}, veo que ${sentences.join(' · ')}.`,
       meta: { programId, periodKey: currentPeriod, comparisonPeriodKey: previousPeriod }
     };
   }
 
-  function answerSearch(question, programIds, periodKey) {
-    const hits = Data.search(question, { latestOnly: false, limit: Config.DATA.maxSearchResults || 25 });
+  function buildSearchAnswer(question, programIds, periodKey) {
+    const hits = Data.search(question, { latestOnly: !periodKey, limit: Config.DATA.maxSearchResults || 25 });
     const filtered = hits.filter((row) => programIds.includes(row.program_id)).filter((row) => !periodKey || row.period_key === periodKey);
     if (!filtered.length) return null;
+
     const first = filtered[0];
     if (first.dataset_kind === 'indicator' || first.dataset_kind === 'indicator_chart') {
-      return answerIndicators(first.program_id, periodKey || first.period_key, question);
+      return buildIndicatorsAnswer(first.program_id, periodKey || first.period_key, question);
     }
-    const monthly = getMonthlyRecord(first.program_id, periodKey || first.period_key);
-    if (monthly) {
-      const summary = summarizeProgram(first.program_id, periodKey || first.period_key, question);
-      if (summary) return summary;
+
+    if (first.program_id) {
+      return buildProgramSummary(first.program_id, periodKey || first.period_key);
     }
-    const simple = filtered.slice(0, 4).map((row) => {
-      const numericEntry = Object.entries(row.values || {}).find(([, value]) => toNumber(value) != null);
-      const valueText = numericEntry ? `${humanizeKey(numericEntry[0])}: ${formatNumber(numericEntry[1])}` : row.indicator_name || row.primary_dimension_value || row.dataset_key;
-      return `${getProgramName(row.program_id)}${row.period_key ? ` (${describePeriod(row.period_key)})` : ''}: ${valueText}`;
-    });
-    return { title: 'Resultados encontrados', text: simple.join(' | '), meta: { programs: programIds, periodKey: periodKey || null } };
+
+    return null;
+  }
+
+  function buildOffTopicAnswer() {
+    const cutoff = getCutoffPeriod();
+    return {
+      title: '',
+      text: `${Config.FALLBACKS.offTopic} ${cutoff ? `Ahorita además estoy limitado al corte válido ${describePeriod(cutoff)}.` : ''}`.trim(),
+      meta: {}
+    };
   }
 
   function buildLocalAnswer(question) {
-    const trimmed = String(question || '').trim();
-    if (!trimmed) return { title: '', text: Config.FALLBACKS.ambiguous, meta: {} };
-    if (isGreeting(trimmed)) return { title: '', text: `${Config.APP.greeting} Puedes pedirme un resumen, una comparación, alertas o indicadores por programa.`, meta: {} };
-    if (isThanks(trimmed)) return { title: '', text: 'Con gusto. Puedes seguir preguntando por programa, indicador o período.', meta: {} };
-    if (looksOffTopic(trimmed)) return { title: '', text: Config.FALLBACKS.offTopic, meta: {} };
+    const text = String(question || '').trim();
+    if (!text) {
+      return { title: '', text: Config.FALLBACKS.ambiguous, meta: {} };
+    }
+    if (isGreeting(text)) {
+      const cutoff = getCutoffPeriod();
+      return {
+        title: '',
+        text: `${Config.APP.greeting} ${cutoff ? `Estoy respondiendo con el corte válido de ${describePeriod(cutoff)}.` : ''} Puedes pedirme resúmenes, alertas, comparaciones, tendencias o detalle por programa.`,
+        meta: {}
+      };
+    }
+    if (isThanks(text)) {
+      return { title: '', text: 'Con gusto. Si quieres, ahora puedo bajarlo a un programa, un indicador o un período específico.', meta: {} };
+    }
+    if (looksOffTopic(text)) {
+      return buildOffTopicAnswer();
+    }
 
-    const programId = detectProgram(trimmed);
-    const programIds = getProgramScope(trimmed);
-    const periodKey = detectPeriod(trimmed, programId);
-    const intent = detectIntent(trimmed);
+    const programId = detectProgram(text);
+    const programIds = getProgramScope(text);
+    const periodInfo = resolvePeriodInfo(text, programId);
+    const intent = detectIntent(text);
+    const invalidPeriodMessage = buildInvalidPeriodMessage(periodInfo, programId);
 
+    let response = null;
     if (intent === 'comparacion') {
-      const response = comparePrograms(trimmed, periodKey);
-      if (response) return response;
+      response = buildComparisonAnswer(periodInfo.effective);
+    } else if (intent === 'alerta') {
+      response = buildAlertsAnswer(programIds, periodInfo.effective);
+    } else if (programId && intent === 'tendencia') {
+      response = buildTrendAnswer(programId, periodInfo.effective);
+    } else if (programId && intent === 'territorio') {
+      response = buildTerritoryAnswer(programId, periodInfo.effective) || buildProgramSummary(programId, periodInfo.effective);
+    } else if (programId && intent === 'indicadores') {
+      response = buildIndicatorsAnswer(programId, periodInfo.effective, text);
+    } else if (programId && intent === 'resumen') {
+      response = buildProgramSummary(programId, periodInfo.effective);
+    } else if (!programId && intent === 'resumen') {
+      response = buildComparisonAnswer(periodInfo.effective);
     }
 
-    if (intent === 'alerta') {
-      const response = answerAlerts(programIds, periodKey);
-      if (response) return response;
+    if (!response) {
+      response = buildSearchAnswer(text, programIds, periodInfo.effective);
+    }
+    if (!response && programId) {
+      response = buildProgramSummary(programId, periodInfo.effective);
+    }
+    if (!response) {
+      response = { title: '', text: Config.FALLBACKS.noData, meta: { programId: programId || null, periodKey: periodInfo.effective || null } };
     }
 
-    if (programId && intent === 'tendencia') {
-      const response = answerTrend(programId, periodKey);
-      if (response) return response;
+    if (invalidPeriodMessage) {
+      response.text = `${invalidPeriodMessage}\n\n${response.text}`;
     }
 
-    if (programId && intent === 'territorio') {
-      const response = answerTerritory(programId, periodKey);
-      if (response) return response;
-    }
-
-    if (programId && intent === 'indicadores') {
-      const response = answerIndicators(programId, periodKey, trimmed);
-      if (response) return response;
-    }
-
-    if (programId && intent === 'resumen') {
-      const response = summarizeProgram(programId, periodKey, trimmed);
-      if (response) return response;
-    }
-
-    if (!programId && intent === 'resumen') {
-      const response = comparePrograms(trimmed, periodKey);
-      if (response) return response;
-    }
-
-    const searchResponse = answerSearch(trimmed, programIds, periodKey);
-    if (searchResponse) return searchResponse;
-
-    if (programId) {
-      const summary = summarizeProgram(programId, periodKey, trimmed);
-      if (summary) return summary;
-    }
-
-    return { title: '', text: Config.FALLBACKS.noData, meta: { programId: programId || null, periodKey: periodKey || null } };
+    return response;
   }
 
   async function buildAnswer(question) {
     if (Config.MODEL.backendEnabled && Config.MODEL.endpoint) {
       try {
         const programId = detectProgram(question);
-        const periodKey = detectPeriod(question, programId);
+        const periodInfo = resolvePeriodInfo(question, programId);
         const context = Data.buildContext({
           programId,
-          periodKey,
-          latestOnly: !periodKey,
+          periodKey: periodInfo.effective,
+          latestOnly: !periodInfo.requested,
           includeDetails: Config.DATA.includeDetailsByDefault,
           includeIndicators: Config.DATA.includeIndicatorsByDefault,
           includeMetadata: Config.DATA.includeMetadataByDefault,
@@ -699,15 +876,15 @@
     style.textContent = `
       .aala-chatbot-root{
         position:fixed;
-        right:24px;
+        right:26px;
         bottom:24px;
         z-index:1200;
         font-family:var(--font-body,'Sora',system-ui,sans-serif)
       }
 
       .aala-chatbot-launcher{
-        width:64px;
-        height:64px;
+        width:68px;
+        height:68px;
         border:0;
         cursor:pointer;
         border-radius:999px;
@@ -727,7 +904,7 @@
       }
 
       .aala-chatbot-launcher span:first-child{
-        font-size:26px;
+        font-size:27px;
         line-height:1
       }
 
@@ -736,11 +913,11 @@
       }
 
       .aala-chatbot-panel{
-        width:min(390px,calc(100vw - 28px));
-        height:min(680px,74vh);
+        width:min(540px,calc(100vw - 30px));
+        height:min(760px,82vh);
         background:#ffffff;
         border:1px solid rgba(19,72,86,.10);
-        border-radius:22px;
+        border-radius:24px;
         box-shadow:0 24px 60px rgba(9,38,58,.18);
         overflow:hidden;
         display:none;
@@ -756,7 +933,7 @@
       }
 
       .aala-chatbot-head{
-        padding:16px 16px 12px;
+        padding:16px 18px 12px;
         background:#ffffff;
         border-bottom:1px solid #e8eff2;
         display:flex;
@@ -773,10 +950,10 @@
       }
 
       .aala-chatbot-avatar{
-        width:42px;
-        height:42px;
+        width:44px;
+        height:44px;
         border-radius:999px;
-        flex:0 0 42px;
+        flex:0 0 44px;
         display:flex;
         align-items:center;
         justify-content:center;
@@ -788,7 +965,7 @@
       }
 
       .aala-chatbot-head h3{
-        font-size:1rem;
+        font-size:1.04rem;
         line-height:1.2;
         margin:0;
         color:#1b7f76;
@@ -796,7 +973,7 @@
       }
 
       .aala-chatbot-head p{
-        font-size:.78rem;
+        font-size:.8rem;
         color:#5f6f78;
         line-height:1.45;
         margin:4px 0 0
@@ -808,6 +985,7 @@
         gap:8px
       }
 
+      .aala-chatbot-reset,
       .aala-chatbot-close{
         border:0;
         background:#f1f5f7;
@@ -815,26 +993,28 @@
         border-radius:10px;
         width:34px;
         height:34px;
-        font-size:20px;
+        font-size:18px;
         cursor:pointer;
         line-height:1
       }
 
+      .aala-chatbot-reset:hover,
       .aala-chatbot-close:hover{
         background:#e7eef1
       }
 
       .aala-chatbot-status{
-        padding:8px 16px 0;
-        font-size:.75rem;
+        padding:8px 18px 0;
+        font-size:.76rem;
         color:#78909a;
-        background:#ffffff
+        background:#ffffff;
+        min-height:26px
       }
 
       .aala-chatbot-body{
         flex:1;
         overflow:auto;
-        padding:14px 14px 10px;
+        padding:16px 16px 12px;
         background:linear-gradient(180deg,#f6f7f8 0%,#f2f5f7 100%)
       }
 
@@ -842,7 +1022,7 @@
         display:flex;
         align-items:flex-end;
         gap:8px;
-        margin-bottom:12px
+        margin-bottom:14px
       }
 
       .aala-chatbot-row.user{
@@ -850,10 +1030,10 @@
       }
 
       .aala-chatbot-mini-avatar{
-        width:30px;
-        height:30px;
+        width:32px;
+        height:32px;
         border-radius:999px;
-        flex:0 0 30px;
+        flex:0 0 32px;
         display:flex;
         align-items:center;
         justify-content:center;
@@ -864,11 +1044,11 @@
       }
 
       .aala-chatbot-msg{
-        max-width:84%;
-        padding:12px 14px;
-        border-radius:18px;
-        line-height:1.55;
-        font-size:.92rem;
+        max-width:88%;
+        padding:14px 15px;
+        border-radius:20px;
+        line-height:1.62;
+        font-size:.95rem;
         white-space:pre-wrap;
         word-break:break-word;
         box-shadow:0 8px 18px rgba(18,42,66,.05)
@@ -891,14 +1071,15 @@
       .aala-chatbot-msg-title{
         font-weight:700;
         margin-bottom:6px;
-        color:#1b7f76
+        color:#1b7f76;
+        font-size:.95rem
       }
 
       .aala-chatbot-meta{
         display:flex;
         flex-wrap:wrap;
         gap:6px;
-        margin-top:9px
+        margin-top:10px
       }
 
       .aala-chatbot-chip{
@@ -914,11 +1095,15 @@
       }
 
       .aala-chatbot-suggestions{
-        padding:0 14px 12px;
+        padding:0 16px 12px;
         display:flex;
         flex-wrap:wrap;
         gap:8px;
         background:linear-gradient(180deg,#f2f5f7 0%,#ffffff 60%)
+      }
+
+      .aala-chatbot-suggestions.is-hidden{
+        display:none
       }
 
       .aala-chatbot-suggestion{
@@ -927,7 +1112,7 @@
         color:#35535f;
         border-radius:999px;
         padding:8px 12px;
-        font-size:.78rem;
+        font-size:.79rem;
         cursor:pointer;
         line-height:1.35
       }
@@ -947,12 +1132,12 @@
 
       .aala-chatbot-input{
         flex:1;
-        min-height:46px;
-        max-height:130px;
+        min-height:50px;
+        max-height:150px;
         resize:none;
         border:1px solid #d9e5ea;
         border-radius:16px;
-        padding:12px 14px;
+        padding:13px 14px;
         font:inherit;
         color:#17314f;
         outline:none;
@@ -969,10 +1154,10 @@
         border-radius:14px;
         background:#f0a63f;
         color:#ffffff;
-        padding:12px 14px;
+        padding:12px 16px;
         font-weight:700;
         cursor:pointer;
-        min-width:84px;
+        min-width:88px;
         box-shadow:0 10px 22px rgba(240,166,63,.24)
       }
 
@@ -1001,13 +1186,8 @@
         animation:aala-chatbot-pulse 1.2s infinite ease-in-out
       }
 
-      .aala-chatbot-loader span:nth-child(2){
-        animation-delay:.15s
-      }
-
-      .aala-chatbot-loader span:nth-child(3){
-        animation-delay:.3s
-      }
+      .aala-chatbot-loader span:nth-child(2){ animation-delay:.15s }
+      .aala-chatbot-loader span:nth-child(3){ animation-delay:.3s }
 
       @keyframes aala-chatbot-pulse{
         0%,80%,100%{transform:scale(.5);opacity:.45}
@@ -1023,7 +1203,7 @@
 
         .aala-chatbot-panel{
           width:100%;
-          height:min(78vh,700px)
+          height:min(82vh,760px)
         }
 
         .aala-chatbot-launcher{
@@ -1031,7 +1211,7 @@
         }
 
         .aala-chatbot-msg{
-          max-width:88%
+          max-width:91%
         }
       }
     `;
@@ -1061,6 +1241,7 @@
             </div>
           </div>
           <div class="aala-chatbot-head-actions">
+            <button type="button" class="aala-chatbot-reset" aria-label="Reiniciar chat">↺</button>
             <button type="button" class="aala-chatbot-close" aria-label="Cerrar chat">×</button>
           </div>
         </header>
@@ -1089,12 +1270,17 @@
     state.elements.launcher = root.querySelector('.aala-chatbot-launcher');
     state.elements.panel = root.querySelector('.aala-chatbot-panel');
     state.elements.close = root.querySelector('.aala-chatbot-close');
+    state.elements.reset = root.querySelector('.aala-chatbot-reset');
     state.elements.status = root.querySelector('.aala-chatbot-status');
     state.elements.body = root.querySelector('.aala-chatbot-body');
     state.elements.suggestions = root.querySelector('.aala-chatbot-suggestions');
     state.elements.form = root.querySelector('.aala-chatbot-form');
     state.elements.input = root.querySelector('.aala-chatbot-input');
     state.elements.send = root.querySelector('.aala-chatbot-send');
+  }
+
+  function scrollToBottom() {
+    state.elements.body.scrollTop = state.elements.body.scrollHeight;
   }
 
   function setOpen(open) {
@@ -1109,13 +1295,17 @@
     state.elements.input.disabled = state.busy;
     if (busy) {
       state.elements.status.innerHTML = `<span class="aala-chatbot-loader"><span></span><span></span><span></span></span> ${escapeHtml(Config.APP.loadingLabel)}`;
-    } else {
-      state.elements.status.textContent = state.dataLoaded ? `Datos cargados: ${new Date().toLocaleString('es-GT')}` : Config.APP.errorLabel;
+      return;
     }
-  }
 
-  function scrollToBottom() {
-    state.elements.body.scrollTop = state.elements.body.scrollHeight;
+    if (!state.dataLoaded) {
+      state.elements.status.textContent = Config.APP.errorLabel;
+      return;
+    }
+
+    const cutoff = getCutoffPeriod();
+    const latestLabel = cutoff ? `Corte válido del bot: ${describePeriod(cutoff)}.` : 'Datos listos.';
+    state.elements.status.textContent = latestLabel;
   }
 
   function renderMessage(message) {
@@ -1163,12 +1353,22 @@
     renderMessage(message);
   }
 
-  function clearSuggestions() {
-    state.elements.suggestions.innerHTML = '';
+  function clearBody() {
+    state.elements.body.innerHTML = '';
+    state.messages = [];
+  }
+
+  function setSuggestionsHidden(hidden) {
+    state.elements.suggestions.classList.toggle('is-hidden', !!hidden);
   }
 
   function renderSuggestions(programId) {
     if (!Config.UX.showSuggestedQuestions) return;
+    if (state.hasUserInteracted) {
+      state.elements.suggestions.innerHTML = '';
+      setSuggestionsHidden(true);
+      return;
+    }
     const suggestions = Config.getSuggestedQuestions(programId);
     state.elements.suggestions.innerHTML = '';
     suggestions.forEach((item) => {
@@ -1182,42 +1382,85 @@
       });
       state.elements.suggestions.appendChild(button);
     });
+    setSuggestionsHidden(false);
   }
 
   function updateScopeFromQuestion(question) {
     const programId = Config.resolveProgramFromText(question);
     if (programId) state.scopeProgramId = programId;
-    renderSuggestions(state.scopeProgramId);
-  }
-
-  async function handleUserMessage(question) {
-    const text = String(question || '').trim();
-    if (!text || state.busy) return;
-    updateScopeFromQuestion(text);
-    pushMessage('user', text, '', {});
-    if (Config.UX.clearInputOnSend) state.elements.input.value = '';
-    setBusy(true);
-    try {
-      const answer = await buildAnswer(text);
-      pushMessage('bot', answer.text || Config.FALLBACKS.noData, answer.title || '', answer.meta || {});
-    } catch (error) {
-      console.error(error);
-      pushMessage('bot', Config.APP.errorLabel, '', {});
-    } finally {
-      setBusy(false);
-      state.elements.input.focus();
-    }
   }
 
   function autoGrowTextarea() {
     const el = state.elements.input;
     el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 140)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, 150)}px`;
+  }
+
+  function renderWelcomeMessages() {
+    const cutoff = getCutoffPeriod();
+    pushMessage('bot', Config.APP.greeting, '', {});
+    if (state.dataLoaded) {
+      const cutoffText = cutoff
+        ? `Responderé usando únicamente el corte válido ${describePeriod(cutoff)} y los períodos habilitados para cada programa.`
+        : 'Responderé usando solo los CSV publicados y cargados en el dashboard.';
+      pushMessage('bot', `${cutoffText} Puedes preguntarme por resúmenes, alertas, comparaciones, indicadores o tendencias.`, 'Datos listos', {});
+    }
+  }
+
+  function resetConversation(options) {
+    const opts = options || {};
+    state.requestToken += 1;
+    state.busy = false;
+    state.scopeProgramId = null;
+    state.hasUserInteracted = false;
+    state.elements.send.disabled = false;
+    state.elements.input.disabled = false;
+    state.elements.input.value = '';
+    state.elements.input.style.height = 'auto';
+    clearBody();
+    renderWelcomeMessages();
+    renderSuggestions(null);
+    setBusy(false);
+    if (!opts.keepClosed) setOpen(true);
+  }
+
+  async function handleUserMessage(question) {
+    const text = String(question || '').trim();
+    if (!text || state.busy) return;
+
+    const requestToken = ++state.requestToken;
+    state.hasUserInteracted = true;
+    setSuggestionsHidden(true);
+    state.elements.suggestions.innerHTML = '';
+    updateScopeFromQuestion(text);
+    pushMessage('user', text, '', {});
+    if (Config.UX.clearInputOnSend) state.elements.input.value = '';
+    autoGrowTextarea();
+    setBusy(true);
+
+    try {
+      const answer = await buildAnswer(text);
+      if (requestToken !== state.requestToken) return;
+      pushMessage('bot', answer.text || Config.FALLBACKS.noData, answer.title || '', answer.meta || {});
+    } catch (error) {
+      if (requestToken !== state.requestToken) return;
+      console.error(error);
+      pushMessage('bot', Config.APP.errorLabel, '', {});
+    } finally {
+      if (requestToken === state.requestToken) {
+        setBusy(false);
+        state.elements.input.focus();
+      }
+    }
   }
 
   function bindEvents() {
     state.elements.launcher.addEventListener('click', () => setOpen(true));
-    state.elements.close.addEventListener('click', () => setOpen(false));
+    state.elements.close.addEventListener('click', () => {
+      resetConversation({ keepClosed: true });
+      setOpen(false);
+    });
+    state.elements.reset.addEventListener('click', () => resetConversation({ keepClosed: false }));
     state.elements.form.addEventListener('submit', (event) => {
       event.preventDefault();
       handleUserMessage(state.elements.input.value);
@@ -1244,37 +1487,42 @@
     bindElements(root);
     bindEvents();
     setOpen(false);
-    renderSuggestions(null);
-    pushMessage('bot', Config.APP.greeting, '', {});
     setBusy(true);
+
     try {
       await bootstrapData();
       setBusy(false);
-      const latest = Data.getLatest();
-      const loadedPrograms = Object.keys(latest || {});
-      if (loadedPrograms.length) {
-        const periods = loadedPrograms.map((programId) => latest[programId]?.latest_period).filter(Boolean);
-        const uniquePeriods = Array.from(new Set(periods));
-        const freshness = uniquePeriods.length === 1
-          ? `Período más reciente disponible: ${describePeriod(uniquePeriods[0])}.`
-          : 'Los programas tienen cortes recientes cargados y pueden variar por período.';
-        pushMessage('bot', `${freshness} Puedes preguntarme por resúmenes, comparaciones, alertas, indicadores o detalle por programa.`, 'Datos listos', {});
-      }
+      resetConversation({ keepClosed: true });
     } catch (error) {
       console.error(error);
       state.dataLoaded = false;
-      setBusy(false);
+      clearBody();
       pushMessage('bot', Config.APP.errorLabel, '', {});
+      setBusy(false);
     }
+
     state.initialized = true;
   }
 
   global.AALAChatbot = {
     init,
     open() { setOpen(true); },
-    close() { setOpen(false); },
+    close() {
+      resetConversation({ keepClosed: true });
+      setOpen(false);
+    },
+    reset() { resetConversation({ keepClosed: false }); },
     ask(question) { return handleUserMessage(question); },
-    getState() { return clone({ initialized: state.initialized, open: state.open, busy: state.busy, scopeProgramId: state.scopeProgramId, messages: state.messages }); }
+    getState() {
+      return clone({
+        initialized: state.initialized,
+        open: state.open,
+        busy: state.busy,
+        scopeProgramId: state.scopeProgramId,
+        messages: state.messages,
+        hasUserInteracted: state.hasUserInteracted
+      });
+    }
   };
 
   if (document.readyState === 'loading') {
