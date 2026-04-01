@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-01T00:33:04.960512-06:00",
+  "generated_at": "2026-04-01T00:44:04.798733-06:00",
   "cutoff": {
     "institutional_cutoff_period": "2026-04",
     "timezone": "America/Guatemala",
@@ -438,12 +438,12 @@
         {
           "field": "inmuebles_atendidos_mes",
           "label": "Inmuebles atendidos",
-          "value": 168.0
+          "value": 84.0
         },
         {
           "field": "litros_aceite_recolectados_mes",
           "label": "Litros de aceite recolectados",
-          "value": 14106.0
+          "value": 7053.0
         },
         {
           "field": "jabones_vendidos_mes",
@@ -466,11 +466,11 @@
         "aporta_metas_programa": true,
         "jornadas_recoleccion_ciclo_mes": 1,
         "jornadas_codigos_unicos_mes": 84,
-        "filas_recoleccion_validas_mes": 168,
+        "filas_recoleccion_validas_mes": 84,
         "municipios_visitados_mes": 9,
-        "inmuebles_atendidos_mes": 168.0,
-        "litros_aceite_recolectados_mes": 14106.0,
-        "litros_agua_protegidos_mes": 14106000.0,
+        "inmuebles_atendidos_mes": 84.0,
+        "litros_aceite_recolectados_mes": 7053.0,
+        "litros_agua_protegidos_mes": 7053000.0,
         "clientes_recurrentes_atendidos_mes": 0,
         "filas_clientes_recurrentes_mes": 0,
         "jabones_hotel_producidos_mes": 5100.0,
@@ -513,15 +513,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 14106.0,
-            "value_accumulated": 27523.828,
+            "value_month": 7053.0,
+            "value_accumulated": 20470.828,
             "target_month": 0.0,
             "target_year": 80000.0,
             "expected_to_date": 20000.0,
-            "pct_vs_expected": 1.376191,
-            "pct_meta_year": 0.344048,
+            "pct_vs_expected": 1.023541,
+            "pct_meta_year": 0.255885,
             "note": "Compara el acumulado real del año contra el esperado lineal al corte mensual.",
-            "human_summary": "Litros de aceite usado recolectados va bien: alcanza 138% del esperado al corte."
+            "human_summary": "Litros de aceite usado recolectados va bien: alcanza 102% del esperado al corte."
           },
           {
             "indicator_id": "litros_agua_protegidos",
@@ -531,15 +531,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 14106000.0,
-            "value_accumulated": 27523828.0,
+            "value_month": 7053000.0,
+            "value_accumulated": 20470828.0,
             "target_month": 0.0,
             "target_year": 80000000.0,
             "expected_to_date": 20000000.0,
-            "pct_vs_expected": 1.376191,
-            "pct_meta_year": 0.344048,
+            "pct_vs_expected": 1.023541,
+            "pct_meta_year": 0.255885,
             "note": "Compara el acumulado real del año contra el esperado lineal al corte mensual.",
-            "human_summary": "Litros de agua protegidos va bien: alcanza 138% del esperado al corte."
+            "human_summary": "Litros de agua protegidos va bien: alcanza 102% del esperado al corte."
           },
           {
             "indicator_id": "jabones_producidos",
@@ -603,8 +603,8 @@
             "status": "gris",
             "bucket": "neutral",
             "is_required": false,
-            "value_month": 168.0,
-            "value_accumulated": 334.0,
+            "value_month": 84.0,
+            "value_accumulated": 250.0,
             "target_month": 0.0,
             "target_year": 0.0,
             "expected_to_date": 0.0,
@@ -823,15 +823,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 14106.0,
-            "value_accumulated": 27523.828,
+            "value_month": 7053.0,
+            "value_accumulated": 20470.828,
             "target_month": 0.0,
             "target_year": 80000.0,
             "expected_to_date": 20000.0,
-            "pct_vs_expected": 1.376191,
-            "pct_meta_year": 0.344048,
+            "pct_vs_expected": 1.023541,
+            "pct_meta_year": 0.255885,
             "note": "Compara el acumulado real del año contra el esperado lineal al corte mensual.",
-            "human_summary": "Litros de aceite usado recolectados va bien: alcanza 138% del esperado al corte."
+            "human_summary": "Litros de aceite usado recolectados va bien: alcanza 102% del esperado al corte."
           },
           {
             "indicator_id": "litros_agua_protegidos",
@@ -841,15 +841,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 14106000.0,
-            "value_accumulated": 27523828.0,
+            "value_month": 7053000.0,
+            "value_accumulated": 20470828.0,
             "target_month": 0.0,
             "target_year": 80000000.0,
             "expected_to_date": 20000000.0,
-            "pct_vs_expected": 1.376191,
-            "pct_meta_year": 0.344048,
+            "pct_vs_expected": 1.023541,
+            "pct_meta_year": 0.255885,
             "note": "Compara el acumulado real del año contra el esperado lineal al corte mensual.",
-            "human_summary": "Litros de agua protegidos va bien: alcanza 138% del esperado al corte."
+            "human_summary": "Litros de agua protegidos va bien: alcanza 102% del esperado al corte."
           },
           {
             "indicator_id": "jabones_producidos",
@@ -897,8 +897,8 @@
             "status": "gris",
             "bucket": "neutral",
             "is_required": false,
-            "value_month": 168.0,
-            "value_accumulated": 334.0,
+            "value_month": 84.0,
+            "value_accumulated": 250.0,
             "target_month": 0.0,
             "target_year": 0.0,
             "expected_to_date": 0.0,
@@ -1075,8 +1075,8 @@
         "executive_summary": "Para Marzo de 2026, Conservando Atitlán muestra 1 indicador(es) que requieren atención prioritaria. El chatbot debería explicar esos rezagos usando solo este corte válido.",
         "what_is_going_well": [
           "Jornadas de recolección a inmuebles va bien: alcanza 100% del esperado al corte.",
-          "Litros de aceite usado recolectados va bien: alcanza 138% del esperado al corte.",
-          "Litros de agua protegidos va bien: alcanza 138% del esperado al corte."
+          "Litros de aceite usado recolectados va bien: alcanza 102% del esperado al corte.",
+          "Litros de agua protegidos va bien: alcanza 102% del esperado al corte."
         ],
         "what_needs_attention": [
           "Jabones vendidos está por debajo del ritmo esperado: alcanza 39% del avance esperado al corte."
