@@ -994,6 +994,34 @@
   }
 
   // Detecta el último período con datos reales para un programa.
+  // Enriquece el contexto agregando period_key a cada monthly row
+  // porque buildContext solo manda row.values sin el period_key del row
+  function enrichContextWithPeriods(context) {
+    if (!context || !context.programs) return context;
+    const enriched = JSON.parse(JSON.stringify(context));
+    Object.keys(enriched.programs).forEach((programId) => {
+      const prog = enriched.programs[programId];
+      const program = Data.getProgram(programId);
+      if (!program) return;
+      // Reconstruir monthly con period_key incluido
+      prog.monthly = program.monthly
+        .filter((row) => row.period_key)
+        .map((row) => ({ period_key: row.period_key, month_label: row.month_label, ...row.values }));
+      // Reconstruir indicators con period_key incluido
+      prog.indicators = program.indicators
+        .filter((row) => row.period_key)
+        .map((row) => ({
+          period_key: row.period_key,
+          indicator_id: row.indicator_id,
+          indicator_name: row.indicator_name,
+          unit: row.unit,
+          status: row.status,
+          ...row.values
+        }));
+    });
+    return enriched;
+  }
+
   // Detecta si un período tiene datos reales comprobando que al menos
   // un campo numérico del row tenga valor mayor a cero.
   function periodHasRealData(row) {
@@ -1039,29 +1067,16 @@
         const programId = detectProgram(question);
         const periodInfo = resolvePeriodInfo(question, programId);
 
-        // Si el usuario no pidió período explícito, buscar el último con datos reales
-        let effectivePeriod = periodInfo.effective;
-        if (!periodInfo.requested) {
-          if (programId) {
-            // Con programa específico: retroceder al último mes con datos reales
-            effectivePeriod = resolveEffectivePeriodWithData(programId, effectivePeriod);
-          } else {
-            // Sin programa: pasar null para que el Worker reciba todos los períodos
-            // y pueda mostrar el más reciente con datos por cada programa
-            effectivePeriod = null;
-          }
-        }
-
-        // Incluir todos los programas y todos los períodos disponibles
-        // El Worker filtra y presenta solo los que tienen datos reales
+        // Forzar todos los períodos de todos los programas sin filtro
+        // El Worker recibe ENE/FEB/MAR completos y responde con datos reales
         const context = Data.buildContext({
-          programId: programId || null,
-          periodKey: effectivePeriod || null,
+          programId: null,
+          periodKey: null,
           latestOnly: false,
-          includeDetails: Config.DATA.includeDetailsByDefault,
-          includeIndicators: Config.DATA.includeIndicatorsByDefault,
-          includeMetadata: Config.DATA.includeMetadataByDefault,
-          maxRowsPerCollection: Config.DATA.maxRowsPerCollection
+          includeDetails: false,
+          includeIndicators: true,
+          includeMetadata: false,
+          maxRowsPerCollection: 500
         });
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), Config.MODEL.timeoutMs || 30000);
@@ -1071,7 +1086,7 @@
           body: JSON.stringify({
             question,
             system: Config.buildSystemInstruction(),
-            context,
+            context: enrichContextWithPeriods(context),
             config: {
               temperature: Config.MODEL.temperature,
               maxTokens: Config.MODEL.maxTokens
