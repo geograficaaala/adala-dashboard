@@ -1,11 +1,13 @@
 (function (global) {
   'use strict';
 
+  const MANIFEST_PATH = './data/chatbot_manifest.json';
+
   const PROGRAMS = {
     atitlan_recicla: {
       id: 'atitlan_recicla',
       name: 'Atitlán Recicla',
-      aliases: ['atitlan_recicla', 'cooperativa atitlán recicla', 'cooperativa atitlan recicla', 'atitlán recicla']
+      aliases: ['atitlan_recicla', 'cooperativa atitlán recicla', 'cooperativa atitlan recicla', 'atitlán recicla', 'atitlan recicla']
     },
     conservando_atitlan: {
       id: 'conservando_atitlan',
@@ -24,44 +26,29 @@
     },
     reforestacion: {
       id: 'reforestacion',
-      name: 'Reforestando Atitlán',
+      name: 'Reforestación',
       aliases: ['reforestacion', 'reforestación', 'reforestando atitlán', 'reforestando atitlan']
     }
   };
 
-  const DATASETS = [
-    { key: 'atitlan_total_mes', path: './data/total_mes.csv', kind: 'monthly_total', programId: 'atitlan_recicla' },
-    { key: 'atitlan_indicadores', path: './data/institucional_indicadores.csv', kind: 'indicator', programId: 'atitlan_recicla' },
-    { key: 'atitlan_zona_mes', path: './data/zona_mes.csv', kind: 'zone_monthly', programId: 'atitlan_recicla' },
-    { key: 'atitlan_territorio_mes', path: './data/territorio_mes.csv', kind: 'territory_monthly', programId: 'atitlan_recicla' },
-    { key: 'atitlan_materiales_resumen_mes', path: './data/materiales_resumen_mes.csv', kind: 'materials_monthly', programId: 'atitlan_recicla' },
-    { key: 'atitlan_materiales_detalle', path: './data/materiales_detalle.csv', kind: 'materials_detail', programId: 'atitlan_recicla' },
-    { key: 'atitlan_materiales_raw', path: './data/materiales_raw.csv', kind: 'materials_raw', programId: 'atitlan_recicla' },
-    { key: 'atitlan_cdm_raw', path: './data/cdm_raw.csv', kind: 'cdm_raw', programId: 'atitlan_recicla' },
-    { key: 'conservando_total_mes', path: './data/conservando_atitlan/total_mes.csv', kind: 'monthly_total', programId: 'conservando_atitlan' },
-    { key: 'conservando_indicadores', path: './data/conservando_atitlan/institucional_indicadores.csv', kind: 'indicator', programId: 'conservando_atitlan' },
-    { key: 'conservando_metadata', path: './data/conservando_atitlan/metadata_publicacion.csv', kind: 'metadata', programId: 'conservando_atitlan' },
-    { key: 'epc_total_mes', path: './data/educando_para_conservar/total_mes.csv', kind: 'monthly_total', programId: 'educando_para_conservar' },
-    { key: 'epc_indicadores', path: './data/educando_para_conservar/institucional_indicadores.csv', kind: 'indicator', programId: 'educando_para_conservar' },
-    { key: 'epc_metadata', path: './data/educando_para_conservar/metadata_publicacion.csv', kind: 'metadata', programId: 'educando_para_conservar' },
-    { key: 'fm_total_mes', path: './data/fortalecimiento_municipal/total_mes.csv', kind: 'monthly_total', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_indicadores', path: './data/fortalecimiento_municipal/institucional_indicadores.csv', kind: 'indicator', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_metadata', path: './data/fortalecimiento_municipal/metadata_publicacion.csv', kind: 'metadata', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_asistencias_sector_mes', path: './data/fortalecimiento_municipal/asistencias_sector_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_calidad_datos_mes', path: './data/fortalecimiento_municipal/calidad_datos_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_capacitaciones_municipio_mes', path: './data/fortalecimiento_municipal/capacitaciones_municipio_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_capacitaciones_tema_mes', path: './data/fortalecimiento_municipal/capacitaciones_tema_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_estudios_sector_mes', path: './data/fortalecimiento_municipal/estudios_sector_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_reuniones_tipo_mes', path: './data/fortalecimiento_municipal/reuniones_tipo_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_detalle_asistencias', path: './data/fortalecimiento_municipal/detalle_asistencias.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_detalle_capacitaciones', path: './data/fortalecimiento_municipal/detalle_capacitaciones.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_detalle_estudios', path: './data/fortalecimiento_municipal/detalle_estudios.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_detalle_pirdes', path: './data/fortalecimiento_municipal/detalle_pirdes.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal' },
-    { key: 'fm_detalle_reuniones', path: './data/fortalecimiento_municipal/detalle_reuniones.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal' },
-    { key: 'reforestacion_total_mes', path: './data/reforestacion/total_mes.csv', kind: 'monthly_total', programId: 'reforestacion' },
-    { key: 'reforestacion_indicadores', path: './data/reforestacion/institucional_indicadores.csv', kind: 'indicator', programId: 'reforestacion' },
-    { key: 'reforestacion_kpi_graficos', path: './data/reforestacion/kpi_graficos.csv', kind: 'indicator_chart', programId: 'reforestacion' },
-    { key: 'reforestacion_metadata', path: './data/reforestacion/metadata_publicacion.csv', kind: 'metadata', programId: 'reforestacion' }
+  const OPTIONAL_DATASETS = [
+    { key: 'atitlan_zona_mes', path: './data/zona_mes.csv', kind: 'zone_monthly', programId: 'atitlan_recicla', optional: true },
+    { key: 'atitlan_territorio_mes', path: './data/territorio_mes.csv', kind: 'territory_monthly', programId: 'atitlan_recicla', optional: true },
+    { key: 'atitlan_materiales_resumen_mes', path: './data/materiales_resumen_mes.csv', kind: 'materials_monthly', programId: 'atitlan_recicla', optional: true },
+    { key: 'atitlan_materiales_detalle', path: './data/materiales_detalle.csv', kind: 'materials_detail', programId: 'atitlan_recicla', optional: true },
+    { key: 'atitlan_materiales_raw', path: './data/materiales_raw.csv', kind: 'materials_raw', programId: 'atitlan_recicla', optional: true },
+    { key: 'atitlan_cdm_raw', path: './data/cdm_raw.csv', kind: 'cdm_raw', programId: 'atitlan_recicla', optional: true },
+    { key: 'fm_asistencias_sector_mes', path: './data/fortalecimiento_municipal/asistencias_sector_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_calidad_datos_mes', path: './data/fortalecimiento_municipal/calidad_datos_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_capacitaciones_municipio_mes', path: './data/fortalecimiento_municipal/capacitaciones_municipio_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_capacitaciones_tema_mes', path: './data/fortalecimiento_municipal/capacitaciones_tema_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_estudios_sector_mes', path: './data/fortalecimiento_municipal/estudios_sector_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_reuniones_tipo_mes', path: './data/fortalecimiento_municipal/reuniones_tipo_mes.csv', kind: 'detail_monthly', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_detalle_asistencias', path: './data/fortalecimiento_municipal/detalle_asistencias.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_detalle_capacitaciones', path: './data/fortalecimiento_municipal/detalle_capacitaciones.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_detalle_estudios', path: './data/fortalecimiento_municipal/detalle_estudios.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_detalle_pirdes', path: './data/fortalecimiento_municipal/detalle_pirdes.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal', optional: true },
+    { key: 'fm_detalle_reuniones', path: './data/fortalecimiento_municipal/detalle_reuniones.csv', kind: 'detail_row', programId: 'fortalecimiento_municipal', optional: true }
   ];
 
   const MONTHS = {
@@ -90,7 +77,8 @@
     loaded: false,
     loading: null,
     loadedAt: null,
-    version: '1.0.0',
+    version: '2.0.0',
+    manifest: null,
     datasets: [],
     rows: [],
     collections: {
@@ -105,10 +93,13 @@
     searchIndex: []
   };
 
+  function clone(value) {
+    if (typeof structuredClone === 'function') return structuredClone(value);
+    return JSON.parse(JSON.stringify(value));
+  }
+
   function stripAccents(value) {
-    return String(value || '')
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '');
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 
   function normalizeText(value) {
@@ -118,6 +109,10 @@
       .replace(/[^a-z0-9áéíóúüñ\s.-]/gi, ' ')
       .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  function unique(items) {
+    return Array.from(new Set(items));
   }
 
   function toTitleMonth(monthNum) {
@@ -154,9 +149,18 @@
     return out;
   }
 
-  async function fetchText(path) {
+  async function fetchJson(path) {
     const response = await fetch(path, { cache: 'no-store' });
     if (!response.ok) throw new Error(`No se pudo cargar ${path}`);
+    return response.json();
+  }
+
+  async function fetchText(path, optional) {
+    const response = await fetch(path, { cache: 'no-store' });
+    if (!response.ok) {
+      if (optional) return null;
+      throw new Error(`No se pudo cargar ${path}`);
+    }
     return response.text();
   }
 
@@ -206,6 +210,21 @@
     return values;
   }
 
+  function comparePeriods(a, b) {
+    const ay = Number(a.year || 0);
+    const by = Number(b.year || 0);
+    if (ay !== by) return ay - by;
+    const am = Number(a.month_num || 0);
+    const bm = Number(b.month_num || 0);
+    if (am !== bm) return am - bm;
+    return String(a.id).localeCompare(String(b.id), 'es');
+  }
+
+  function manifestPathToClientPath(path) {
+    if (!path) return null;
+    return String(path).replace(/^docs\//, './');
+  }
+
   function inferProgramId(row, dataset) {
     const direct = row.program_id || row.programa_id || row.programa || dataset.programId || null;
     if (!direct) return null;
@@ -222,13 +241,10 @@
     return dataset.programId || normalized.replace(/\s+/g, '_');
   }
 
-  function inferProgramName(row, dataset, programId) {
-    const direct = row.program_name || row.programa_nombre || row.program_name || row.programa || null;
-    if (direct && typeof direct === 'string' && direct.trim()) {
-      if (normalizeText(direct) === normalizeText(programId)) return PROGRAMS[programId]?.name || direct;
-      return direct.trim();
-    }
-    return PROGRAMS[programId]?.name || dataset.programId || null;
+  function inferProgramName(row, dataset, programId, manifestProgram) {
+    const direct = row.program_name || row.programa_nombre || row.programa || null;
+    if (direct && typeof direct === 'string' && direct.trim()) return direct.trim();
+    return manifestProgram?.program_name || PROGRAMS[programId]?.name || dataset.programId || null;
   }
 
   function inferYear(row) {
@@ -244,34 +260,20 @@
     if (period && /^\d{4}-\d{2}$/.test(String(period))) return Number(String(period).slice(5, 7));
     const monthLabel = row.mes_label || row.mes_nombre || row.mes || row.latest_month_label || null;
     const map = {
-      ene: 1,
-      enero: 1,
-      feb: 2,
-      febrero: 2,
-      mar: 3,
-      marzo: 3,
-      abr: 4,
-      abril: 4,
-      may: 5,
-      mayo: 5,
-      jun: 6,
-      junio: 6,
-      jul: 7,
-      julio: 7,
-      ago: 8,
-      agosto: 8,
-      sep: 9,
-      sept: 9,
-      septiembre: 9,
-      oct: 10,
-      octubre: 10,
-      nov: 11,
-      noviembre: 11,
-      dic: 12,
-      diciembre: 12
+      ene: 1, enero: 1,
+      feb: 2, febrero: 2,
+      mar: 3, marzo: 3,
+      abr: 4, abril: 4,
+      may: 5, mayo: 5,
+      jun: 6, junio: 6,
+      jul: 7, julio: 7,
+      ago: 8, agosto: 8,
+      sep: 9, sept: 9, septiembre: 9,
+      oct: 10, octubre: 10,
+      nov: 11, noviembre: 11,
+      dic: 12, diciembre: 12
     };
-    const normalized = normalizeText(monthLabel);
-    return map[normalized] || null;
+    return map[normalizeText(monthLabel)] || null;
   }
 
   function inferPeriodKey(row, year, monthNum) {
@@ -283,12 +285,6 @@
 
   function inferMonthLabel(row, monthNum) {
     return row.mes_label || row.mes_nombre || row.latest_month_label || toTitleMonth(monthNum) || row.mes || null;
-  }
-
-  function inferLatestFlag(row) {
-    const flags = [row.is_latest_data_month, row.tiene_datos_mes, row.has_any_data, row.aporta_metas_programa, row.aporta_metas_epc];
-    if (flags.some((value) => value === true)) return !!row.is_latest_data_month;
-    return !!row.is_latest_data_month;
   }
 
   function inferStatus(row) {
@@ -334,7 +330,7 @@
     return normalizeText(fields.filter((value) => value != null).join(' | '));
   }
 
-  function normalizeRecord(row, dataset, rowIndex) {
+  function normalizeRecord(row, dataset, manifestProgram, rowIndex) {
     const values = cleanRow(row);
     const programId = inferProgramId(values, dataset);
     const year = inferYear(values);
@@ -349,13 +345,13 @@
       dataset_kind: dataset.kind,
       source_path: dataset.path,
       program_id: programId,
-      program_name: inferProgramName(values, dataset, programId),
+      program_name: inferProgramName(values, dataset, programId, manifestProgram),
       period_key: periodKey,
       year,
       month_num: monthNum,
       month_label: monthLabel,
       status: inferStatus(values),
-      is_latest_data_month: inferLatestFlag(values),
+      is_latest_data_month: false,
       indicator_id: inferIndicatorId(values),
       indicator_name: inferIndicatorName(values),
       unit: inferUnit(values),
@@ -369,18 +365,46 @@
     return normalized;
   }
 
-  function comparePeriods(a, b) {
-    const ay = Number(a.year || 0);
-    const by = Number(b.year || 0);
-    if (ay !== by) return ay - by;
-    const am = Number(a.month_num || 0);
-    const bm = Number(b.month_num || 0);
-    if (am !== bm) return am - bm;
-    return String(a.id).localeCompare(String(b.id), 'es');
+  function buildCoreDatasets(manifest) {
+    const datasets = [];
+    (manifest.program_order || []).forEach((programId) => {
+      const program = manifest.programs?.[programId];
+      if (!program?.files) return;
+      if (program.files.total) {
+        datasets.push({
+          key: `${programId}_total_mes`,
+          path: manifestPathToClientPath(program.files.total),
+          kind: 'monthly_total',
+          programId,
+          optional: false
+        });
+      }
+      if (program.files.indicators) {
+        datasets.push({
+          key: `${programId}_indicadores`,
+          path: manifestPathToClientPath(program.files.indicators),
+          kind: 'indicator',
+          programId,
+          optional: false
+        });
+      }
+    });
+    return datasets;
   }
 
-  function summarizeDatasetRows(dataset, rows) {
-    const normalizedRows = rows.map((row, index) => normalizeRecord(row, dataset, index));
+  function isPeriodAllowed(row, manifestProgram, dataset) {
+    if (!manifestProgram) return false;
+    if (KIND_GROUPS.metadata.has(dataset.kind)) return true;
+    if (!row.period_key) return false;
+    return (manifestProgram.valid_periods || []).includes(row.period_key);
+  }
+
+  function summarizeDatasetRows(dataset, rows, manifest) {
+    const manifestProgram = manifest.programs?.[dataset.programId] || null;
+    const normalizedRows = rows
+      .map((row, index) => normalizeRecord(row, dataset, manifestProgram, index))
+      .filter((row) => row.program_id && manifest.programs?.[row.program_id])
+      .filter((row) => isPeriodAllowed(row, manifest.programs[row.program_id], dataset));
     return {
       ...dataset,
       rows: normalizedRows,
@@ -391,70 +415,162 @@
     };
   }
 
-  function unique(items) {
-    return Array.from(new Set(items));
-  }
-
-  async function loadDataset(dataset) {
-    const text = await fetchText(dataset.path);
+  async function loadDataset(dataset, manifest) {
+    const text = await fetchText(dataset.path, !!dataset.optional);
+    if (text == null) {
+      return {
+        ...dataset,
+        rows: [],
+        count: 0,
+        periods: [],
+        programs: [],
+        loadedAt: new Date().toISOString()
+      };
+    }
     const rows = parseCsvText(text).map(cleanRow);
-    return summarizeDatasetRows(dataset, rows);
+    return summarizeDatasetRows(dataset, rows, manifest);
   }
 
-  function buildProgramRegistry(datasetResults) {
-    const ids = unique(datasetResults.flatMap((dataset) => dataset.programs)).filter(Boolean).sort();
-    return ids.map((id) => ({ id, name: PROGRAMS[id]?.name || id }));
+  function buildMetadataDatasets(manifest) {
+    return (manifest.program_order || []).map((programId) => {
+      const program = manifest.programs?.[programId] || {};
+      const row = {
+        program_id: programId,
+        program_name: program.program_name || PROGRAMS[programId]?.name || programId,
+        latest_period: program.latest_valid_period || null,
+        latest_month_label: program.latest_valid_month_label || null,
+        first_period: (program.valid_periods || [])[0] || null,
+        periods_count: (program.valid_periods || []).length,
+        periodos_detectados: (program.available_periods_total || []).length,
+        executive_summary: program.narratives?.executive_summary || null,
+        what_is_going_well: (program.narratives?.what_is_going_well || []).join(' '),
+        what_needs_attention: (program.narratives?.what_needs_attention || []).join(' '),
+        context_notes: (program.narratives?.context_notes || []).join(' '),
+        institutional_cutoff_period: manifest.cutoff?.institutional_cutoff_period || null
+      };
+      const dataset = { key: `${programId}_metadata_manifest`, path: MANIFEST_PATH, kind: 'metadata', programId, optional: false };
+      const normalized = normalizeRecord(row, dataset, program, 0);
+      return {
+        ...dataset,
+        rows: [normalized],
+        count: 1,
+        periods: normalized.period_key ? [normalized.period_key] : [],
+        programs: [programId],
+        loadedAt: new Date().toISOString()
+      };
+    });
   }
 
-  function groupByProgram(rows) {
-    const output = {};
-    rows.forEach((row) => {
-      const programId = row.program_id || 'sin_programa';
-      if (!output[programId]) {
-        output[programId] = {
-          id: programId,
-          name: PROGRAMS[programId]?.name || row.program_name || programId,
-          rows: [],
-          monthly: [],
-          indicators: [],
-          metadata: [],
-          details: [],
-          datasets: [],
-          periods: []
-        };
+  function toPercent(value) {
+    const numeric = parseMaybeNumber(value);
+    if (typeof numeric !== 'number' || !Number.isFinite(numeric)) return null;
+    return Math.abs(numeric) <= 1.5 ? numeric * 100 : numeric;
+  }
+
+  function scoreToStatus(score) {
+    if (score == null) return null;
+    if (score >= 100) return 'verde';
+    if (score >= 85) return 'amarillo';
+    return 'rojo';
+  }
+
+  function scoreToBucket(score) {
+    if (score == null) return 'neutral';
+    if (score >= 100) return 'positivo';
+    if (score >= 85) return 'neutral';
+    return 'alerta';
+  }
+
+  function buildIndicatorLookup(manifestProgram) {
+    const map = new Map();
+    (manifestProgram?.indicators?.all || []).forEach((item) => {
+      const keys = [item.indicator_id, item.indicator_name].filter(Boolean).map((value) => normalizeText(value));
+      keys.forEach((key) => map.set(key, item));
+    });
+    return map;
+  }
+
+  function enrichIndicatorRow(row, manifestProgram) {
+    row.values.valor_mes = row.values.valor_mes ?? row.values.valor ?? null;
+    row.values.valor_acumulado = row.values.valor_acumulado ?? row.values.valor_acum ?? null;
+    row.values.meta_mes = row.values.meta_mes ?? row.values.meta_mensual ?? null;
+    row.values.meta_anual = row.values.meta_anual ?? null;
+
+    const pctExpected = toPercent(row.values.pct_vs_esperado);
+    const pctYear = toPercent(row.values.pct_meta_anual);
+    if (pctExpected != null) row.values.pct_vs_esperado = pctExpected;
+    if (pctYear != null) row.values.pct_meta_anual = pctYear;
+
+    const lookup = buildIndicatorLookup(manifestProgram);
+    const manifestIndicator = lookup.get(normalizeText(row.indicator_id)) || lookup.get(normalizeText(row.indicator_name));
+
+    if (manifestIndicator && row.period_key === manifestProgram.latest_valid_period) {
+      row.indicator_id = manifestIndicator.indicator_id || row.indicator_id;
+      row.indicator_name = manifestIndicator.indicator_name || row.indicator_name;
+      row.unit = manifestIndicator.unit || row.unit;
+      row.category = manifestIndicator.category || row.category;
+      row.status = manifestIndicator.status || row.status;
+      row.values.valor_mes = manifestIndicator.value_month ?? row.values.valor_mes;
+      row.values.valor_acumulado = manifestIndicator.value_accumulated ?? row.values.valor_acumulado;
+      row.values.meta_mes = manifestIndicator.target_month ?? row.values.meta_mes;
+      row.values.meta_anual = manifestIndicator.target_year ?? row.values.meta_anual;
+      row.values.pct_vs_esperado = toPercent(manifestIndicator.pct_vs_expected) ?? row.values.pct_vs_esperado;
+      row.values.pct_meta_anual = toPercent(manifestIndicator.pct_meta_year) ?? row.values.pct_meta_anual;
+      row.values.human_summary = manifestIndicator.human_summary || row.values.human_summary || null;
+      row.values.note = manifestIndicator.note || row.values.note || null;
+      row.values.bucket = manifestIndicator.bucket || row.values.bucket || null;
+      row.values.is_required = manifestIndicator.is_required != null ? !!manifestIndicator.is_required : row.values.is_required;
+    }
+
+    if (!row.status) {
+      let score = row.values.pct_vs_esperado;
+      if (typeof score !== 'number') {
+        const value = parseMaybeNumber(row.values.valor_mes);
+        const target = parseMaybeNumber(row.values.meta_mes);
+        if (typeof value === 'number' && typeof target === 'number' && target > 0) {
+          score = (value / target) * 100;
+          row.values.pct_vs_esperado = score;
+        }
       }
-      const target = output[programId];
-      target.rows.push(row);
-      if (KIND_GROUPS.monthly.has(row.dataset_kind)) target.monthly.push(row);
-      if (KIND_GROUPS.indicator.has(row.dataset_kind)) target.indicators.push(row);
-      if (KIND_GROUPS.metadata.has(row.dataset_kind)) target.metadata.push(row);
-      if (KIND_GROUPS.detail.has(row.dataset_kind)) target.details.push(row);
-      target.datasets.push(row.dataset_key);
-      if (row.period_key) target.periods.push(row.period_key);
-    });
-    Object.values(output).forEach((program) => {
-      program.monthly.sort(comparePeriods);
-      program.indicators.sort(comparePeriods);
-      program.metadata.sort(comparePeriods);
-      program.details.sort(comparePeriods);
-      program.rows.sort(comparePeriods);
-      program.datasets = unique(program.datasets).sort();
-      program.periods = unique(program.periods).sort();
-      program.latest_period = inferLatestPeriod(program);
-      program.latest_monthly = pickLatestRows(program.monthly, program.latest_period);
-      program.latest_indicators = pickLatestRows(program.indicators, program.latest_period);
-      program.latest_metadata = program.metadata[program.metadata.length - 1] || null;
-      program.snapshot = buildProgramSnapshot(program);
-    });
-    return output;
+      row.status = scoreToStatus(score);
+      if (!row.values.bucket) row.values.bucket = scoreToBucket(score);
+    }
+
+    row.searchable_text = buildSearchableText({ key: row.dataset_key, kind: row.dataset_kind }, row);
+    return row;
   }
 
-  function inferLatestPeriod(program) {
-    const explicitMeta = [...program.metadata].reverse().find((row) => row.values.latest_period);
-    if (explicitMeta?.values?.latest_period) return explicitMeta.values.latest_period;
-    const latestTagged = [...program.rows].reverse().find((row) => row.is_latest_data_month && row.period_key);
-    if (latestTagged?.period_key) return latestTagged.period_key;
-    return program.periods[program.periods.length - 1] || null;
+  function buildSyntheticMonthlyRow(programId, manifestProgram) {
+    if (!manifestProgram?.latest_total) return null;
+    const dataset = { key: `${programId}_manifest_latest_total`, path: MANIFEST_PATH, kind: 'monthly_total', programId };
+    const row = normalizeRecord({
+      ...manifestProgram.latest_total,
+      program_id: programId,
+      program_name: manifestProgram.program_name || PROGRAMS[programId]?.name || programId,
+      periodo_clave: manifestProgram.latest_valid_period,
+      latest_month_label: manifestProgram.latest_valid_month_label,
+      latest_period: manifestProgram.latest_valid_period
+    }, dataset, manifestProgram, 0);
+    return row;
+  }
+
+  function enrichLatestMonthlyRow(row, manifest, manifestProgram) {
+    if (!row) return null;
+    const narratives = manifestProgram?.narratives || {};
+    row.values = {
+      ...row.values,
+      ...(manifestProgram?.latest_total || {}),
+      latest_valid_period: manifestProgram?.latest_valid_period || row.period_key,
+      latest_valid_month_label: manifestProgram?.latest_valid_month_label || row.month_label,
+      institutional_cutoff_period: manifest.cutoff?.institutional_cutoff_period || null,
+      resumen_ejecutivo_texto: narratives.executive_summary || null,
+      logros_texto: (narratives.what_is_going_well || []).join(' '),
+      alertas_texto: (narratives.what_needs_attention || []).join(' '),
+      contexto_texto: (narratives.context_notes || []).join(' ')
+    };
+    row.is_latest_data_month = true;
+    row.searchable_text = buildSearchableText({ key: row.dataset_key, kind: row.dataset_kind }, row);
+    return row;
   }
 
   function pickLatestRows(rows, periodKey) {
@@ -462,7 +578,7 @@
     return rows.filter((row) => row.period_key === periodKey);
   }
 
-  function buildProgramSnapshot(program) {
+  function buildProgramSnapshot(program, manifestProgram) {
     const latestMonthly = program.latest_monthly[0] || null;
     const latestIndicators = program.latest_indicators.map((row) => ({
       indicator_id: row.indicator_id,
@@ -474,7 +590,8 @@
       meta_mes: row.values.meta_mes ?? row.values.meta_mensual ?? null,
       meta_anual: row.values.meta_anual ?? null,
       pct_meta_anual: row.values.pct_meta_anual ?? null,
-      pct_vs_esperado: row.values.pct_vs_esperado ?? null
+      pct_vs_esperado: row.values.pct_vs_esperado ?? null,
+      human_summary: row.values.human_summary || null
     }));
     return {
       id: program.id,
@@ -484,45 +601,143 @@
       latest_monthly: latestMonthly ? latestMonthly.values : null,
       latest_indicators: latestIndicators,
       latest_metadata: program.latest_metadata ? program.latest_metadata.values : null,
+      narratives: clone(manifestProgram?.narratives || {}),
+      alerts_count: (manifestProgram?.indicators?.alerts || []).length,
+      positives_count: (manifestProgram?.indicators?.positives || []).length,
+      cutoff_period: manifestProgram?.cutoff_period || manifestProgram?.latest_valid_period || null,
       dataset_count: program.datasets.length,
       row_count: program.rows.length
     };
   }
 
-  function buildSearchIndex(rows) {
+  function groupByProgram(rows, manifest) {
+    const output = {};
+    (manifest.program_order || []).forEach((programId) => {
+      const manifestProgram = manifest.programs?.[programId] || {};
+      output[programId] = {
+        id: programId,
+        name: manifestProgram.program_name || PROGRAMS[programId]?.name || programId,
+        rows: [],
+        monthly: [],
+        indicators: [],
+        metadata: [],
+        details: [],
+        datasets: [],
+        periods: [...(manifestProgram.valid_periods || [])],
+        latest_period: manifestProgram.latest_valid_period || null,
+        narratives: clone(manifestProgram.narratives || {}),
+        manifest: clone(manifestProgram)
+      };
+    });
+
+    rows.forEach((row) => {
+      const programId = row.program_id || 'sin_programa';
+      if (!output[programId]) return;
+      const target = output[programId];
+      target.rows.push(row);
+      if (KIND_GROUPS.monthly.has(row.dataset_kind)) target.monthly.push(row);
+      if (KIND_GROUPS.indicator.has(row.dataset_kind)) target.indicators.push(row);
+      if (KIND_GROUPS.metadata.has(row.dataset_kind)) target.metadata.push(row);
+      if (KIND_GROUPS.detail.has(row.dataset_kind)) target.details.push(row);
+      target.datasets.push(row.dataset_key);
+      if (row.period_key) target.periods.push(row.period_key);
+    });
+
+    Object.values(output).forEach((program) => {
+      const manifestProgram = program.manifest || {};
+      program.monthly.sort(comparePeriods);
+      program.indicators.sort(comparePeriods);
+      program.metadata.sort(comparePeriods);
+      program.details.sort(comparePeriods);
+      program.rows.sort(comparePeriods);
+      program.datasets = unique(program.datasets).sort();
+      program.periods = unique([...(manifestProgram.valid_periods || []), ...program.periods]).sort();
+      program.latest_period = manifestProgram.latest_valid_period || program.periods[program.periods.length - 1] || null;
+
+      let latestMonthly = program.monthly.find((row) => row.period_key === program.latest_period && row.dataset_kind === 'monthly_total')
+        || program.monthly.find((row) => row.period_key === program.latest_period)
+        || null;
+      if (!latestMonthly) {
+        const synthetic = buildSyntheticMonthlyRow(program.id, manifestProgram);
+        if (synthetic) {
+          program.monthly.push(synthetic);
+          program.rows.push(synthetic);
+          program.datasets.push(synthetic.dataset_key);
+          latestMonthly = synthetic;
+        }
+      }
+      if (latestMonthly) enrichLatestMonthlyRow(latestMonthly, manifest, manifestProgram);
+
+      program.indicators = program.indicators.map((row) => enrichIndicatorRow(row, manifestProgram));
+      program.rows = program.rows.map((row) => {
+        if (KIND_GROUPS.indicator.has(row.dataset_kind)) {
+          const replacement = program.indicators.find((candidate) => candidate.id === row.id);
+          return replacement || row;
+        }
+        return row;
+      });
+
+      program.monthly.sort(comparePeriods);
+      program.indicators.sort(comparePeriods);
+      program.rows.sort(comparePeriods);
+      program.latest_monthly = pickLatestRows(program.monthly, program.latest_period);
+      program.latest_indicators = pickLatestRows(program.indicators, program.latest_period);
+      program.latest_metadata = program.metadata[program.metadata.length - 1] || null;
+      program.snapshot = buildProgramSnapshot(program, manifestProgram);
+    });
+
+    return output;
+  }
+
+  function buildSearchIndex(rows, byProgram) {
     return rows.map((row) => ({
       id: row.id,
       program_id: row.program_id,
       dataset_key: row.dataset_key,
       dataset_kind: row.dataset_kind,
       period_key: row.period_key,
-      score_base: row.is_latest_data_month ? 10 : 0,
+      score_base: row.period_key && row.period_key === byProgram[row.program_id]?.latest_period ? 12 : 0,
       text: row.searchable_text,
       row
     }));
+  }
+
+  function requireLoaded() {
+    if (!state.loaded) throw new Error('ChatbotData no ha sido cargado todavía. Ejecuta ChatbotData.loadAll() primero.');
   }
 
   async function loadAll(options = {}) {
     const force = !!options.force;
     if (state.loaded && !force) return state;
     if (state.loading && !force) return state.loading;
+
     state.loading = (async () => {
-      const datasets = await Promise.all(DATASETS.map(loadDataset));
+      const manifest = await fetchJson(MANIFEST_PATH);
+      const datasetDefs = [...buildCoreDatasets(manifest), ...OPTIONAL_DATASETS];
+      const loadedDatasets = await Promise.all(datasetDefs.map((dataset) => loadDataset(dataset, manifest)));
+      const metadataDatasets = buildMetadataDatasets(manifest);
+      const datasets = [...loadedDatasets, ...metadataDatasets];
       const rows = datasets.flatMap((dataset) => dataset.rows);
+      const byProgram = groupByProgram(rows, manifest);
+      const normalizedRows = Object.values(byProgram).flatMap((program) => program.rows).sort(comparePeriods);
       const collections = {
-        monthly: rows.filter((row) => KIND_GROUPS.monthly.has(row.dataset_kind)).sort(comparePeriods),
-        indicators: rows.filter((row) => KIND_GROUPS.indicator.has(row.dataset_kind)).sort(comparePeriods),
-        metadata: rows.filter((row) => KIND_GROUPS.metadata.has(row.dataset_kind)).sort(comparePeriods),
-        details: rows.filter((row) => KIND_GROUPS.detail.has(row.dataset_kind)).sort(comparePeriods)
+        monthly: normalizedRows.filter((row) => KIND_GROUPS.monthly.has(row.dataset_kind)).sort(comparePeriods),
+        indicators: normalizedRows.filter((row) => KIND_GROUPS.indicator.has(row.dataset_kind)).sort(comparePeriods),
+        metadata: normalizedRows.filter((row) => KIND_GROUPS.metadata.has(row.dataset_kind)).sort(comparePeriods),
+        details: normalizedRows.filter((row) => KIND_GROUPS.detail.has(row.dataset_kind)).sort(comparePeriods)
       };
-      const programs = buildProgramRegistry(datasets);
-      const byProgram = groupByProgram(rows);
+      const programs = (manifest.program_order || []).map((programId) => ({
+        id: programId,
+        name: manifest.programs?.[programId]?.program_name || PROGRAMS[programId]?.name || programId
+      }));
       const latestByProgram = Object.fromEntries(Object.entries(byProgram).map(([key, value]) => [key, value.snapshot]));
-      const searchIndex = buildSearchIndex(rows);
+      const searchIndex = buildSearchIndex(normalizedRows, byProgram);
+
       state.loaded = true;
       state.loadedAt = new Date().toISOString();
+      state.manifest = manifest;
       state.datasets = datasets;
-      state.rows = rows.sort(comparePeriods);
+      state.rows = normalizedRows;
       state.collections = collections;
       state.programs = programs;
       state.byProgram = byProgram;
@@ -534,16 +749,8 @@
       state.loading = null;
       throw error;
     });
+
     return state.loading;
-  }
-
-  function requireLoaded() {
-    if (!state.loaded) throw new Error('ChatbotData no ha sido cargado todavía. Ejecuta ChatbotData.loadAll() primero.');
-  }
-
-  function clone(value) {
-    if (typeof structuredClone === 'function') return structuredClone(value);
-    return JSON.parse(JSON.stringify(value));
   }
 
   function getPrograms() {
@@ -578,7 +785,7 @@
 
   function listPeriods(programId) {
     requireLoaded();
-    if (!programId) return unique(state.rows.map((row) => row.period_key).filter(Boolean)).sort();
+    if (!programId) return [...(state.manifest?.valid_periods_global || [])];
     return [...(state.byProgram[programId]?.periods || [])];
   }
 
@@ -598,7 +805,10 @@
     if (datasetKey) rows = rows.filter((row) => row.dataset_key === datasetKey);
     if (datasetKind) rows = rows.filter((row) => row.dataset_kind === datasetKind);
     if (periodKey) rows = rows.filter((row) => row.period_key === periodKey);
-    if (indicatorId) rows = rows.filter((row) => row.indicator_id === indicatorId);
+    if (indicatorId) {
+      const target = normalizeText(indicatorId);
+      rows = rows.filter((row) => normalizeText(row.indicator_id) === target || normalizeText(row.indicator_name) === target);
+    }
     if (latestOnly) {
       rows = rows.filter((row) => {
         const latest = state.byProgram[row.program_id]?.latest_period || null;
@@ -637,6 +847,7 @@
           if (normalizeText(entry.row.dataset_key).includes(term)) score += 2;
           if (entry.row.indicator_name && normalizeText(entry.row.indicator_name).includes(term)) score += 5;
           if (entry.row.primary_dimension_value && normalizeText(entry.row.primary_dimension_value).includes(term)) score += 4;
+          if (entry.row.values?.human_summary && normalizeText(entry.row.values.human_summary).includes(term)) score += 5;
         }
         return { score, row: entry.row };
       })
@@ -662,6 +873,8 @@
     const context = {
       generated_at: new Date().toISOString(),
       loaded_at: state.loadedAt,
+      cutoff: clone(state.manifest?.cutoff || {}),
+      valid_periods_global: [...(state.manifest?.valid_periods_global || [])],
       programs: {},
       datasets: getDatasets()
     };
@@ -679,6 +892,7 @@
         latest_period: program.latest_period,
         available_periods: [...program.periods],
         snapshot: clone(program.snapshot),
+        narratives: clone(program.narratives || {}),
         monthly: clone(monthly.map((row) => row.values)),
         indicators: clone(indicators.map((row) => row.values)),
         metadata: clone(metadata.map((row) => row.values)),
@@ -694,8 +908,8 @@
 
   global.ChatbotData = {
     version: state.version,
+    MANIFEST_PATH,
     PROGRAMS: clone(PROGRAMS),
-    DATASETS: clone(DATASETS),
     loadAll,
     refresh,
     getPrograms,
@@ -706,6 +920,10 @@
     getRows,
     search,
     buildContext,
+    getManifest() {
+      requireLoaded();
+      return clone(state.manifest);
+    },
     getState() {
       requireLoaded();
       return clone({
@@ -713,7 +931,8 @@
         loadedAt: state.loadedAt,
         programs: state.programs,
         datasets: getDatasets(),
-        latestByProgram: state.latestByProgram
+        latestByProgram: state.latestByProgram,
+        cutoff: state.manifest?.cutoff || null
       });
     }
   };
