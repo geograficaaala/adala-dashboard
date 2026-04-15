@@ -2057,6 +2057,18 @@ async function loadAtitlan(cfg){
     scoreLabel: 'Cumplimiento promedio vs metas del mes',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets',
+    narrative: (() => {
+      const mesNombre = withData.length ? safe(latest.mes) : 'el mes';
+      const s = (score || 0).toFixed(1);
+      const mat = `${fmt(acumMateriales)} qq`;
+      const ing = `Q${fmt(acumIngresos)}`;
+      const lid = `Q${fmt(ingresoLideresaVal,1)}`;
+      return `En ${mesNombre}, Atitlán Recicla alcanzó el <strong>${s}%</strong> de sus metas mensuales. `
+        + `La cooperativa acumuló <strong>${mat}</strong> de materiales reciclables recolectados y generó <strong>${ing}</strong> en ingresos brutos para el territorio. `
+        + `El ingreso diario promedio por lideresa fue de <strong>${lid}</strong>, `
+        + `frente a una meta mensual de Q${fmt(META_DIARIA_LIDERESA)}. `
+        + (pctMateriales >= 100 ? `La meta de materiales fue superada este mes.` : `La meta de materiales va al ${fmtPct(pctMateriales)} de avance anual.`);
+    })(),
     tooltipLines: [
       `Materiales: ${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq — ${fmtPct(pctMateriales)} de meta anual`,
       `Ingresos brutos: Q${fmt(acumIngresos)} / Q${fmt(META_ANUAL_INGRESOS)} — ${fmtPct(pctIngresos)} de meta anual`,
@@ -2129,6 +2141,11 @@ async function loadConservando(cfg){
     scoreLabel:'Promedio de indicadores vs ritmo esperado en marzo',
     metrics:keyMetrics,
     sourceSummary:'Google Sheets · Conservando Atitlán',
+    narrative: `A cierre de marzo, Conservando Atitlán avanza al <strong>${(score||0).toFixed(1)}%</strong> del ritmo esperado para este mes del año. `
+      + `El programa ha recolectado <strong>${fmt(aceiteAcum)} litros de aceite</strong> usado de cocina de una meta anual de ${fmt(metaAceite)} litros (${fmtPct(pctAceite)} de avance). `
+      + `En producción de jabones, lleva <strong>${fmt(jabonesProdAcum)} jabones producidos</strong> de ${fmt(metaJabonesProd)} planificados para el año (${fmtPct(pctJabonesProd)}), `
+      + `y ha comercializado <strong>${fmt(jabonesVendAcum)} jabones</strong> de ${fmt(metaJabonesVend)} en meta de ventas (${fmtPct(pctJabonesVend)}). `
+      + `El volumen de agua protegida por la transformación del aceite asciende a <strong>${fmt(aguaAcum)} litros</strong>, equivalente al ${fmtPct(pctAgua)} de la meta anual.`,
     tooltipLines: [
       `Aceite: ${fmt(aceiteAcum)} / ${fmt(metaAceite)} litros — ${fmtPct(pctAceite)} de meta anual`,
       `Agua protegida: ${fmt(aguaAcum)} / ${fmt(metaAgua)} litros — ${fmtPct(pctAgua)} de meta anual`,
@@ -2261,6 +2278,15 @@ async function loadFM(cfg){
     scoreLabel: 'Promedio de 4 componentes vs ritmo esperado en marzo',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets · FM',
+    narrative: `En marzo, Fortalecimiento Municipal alcanza el <strong>${(score||0).toFixed(1)}%</strong> del ritmo esperado para este mes del año, calculado sobre cuatro componentes. `
+      + `En capacitaciones, se han formado <strong>${fmt(Object.values(ejesData).reduce((s,e)=>s+e.personas,0))} personas</strong> en tres ejes temáticos: `
+      + `${fmt(ejesData.sig.personas)} en SIG, ${fmt(ejesData.cumplimiento.personas)} en cumplimiento legal ambiental y ${fmt(ejesData.saneamiento.personas)} en saneamiento, `
+      + `de una meta de 25 personas por eje al cierre del año. `
+      + `Los PIRDES acumulan <strong>${fmt(puntosPirdes)} puntos</strong> de avance de los 500 posibles: `
+      + `${pirdesDesc}. `
+      + `En asistencias técnicas se contabilizan <strong>${fmt(puntosAsist,1)} equivalentes</strong> de las 3 planificadas para el año `
+      + `(solo se cuentan asistencias formales y seguimientos técnicos verificados). `
+      + `Los estudios de caracterización de residuos llevan <strong>${fmt(estudiosAcum)} de 2</strong> estudios completados.`,
     tooltipLines: [
       `Capacitaciones: ${fmt(Object.values(ejesData).reduce((s,e)=>s+e.personas,0))} personas capacitadas / 75 meta anual — ritmo: ${fmtPct(Math.min(scoreCap,100))} del esperado en marzo`,
       `PIRDES: ${fmt(puntosPirdes)} / ${fmt(META_PUNTOS_PIRDES)} puntos de etapa (${Object.keys(mejorEtapa).length} activos) — ${fmtPct(Math.min(scorePirdes,100))} del esperado en marzo`,
@@ -2339,6 +2365,11 @@ async function loadEPC(cfg){
     scoreLabel:'Promedio de componentes vs ritmo esperado en marzo',
     metrics:keyMetrics,
     sourceSummary:'Google Sheets · EPC',
+    narrative: `En marzo, Educando para Conservar registra un avance de <strong>${(score||0).toFixed(1)}%</strong> frente al ritmo esperado para el año. `
+      + `El programa ha completado <strong>${docentesVisitasRealizadas} de ${docentesVisitasMeta} visitas sostenidas</strong> a centros educativos, llegando a ${fmt(docentesPorVisita)} docentes. `
+      + `La formación de cohortes juveniles avanza al <strong>${fmtPct(pctAvanceFormacion)}</strong>: se han desarrollado ${momentosDesarrolladosCohorteUno} de ${momentosPorCohorte} momentos formativos en la primera cohorte. `
+      + `Las actividades de campo suman <strong>${fmt(actividadesVal)}</strong> de las ${fmt(actividadesMeta)} planificadas para el año (${fmtPct(pctActividades)}). `
+      + `El programa trabaja con los ${cohortesTotales * estudiantesPorCohorte} jóvenes de las ${cohortesTotales} cohortes activas en los 13 municipios de la cuenca.`,
     tooltipLines: [
       `Visitas a docentes: ${docentesVisitasRealizadas} / ${docentesVisitasMeta} — ${fmtPct(pctDocentes)} de meta anual`,
       `Visitas a estudiantes: ${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} — ${fmtPct(pctEstudiantes)} de meta anual`,
@@ -2497,7 +2528,22 @@ async function loadReforestacion(cfg){
       : 'Promedio de componentes activos en marzo (siembra fuera de temporada)',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets · Reforestación',
-    tooltipLines: refoTooltipLines
+    tooltipLines: refoTooltipLines,
+    narrative: (() => {
+      const s = (score||0).toFixed(1);
+      const base = `En marzo, Reforestando Atitlán registra un avance de <strong>${s}%</strong> en sus componentes activos este mes. `
+        + `El monitoreo de reforestaciones lleva <strong>${fmt(haAcum,1)} de ${fmt(haMeta)} hectáreas</strong> monitoreadas (${fmtPct(pctHa)} de la meta anual), `
+        + `con cobertura cartográfica al <strong>${fmtPct(pctCart)}</strong>. `
+        + `El vivero mantiene <strong>${fmt(plantasAcum)} plantas forestales</strong> producidas de las ${fmt(plantasMeta)} planificadas para el año (${fmtPct(pctPlantas)}), `
+        + `con <strong>${fmt(especiesAcum)} de ${fmt(especiesMeta)} especies nativas</strong> activas (${fmtPct(pctEspecies)}). `
+        + `La unidad SIG avanza al <strong>${fmtPct(pctSig)}</strong> de consolidación. `;
+      const siembraText = siembraActiva
+        ? `La siembra de árboles lleva <strong>${fmt(arbolesAcum)}</strong> de los ${fmt(arbolesMeta)} planificados (${fmtPct(pctArboles)}).`
+        : `La siembra de ${fmt(arbolesMeta)} árboles no está activa en marzo: esta actividad comienza con la temporada de lluvias `
+          + `y se excluye del cálculo del avance para no penalizar al programa en meses en que, por diseño, no está programada. `
+          + `El porcentaje de <strong>${s}%</strong> refleja únicamente los componentes que sí operan durante este mes.`;
+      return base + siembraText;
+    })(),
   };
 }
 
@@ -2820,14 +2866,10 @@ function chartOptions(mini = false){
         callbacks: {
           title: items => items[0]?.label || '',
           label: ctx => {
-            if (ctx.dataset.role === 'actual') {
-              const lines = [`Avance observado: ${fmt(ctx.parsed.x,1)}%`];
-              const prog = (typeof programsData !== 'undefined' ? programsData : [])[ctx.dataIndex];
-              if (prog?.tooltipLines) lines.push('', ...prog.tooltipLines);
-              return lines;
-            }
-            if (ctx.dataset.role === 'attention') return ['Zona de seguimiento: 80%', 'Programas por debajo de esta línea requieren atención.'];
-            if (ctx.dataset.role === 'target') return ['Meta esperada: 100%', 'Nivel de avance esperado para este mes del año.'];
+            if (ctx.dataset.role === 'actual')
+              return `Avance: ${fmt(ctx.parsed.x,1)}% — haz clic en el nombre para el detalle`;
+            if (ctx.dataset.role === 'attention') return 'Zona de seguimiento: 80%';
+            if (ctx.dataset.role === 'target')    return 'Meta esperada en marzo: 100%';
             return '';
           }
         },
@@ -2959,8 +3001,141 @@ async function init(){
 init();
 </script>
 
+/* ── Modal narrativo de programa ────────────────────────── */
+function fmt1(n){ return (n||0).toFixed(1); }
+
+function showProgramModal(index){
+  const prog = (programsData || [])[index];
+  if (!prog) return;
+  const modal = document.getElementById('progModal');
+  const score = Number(prog.score || 0);
+  const chipColor = score >= 100 ? '#2e6a57' : score >= 80 ? '#b07a10' : '#9c4242';
+
+  document.getElementById('progModalKicker').textContent = prog.scoreLabel || 'Avance del programa';
+  document.getElementById('progModalTitle').textContent = prog.name || '';
+  document.getElementById('progModalScore').innerHTML =
+    `<span style="color:${chipColor}">${score.toFixed(1)}%</span>`;
+  document.getElementById('progModalScoreLabel').textContent =
+    `Datos a ${prog.latestLabel || 'último mes disponible'}`;
+  document.getElementById('progModalNarrative').innerHTML =
+    prog.narrative || '<em>Sin narrativa disponible para este programa.</em>';
+  document.getElementById('progModalPeriod').textContent =
+    `Fuente: ${prog.sourceSummary || '—'} · Período: ${prog.latestLabel || '—'}`;
+
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  // Trap focus
+  const closeBtn = modal.querySelector('button[aria-label="Cerrar"]');
+  if (closeBtn) setTimeout(() => closeBtn.focus(), 80);
+}
+
+function closeProgramModal(){
+  const modal = document.getElementById('progModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Cerrar con Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeProgramModal();
+});
+
+// Click en canvas — detectar si fue en el área del eje Y (nombre del programa)
+function attachChartNameClick(canvas, getChart){
+  if (!canvas) return;
+  canvas.style.cursor = 'default';
+  canvas.addEventListener('mousemove', e => {
+    const chart = getChart();
+    if (!chart || !chart.chartArea) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    canvas.style.cursor = (mx < chart.chartArea.left) ? 'pointer' : 'default';
+  });
+  canvas.addEventListener('click', e => {
+    const chart = getChart();
+    if (!chart || !chart.chartArea) return;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    if (mx >= chart.chartArea.left) return; // solo clic en eje Y
+    const yScale = chart.scales.y;
+    if (!yScale) return;
+    for (let i = 0; i < (programsData || []).length; i++){
+      const labelY = yScale.getPixelForValue(i);
+      if (Math.abs(my - labelY) < 22){
+        showProgramModal(i);
+        break;
+      }
+    }
+  });
+}
+
+// Adjuntar handlers después de renderizar charts
+const _origRenderCharts = renderCharts;
+renderCharts = function(programs){
+  _origRenderCharts(programs);
+  // Mini chart
+  attachChartNameClick(
+    document.getElementById('programChartMini'),
+    () => chartMiniRef
+  );
+  // Full chart
+  attachChartNameClick(
+    document.getElementById('programChart'),
+    () => chartRef
+  );
+  // Añadir instrucción visual bajo cada gráfico
+  ['programChartMini','programChart'].forEach(id => {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    let hint = canvas.parentElement.querySelector('.chart-click-hint');
+    if (!hint){
+      hint = document.createElement('p');
+      hint.className = 'chart-click-hint';
+      hint.style.cssText = 'font-size:.72rem;color:#6b7f90;text-align:center;margin-top:6px;';
+      hint.textContent = 'Haz clic en el nombre de un programa para leer su narrativa de avance';
+      canvas.parentElement.appendChild(hint);
+    }
+  });
+};
+
 <script src="./chatbot-config.js"></script>
 <script src="./chatbot-data.js"></script>
 <script src="./chatbot.js"></script>
+
+<!-- ── Modal narrativo de programa ─────────────────────────── -->
+<div id="progModal" role="dialog" aria-modal="true" aria-labelledby="progModalTitle"
+  style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:24px">
+  <div id="progModalBackdrop"
+    style="position:absolute;inset:0;background:rgba(18,42,66,.55);backdrop-filter:blur(4px)"
+    onclick="closeProgramModal()"></div>
+  <article id="progModalCard"
+    style="position:relative;background:var(--surface,#fff);border-radius:20px;
+           padding:36px 40px;max-width:560px;width:100%;box-shadow:0 24px 60px rgba(18,42,66,.22);
+           max-height:85vh;overflow-y:auto">
+    <button onclick="closeProgramModal()" aria-label="Cerrar"
+      style="position:absolute;top:16px;right:16px;background:none;border:none;
+             font-size:22px;cursor:pointer;color:var(--muted,#6b7f90);line-height:1;padding:4px 8px">
+      &#x2715;
+    </button>
+    <div id="progModalKicker"
+      style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+             color:var(--lake,#1c6084);margin-bottom:8px"></div>
+    <h2 id="progModalTitle"
+      style="font-family:var(--font-head,'Lora',serif);font-size:1.35rem;font-weight:600;
+             color:var(--text,#17314f);margin-bottom:6px;line-height:1.3"></h2>
+    <div id="progModalScore"
+      style="font-size:2.4rem;font-weight:800;font-family:var(--font-mono,'JetBrains Mono',monospace);
+             color:var(--lake,#1c6084);margin-bottom:20px;line-height:1"></div>
+    <div id="progModalScoreLabel"
+      style="font-size:.8rem;color:var(--muted,#6b7f90);margin-top:-14px;margin-bottom:20px"></div>
+    <div id="progModalNarrative"
+      style="font-size:.95rem;line-height:1.75;color:var(--text-2,#36516a)"></div>
+    <div id="progModalPeriod"
+      style="margin-top:20px;font-size:.78rem;color:var(--muted,#6b7f90);
+             border-top:1px solid var(--line,#d5e2dc);padding-top:14px"></div>
+  </article>
+</div>
+
 </body>
 </html>
