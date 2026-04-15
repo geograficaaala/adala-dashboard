@@ -2,9 +2,9 @@
   "schema_version": 1,
   "generated_at": "2026-04-15T06:09:48.944020-06:00",
   "cutoff": {
-    "institutional_cutoff_period": "2026-04",
+    "institutional_cutoff_period": "2026-03",
     "timezone": "America/Guatemala",
-    "reason": "Se excluyen meses posteriores al corte y filas placeholder para el chatbot."
+    "reason": "Se excluyen meses posteriores al corte. Último mes con datos reales: marzo 2026."
   },
   "program_order": [
     "atitlan_recicla",
@@ -16,8 +16,7 @@
   "valid_periods_global": [
     "2026-01",
     "2026-02",
-    "2026-03",
-    "2026-04"
+    "2026-03"
   ],
   "programs": {
     "atitlan_recicla": {
@@ -59,10 +58,9 @@
       "valid_periods": [
         "2026-01",
         "2026-02",
-        "2026-03",
-        "2026-04"
+        "2026-03"
       ],
-      "latest_valid_period": "2026-04",
+      "latest_valid_period": "2026-03",
       "latest_valid_month_label": "Abril",
       "metadata": null,
       "summary_metrics": [
@@ -2655,10 +2653,9 @@
       "valid_periods": [
         "2026-01",
         "2026-02",
-        "2026-03",
-        "2026-04"
+        "2026-03"
       ],
-      "latest_valid_period": "2026-04",
+      "latest_valid_period": "2026-03",
       "latest_valid_month_label": "Abril",
       "metadata": {
         "program_id": "reforestacion",
@@ -3022,7 +3019,7 @@
       {
         "program_id": "atitlan_recicla",
         "program_name": "Atitlán Recicla",
-        "latest_valid_period": "2026-04",
+        "latest_valid_period": "2026-03",
         "alerts_count": 6,
         "positives_count": 0,
         "valid_periods_count": 4
@@ -3030,7 +3027,7 @@
       {
         "program_id": "reforestacion",
         "program_name": "Reforestación",
-        "latest_valid_period": "2026-04",
+        "latest_valid_period": "2026-03",
         "alerts_count": 1,
         "positives_count": 4,
         "valid_periods_count": 4
