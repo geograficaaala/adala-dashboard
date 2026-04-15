@@ -1543,14 +1543,14 @@
         <div class="ribbon-sub">Con datos publicados y seguimiento institucional continuo.</div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Último corte institucional</div>
+        <div class="ribbon-label">Último mes institucional</div>
         <div class="ribbon-value" id="kpiLatest">—</div>
         <div class="ribbon-sub" id="kpiLatestSub"></div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Semáforo institucional vigente</div>
+        <div class="ribbon-label">Avance institucional · Marzo 2026</div>
         <div class="ribbon-value" id="kpiHealth">—</div>
-        <div class="ribbon-sub" id="kpiHealthSub">Promedio institucional vs esperado.</div>
+        <div class="ribbon-sub" id="kpiHealthSub">Promedio de avance frente a lo esperado en marzo.</div>
       </article>
     </section>
 
@@ -1563,12 +1563,12 @@
         </p>
         <div class="story-columns">
           <p class="prose">
-            El tablero compara el desempeño de los programas y proyectos frente a sus metas y su avance esperado al presente mes. Como los programas y proyectos no comparten unidades operativas ni resultados equivalentes, la lectura institucional se apoya en porcentajes de avance y no en la suma directa de datos entre programas y proyectos.
+            El tablero compara el desempeño de los programas y proyectos frente a sus metas y su avance esperado para este mes. Como los programas y proyectos no comparten unidades operativas ni resultados equivalentes, la lectura institucional se apoya en porcentajes de avance y no en la suma directa de datos entre programas y proyectos.
           </p>
           <div class="story-points" aria-label="Claves de lectura institucional">
             <article class="story-point">
               <span>Seguimiento</span>
-              <p>Una sola vista para entender el estado institucional del corte más reciente.</p>
+              <p>Una sola vista para entender el estado institucional del mes más reciente.</p>
             </article>
             <article class="story-point">
               <span>Comparación</span>
@@ -1586,7 +1586,7 @@
         <div class="signal-top">
           <div>
             <div class="section-kicker">Panorama institucional</div>
-            <h2 class="section-title">Semáforo al último corte</h2>
+            <h2 class="section-title">Semáforo al mes de marzo</h2>
           </div>
           <div class="signal-score" id="kpiHealthHero">—</div>
         </div>
@@ -1598,22 +1598,22 @@
         </div>
         <div class="signal-status">
           <span id="kpiHealthStatus">Promedio institucional vs esperado</span>
-          <span id="kpiHealthContext">Corte vigente</span>
+          <span id="kpiHealthContext">Mes de referencia: Marzo 2026</span>
         </div>
         <div class="signal-grid">
           <article class="signal-stat">
             <div class="mini-label">Programas y proyectos con cumplimiento</div>
             <div class="mini-value" id="kpiOnTrack">—</div>
-            <div class="mini-sub">Con promedio al menos 80% del esperado al corte.</div>
+            <div class="mini-sub">Con promedio al menos 80% de lo esperado en marzo.</div>
           </article>
           <article class="signal-stat">
             <div class="mini-label">Programas y proyectos con alerta</div>
             <div class="mini-value" id="kpiAlert">—</div>
-            <div class="mini-sub">Con promedio por debajo del 80% del esperado.</div>
+            <div class="mini-sub">Con promedio por debajo del 80% de lo esperado en marzo.</div>
           </article>
         </div>
         <div class="signal-latest">
-          <div class="mini-label">Último corte disponible</div>
+          <div class="mini-label">Último mes con datos</div>
           <div class="mini-value" id="kpiLatestHero">—</div>
           <div class="mini-sub" id="kpiLatestHeroSub"></div>
         </div>
@@ -1636,7 +1636,7 @@
 
       <article class="chart-stage stagger-6">
         <div class="section-kicker">Vista rápida</div>
-        <h2 class="section-title">Lectura comparativa del avance de programas y proyectos</h2>
+        <h2 class="section-title">¿Cuánto avanzó cada programa en marzo frente a su meta?</h2>
         <div class="chart-wrap">
           <canvas id="programChartMini"></canvas>
         </div>
@@ -1673,8 +1673,8 @@
 <div class="page" id="page-grafica">
   <div class="wrap">
     <article class="card chart-full">
-      <div class="section-kicker">Comparación ejecutiva</div>
-      <h2 class="section-title">Comparativo institucional del avance de programas y proyectos</h2>
+      <div class="section-kicker">Avance por programa</div>
+      <h2 class="section-title">Avance real de cada programa en marzo frente a lo esperado</h2>
       <div class="chart-wrap">
         <canvas id="programChart"></canvas>
       </div>
@@ -1685,8 +1685,8 @@
 <div class="page" id="page-matriz">
   <div class="wrap">
     <article class="card matrix-card">
-      <div class="section-kicker">Matriz institucional de corte</div>
-      <h2 class="section-title">Estado resumido por programas y proyectos</h2>
+      <div class="section-kicker">Resumen por programa</div>
+      <h2 class="section-title">Estado de cada programa al mes de marzo</h2>
       <div id="matrixWrap" class="empty">Cargando matriz...</div>
     </article>
   </div>
@@ -2054,9 +2054,13 @@ async function loadAtitlan(cfg){
     latestLabel: withData.length ? `${safe(latest.mes)} ${safe(latest.anio)}` : 'Sin datos',
     periodKey: latestMonth ? `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}` : '—',
     score: score || 0,
-    scoreLabel: 'Cumplimiento promedio vs metas mensuales',
+    scoreLabel: 'Cumplimiento promedio vs metas del mes',
     metrics: keyMetrics,
-    sourceSummary: 'Google Sheets'
+    sourceSummary: 'Google Sheets',
+    tooltipLines: [
+      'Metas mensuales fijas: materiales, ingresos e ingreso por lideresa.',
+      `Avance observado en ${withData.length ? safe(latest.mes) : 'el mes'}: ${fmtPct(score)}`
+    ]
   };
 }
 
@@ -2120,62 +2124,134 @@ async function loadConservando(cfg){
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
     score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
+    scoreLabel:'Avance vs esperado en marzo al corte',
     metrics:keyMetrics,
     sourceSummary:'Valor fijo · corte marzo 2026'
   };
 }
 
 async function loadFM(cfg){
-  const municipiosVal = 6;
-  const personasVal = 52;
-  const asistVal = 2;
-  const estudiosVal = 2;
-  const pirdesVal = 2;
-
-  const pctFortalecimiento = Math.min((municipiosVal / 15) * 100, (personasVal / 75) * 100);
-  const pctAsistencia = (asistVal / 3) * 100;
-  const pctResiduos = Math.min((estudiosVal / 2) * 100, (pirdesVal / 5) * 100);
-
-  const esperadoCorte = (3 / 12) * 100; // enero-marzo 2026
-  const score = avg([
-    (pctFortalecimiento / esperadoCorte) * 100,
-    (pctAsistencia / esperadoCorte) * 100,
-    (pctResiduos / esperadoCorte) * 100
+  const [indRaw, temaRaw, pirdesRaw, asistRaw] = await Promise.all([
+    parseCsv(cfg.indUrl),
+    parseCsv('./data/fortalecimiento_municipal/capacitaciones_tema_mes.csv'),
+    parseCsv('./data/fortalecimiento_municipal/detalle_pirdes.csv'),
+    parseCsv('./data/fortalecimiento_municipal/detalle_asistencias.csv')
   ]);
+
+  const MES_LABEL  = 'Marzo 2026';
+  const PERIOD_KEY = '2026-03';
+  const ESPERADO_PCT = (3 / 12) * 100; // 25 % — 3 de 12 meses transcurridos
+
+  // ── Capacitaciones por 3 ejes temáticos núcleo ────────────
+  // Meta: 75 personas / 3 ejes = 25 personas por eje
+  const META_EJE = 25;
+  const temas = cast(temaRaw).filter(r => String(r.es_tema_nucleo) === 'True');
+  const ejesData = {
+    sig:          { label: 'SIG (Sistemas de Información Geográfica)', personas: 0 },
+    cumplimiento: { label: 'Cumplimiento legal ambiental y saneamiento', personas: 0 },
+    saneamiento:  { label: 'Saneamiento ambiental', personas: 0 }
+  };
+  temas.forEach(r => {
+    const tema = String(r.tema || '');
+    const p = Number(r.personas || 0);
+    if      (tema.includes('SIG'))              ejesData.sig.personas          += p;
+    else if (tema.includes('Cumplimiento'))      ejesData.cumplimiento.personas += p;
+    else if (tema.includes('Saneamiento'))       ejesData.saneamiento.personas  += p;
+  });
+  const capPcts = Object.values(ejesData).map(e => (e.personas / META_EJE) * 100);
+  const pctCapAcum = avg(capPcts);
+  const scoreCap = avg(capPcts.map(p => p / ESPERADO_PCT * 100));
+
+  // ── PIRDES por etapa ───────────────────────────────────────
+  // Diagnóstico=25 pts, Revisión técnica=50 pts, Aprobado=75 pts, Terminado=100 pts
+  // Meta: 5 PIRDES completados = 500 puntos
+  const PESOS_ETAPA = {'Diagnóstico': 25, 'Revisión técnica': 50, 'Aprobado': 75, 'Terminado': 100};
+  const META_PUNTOS_PIRDES = 500;
+  const pirdes = cast(pirdesRaw).filter(r => r.municipio && r.estado_pirdes);
+  const mejorEtapa = {};
+  pirdes.forEach(r => {
+    const mun  = String(r.municipio || '').trim();
+    if (!mun) return;
+    const peso = PESOS_ETAPA[String(r.estado_pirdes)] || 0;
+    if (!mejorEtapa[mun] || peso > mejorEtapa[mun]) mejorEtapa[mun] = peso;
+  });
+  const puntosPirdes  = Object.values(mejorEtapa).reduce((s, v) => s + v, 0);
+  const pctPirdesAcum = (puntosPirdes / META_PUNTOS_PIRDES) * 100;
+  const scorePirdes   = pctPirdesAcum / ESPERADO_PCT * 100;
+  const pirdesDesc    = Object.entries(mejorEtapa)
+    .map(([mun, pts]) => `${mun}: ${Object.keys(PESOS_ETAPA).find(k => PESOS_ETAPA[k] === pts) || '?'}`)
+    .join(' · ') || 'Sin PIRDES registrados';
+
+  // ── Asistencias técnicas ──────────────────────────────────
+  // Asistencia técnica formal = 1 punto; Seguimiento técnico = 0.3 punto
+  // Visitas de planta y "Otro" no cuentan (para no inflar el indicador)
+  const META_ASIST = 3;
+  const asist = cast(asistRaw).filter(r => r.municipio && r.tipo_asistencia);
+  let puntosAsist = 0;
+  asist.forEach(r => {
+    const tipo = String(r.tipo_asistencia || '').toLowerCase();
+    if      (tipo.includes('asistencia técnica') || tipo.includes('asistencia tecnica')) puntosAsist += 1;
+    else if (tipo.includes('seguimiento'))                                               puntosAsist += 0.3;
+  });
+  const pctAsistAcum = Math.min((puntosAsist / META_ASIST) * 100, 130);
+  const scoreAsist   = pctAsistAcum / ESPERADO_PCT * 100;
+
+  // ── Estudios de residuos ──────────────────────────────────
+  const indData = cast(indRaw);
+  const estRow  = indData.find(r => String(r.mes_num) === '3' && r.indicador_id === 'estudios_rs_comercial_mercados');
+  const estudiosAcum = estRow ? Number(estRow.valor_acumulado || 0) : 0;
+  const pctEstudiosAcum = (estudiosAcum / 2) * 100;
+  const scoreEstudios   = pctEstudiosAcum / ESPERADO_PCT * 100;
+
+  // ── Score global ──────────────────────────────────────────
+  const score = avg([scoreCap, scorePirdes, scoreAsist, scoreEstudios]);
 
   const keyMetrics = [
     {
-      label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
-      acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
-      pct:pctFortalecimiento,
-      pctDisplay:`${fmtPct(pctFortalecimiento)} de avance con respecto a meta anual`,
-      barPct:pctFortalecimiento
+      label: 'Personas capacitadas en 3 ejes temáticos núcleo. Meta anual: 25 personas por eje (75 en total).',
+      acumDisplay: Object.values(ejesData).map(e => `${e.label}: ${fmt(e.personas)}`).join(' · '),
+      pct: pctCapAcum,
+      pctDisplay: `Avance promedio: ${fmtPct(pctCapAcum)} de meta anual por eje · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
+      barPct: Math.min(pctCapAcum, 120)
     },
     {
-      label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento (alcantarillado, tratamiento de aguas residuales y/o desechos sólidos) con fondos CODEDE.',
-      acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
-      pct:pctAsistencia,
-      pctDisplay:`${fmtPct(pctAsistencia)} de avance con respecto a meta anual`,
-      barPct:pctAsistencia
+      label: 'PIRDES apoyados (meta: 5 completados al cierre del año). Avance por etapa: Diagnóstico 25 %, Revisión técnica 50 %, Aprobado 75 %, Completado 100 %.',
+      acumDisplay: `${fmt(puntosPirdes)} / ${fmt(META_PUNTOS_PIRDES)} puntos · ${Object.keys(mejorEtapa).length} PIRDE(s) activo(s)`,
+      pct: pctPirdesAcum,
+      pctDisplay: `${fmtPct(pctPirdesAcum)} de avance acumulado · ${pirdesDesc}`,
+      barPct: Math.min(pctPirdesAcum, 120)
     },
     {
-      label:'2 nuevos estudios de caracterización de residuos y desechos sólidos del sector comercial y de mercados y al menos 5 PIRDES implementados.',
-      acumDisplay:`${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`,
-      pct:pctResiduos,
-      pctDisplay:`${fmtPct(pctResiduos)} de avance con respecto a meta anual`,
-      barPct:pctResiduos
+      label: 'Asistencias técnicas priorizadas (meta: 3 al cierre del año). Solo se cuentan asistencias formales (1 punto) y seguimientos técnicos (0.3 puntos), sin inflar con visitas de diagnóstico.',
+      acumDisplay: `${fmt(puntosAsist, 1)} / ${fmt(META_ASIST)} asistencias equivalentes`,
+      pct: pctAsistAcum,
+      pctDisplay: `${fmtPct(pctAsistAcum)} de avance acumulado · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
+      barPct: Math.min(pctAsistAcum, 120)
+    },
+    {
+      label: 'Estudios de caracterización de residuos sólidos sector comercial y mercados (meta: 2 al cierre del año).',
+      acumDisplay: `${fmt(estudiosAcum)} / 2 estudios finalizados`,
+      pct: pctEstudiosAcum,
+      pctDisplay: `${fmtPct(pctEstudiosAcum)} de avance · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
+      barPct: Math.min(pctEstudiosAcum, 120)
     }
   ];
 
   return {
     ...cfg,
-    latestLabel:'Marzo 2026',
-    periodKey:'2026-03',
-    score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
-    metrics:keyMetrics,
-    sourceSummary:'Valor fijo · corte marzo 2026'
+    latestLabel: MES_LABEL,
+    periodKey: PERIOD_KEY,
+    score: score || 0,
+    scoreLabel: 'Promedio de 4 componentes vs ritmo esperado en marzo',
+    metrics: keyMetrics,
+    sourceSummary: 'Google Sheets · FM',
+    tooltipLines: [
+      'Meta anual dividida en 4 componentes. En marzo se esperaba el 25 % de avance anual en cada uno.',
+      `Capacitaciones (3 ejes): ${fmtPct(pctCapAcum)} de avance`,
+      `PIRDES (por etapa): ${fmtPct(pctPirdesAcum)} de avance`,
+      `Asistencias técnicas: ${fmtPct(Math.min(pctAsistAcum, 100))} de avance`,
+      `Estudios de residuos: ${fmtPct(pctEstudiosAcum)} de avance`
+    ]
   };
 }
 
@@ -2244,7 +2320,7 @@ async function loadEPC(cfg){
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
     score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
+    scoreLabel:'Avance vs esperado en marzo al corte',
     metrics:keyMetrics,
     sourceSummary:'Valor fijo · corte marzo 2026'
   };
@@ -2317,7 +2393,20 @@ async function loadReforestacion(cfg){
 
   const pctMonitoreoIntegral = Math.min(pctHa, pctCart || 0);
   const pctViveroIntegral = Math.min(pctPlantas, pctEspecies || 0);
-  const score = avg([pctMonitoreoIntegral, pctArboles, pctSig, pctViveroIntegral]);
+  // Solo incluir siembra si está activa en este mes (flag del CSV)
+  const siembraActiva = String(latestMovement.siembra_activa || 'False').toLowerCase() === 'true';
+  const componentes = [pctMonitoreoIntegral, pctSig, pctViveroIntegral];
+  if (siembraActiva) componentes.push(pctArboles);
+  const score = avg(componentes);
+  const refoTooltipLines = [
+    `Esperado en marzo: avance proporcional a la meta anual`,
+    `Monitoreo y cartografía: ${fmtPct(pctMonitoreoIntegral)}`,
+    `Vivero (plantas + especies): ${fmtPct(pctViveroIntegral)}`,
+    `SIG: ${fmtPct(pctSig)}`,
+    siembraActiva
+      ? `Siembra de árboles: ${fmtPct(pctArboles)}`
+      : `Siembra de árboles: sin actividad programada en marzo`
+  ];
 
   const keyMetrics = [
     {
@@ -2380,9 +2469,12 @@ async function loadReforestacion(cfg){
     latestLabel,
     periodKey,
     score: score || 0,
-    scoreLabel: 'Cumplimiento promedio vs metas anuales',
+    scoreLabel: siembraActiva
+      ? 'Promedio de componentes activos vs meta anual'
+      : 'Promedio de componentes activos en marzo (siembra fuera de temporada)',
     metrics: keyMetrics,
-    sourceSummary: 'Google Sheets · Reforestación'
+    sourceSummary: 'Google Sheets · Reforestación',
+    tooltipLines: refoTooltipLines
   };
 }
 
@@ -2444,7 +2536,7 @@ function programCard(p){
       <div class="metric-list">
         <div class="metric-header">
           <span>Indicador</span>
-          <span>Acumulado al presente mes / Meta anual</span>
+          <span>Acumulado a marzo / Meta anual</span>
           <span>% de avance con respecto a meta anual</span>
         </div>
         ${p.metrics.map(metricRow).join('')}
@@ -2466,22 +2558,27 @@ function programCard(p){
 /* ────────────────────────────────
    RENDER RESUMEN GLOBAL
 ──────────────────────────────── */
-function currentVisitLabel(){
-  const parts = new Intl.DateTimeFormat('es-GT', { month:'long', year:'numeric' }).formatToParts(new Date());
-  const month = (parts.find(p => p.type === 'month')?.value || '').replace(/^./, c => c.toUpperCase());
-  const year = parts.find(p => p.type === 'year')?.value || '';
-  return `${month} de ${year}`.trim();
+function dataMonthLabel(programs){
+  // Deriva el mes desde los datos cargados, NUNCA desde el calendario del sistema
+  const labels = (programs || []).map(p => p.latestLabel).filter(l => l && l !== 'Sin datos' && l !== '—');
+  if (!labels.length) return 'Último mes disponible';
+  // Ordenar por periodo_key si existe, si no por label
+  const withPeriod = (programs || [])
+    .filter(p => p.latestLabel && p.latestLabel !== 'Sin datos')
+    .sort((a, b) => (b.periodKey || '').localeCompare(a.periodKey || ''));
+  return withPeriod.length ? withPeriod[0].latestLabel : labels[labels.length - 1];
 }
 
 function renderSummary(programs){
   const avgScore = avg(programs.map(p => p.score));
   const onTrack  = programs.filter(p => p.score >= 80).length;
   const alert    = programs.filter(p => p.score < 80).length;
-  const visitLabel = currentVisitLabel();
+  const visitLabel = dataMonthLabel(programs);
   const [, chipText] = statusClass(avgScore);
 
   document.getElementById('kpiPrograms').textContent = String(programs.length);
   document.getElementById('kpiLatest').textContent = visitLabel;
+  document.getElementById('kpiLatestSub').textContent = 'Último mes con datos en el sistema';
   document.getElementById('kpiLatestSub').textContent = '';
   document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
   document.getElementById('kpiHealthSub').textContent = chipText;
@@ -2496,7 +2593,7 @@ function renderSummary(programs){
   const healthMeterFill = document.getElementById('healthMeterFill');
   if (kpiHealthHero) kpiHealthHero.textContent = fmtPct(avgScore);
   if (kpiHealthStatus) kpiHealthStatus.textContent = chipText;
-  if (kpiHealthContext) kpiHealthContext.textContent = 'Lectura institucional del mes de visita';
+  if (kpiHealthContext) kpiHealthContext.textContent = 'Avance frente a lo esperado en marzo';
   if (kpiLatestHero) kpiLatestHero.textContent = visitLabel;
   if (kpiLatestHeroSub) kpiLatestHeroSub.textContent = '';
   if (healthMeterFill) healthMeterFill.style.width = `${Math.max(0, Math.min(avgScore, 100))}%`;
@@ -2528,8 +2625,8 @@ function renderMatrix(programs){
       <thead><tr>
         <th>Programa / Proyecto</th>
         <th>Fuente</th>
-        <th>Último corte</th>
-        <th>Promedio vs esperado</th>
+        <th>Último mes</th>
+        <th>Avance vs esperado en marzo</th>
         <th>Estado</th>
         <th>Tablero dinámico</th>
       </tr></thead>
@@ -2589,6 +2686,32 @@ const endLabelPlugin = {
       ctx.fillText(`${fmt(value,1)}%`, x, y);
     });
     ctx.restore();
+  },
+  afterDraw(chart, args, pluginOptions){
+    const {ctx, chartArea, scales} = chart;
+    if (!chartArea || !scales.x) return;
+    const mini = pluginOptions?.fontSize === 10;
+    const fz = mini ? 9 : 10;
+    const x100 = scales.x.getPixelForValue(100);
+    const x80  = scales.x.getPixelForValue(80);
+    if (x100 > chartArea.left && x100 < chartArea.right) {
+      ctx.save();
+      ctx.font = `600 ${fz}px Sora, sans-serif`;
+      ctx.fillStyle = 'rgba(46,106,87,.85)';
+      ctx.textAlign = 'center';
+      ctx.fillText('Meta esperada', x100, chartArea.top + (mini ? 8 : 11));
+      ctx.fillText('en marzo', x100, chartArea.top + (mini ? 18 : 23));
+      ctx.restore();
+    }
+    if (x80 > chartArea.left && x80 < chartArea.right) {
+      ctx.save();
+      ctx.font = `600 ${fz}px Sora, sans-serif`;
+      ctx.fillStyle = 'rgba(213,163,75,.9)';
+      ctx.textAlign = 'center';
+      ctx.fillText('Zona de', x80, chartArea.top + (mini ? 8 : 11));
+      ctx.fillText('seguimiento', x80, chartArea.top + (mini ? 18 : 23));
+      ctx.restore();
+    }
   }
 };
 
@@ -2635,15 +2758,27 @@ function chartOptions(mini = false){
       tooltip: {
         backgroundColor: 'rgba(18, 42, 66, .94)',
         padding: 12,
-        titleFont: { family: "'Sora', sans-serif", weight: '700', size: 12 },
-        bodyFont: { family: "'Sora', sans-serif", size: 12 },
+  
         displayColors: false,
+        maxWidth: 320,
         callbacks: {
           title: items => items[0]?.label || '',
-          label: ctx => ctx.dataset.role === 'actual'
-            ? `Promedio observado: ${fmt(ctx.parsed.x,1)}%`
-            : (ctx.dataset.role === 'attention' ? 'Umbral de seguimiento: 80%' : 'Meta de referencia: 100%')
-        }
+          label: ctx => {
+            if (ctx.dataset.role === 'actual') {
+              const lines = [`Avance observado: ${fmt(ctx.parsed.x,1)}%`];
+              const prog = (typeof programsData !== 'undefined' ? programsData : [])[ctx.dataIndex];
+              if (prog?.tooltipLines) lines.push('', ...prog.tooltipLines);
+              return lines;
+            }
+            if (ctx.dataset.role === 'attention') return ['Zona de seguimiento: 80%', 'Programas por debajo de esta línea requieren atención.'];
+            if (ctx.dataset.role === 'target') return ['Meta esperada: 100%', 'Nivel de avance esperado para este mes del año.'];
+            return '';
+          }
+        },
+        titleFont: { family: "'Sora', sans-serif", weight: '700', size: 13 },
+        bodyFont: { family: "'Sora', sans-serif", size: 12 },
+        padding: 14,
+        maxWidth: 320
       },
       endLabelPlugin: { datasetIndex: 1, fontSize: mini ? 10 : 11 }
     }
@@ -2651,6 +2786,7 @@ function chartOptions(mini = false){
 }
 
 let chartRef = null, chartMiniRef = null;
+let programsData = [];
 
 function createChartConfig(labels, data, mini = false){
   return {
@@ -2718,6 +2854,7 @@ function createChartConfig(labels, data, mini = false){
 }
 
 function renderCharts(programs){
+  programsData = programs;
   const labels = programs.map(p => p.name);
   const data   = programs.map(p => Number(p.score || 0));
 
