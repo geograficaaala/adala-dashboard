@@ -810,8 +810,19 @@ def dedupe_preserve_order(values: list[str]) -> list[str]:
 
 
 def default_cutoff_period() -> str:
+    """Retorna el mes anterior al mes actual en Guatemala.
+
+    El mes actual casi nunca tiene datos completos — los datos reales
+    se consolidan el mes siguiente. Por eso el corte por defecto es
+    el mes anterior, no el mes actual.
+    """
     now = datetime.now(ZoneInfo("America/Guatemala"))
-    return f"{now.year:04d}-{now.month:02d}"
+    # Retroceder un mes para evitar incluir meses sin datos reales
+    if now.month == 1:
+        year, month = now.year - 1, 12
+    else:
+        year, month = now.year, now.month - 1
+    return f"{year:04d}-{month:02d}"
 
 
 def parse_args() -> argparse.Namespace:
