@@ -338,7 +338,8 @@
       diciembre: '12', dic: '12'
     };
     const yearMatch = normalized.match(/20\d{2}/);
-    const year = yearMatch ? yearMatch[0] : new Date().getFullYear().toString();
+    const cutoffYear = (getManifest()?.cutoff?.institutional_cutoff_period || '').split('-')[0] || null;
+    const year = yearMatch ? yearMatch[0] : (cutoffYear || '2026');
     for (const [token, month] of Object.entries(monthMap)) {
       if (normalized.includes(token)) {
         const candidate = `${year}-${month}`;
@@ -367,7 +368,8 @@
     if (!candidate && mentionedMonth) {
       // El usuario mencionó un mes pero no existe en los datos
       const yearMatch = normalized.match(/20\d{2}/);
-      const year = yearMatch ? yearMatch[0] : new Date().getFullYear().toString();
+      const cutoffYear2 = (getManifest()?.cutoff?.institutional_cutoff_period || '').split('-')[0] || null;
+      const year = yearMatch ? yearMatch[0] : (cutoffYear2 || '2026');
       const monthMap = { enero: '01', febrero: '02', marzo: '03', abril: '04', mayo: '05', junio: '06', julio: '07', agosto: '08', septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12' };
       const requestedKey = `${year}-${monthMap[mentionedMonth]}`;
       return { requested: requestedKey, effective: latestValid, invalid: true, validPeriods, latestValid };
@@ -1067,8 +1069,8 @@
         const programId = detectProgram(question);
         const periodInfo = resolvePeriodInfo(question, programId);
 
-        // Forzar todos los períodos de todos los programas sin filtro
-        // El Worker recibe ENE/FEB/MAR completos y responde con datos reales
+        // Construir contexto solo con períodos que tienen datos reales (≤ corte marzo 2026)
+        const REAL_DATA_CUTOFF = getCutoffPeriod() || '2026-03';
         const context = Data.buildContext({
           programId: null,
           periodKey: null,
@@ -1078,6 +1080,34 @@
           includeMetadata: false,
           maxRowsPerCollection: 500
         });
+        const enriched = enrichContextWithPeriods(context);
+        // Filtrar filas con período posterior al corte o con todos los valores en cero
+        if (enriched && enriched.programs) {
+          Object.keys(enriched.programs).forEach((pid) => {
+            const prog = enriched.programs[pid];
+            if (prog.monthly) {
+              prog.monthly = prog.monthly.filter((row) => {
+                if (!row.period_key || row.period_key > REAL_DATA_CUTOFF) return false;
+                const vals = Object.entries(row).filter(([k]) => !['period_key','month_label'].includes(k));
+                return vals.some(([, v]) => {
+                  const n = parseFloat(v);
+                  return Number.isFinite(n) && n > 0;
+                });
+              });
+            }
+            if (prog.indicators) {
+              prog.indicators = prog.indicators.filter((row) =>
+                row.period_key && row.period_key <= REAL_DATA_CUTOFF
+              );
+            }
+          });
+          // Añadir metadato de corte para que el Worker lo tenga explícito
+          enriched._cutoff = {
+            last_period_with_data: REAL_DATA_CUTOFF,
+            last_period_label: 'Marzo 2026',
+            note: 'Solo existen datos reales hasta marzo 2026. Períodos posteriores tienen valores cero y NO deben mencionarse.'
+          };
+        }
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), Config.MODEL.timeoutMs || 30000);
         const response = await fetch(Config.MODEL.endpoint, {
@@ -1086,7 +1116,7 @@
           body: JSON.stringify({
             question,
             system: Config.buildSystemInstruction(),
-            context: enrichContextWithPeriods(context),
+            context: enriched,
             config: {
               temperature: Config.MODEL.temperature,
               maxTokens: Config.MODEL.maxTokens
