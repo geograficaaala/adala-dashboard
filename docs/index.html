@@ -1543,7 +1543,7 @@
         <div class="ribbon-sub">Con datos publicados y seguimiento institucional continuo.</div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Último mes institucional</div>
+        <div class="ribbon-label">Último corte institucional</div>
         <div class="ribbon-value" id="kpiLatest">—</div>
         <div class="ribbon-sub" id="kpiLatestSub"></div>
       </article>
@@ -1563,12 +1563,12 @@
         </p>
         <div class="story-columns">
           <p class="prose">
-            El tablero compara el desempeño de los programas y proyectos frente a sus metas y su avance esperado para este mes. Como los programas y proyectos no comparten unidades operativas ni resultados equivalentes, la lectura institucional se apoya en porcentajes de avance y no en la suma directa de datos entre programas y proyectos.
+            El tablero compara el desempeño de los programas y proyectos frente a sus metas y su avance esperado al presente mes. Como los programas y proyectos no comparten unidades operativas ni resultados equivalentes, la lectura institucional se apoya en porcentajes de avance y no en la suma directa de datos entre programas y proyectos.
           </p>
           <div class="story-points" aria-label="Claves de lectura institucional">
             <article class="story-point">
               <span>Seguimiento</span>
-              <p>Una sola vista para entender el estado institucional del mes más reciente.</p>
+              <p>Una sola vista para entender el estado institucional del corte más reciente.</p>
             </article>
             <article class="story-point">
               <span>Comparación</span>
@@ -1598,7 +1598,7 @@
         </div>
         <div class="signal-status">
           <span id="kpiHealthStatus">Promedio institucional vs esperado</span>
-          <span id="kpiHealthContext">Mes de referencia: Marzo 2026</span>
+          <span id="kpiHealthContext">Corte vigente</span>
         </div>
         <div class="signal-grid">
           <article class="signal-stat">
@@ -2051,32 +2051,19 @@ async function loadAtitlan(cfg){
 
   return {
     ...cfg,
-    latestLabel: withData.length ? `${safe(latest.mes)} ${safe(latest.anio)}` : 'Sin datos',
-    periodKey: latestMonth ? `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}` : '—',
-    score: score || 0,
+    latestLabel: withData.length ? safe(latest.mes)+' '+safe(latest.anio) : 'Sin datos',
+    periodKey: latestMonth ? safe(latest.anio)+'-'+String(latestMonth).padStart(2,'0') : '—',
+    score: score||0,
     scoreLabel: 'Cumplimiento promedio vs metas del mes',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets',
-    narrative: (() => {
-      const mesNombre = withData.length ? safe(latest.mes) : 'el mes';
-      const s = (score || 0).toFixed(1);
-      const mat = `${fmt(acumMateriales)} qq`;
-      const ing = `Q${fmt(acumIngresos)}`;
-      const lid = `Q${fmt(ingresoLideresaVal,1)}`;
-      return `En ${mesNombre}, Atitlán Recicla alcanzó el <strong>${s}%</strong> de sus metas mensuales. `
-        + `La cooperativa acumuló <strong>${mat}</strong> de materiales reciclables recolectados y generó <strong>${ing}</strong> en ingresos brutos para el territorio. `
-        + `El ingreso diario promedio por lideresa fue de <strong>${lid}</strong>, `
-        + `frente a una meta mensual de Q${fmt(META_DIARIA_LIDERESA)}. `
-        + (pctMateriales >= 100 ? `La meta de materiales fue superada este mes.` : `La meta de materiales va al ${fmtPct(pctMateriales)} de avance anual.`);
-    })(),
-    tooltipLines: [
-      `Materiales: ${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq — ${fmtPct(pctMateriales)} de meta anual`,
-      `Ingresos brutos: Q${fmt(acumIngresos)} / Q${fmt(META_ANUAL_INGRESOS)} — ${fmtPct(pctIngresos)} de meta anual`,
-      `Ingreso diario lideresas: Q${fmt(ingresoLideresaVal,1)} / Q${fmt(META_DIARIA_LIDERESA)} meta — ${fmtPct(pctLideresa)} de meta mensual`,
-      `Promedio global: ${fmtPct(score)}`
-    ]
+    narrative: (function(){
+      var mesNombre=withData.length?safe(latest.mes):'el mes';
+      return 'En '+mesNombre+', Atitlán Recicla alcanzó el <strong>'+(score||0).toFixed(1)+'%</strong> de sus metas mensuales. La cooperativa acumuló <strong>'+fmt(acumMateriales)+' qq</strong> de materiales reciclables y generó <strong>Q'+fmt(acumIngresos)+'</strong> en ingresos brutos para el territorio. El ingreso diario promedio por lideresa fue de <strong>Q'+fmt(ingresoLideresaVal,1)+'</strong> frente a una meta mensual de Q'+fmt(META_DIARIA_LIDERESA)+'. '+(pctMateriales>=100?'La meta de materiales fue superada este mes.':'La recolección lleva el '+fmtPct(pctMateriales)+' de la meta anual.');
+    })()
   };
 }
+
 
 async function loadConservando(cfg){
   const aceiteAcum = 20470.828;
@@ -2135,167 +2122,57 @@ async function loadConservando(cfg){
 
   return {
     ...cfg,
+      return {
+    ...cfg,
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
-    score:score || 0,
+    score:score||0,
     scoreLabel:'Promedio de indicadores vs ritmo esperado en marzo',
     metrics:keyMetrics,
     sourceSummary:'Google Sheets · Conservando Atitlán',
-    narrative: `A cierre de marzo, Conservando Atitlán avanza al <strong>${(score||0).toFixed(1)}%</strong> del ritmo esperado para este mes del año. `
-      + `El programa ha recolectado <strong>${fmt(aceiteAcum)} litros de aceite</strong> usado de cocina de una meta anual de ${fmt(metaAceite)} litros (${fmtPct(pctAceite)} de avance). `
-      + `En producción de jabones, lleva <strong>${fmt(jabonesProdAcum)} jabones producidos</strong> de ${fmt(metaJabonesProd)} planificados para el año (${fmtPct(pctJabonesProd)}), `
-      + `y ha comercializado <strong>${fmt(jabonesVendAcum)} jabones</strong> de ${fmt(metaJabonesVend)} en meta de ventas (${fmtPct(pctJabonesVend)}). `
-      + `El volumen de agua protegida por la transformación del aceite asciende a <strong>${fmt(aguaAcum)} litros</strong>, equivalente al ${fmtPct(pctAgua)} de la meta anual.`,
-    tooltipLines: [
-      `Aceite: ${fmt(aceiteAcum)} / ${fmt(metaAceite)} litros — ${fmtPct(pctAceite)} de meta anual`,
-      `Agua protegida: ${fmt(aguaAcum)} / ${fmt(metaAgua)} litros — ${fmtPct(pctAgua)} de meta anual`,
-      `Jabones producidos: ${fmt(jabonesProdAcum)} / ${fmt(metaJabonesProd)} — ${fmtPct(pctJabonesProd)} de meta anual`,
-      `Jabones vendidos: ${fmt(jabonesVendAcum)} / ${fmt(metaJabonesVend)} — ${fmtPct(pctJabonesVend)} de meta anual`,
-      `Promedio global: ${fmtPct(score)}`
-    ]
+    narrative:'A cierre de marzo, Conservando Atitlán avanza al <strong>'+(score||0).toFixed(1)+'%</strong> del ritmo esperado. El programa ha recolectado <strong>'+fmt(aceiteAcum)+' litros de aceite</strong> usado de cocina de una meta anual de '+fmt(metaAceite)+' litros ('+fmtPct(pctAceite)+'). En jabones lleva <strong>'+fmt(jabonesProdAcum)+' producidos</strong> de '+fmt(metaJabonesProd)+' planificados ('+fmtPct(pctJabonesProd)+'), y ha comercializado <strong>'+fmt(jabonesVendAcum)+'</strong> de '+fmt(metaJabonesVend)+' en meta de ventas ('+fmtPct(pctJabonesVend)+'). El agua protegida por transformación del aceite asciende a <strong>'+fmt(aguaAcum)+' litros</strong>, el '+fmtPct(pctAgua)+' de la meta anual.'
   };
 }
 
 async function loadFM(cfg){
-  const [indRaw, temaRaw, pirdesRaw, asistRaw] = await Promise.all([
-    parseCsv(cfg.indUrl),
-    parseCsv('./data/fortalecimiento_municipal/capacitaciones_tema_mes.csv'),
-    parseCsv('./data/fortalecimiento_municipal/detalle_pirdes.csv'),
-    parseCsv('./data/fortalecimiento_municipal/detalle_asistencias.csv')
-  ]);
-
-  const MES_LABEL  = 'Marzo 2026';
-  const PERIOD_KEY = '2026-03';
-  const ESPERADO_PCT = (3 / 12) * 100; // 25 % — 3 de 12 meses transcurridos
-
-  // ── Capacitaciones por 3 ejes temáticos núcleo ────────────
-  // Meta: 75 personas / 3 ejes = 25 personas por eje
-  const META_EJE = 25;
-  const temas = cast(temaRaw).filter(r => String(r.es_tema_nucleo) === 'True');
-  const ejesData = {
-    sig:          { label: 'SIG (Sistemas de Información Geográfica)', personas: 0 },
-    cumplimiento: { label: 'Cumplimiento legal ambiental y saneamiento', personas: 0 },
-    saneamiento:  { label: 'Saneamiento ambiental', personas: 0 }
-  };
-  temas.forEach(r => {
-    const tema = String(r.tema || '');
-    const p = Number(r.personas || 0);
-    if      (tema.includes('SIG'))              ejesData.sig.personas          += p;
-    else if (tema.includes('Cumplimiento'))      ejesData.cumplimiento.personas += p;
-    else if (tema.includes('Saneamiento'))       ejesData.saneamiento.personas  += p;
-  });
-  const capPcts = Object.values(ejesData).map(e => (e.personas / META_EJE) * 100);
-  const pctCapAcum = avg(capPcts);
-  const scoreCap = avg(capPcts.map(p => p / ESPERADO_PCT * 100));
-
-  // ── PIRDES por etapa ───────────────────────────────────────
-  // Diagnóstico=25 pts, Revisión técnica=50 pts, Aprobado=75 pts, Terminado=100 pts
-  // Meta: 5 PIRDES completados = 500 puntos
-  const PESOS_ETAPA = {'Diagnóstico': 25, 'Revisión técnica': 50, 'Aprobado': 75, 'Terminado': 100};
-  const META_PUNTOS_PIRDES = 500;
-  const pirdes = cast(pirdesRaw).filter(r => r.municipio && r.estado_pirdes);
-  const mejorEtapa = {};
-  pirdes.forEach(r => {
-    const mun  = String(r.municipio || '').trim();
-    if (!mun) return;
-    const peso = PESOS_ETAPA[String(r.estado_pirdes)] || 0;
-    if (!mejorEtapa[mun] || peso > mejorEtapa[mun]) mejorEtapa[mun] = peso;
-  });
-  const puntosPirdes  = Object.values(mejorEtapa).reduce((s, v) => s + v, 0);
-  const pctPirdesAcum = (puntosPirdes / META_PUNTOS_PIRDES) * 100;
-  const scorePirdes   = pctPirdesAcum / ESPERADO_PCT * 100;
-  const pirdesDesc    = Object.entries(mejorEtapa)
-    .map(([mun, pts]) => `${mun}: ${Object.keys(PESOS_ETAPA).find(k => PESOS_ETAPA[k] === pts) || '?'}`)
-    .join(' · ') || 'Sin PIRDES registrados';
-
-  // ── Asistencias técnicas ──────────────────────────────────
-  // Asistencia técnica formal = 1 punto; Seguimiento técnico = 0.3 punto
-  // Visitas de planta y "Otro" no cuentan (para no inflar el indicador)
-  const META_ASIST = 3;
-  const asist = cast(asistRaw).filter(r => r.municipio && r.tipo_asistencia);
-  let puntosAsist = 0;
-  asist.forEach(r => {
-    const tipo = String(r.tipo_asistencia || '').toLowerCase();
-    if      (tipo.includes('asistencia técnica') || tipo.includes('asistencia tecnica')) puntosAsist += 1;
-    else if (tipo.includes('seguimiento'))                                               puntosAsist += 0.3;
-  });
-  const pctAsistAcum = Math.min((puntosAsist / META_ASIST) * 100, 130);
-  const scoreAsist   = pctAsistAcum / ESPERADO_PCT * 100;
-
-  // ── Estudios de residuos ──────────────────────────────────
-  const indData = cast(indRaw);
-  const estRow  = indData.find(r => String(r.mes_num) === '3' && r.indicador_id === 'estudios_rs_comercial_mercados');
-  const estudiosAcum = estRow ? Number(estRow.valor_acumulado || 0) : 0;
-  const pctEstudiosAcum = (estudiosAcum / 2) * 100;
-  const scoreEstudios   = pctEstudiosAcum / ESPERADO_PCT * 100;
-
-  // ── Score global ──────────────────────────────────────────
-  // Cada componente se normaliza vs el ritmo esperado en marzo (25%).
-  // Se cap a 100 porque ir adelantado no debe inflar el score institucional.
-  const score = avg([
-    Math.min(scoreCap, 100),
-    Math.min(scorePirdes, 100),
-    Math.min(scoreAsist, 100),
-    Math.min(scoreEstudios, 100)
-  ]);
-
-  const keyMetrics = [
-    {
-      label: 'Personas capacitadas en 3 ejes temáticos núcleo. Meta anual: 25 personas por eje (75 en total).',
-      acumDisplay: Object.values(ejesData).map(e => `${e.label}: ${fmt(e.personas)}`).join(' · '),
-      pct: pctCapAcum,
-      pctDisplay: `Avance promedio: ${fmtPct(pctCapAcum)} de meta anual por eje · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
-      barPct: Math.min(pctCapAcum, 120)
-    },
-    {
-      label: 'PIRDES apoyados (meta: 5 completados al cierre del año). Avance por etapa: Diagnóstico 25 %, Revisión técnica 50 %, Aprobado 75 %, Completado 100 %.',
-      acumDisplay: `${fmt(puntosPirdes)} / ${fmt(META_PUNTOS_PIRDES)} puntos · ${Object.keys(mejorEtapa).length} PIRDE(s) activo(s)`,
-      pct: pctPirdesAcum,
-      pctDisplay: `${fmtPct(pctPirdesAcum)} de avance acumulado · ${pirdesDesc}`,
-      barPct: Math.min(pctPirdesAcum, 120)
-    },
-    {
-      label: 'Asistencias técnicas priorizadas (meta: 3 al cierre del año). Solo se cuentan asistencias formales (1 punto) y seguimientos técnicos (0.3 puntos), sin inflar con visitas de diagnóstico.',
-      acumDisplay: `${fmt(puntosAsist, 1)} / ${fmt(META_ASIST)} asistencias equivalentes`,
-      pct: pctAsistAcum,
-      pctDisplay: `${fmtPct(pctAsistAcum)} de avance acumulado · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
-      barPct: Math.min(pctAsistAcum, 120)
-    },
-    {
-      label: 'Estudios de caracterización de residuos sólidos sector comercial y mercados (meta: 2 al cierre del año).',
-      acumDisplay: `${fmt(estudiosAcum)} / 2 estudios finalizados`,
-      pct: pctEstudiosAcum,
-      pctDisplay: `${fmtPct(pctEstudiosAcum)} de avance · Se esperaba ${fmtPct(ESPERADO_PCT)} en marzo`,
-      barPct: Math.min(pctEstudiosAcum, 120)
-    }
+  const [indRaw,temaRaw,pirdesRaw,asistRaw]=await Promise.all([parseCsv(cfg.indUrl),parseCsv('./data/fortalecimiento_municipal/capacitaciones_tema_mes.csv'),parseCsv('./data/fortalecimiento_municipal/detalle_pirdes.csv'),parseCsv('./data/fortalecimiento_municipal/detalle_asistencias.csv')]);
+  const MES_LABEL='Marzo 2026',PERIOD_KEY='2026-03',ESPERADO_PCT=25,META_EJE=25;
+  const temas=cast(temaRaw).filter(r=>String(r.es_tema_nucleo)==='True');
+  const ejesData={sig:{label:'SIG',personas:0},cumplimiento:{label:'Cumplimiento legal ambiental',personas:0},saneamiento:{label:'Saneamiento ambiental',personas:0}};
+  temas.forEach(r=>{const tema=String(r.tema||''),p=Number(r.personas||0);if(tema.includes('SIG'))ejesData.sig.personas+=p;else if(tema.includes('Cumplimiento'))ejesData.cumplimiento.personas+=p;else if(tema.includes('Saneamiento'))ejesData.saneamiento.personas+=p;});
+  const capPcts=Object.values(ejesData).map(e=>(e.personas/META_EJE)*100);
+  const pctCapAcum=avg(capPcts);
+  const scoreCap=avg(capPcts.map(p=>p/ESPERADO_PCT*100));
+  const PESOS={'Diagnóstico':25,'Revisión técnica':50,'Aprobado':75,'Terminado':100};
+  const pirdes=cast(pirdesRaw).filter(r=>r.municipio&&r.estado_pirdes);
+  const mejorEtapa={};
+  pirdes.forEach(r=>{const mun=String(r.municipio||'').trim();if(!mun)return;const peso=PESOS[String(r.estado_pirdes)]||0;if(!mejorEtapa[mun]||peso>mejorEtapa[mun])mejorEtapa[mun]=peso;});
+  const puntosPirdes=Object.values(mejorEtapa).reduce((s,v)=>s+v,0);
+  const pctPirdesAcum=(puntosPirdes/500)*100;
+  const scorePirdes=pctPirdesAcum/ESPERADO_PCT*100;
+  const pirdesDesc=Object.entries(mejorEtapa).map(([m,p])=>`${m}: ${Object.keys(PESOS).find(k=>PESOS[k]===p)||'?'}`).join(' · ')||'Sin PIRDES registrados';
+  const asist=cast(asistRaw).filter(r=>r.municipio&&r.tipo_asistencia);
+  let puntosAsist=0;
+  asist.forEach(r=>{const t=String(r.tipo_asistencia||'').toLowerCase();if(t.includes('asistencia técnica')||t.includes('asistencia tecnica'))puntosAsist+=1;else if(t.includes('seguimiento'))puntosAsist+=0.3;});
+  const pctAsistAcum=Math.min((puntosAsist/3)*100,130);
+  const scoreAsist=pctAsistAcum/ESPERADO_PCT*100;
+  const indData=cast(indRaw);
+  const estRow=indData.find(r=>String(r.mes_num)==='3'&&r.indicador_id==='estudios_rs_comercial_mercados');
+  const estudiosAcum=estRow?Number(estRow.valor_acumulado||0):0;
+  const pctEstudiosAcum=(estudiosAcum/2)*100;
+  const scoreEstudios=pctEstudiosAcum/ESPERADO_PCT*100;
+  const score=avg([Math.min(scoreCap,100),Math.min(scorePirdes,100),Math.min(scoreAsist,100),Math.min(scoreEstudios,100)]);
+  const totalP=Object.values(ejesData).reduce((s,e)=>s+e.personas,0);
+  const keyMetrics=[
+    {label:'Personas capacitadas en 3 ejes temáticos núcleo (meta: 25 por eje, 75 total).',acumDisplay:Object.values(ejesData).map(e=>`${e.label}: ${fmt(e.personas)}`).join(' · '),pct:pctCapAcum,pctDisplay:`${fmtPct(pctCapAcum)} avance · esperado ${fmtPct(ESPERADO_PCT)} en marzo`,barPct:Math.min(pctCapAcum,120)},
+    {label:'PIRDES apoyados (meta: 5 al año). Diagnóstico 25%, Revisión técnica 50%, Aprobado 75%, Completado 100%.',acumDisplay:`${fmt(puntosPirdes)}/500 puntos · ${Object.keys(mejorEtapa).length} activo(s)`,pct:pctPirdesAcum,pctDisplay:`${fmtPct(pctPirdesAcum)} acumulado · ${pirdesDesc}`,barPct:Math.min(pctPirdesAcum,120)},
+    {label:'Asistencias técnicas priorizadas (meta: 3 al año).',acumDisplay:`${fmt(puntosAsist,1)}/3 equivalentes`,pct:pctAsistAcum,pctDisplay:`${fmtPct(pctAsistAcum)} acumulado`,barPct:Math.min(pctAsistAcum,120)},
+    {label:'Estudios de residuos sólidos (meta: 2 al año).',acumDisplay:`${fmt(estudiosAcum)}/2 estudios`,pct:pctEstudiosAcum,pctDisplay:`${fmtPct(pctEstudiosAcum)} avance`,barPct:Math.min(pctEstudiosAcum,120)}
   ];
-
-  return {
-    ...cfg,
-    latestLabel: MES_LABEL,
-    periodKey: PERIOD_KEY,
-    score: score || 0,
-    scoreLabel: 'Promedio de 4 componentes vs ritmo esperado en marzo',
-    metrics: keyMetrics,
-    sourceSummary: 'Google Sheets · FM',
-    narrative: `En marzo, Fortalecimiento Municipal alcanza el <strong>${(score||0).toFixed(1)}%</strong> del ritmo esperado para este mes del año, calculado sobre cuatro componentes. `
-      + `En capacitaciones, se han formado <strong>${fmt(Object.values(ejesData).reduce((s,e)=>s+e.personas,0))} personas</strong> en tres ejes temáticos: `
-      + `${fmt(ejesData.sig.personas)} en SIG, ${fmt(ejesData.cumplimiento.personas)} en cumplimiento legal ambiental y ${fmt(ejesData.saneamiento.personas)} en saneamiento, `
-      + `de una meta de 25 personas por eje al cierre del año. `
-      + `Los PIRDES acumulan <strong>${fmt(puntosPirdes)} puntos</strong> de avance de los 500 posibles: `
-      + `${pirdesDesc}. `
-      + `En asistencias técnicas se contabilizan <strong>${fmt(puntosAsist,1)} equivalentes</strong> de las 3 planificadas para el año `
-      + `(solo se cuentan asistencias formales y seguimientos técnicos verificados). `
-      + `Los estudios de caracterización de residuos llevan <strong>${fmt(estudiosAcum)} de 2</strong> estudios completados.`,
-    tooltipLines: [
-      `Capacitaciones: ${fmt(Object.values(ejesData).reduce((s,e)=>s+e.personas,0))} personas capacitadas / 75 meta anual — ritmo: ${fmtPct(Math.min(scoreCap,100))} del esperado en marzo`,
-      `PIRDES: ${fmt(puntosPirdes)} / ${fmt(META_PUNTOS_PIRDES)} puntos de etapa (${Object.keys(mejorEtapa).length} activos) — ${fmtPct(Math.min(scorePirdes,100))} del esperado en marzo`,
-      `Asistencias: ${fmt(puntosAsist,1)} / 3 equivalentes — ${fmtPct(Math.min(scoreAsist,100))} del esperado en marzo`,
-      `Estudios: ${fmt(estudiosAcum)} / 2 estudios — ${fmtPct(Math.min(scoreEstudios,100))} del esperado en marzo`,
-      `Promedio global: ${fmtPct(score)}`
-    ]
-  };
+  const narrative='En marzo, Fortalecimiento Municipal alcanza el <strong>'+score.toFixed(1)+'%</strong> del ritmo esperado. Las capacitaciones suman <strong>'+fmt(totalP)+' personas</strong> en 3 ejes: '+fmt(ejesData.sig.personas)+' en SIG, '+fmt(ejesData.cumplimiento.personas)+' en cumplimiento legal y '+fmt(ejesData.saneamiento.personas)+' en saneamiento (meta: 25 por eje). Los PIRDES activos acumulan <strong>'+fmt(puntosPirdes)+'/500 puntos</strong>: '+pirdesDesc+'. Las asistencias técnicas suman <strong>'+fmt(puntosAsist,1)+' equivalentes</strong> de 3 planificadas. Los estudios de residuos llevan <strong>'+fmt(estudiosAcum)+'/2</strong> completados.';
+  return{...cfg,latestLabel:MES_LABEL,periodKey:PERIOD_KEY,score:score||0,scoreLabel:'Promedio de 4 componentes vs ritmo esperado en marzo',metrics:keyMetrics,sourceSummary:'Google Sheets · FM',narrative};
 }
+
 
 async function loadEPC(cfg){
   const docentesVisitasRealizadas = 1;
@@ -2359,24 +2236,15 @@ async function loadEPC(cfg){
 
   return {
     ...cfg,
+      return {
+    ...cfg,
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
-    score:score || 0,
+    score:score||0,
     scoreLabel:'Promedio de componentes vs ritmo esperado en marzo',
     metrics:keyMetrics,
     sourceSummary:'Google Sheets · EPC',
-    narrative: `En marzo, Educando para Conservar registra un avance de <strong>${(score||0).toFixed(1)}%</strong> frente al ritmo esperado para el año. `
-      + `El programa ha completado <strong>${docentesVisitasRealizadas} de ${docentesVisitasMeta} visitas sostenidas</strong> a centros educativos, llegando a ${fmt(docentesPorVisita)} docentes. `
-      + `La formación de cohortes juveniles avanza al <strong>${fmtPct(pctAvanceFormacion)}</strong>: se han desarrollado ${momentosDesarrolladosCohorteUno} de ${momentosPorCohorte} momentos formativos en la primera cohorte. `
-      + `Las actividades de campo suman <strong>${fmt(actividadesVal)}</strong> de las ${fmt(actividadesMeta)} planificadas para el año (${fmtPct(pctActividades)}). `
-      + `El programa trabaja con los ${cohortesTotales * estudiantesPorCohorte} jóvenes de las ${cohortesTotales} cohortes activas en los 13 municipios de la cuenca.`,
-    tooltipLines: [
-      `Visitas a docentes: ${docentesVisitasRealizadas} / ${docentesVisitasMeta} — ${fmtPct(pctDocentes)} de meta anual`,
-      `Visitas a estudiantes: ${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} — ${fmtPct(pctEstudiantes)} de meta anual`,
-      `Formación cohortes: ${fmtPct(pctAvanceFormacion)} (${momentosDesarrolladosCohorteUno}/${momentosPorCohorte} momentos)`,
-      `Actividades de campo: ${fmt(actividadesVal)} / ${fmt(actividadesMeta)} — ${fmtPct(pctActividades)} de meta anual`,
-      `Promedio global: ${fmtPct(score)}`
-    ]
+    narrative:'En marzo, Educando para Conservar registra un avance de <strong>'+(score||0).toFixed(1)+'%</strong>. El programa ha completado <strong>'+docentesVisitasRealizadas+' de '+docentesVisitasMeta+' visitas</strong> a centros educativos, llegando a '+fmt(docentesPorVisita)+' docentes. La formación de cohortes avanza al <strong>'+fmtPct(pctAvanceFormacion)+'</strong>: se han desarrollado '+momentosDesarrolladosCohorteUno+' de '+momentosPorCohorte+' momentos en la primera cohorte. Las actividades de campo suman <strong>'+fmt(actividadesVal)+'</strong> de las '+fmt(actividadesMeta)+' planificadas para el año ('+fmtPct(pctActividades)+'). El programa trabaja con los '+(cohortesTotales*estudiantesPorCohorte)+' jóvenes de las '+cohortesTotales+' cohortes activas en los 13 municipios.'
   };
 }
 
@@ -2447,20 +2315,10 @@ async function loadReforestacion(cfg){
 
   const pctMonitoreoIntegral = Math.min(pctHa, pctCart || 0);
   const pctViveroIntegral = Math.min(pctPlantas, pctEspecies || 0);
-  // Solo incluir siembra si está activa en este mes (flag del CSV)
   const siembraActiva = String(latestMovement.siembra_activa || 'False').toLowerCase() === 'true';
   const componentes = [pctMonitoreoIntegral, pctSig, pctViveroIntegral];
   if (siembraActiva) componentes.push(pctArboles);
   const score = avg(componentes);
-  const refoTooltipLines = [
-    `Monitoreo: ${fmt(haAcum,2)} / ${fmt(haMeta)} ha — ${fmtPct(pctMonitoreoIntegral)} de meta anual`,
-    `Vivero: ${fmt(plantasAcum)} plantas / ${fmt(plantasMeta)} meta — ${fmtPct(pctViveroIntegral)} de meta anual`,
-    `SIG: ${fmt(sigAcum,2)} / ${fmt(sigMeta,0)} unidad — ${fmtPct(pctSig)} de meta anual`,
-    siembraActiva
-      ? `Siembra: ${fmt(arbolesAcum)} / ${fmt(arbolesMeta)} árboles — ${fmtPct(pctArboles)} de meta anual`
-      : `Siembra de árboles: no programada en marzo (se activa en temporada de lluvias)`,
-    `Promedio global: ${fmtPct(score)}`
-  ];
 
   const keyMetrics = [
     {
@@ -2523,29 +2381,25 @@ async function loadReforestacion(cfg){
     latestLabel,
     periodKey,
     score: score || 0,
-    scoreLabel: siembraActiva
-      ? 'Promedio de componentes activos vs meta anual'
-      : 'Promedio de componentes activos en marzo (siembra fuera de temporada)',
+    scoreLabel: siembraActiva ? 'Promedio de componentes activos vs meta anual' : 'Promedio de componentes activos en marzo (siembra fuera de temporada)',
     metrics: keyMetrics,
     sourceSummary: 'Google Sheets · Reforestación',
-    tooltipLines: refoTooltipLines,
-    narrative: (() => {
-      const s = (score||0).toFixed(1);
-      const base = `En marzo, Reforestando Atitlán registra un avance de <strong>${s}%</strong> en sus componentes activos este mes. `
-        + `El monitoreo de reforestaciones lleva <strong>${fmt(haAcum,1)} de ${fmt(haMeta)} hectáreas</strong> monitoreadas (${fmtPct(pctHa)} de la meta anual), `
-        + `con cobertura cartográfica al <strong>${fmtPct(pctCart)}</strong>. `
-        + `El vivero mantiene <strong>${fmt(plantasAcum)} plantas forestales</strong> producidas de las ${fmt(plantasMeta)} planificadas para el año (${fmtPct(pctPlantas)}), `
-        + `con <strong>${fmt(especiesAcum)} de ${fmt(especiesMeta)} especies nativas</strong> activas (${fmtPct(pctEspecies)}). `
-        + `La unidad SIG avanza al <strong>${fmtPct(pctSig)}</strong> de consolidación. `;
-      const siembraText = siembraActiva
-        ? `La siembra de árboles lleva <strong>${fmt(arbolesAcum)}</strong> de los ${fmt(arbolesMeta)} planificados (${fmtPct(pctArboles)}).`
-        : `La siembra de ${fmt(arbolesMeta)} árboles no está activa en marzo: esta actividad comienza con la temporada de lluvias `
-          + `y se excluye del cálculo del avance para no penalizar al programa en meses en que, por diseño, no está programada. `
-          + `El porcentaje de <strong>${s}%</strong> refleja únicamente los componentes que sí operan durante este mes.`;
+    narrative: (function(){
+      var s=(score||0).toFixed(1);
+      var base='En marzo, Reforestando Atitlán registra un avance de <strong>'+s+'%</strong> en sus componentes activos. '
+        +'El monitoreo lleva <strong>'+fmt(haAcum,1)+' de '+fmt(haMeta)+' hectáreas</strong> monitoreadas ('+fmtPct(pctHa)+' de la meta anual), '
+        +'con cobertura cartográfica al <strong>'+fmtPct(pctCart)+'</strong>. '
+        +'El vivero mantiene <strong>'+fmt(plantasAcum)+' plantas</strong> de las '+fmt(plantasMeta)+' planificadas ('+fmtPct(pctPlantas)+'), '
+        +'con <strong>'+fmt(especiesAcum)+' de '+fmt(especiesMeta)+' especies nativas</strong> activas. '
+        +'La unidad SIG avanza al <strong>'+fmtPct(pctSig)+'</strong> de consolidación. ';
+      var siembraText = siembraActiva
+        ? 'La siembra lleva <strong>'+fmt(arbolesAcum)+'</strong> de los '+fmt(arbolesMeta)+' árboles planificados ('+fmtPct(pctArboles)+').'
+        : 'La siembra de <strong>'+fmt(arbolesMeta)+' árboles</strong> no está activa en marzo: comienza con la temporada de lluvias y se excluye del cálculo para no penalizar al programa en meses en que, por diseño, no opera. El <strong>'+s+'%</strong> refleja únicamente los tres componentes que sí trabajan este mes.';
       return base + siembraText;
-    })(),
+    })()
   };
 }
+
 
 /* ────────────────────────────────
    RENDER MÉTRICAS
@@ -2628,14 +2482,8 @@ function programCard(p){
    RENDER RESUMEN GLOBAL
 ──────────────────────────────── */
 function dataMonthLabel(programs){
-  // Deriva el mes desde los datos cargados, NUNCA desde el calendario del sistema
-  const labels = (programs || []).map(p => p.latestLabel).filter(l => l && l !== 'Sin datos' && l !== '—');
-  if (!labels.length) return 'Último mes disponible';
-  // Ordenar por periodo_key si existe, si no por label
-  const withPeriod = (programs || [])
-    .filter(p => p.latestLabel && p.latestLabel !== 'Sin datos')
-    .sort((a, b) => (b.periodKey || '').localeCompare(a.periodKey || ''));
-  return withPeriod.length ? withPeriod[0].latestLabel : labels[labels.length - 1];
+  const wp=(programs||[]).filter(p=>p.latestLabel&&p.latestLabel!=='Sin datos').sort((a,b)=>(b.periodKey||'').localeCompare(a.periodKey||''));
+  return wp.length?wp[0].latestLabel:'Último mes disponible';
 }
 
 function renderSummary(programs){
@@ -2647,7 +2495,6 @@ function renderSummary(programs){
 
   document.getElementById('kpiPrograms').textContent = String(programs.length);
   document.getElementById('kpiLatest').textContent = visitLabel;
-  document.getElementById('kpiLatestSub').textContent = 'Último mes con datos en el sistema';
   document.getElementById('kpiLatestSub').textContent = '';
   document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
   document.getElementById('kpiHealthSub').textContent = chipText;
@@ -2662,7 +2509,7 @@ function renderSummary(programs){
   const healthMeterFill = document.getElementById('healthMeterFill');
   if (kpiHealthHero) kpiHealthHero.textContent = fmtPct(avgScore);
   if (kpiHealthStatus) kpiHealthStatus.textContent = chipText;
-  if (kpiHealthContext) kpiHealthContext.textContent = 'Avance frente a lo esperado en marzo';
+  if (kpiHealthContext) kpiHealthContext.textContent = 'Lectura institucional del mes de visita';
   if (kpiLatestHero) kpiLatestHero.textContent = visitLabel;
   if (kpiLatestHeroSub) kpiLatestHeroSub.textContent = '';
   if (healthMeterFill) healthMeterFill.style.width = `${Math.max(0, Math.min(avgScore, 100))}%`;
@@ -2694,7 +2541,7 @@ function renderMatrix(programs){
       <thead><tr>
         <th>Programa / Proyecto</th>
         <th>Fuente</th>
-        <th>Último mes</th>
+        <th>Datos a</th>
         <th>Avance vs esperado en marzo</th>
         <th>Estado</th>
         <th>Tablero dinámico</th>
@@ -2724,38 +2571,15 @@ const benchmarkBandPlugin = {
   beforeDatasetsDraw(chart){
     const {ctx, chartArea, scales} = chart;
     if (!chartArea || !scales.x || !scales.y) return;
-    const {left, right} = chartArea;
-    const x80  = Math.max(left, Math.min(right, scales.x.getPixelForValue(80)));
+    const {left, right, top, bottom} = chartArea;
+    const x80 = Math.max(left, Math.min(right, scales.x.getPixelForValue(80)));
     const x100 = Math.max(left, Math.min(right, scales.x.getPixelForValue(100)));
-    const barThickness = 26;
-    const half = barThickness / 2 + 6;
-
-    // Dibujar zona independiente por cada barra
-    const numBars = chart.data.labels?.length || 0;
-    for (let i = 0; i < numBars; i++){
-      const meta = chart.getDatasetMeta(1);
-      const el   = meta?.data?.[i];
-      if (!el) continue;
-      const cy = el.y;
-      // Zona rezago (0 → 80%)
-      ctx.save();
-      ctx.fillStyle = 'rgba(213,163,75,.09)';
-      ctx.fillRect(left, cy - half, Math.max(0, x80 - left), half * 2);
-      // Zona en seguimiento (80% → 100%)
-      ctx.fillStyle = 'rgba(46,106,87,.09)';
-      ctx.fillRect(x80, cy - half, Math.max(0, x100 - x80), half * 2);
-      // Borde izquierdo de zona rezago
-      ctx.strokeStyle = 'rgba(213,163,75,.25)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([]);
-      ctx.strokeRect(left, cy - half, Math.max(0, x80 - left), half * 2);
-      // Borde zona seguimiento
-      ctx.strokeStyle = 'rgba(46,106,87,.25)';
-      ctx.strokeRect(x80, cy - half, Math.max(0, x100 - x80), half * 2);
-      ctx.restore();
-
-
-    }
+    ctx.save();
+    ctx.fillStyle = 'rgba(213, 163, 75, .08)';
+    ctx.fillRect(left, top, Math.max(0, x80 - left), bottom - top);
+    ctx.fillStyle = 'rgba(46, 106, 87, .08)';
+    ctx.fillRect(x80, top, Math.max(0, x100 - x80), bottom - top);
+    ctx.restore();
   }
 };
 
@@ -2778,8 +2602,7 @@ const endLabelPlugin = {
       ctx.fillText(`${fmt(value,1)}%`, x, y);
     });
     ctx.restore();
-  },
-  afterDraw(){}
+  }
 };
 
 function chartGradient(context){
@@ -2822,14 +2645,25 @@ function chartOptions(mini = false){
     },
     plugins: {
       legend: { display: false },
-      tooltip: { enabled: false },
+      tooltip: {
+        backgroundColor: 'rgba(18, 42, 66, .94)',
+        padding: 12,
+        titleFont: { family: "'Sora', sans-serif", weight: '700', size: 12 },
+        bodyFont: { family: "'Sora', sans-serif", size: 12 },
+        displayColors: false,
+        callbacks: {
+          title: items => items[0]?.label || '',
+          label: ctx => ctx.dataset.role === 'actual'
+            ? `Promedio observado: ${fmt(ctx.parsed.x,1)}%`
+            : (ctx.dataset.role === 'attention' ? 'Umbral de seguimiento: 80%' : 'Meta de referencia: 100%')
+        }
+      },
       endLabelPlugin: { datasetIndex: 1, fontSize: mini ? 10 : 11 }
     }
   };
 }
 
 let chartRef = null, chartMiniRef = null;
-let programsData = [];
 
 function createChartConfig(labels, data, mini = false){
   return {
@@ -2905,14 +2739,42 @@ function renderCharts(programs){
   if (ctxMini){
     if (chartMiniRef) chartMiniRef.destroy();
     chartMiniRef = new Chart(ctxMini, createChartConfig(labels, data, true));
+    setTimeout(() => injectChartButtons('programChartMini', chartMiniRef, true), 150);
   }
 
   const ctx = document.getElementById('programChart');
   if (ctx){
     if (chartRef) chartRef.destroy();
     chartRef = new Chart(ctx, createChartConfig(labels, data, false));
+    setTimeout(() => injectChartButtons('programChart', chartRef, false), 150);
   }
 }
+
+function injectChartButtons(canvasId, chart, mini){
+  const canvas = document.getElementById(canvasId);
+  if (!canvas || !chart) return;
+  const wrap = canvas.parentElement;
+  wrap.style.position = 'relative';
+  wrap.querySelectorAll('.prog-btn').forEach(el => el.remove());
+  const {chartArea, scales} = chart;
+  if (!chartArea || !scales.y) return;
+  const cRect = canvas.getBoundingClientRect();
+  const wRect = wrap.getBoundingClientRect();
+  const offX = cRect.left - wRect.left;
+  const offY = cRect.top  - wRect.top;
+  programsData.forEach((prog, i) => {
+    const cy = offY + scales.y.getPixelForValue(i);
+    const cx = offX + chartArea.right + 10;
+    const btn = document.createElement('button');
+    btn.className = 'prog-btn';
+    btn.textContent = mini ? '?' : '¿Qué significa esta barra?';
+    btn.title = '¿Qué significa esta barra?';
+    btn.style.cssText = 'position:absolute;top:'+cy+'px;left:'+cx+'px;transform:translateY(-50%);white-space:nowrap;font-size:'+(mini?'9px':'10px')+';font-family:var(--font-body,"Sora",sans-serif);font-weight:600;color:var(--lake,#1c6084);background:var(--lake-soft,#d9ecf1);border:1px solid var(--lake-light,#4ca5bf);border-radius:20px;padding:'+(mini?'2px 6px':'3px 10px')+';cursor:pointer;line-height:1.5;z-index:10;';
+    btn.addEventListener('click', () => showProgramModal(i));
+    wrap.appendChild(btn);
+  });
+}
+
 
 /* ────────────────────────────────
    INIT
@@ -2943,138 +2805,53 @@ async function init(){
   }
 }
 
+/* ── Modal narrativo ── */
+function showProgramModal(index){
+  var prog=(programsData||[])[index];
+  if(!prog)return;
+  var score=Number(prog.score||0);
+  var color=score>=100?'#2e6a57':score>=80?'#b07a10':'#9c4242';
+  document.getElementById('pmKicker').textContent=prog.scoreLabel||'Avance del programa';
+  document.getElementById('pmTitle').textContent=prog.name||'';
+  document.getElementById('pmScore').innerHTML='<span style="color:'+color+'">'+score.toFixed(1)+'%</span>';
+  document.getElementById('pmPeriod').textContent='Datos a '+(prog.latestLabel||'—')+' · '+(prog.sourceSummary||'');
+  document.getElementById('pmText').innerHTML=prog.narrative||'<em>Sin narrativa disponible.</em>';
+  document.getElementById('progModal').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeProgramModal(){
+  document.getElementById('progModal').style.display='none';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeProgramModal();});
+
 init();
 </script>
-
-/* ── Modal narrativo de programa ────────────────────────── */
-function fmt1(n){ return (n||0).toFixed(1); }
-
-function showProgramModal(index){
-  const prog = (programsData || [])[index];
-  if (!prog) return;
-  const modal = document.getElementById('progModal');
-  const score = Number(prog.score || 0);
-  const chipColor = score >= 100 ? '#2e6a57' : score >= 80 ? '#b07a10' : '#9c4242';
-
-  document.getElementById('progModalKicker').textContent = prog.scoreLabel || 'Avance del programa';
-  document.getElementById('progModalTitle').textContent = prog.name || '';
-  document.getElementById('progModalScore').innerHTML =
-    `<span style="color:${chipColor}">${score.toFixed(1)}%</span>`;
-  document.getElementById('progModalScoreLabel').textContent =
-    `Datos a ${prog.latestLabel || 'último mes disponible'}`;
-  document.getElementById('progModalNarrative').innerHTML =
-    prog.narrative || '<em>Sin narrativa disponible para este programa.</em>';
-  document.getElementById('progModalPeriod').textContent =
-    `Fuente: ${prog.sourceSummary || '—'} · Período: ${prog.latestLabel || '—'}`;
-
-  modal.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  // Trap focus
-  const closeBtn = modal.querySelector('button[aria-label="Cerrar"]');
-  if (closeBtn) setTimeout(() => closeBtn.focus(), 80);
-}
-
-function closeProgramModal(){
-  const modal = document.getElementById('progModal');
-  if (modal) modal.style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-// Cerrar con Escape
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeProgramModal();
-});
-
-// Click en canvas — detectar si fue en el área del eje Y (nombre del programa)
-function attachChartNameClick(canvas, getChart){
-  if (!canvas) return;
-  // Cursor pointer en toda el área del gráfico
-  canvas.style.cursor = 'pointer';
-  canvas.addEventListener('click', e => {
-    const chart = getChart();
-    if (!chart || !chart.chartArea) return;
-    const rect = canvas.getBoundingClientRect();
-    const my = e.clientY - rect.top;
-    const mx = e.clientX - rect.left;
-    const {chartArea, scales} = chart;
-    // Detectar barra clicada (zona del eje Y O zona de barras)
-    const yScale = scales.y;
-    if (!yScale) return;
-    for (let i = 0; i < (programsData || []).length; i++){
-      const labelY = yScale.getPixelForValue(i);
-      const half = 22;
-      if (Math.abs(my - labelY) < half && mx >= 0 && mx <= chartArea.right + 20){
-        showProgramModal(i);
-        return;
-      }
-    }
-  });
-}
-
-// Adjuntar handlers después de renderizar charts
-const _origRenderCharts = renderCharts;
-renderCharts = function(programs){
-  _origRenderCharts(programs);
-  // Mini chart
-  attachChartNameClick(
-    document.getElementById('programChartMini'),
-    () => chartMiniRef
-  );
-  // Full chart
-  attachChartNameClick(
-    document.getElementById('programChart'),
-    () => chartRef
-  );
-  // Añadir instrucción visual bajo cada gráfico
-  ['programChartMini','programChart'].forEach(id => {
-    const canvas = document.getElementById(id);
-    if (!canvas) return;
-    let hint = canvas.parentElement.querySelector('.chart-click-hint');
-    if (!hint){
-      hint = document.createElement('p');
-      hint.className = 'chart-click-hint';
-      hint.style.cssText = 'font-size:.72rem;color:#6b7f90;text-align:center;margin-top:6px;';
-      hint.textContent = 'Haz clic en el nombre de un programa para leer su narrativa de avance';
-      canvas.parentElement.appendChild(hint);
-    }
-  });
-};
 
 <script src="./chatbot-config.js"></script>
 <script src="./chatbot-data.js"></script>
 <script src="./chatbot.js"></script>
-
-<!-- ── Modal narrativo de programa ─────────────────────────── -->
-<div id="progModal" role="dialog" aria-modal="true" aria-labelledby="progModalTitle"
-  style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:24px">
-  <div id="progModalBackdrop"
-    style="position:absolute;inset:0;background:rgba(18,42,66,.55);backdrop-filter:blur(4px)"
-    onclick="closeProgramModal()"></div>
-  <article id="progModalCard"
-    style="position:relative;background:var(--surface,#fff);border-radius:20px;
-           padding:36px 40px;max-width:560px;width:100%;box-shadow:0 24px 60px rgba(18,42,66,.22);
-           max-height:85vh;overflow-y:auto">
-    <button onclick="closeProgramModal()" aria-label="Cerrar"
-      style="position:absolute;top:16px;right:16px;background:none;border:none;
-             font-size:22px;cursor:pointer;color:var(--muted,#6b7f90);line-height:1;padding:4px 8px">
-      &#x2715;
-    </button>
-    <div id="progModalKicker"
-      style="font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
-             color:var(--lake,#1c6084);margin-bottom:8px"></div>
-    <h2 id="progModalTitle"
-      style="font-family:var(--font-head,'Lora',serif);font-size:1.35rem;font-weight:600;
-             color:var(--text,#17314f);margin-bottom:6px;line-height:1.3"></h2>
-    <div id="progModalScore"
-      style="font-size:2.4rem;font-weight:800;font-family:var(--font-mono,'JetBrains Mono',monospace);
-             color:var(--lake,#1c6084);margin-bottom:20px;line-height:1"></div>
-    <div id="progModalScoreLabel"
-      style="font-size:.8rem;color:var(--muted,#6b7f90);margin-top:-14px;margin-bottom:20px"></div>
-    <div id="progModalNarrative"
-      style="font-size:.95rem;line-height:1.75;color:var(--text-2,#36516a)"></div>
-    <div id="progModalPeriod"
-      style="margin-top:20px;font-size:.78rem;color:var(--muted,#6b7f90);
-             border-top:1px solid var(--line,#d5e2dc);padding-top:14px"></div>
+<style>
+.prog-btn:hover{background:var(--lake,#1c6084)!important;color:#fff!important;}
+#progModal{display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;padding:20px;}
+#pmBackdrop{position:absolute;inset:0;background:rgba(18,42,66,.6);backdrop-filter:blur(5px);cursor:pointer;}
+#pmCard{position:relative;background:var(--surface,#fff);border-radius:20px;padding:36px 40px;max-width:560px;width:100%;box-shadow:0 24px 60px rgba(18,42,66,.25);max-height:88vh;overflow-y:auto;z-index:1;}
+#pmClose{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted,#6b7f90);line-height:1;padding:4px 8px;}
+#pmKicker{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--lake,#1c6084);margin-bottom:8px;}
+#pmTitle{font-family:var(--font-head,'Lora',serif);font-size:1.4rem;font-weight:600;color:var(--text,#17314f);margin-bottom:4px;margin-top:0;}
+#pmScore{font-size:2.6rem;font-weight:800;font-family:var(--font-mono,monospace);line-height:1;margin-bottom:4px;}
+#pmPeriod{font-size:.75rem;color:var(--muted,#6b7f90);margin-bottom:20px;border-bottom:1px solid var(--line,#d5e2dc);padding-bottom:14px;}
+#pmText{font-size:.95rem;line-height:1.8;color:var(--text-2,#36516a);}
+</style>
+<div id="progModal" onclick="if(event.target===this||event.target.id==='pmBackdrop')closeProgramModal()">
+  <div id="pmBackdrop"></div>
+  <article id="pmCard">
+    <button id="pmClose" onclick="closeProgramModal()" aria-label="Cerrar">&#x2715;</button>
+    <div id="pmKicker"></div>
+    <h2 id="pmTitle"></h2>
+    <div id="pmScore"></div>
+    <div id="pmPeriod"></div>
+    <div id="pmText"></div>
   </article>
 </div>
 
