@@ -2754,17 +2754,7 @@ const benchmarkBandPlugin = {
       ctx.strokeRect(x80, cy - half, Math.max(0, x100 - x80), half * 2);
       ctx.restore();
 
-      // Etiqueta "Rezago" sobre la zona izquierda (solo primera barra)
-      if (i === 0){
-        ctx.save();
-        ctx.font = '500 9px Sora, sans-serif';
-        ctx.fillStyle = 'rgba(170,120,30,.8)';
-        ctx.textAlign = 'left';
-        ctx.fillText('Rezago', left + 4, cy - half - 3);
-        ctx.fillStyle = 'rgba(40,90,60,.8)';
-        ctx.fillText('En seguimiento', x80 + 4, cy - half - 3);
-        ctx.restore();
-      }
+
     }
   }
 };
@@ -2789,32 +2779,7 @@ const endLabelPlugin = {
     });
     ctx.restore();
   },
-  afterDraw(chart, args, pluginOptions){
-    const {ctx, chartArea, scales} = chart;
-    if (!chartArea || !scales.x) return;
-    const mini = pluginOptions?.fontSize === 10;
-    const fz = mini ? 9 : 10;
-    const x100 = scales.x.getPixelForValue(100);
-    const x80  = scales.x.getPixelForValue(80);
-    if (x100 > chartArea.left && x100 < chartArea.right) {
-      ctx.save();
-      ctx.font = `600 ${fz}px Sora, sans-serif`;
-      ctx.fillStyle = 'rgba(46,106,87,.85)';
-      ctx.textAlign = 'center';
-      ctx.fillText('Meta esperada', x100, chartArea.top + (mini ? 8 : 11));
-      ctx.fillText('en marzo', x100, chartArea.top + (mini ? 18 : 23));
-      ctx.restore();
-    }
-    if (x80 > chartArea.left && x80 < chartArea.right) {
-      ctx.save();
-      ctx.font = `600 ${fz}px Sora, sans-serif`;
-      ctx.fillStyle = 'rgba(213,163,75,.9)';
-      ctx.textAlign = 'center';
-      ctx.fillText('Zona de', x80, chartArea.top + (mini ? 8 : 11));
-      ctx.fillText('seguimiento', x80, chartArea.top + (mini ? 18 : 23));
-      ctx.restore();
-    }
-  }
+  afterDraw(){}
 };
 
 function chartGradient(context){
@@ -2833,7 +2798,7 @@ function chartOptions(mini = false){
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: 'y',
-    interaction: { mode: 'nearest', intersect: false },
+    interaction: { mode: 'nearest', intersect: true },
     animation: { duration: 900, easing: 'easeOutQuart' },
     layout: { padding: { right: mini ? 54 : 66, left: 4, top: 6, bottom: 4 } },
     scales: {
@@ -2857,27 +2822,7 @@ function chartOptions(mini = false){
     },
     plugins: {
       legend: { display: false },
-      tooltip: {
-        backgroundColor: 'rgba(18, 42, 66, .94)',
-        padding: 12,
-  
-        displayColors: false,
-        maxWidth: 320,
-        callbacks: {
-          title: items => items[0]?.label || '',
-          label: ctx => {
-            if (ctx.dataset.role === 'actual')
-              return `Avance: ${fmt(ctx.parsed.x,1)}% — haz clic en el nombre para el detalle`;
-            if (ctx.dataset.role === 'attention') return 'Zona de seguimiento: 80%';
-            if (ctx.dataset.role === 'target')    return 'Meta esperada en marzo: 100%';
-            return '';
-          }
-        },
-        titleFont: { family: "'Sora', sans-serif", weight: '700', size: 13 },
-        bodyFont: { family: "'Sora', sans-serif", size: 12 },
-        padding: 14,
-        maxWidth: 320
-      },
+      tooltip: { enabled: false },
       endLabelPlugin: { datasetIndex: 1, fontSize: mini ? 10 : 11 }
     }
   };
@@ -3043,28 +2988,24 @@ document.addEventListener('keydown', e => {
 // Click en canvas — detectar si fue en el área del eje Y (nombre del programa)
 function attachChartNameClick(canvas, getChart){
   if (!canvas) return;
-  canvas.style.cursor = 'default';
-  canvas.addEventListener('mousemove', e => {
-    const chart = getChart();
-    if (!chart || !chart.chartArea) return;
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    canvas.style.cursor = (mx < chart.chartArea.left) ? 'pointer' : 'default';
-  });
+  // Cursor pointer en toda el área del gráfico
+  canvas.style.cursor = 'pointer';
   canvas.addEventListener('click', e => {
     const chart = getChart();
     if (!chart || !chart.chartArea) return;
     const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
-    if (mx >= chart.chartArea.left) return; // solo clic en eje Y
-    const yScale = chart.scales.y;
+    const mx = e.clientX - rect.left;
+    const {chartArea, scales} = chart;
+    // Detectar barra clicada (zona del eje Y O zona de barras)
+    const yScale = scales.y;
     if (!yScale) return;
     for (let i = 0; i < (programsData || []).length; i++){
       const labelY = yScale.getPixelForValue(i);
-      if (Math.abs(my - labelY) < 22){
+      const half = 22;
+      if (Math.abs(my - labelY) < half && mx >= 0 && mx <= chartArea.right + 20){
         showProgramModal(i);
-        break;
+        return;
       }
     }
   });
