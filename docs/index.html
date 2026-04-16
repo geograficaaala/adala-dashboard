@@ -1039,6 +1039,16 @@
       color: var(--muted);
       font-weight: 600;
     }
+    .metric-note {
+      grid-column: 2 / 4;
+      text-align: center;
+      font-size: .75rem;
+      color: var(--lake);
+      font-style: italic;
+      padding: 6px 4px 10px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
 
     .btn {
       display: inline-flex;
@@ -2036,6 +2046,9 @@ const PROGRAMS = [
    LOADERS
 ──────────────────────────────── */
 
+// Mapa mes abreviado → nombre completo
+const MES_LARGO = {ENE:'Enero',FEB:'Febrero',MAR:'Marzo',ABR:'Abril',MAY:'Mayo',JUN:'Junio',JUL:'Julio',AGO:'Agosto',SEP:'Septiembre',OCT:'Octubre',NOV:'Noviembre',DIC:'Diciembre'};
+
 // METAS ANUALES ATITLÁN RECICLA (basadas en los CSV de la repo)
 const META_ANUAL_MATERIALES = 17920;   // qq — 815 TM
 const META_ANUAL_INGRESOS   = 448000;  // GTQ brutos
@@ -2066,6 +2079,7 @@ async function loadAtitlan(cfg){
 
   const ingresoLideresaRow = latestIndicators.find(r => r.indicador_id === 'ingreso_diario_lideresa');
   const ingresoLideresaVal = ingresoLideresaRow ? Number(ingresoLideresaRow.valor || 0) : Number(latest.ingreso_diario_lideresa || 0);
+  const mesLargoAtitlan = MES_LARGO[safe(latest.mes)] || safe(latest.mes);
 
   const pctMateriales = (acumMateriales / META_ANUAL_MATERIALES) * 100;
   const pctIngresos   = (acumIngresos   / META_ANUAL_INGRESOS)   * 100;
@@ -2078,31 +2092,34 @@ async function loadAtitlan(cfg){
       label: 'Colecta de materiales reciclables',
       acumDisplay: `${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq`,
       pct: pctMateriales,
-      pctDisplay: `${fmtPct(pctMateriales)} de avance con respecto a meta anual`,
-      barPct: pctMateriales
+      pctDisplay: `${fmtPct(pctMateriales)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct: pctMateriales,
+      temporality: 'Este indicador tiene por temporalidad desde enero a noviembre de 2026'
     },
     {
       label: 'Ingresos brutos por comercialización',
       acumDisplay: `${fmt(acumIngresos)} / ${fmt(META_ANUAL_INGRESOS)} GTQ`,
       pct: pctIngresos,
-      pctDisplay: `${fmtPct(pctIngresos)} de avance con respecto a meta anual`,
-      barPct: pctIngresos
+      pctDisplay: `${fmtPct(pctIngresos)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct: pctIngresos,
+      temporality: 'Este indicador tiene por temporalidad desde enero a noviembre de 2026'
     },
     {
       label: 'Ingresos medios diarios por lideresas',
-      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ/día en ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'} — meta mensual: ${fmt(META_DIARIA_LIDERESA)} GTQ/día`,
+      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ/día en ${safe(latest.mes) !== '—' ? mesLargoAtitlan : 'el presente mes'} — meta mensual: ${fmt(META_DIARIA_LIDERESA)} GTQ/día`,
       pct: pctLideresa,
       pctDisplay: pctLideresa >= 100
-        ? `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día, superando la meta mensual en ${fmtPct(pctLideresa - 100)}`
-        : `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día — ${fmtPct(pctLideresa)} de la meta mensual (${fmt(META_DIARIA_LIDERESA)} GTQ/día)`,
+        ? `En ${safe(latest.mes) !== '—' ? mesLargoAtitlan : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día, superando la meta mensual en ${fmtPct(pctLideresa - 100)}`
+        : `En ${safe(latest.mes) !== '—' ? mesLargoAtitlan : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día — ${fmtPct(pctLideresa)} de la meta mensual (${fmt(META_DIARIA_LIDERESA)} GTQ/día)`,
       barPct: pctLideresa,
-      isMensual: true
+      isMensual: true,
+      temporality: 'Este indicador tiene por temporalidad desde enero a noviembre de 2026'
     }
   ];
 
   return {
     ...cfg,
-    latestLabel: withData.length ? `${safe(latest.mes)} ${safe(latest.anio)}` : 'Sin datos',
+    latestLabel: withData.length ? `${MES_LARGO[safe(latest.mes)] || safe(latest.mes)} ${safe(latest.anio)}` : 'Sin datos',
     periodKey: latestMonth ? `${safe(latest.anio)}-${String(latestMonth).padStart(2,'0')}` : '—',
     score: score || 0,
     scoreLabel: 'Cumplimiento promedio vs metas mensuales',
@@ -2140,29 +2157,33 @@ async function loadConservando(cfg){
       label:'Litros de aceite usado de cocina recolectados.',
       acumDisplay:`${fmt(aceiteAcum)} lt / ${fmt(metaAceite)} litros recolectados anualmente`,
       pct:pctAceite,
-      pctDisplay:`${fmtPct(pctAceite)} de avance con respecto a meta anual`,
-      barPct:pctAceite
+      pctDisplay:`${fmtPct(pctAceite)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctAceite,
+      temporality: 'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     },
     {
       label:'Litros de agua protegidos.',
       acumDisplay:`${fmt(aguaAcum)} lt / ${fmt(metaAgua)} litros de agua protegidos`,
       pct:pctAgua,
-      pctDisplay:`${fmtPct(pctAgua)} de avance con respecto a meta anual`,
-      barPct:pctAgua
+      pctDisplay:`${fmtPct(pctAgua)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctAgua,
+      temporality: 'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     },
     {
       label:'65,040 jabones producidos.',
       acumDisplay:`${fmt(jabonesProdAcum)} jabones producidos / ${fmt(metaJabonesProd)} jabones producidos anualmente`,
       pct:pctJabonesProd,
-      pctDisplay:`${fmtPct(pctJabonesProd)} de avance con respecto a meta anual`,
-      barPct:pctJabonesProd
+      pctDisplay:`${fmtPct(pctJabonesProd)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctJabonesProd,
+      temporality: 'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     },
     {
       label:'51,600 jabones vendidos anualmente.',
       acumDisplay:`${fmt(jabonesVendAcum)} vendidos / ${fmt(metaJabonesVend)} jabones anualmente`,
       pct:pctJabonesVend,
-      pctDisplay:`${fmtPct(pctJabonesVend)} de avance con respecto a meta anual`,
-      barPct:pctJabonesVend
+      pctDisplay:`${fmtPct(pctJabonesVend)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctJabonesVend,
+      temporality: 'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     }
   ];
 
@@ -2201,21 +2222,21 @@ async function loadFM(cfg){
       label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
       acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
       pct:pctFortalecimiento,
-      pctDisplay:`${fmtPct(pctFortalecimiento)} de avance con respecto a meta anual`,
+      pctDisplay:`${fmtPct(pctFortalecimiento)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctFortalecimiento
     },
     {
       label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento (alcantarillado, tratamiento de aguas residuales y/o desechos sólidos) con fondos CODEDE.',
       acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
       pct:pctAsistencia,
-      pctDisplay:`${fmtPct(pctAsistencia)} de avance con respecto a meta anual`,
+      pctDisplay:`${fmtPct(pctAsistencia)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctAsistencia
     },
     {
       label:'2 nuevos estudios de caracterización de residuos y desechos sólidos del sector comercial y de mercados y al menos 5 PIRDES implementados.',
       acumDisplay:`${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`,
       pct:pctResiduos,
-      pctDisplay:`${fmtPct(pctResiduos)} de avance con respecto a meta anual`,
+      pctDisplay:`${fmtPct(pctResiduos)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctResiduos
     }
   ];
@@ -2267,29 +2288,33 @@ async function loadEPC(cfg){
       label:'Visitas de fortalecimiento de las capacidades técnicas de docentes en los contenidos del Módulo 1 al módulo 7 a través de la metodología Epc, fase 2 Co-Facilitación y Empoderamiento',
       acumDisplay:`${docentesVisitasRealizadas} / ${docentesVisitasMeta} visitas sostenidas a ${fmt(docentesPorVisita)} docentes`,
       pct:pctDocentes,
-      pctDisplay:`${fmtPct(pctDocentes)} de avance con respecto a meta anual`,
-      barPct:pctDocentes
+      pctDisplay:`${fmtPct(pctDocentes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctDocentes,
+      temporality: 'Este indicador tiene por temporalidad desde marzo a septiembre de 2026'
     },
     {
       label:'Visita de fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los estudiantes en los módulos 1 al 7.',
       acumDisplay:`${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} visitas sostenidas a ${fmt(estudiantesPorVisita)} estudiantes`,
       pct:pctEstudiantes,
-      pctDisplay:`${fmtPct(pctEstudiantes)} de avance con respecto a meta anual`,
-      barPct:pctEstudiantes
+      pctDisplay:`${fmtPct(pctEstudiantes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctEstudiantes,
+      temporality: 'Este indicador tiene por temporalidad desde marzo a septiembre de 2026'
     },
     {
       label:'120 jóvenes de 12 municipios, distribuidos en 2 cohortes de 60 estudiantes cada una, formados en 5 módulos temáticos y una actividad de presentación de proyectos por cohorte en temas de gestión ambiental y liderazgo juvenil.',
       acumDisplay:`Avance en el desarrollo de la formación de estudiantes acumulada a la fecha: ${fmtPct(pctAvanceFormacion)}`,
       pct:pctAvanceFormacion,
-      pctDisplay:`${fmtPct(pctAvanceFormacion)} de avance con respecto a meta anual`,
-      barPct:pctAvanceFormacion
+      pctDisplay:`${fmtPct(pctAvanceFormacion)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct:pctAvanceFormacion,
+      temporality: 'Este indicador tiene por temporalidad desde marzo a octubre de 2026'
     },
     {
       label:'Actividades en campo',
       acumDisplay:`${fmt(actividadesVal)} / ${fmt(actividadesMeta)} actividades`,
       pct:pctActividades,
       pctDisplay:`${fmtPct(pctActividades)}`,
-      barPct:pctActividades
+      barPct:pctActividades,
+      temporality: 'Este indicador tiene por temporalidad desde enero a octubre de 2026'
     }
   ];
 
@@ -2379,11 +2404,12 @@ async function loadReforestacion(cfg){
 
   const keyMetrics = [
     {
-      label: '35 hectáreas monitoreadas de las reforestaciones realizadas en 2025 en Sololá y la Cuenca del Lago de Atitlán, con su respectiva cartografía durante el primer semestre de 2026.',
+      label: '35 hectáreas monitoreadas de las reforestaciones realizadas en 2025 en Sololá y la Cuenca del Lago de Atitlán, con su respectiva cartografía.',
       acumDisplay: `${fmt(haAcum, 2)} / ${fmt(haMeta)} ha monitoreadas`,
       pct: pctMonitoreoIntegral,
       pctDisplay: `${fmtPct(pctHa)} en hectáreas y ${fmtPct(pctCart)} en cartografía`,
       barPct: pctMonitoreoIntegral,
+      temporality: 'Este indicador tiene por temporalidad desde enero a julio de 2026',
       subIndicators: [
         {
           label: 'Hectáreas monitoreadas',
@@ -2402,8 +2428,9 @@ async function loadReforestacion(cfg){
       label: '85,000 árboles sembrados durante 2026 en el departamento de Sololá y la Cuenca del Lago de Atitlán.',
       acumDisplay: `${fmt(arbolesAcum)} / ${fmt(arbolesMeta)} árboles`,
       pct: pctArboles,
-      pctDisplay: `${fmtPct(pctArboles)} de avance con respecto a meta anual`,
+      pctDisplay: `${fmtPct(pctArboles)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct: pctArboles,
+      temporality: 'Este indicador tiene por temporalidad desde junio a noviembre de 2026',
       inactive: !siembraActiva
     },
     {
@@ -2419,6 +2446,7 @@ async function loadReforestacion(cfg){
       pct: pctViveroIntegral,
       pctDisplay: `${fmtPct(pctPlantas)} en plantas y ${fmtPct(pctEspecies)} en especies`,
       barPct: pctViveroIntegral,
+      temporality: 'Este indicador tiene por temporalidad desde enero a noviembre de 2026',
       subIndicators: [
         {
           label: 'Plantas forestales',
@@ -2495,6 +2523,7 @@ function metricRow(m){
         <div class="metric-primary">${pctLabel}</div>
         <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
       </div>
+      ${m.temporality ? `<div class="metric-note">${m.temporality}</div>` : ''}
     </div>
   `;
 }
@@ -2522,13 +2551,13 @@ function programCard(p){
         <div class="prog-score-track">
           <div class="prog-score-fill" style="width:${scoreFill}%"></div>
         </div>
-        <div class="prog-score-sub">Corte: ${safe(p.latestLabel)}</div>
+        <div class="prog-score-sub">${safe(p.latestLabel)}</div>
       </div>
       <div class="metric-list">
         <div class="metric-header">
           <span>Indicador</span>
-          <span>Acumulado al presente mes / Meta anual</span>
-          <span>% de avance con respecto a meta anual</span>
+          <span>Avance acumulado hasta el mes de marzo / Meta anual</span>
+          <span>% de avance acumulado hasta el mes de marzo con respecto a meta anual</span>
         </div>
         ${p.metrics.map(metricRow).join('')}
       </div>
