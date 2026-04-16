@@ -177,6 +177,13 @@
 
     /* ── CHIP ── */
     .chip{padding:4px 9px;border-radius:var(--radius-xs);font-weight:700;font-size:.67rem;white-space:nowrap;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0}
+    .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 12px}
+    .stat-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;
+      font-size:.80rem;font-weight:700;line-height:1.2;
+      background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(237,248,251,.9));
+      border:1px solid var(--line-soft);color:var(--blue);box-shadow:0 2px 8px rgba(23,50,58,.06)}
+    .stat-chip::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,var(--green),var(--blue-mid))}
     .chip.green{background:var(--green-soft);color:var(--green)}
     .chip.yellow{background:var(--gold-soft);color:var(--gold)}
     .chip.red{background:var(--red-soft);color:var(--red)}
@@ -206,7 +213,7 @@
     .interp strong{color:var(--blue-mid)}
 
     /* ── CHARTS ── */
-    .chart-wrap{overflow:auto;border-radius:var(--radius-xs);background:var(--surface);border:1px solid var(--line-soft);padding:6px 0 2px}
+    .chart-wrap{overflow-x:auto;overflow-y:visible;border-radius:var(--radius-xs);background:var(--surface);border:1px solid var(--line-soft);padding:6px 0 2px;-webkit-overflow-scrolling:touch}
     .chart{width:100%;min-width:760px;height:auto;display:block}
     .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.79rem;margin-top:10px;
       padding-top:8px;border-top:1px solid var(--line-soft)}
@@ -1778,6 +1785,9 @@
         </a>
       </div>
     </section>
+    <section class="footer-mark" aria-label="Imagen institucional">
+      <img src="./chill_lago.png" alt="Atitlán Chill — Cooperativa Atitlán Recicla">
+    </section>
   </div>
 </footer>
 
@@ -1976,10 +1986,14 @@ function bindControls(state){
     state.selectedZone = zoneSelect.value;
     render(state);
   };
-  indicatorSelect.onchange = ()=>{
+  indicatorSelect.onchange = (e)=>{
+    e.stopPropagation();
     state.selectedIndicatorId = indicatorSelect.value;
     render(state);
   };
+  // Prevent select clicks from bubbling to chart-zoomable container
+  indicatorSelect.addEventListener('click', e=>e.stopPropagation());
+  indicatorSelect.addEventListener('mousedown', e=>e.stopPropagation());
 }
 
 function renderHero(state){
@@ -3561,25 +3575,23 @@ function renderZoneBarChart(containerId,state,period,subtitleId,interpId){
       style:'transition:width .75s cubic-bezier(.4,0,.2,1)',cursor:'pointer'});
     setTimeout(function(b,w){ b.setAttribute('width',w); },60+i*80,bar,barW);
 
-    /* pct badge inside bar */
-    var badge=svgEl('text',{x:padL+barW-10,y:y+barH/2+4,'text-anchor':'end',fill:'rgba(255,255,255,.85)',
-      'font-size':'10','font-weight':'700','font-family':'DM Sans,sans-serif','pointer-events':'none'});
-    setTimeout(function(el,w,p){
-      if(w>50) el.textContent=p+'%';
-      el.setAttribute('x',padL+w-10);
-    },80+i*80,badge,barW,pct);
-
-    var insideZone=barW>60;
-    var valLbl=svgEl('text',{x:insideZone?padL+barW-8:padL+barW+8,y:y+barH/2+4,
+    /* value label: inside bar when wide, outside when narrow. No separate % badge to avoid overlap */
+    var insideZone=barW>80;
+    var valLbl=svgEl('text',{
+      x:insideZone?padL+barW-10:Math.min(padL+barW+8,W-padR-4),
+      y:y+barH/2+4,
       'text-anchor':insideZone?'end':'start',
-      fill:insideZone?'rgba(255,255,255,.92)':'#516851',
-      'font-size':'10','font-weight':'700','font-family':'JetBrains Mono,monospace'});
+      fill:insideZone?'rgba(255,255,255,.94)':'#516851',
+      'font-size':'10.5','font-weight':'700','font-family':'JetBrains Mono,monospace',
+      'pointer-events':'none'
+    });
+    var badge=svgEl('g',{}); /* empty placeholder to keep event-listener loop intact */
     setTimeout(function(el,v,w){
-      var inside=w>60;
-      el.setAttribute('x',inside?padL+w-8:Math.min(padL+w+8,W-padR-4));
+      var inside=w>80;
+      el.setAttribute('x',inside?padL+w-10:Math.min(padL+w+8,W-padR-4));
       el.setAttribute('text-anchor',inside?'end':'start');
-      el.setAttribute('fill',inside?'rgba(255,255,255,.92)':'#516851');
-      el.textContent=formatNumber(v)+' qq';
+      el.setAttribute('fill',inside?'rgba(255,255,255,.94)':'#516851');
+      el.textContent=formatNumber(v)+' qq'+(inside?'':' ('+pct+'%)');
     },80+i*80,valLbl,val,barW);
 
     var inc=formatNumber(safeNumber(row.ingreso_bruto_total));
@@ -4248,7 +4260,8 @@ document.addEventListener('keydown', function(e){
 function setupChartZoom(){
   document.querySelectorAll('.chart-zoomable').forEach(function(el){
     el.addEventListener('click',function(e){
-      if(e.target.closest('.zoom-overlay,.modal-overlay')) return;
+      // Don't trigger zoom when interacting with form elements inside the card
+      if(e.target.closest('select,input,button,.zoom-overlay,.modal-overlay')) return;
       var title = el.querySelector('h3')?.textContent || 'Gráfica';
       var viz = el.querySelector('.viz-wrap,.chart-wrap');
       if(!viz || !viz.innerHTML.trim()) return;
@@ -4377,7 +4390,6 @@ document.body.classList.add('view-full');
   function patchStaticDom(){
     const heroLead=q('.hero-lead');
     if(heroLead){ heroLead.remove(); }
-    }
     const supportStrip=q('.support-strip');
     if(supportStrip) supportStrip.remove();
     const footerWrap=q('.footer-wrap');
