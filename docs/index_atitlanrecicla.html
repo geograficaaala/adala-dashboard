@@ -127,7 +127,7 @@
 
     /* ── INTRO ── */
     .intro-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;margin-bottom:20px}
-    .intro-copy p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:.92rem;text-align:justify;hyphens:auto}
+    .intro-copy p{margin:0 0 12px;color:var(--muted);line-height:1.8;font-size:.80rem;text-align:justify;hyphens:auto}
     .intro-copy p:last-child{margin-bottom:0}
     .intro-copy strong{color:var(--blue-mid)}
     .annual-goals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
@@ -268,14 +268,19 @@
     .alert.green{background:var(--green-soft);border-color:var(--green);color:var(--green)}
 
     /* ── DIAGNOSTIC ── */
-    .diagnostic{padding:26px 32px;line-height:1.82;font-size:.93rem;
+    .diagnostic{padding:26px 32px;line-height:1.82;font-size:.83rem;
       border-left:4px solid var(--blue-mid);
       background:linear-gradient(to right,var(--blue-pale) 0%,var(--card) 55%)}
-    .diagnostic h3{font-family:var(--font-head);font-size:1.12rem;font-weight:600;color:var(--text);
+    .diagnostic h3{font-family:var(--font-head);font-size:1.05rem;font-weight:600;color:var(--text);
       margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
-    .diagnostic p{color:var(--muted);margin-bottom:8px}
+    .diagnostic p{color:var(--muted);margin-bottom:10px;text-align:justify;hyphens:auto}
     .diagnostic p:last-child{margin-bottom:0}
     .diagnostic strong{color:var(--blue-mid)}
+    .diagnostic .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+    .diagnostic .diag-block{padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)}
+    .diagnostic .diag-block strong{display:block;font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+    .diagnostic .diag-block p{font-size:.81rem;margin:0;color:var(--muted)}
+    @media(max-width:760px){.diagnostic .diag-grid{grid-template-columns:1fr}}
     .muted{color:var(--muted)}
     .empty{padding:20px;border:1.5px dashed var(--line);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);text-align:center;font-size:.88rem}
     .footer-note{margin-top:8px;color:var(--muted);font-size:.77rem}
@@ -442,7 +447,7 @@
     }
     .intro-story{background:linear-gradient(180deg,#ffffff 0%,#fbfefe 100%)}
     .intro-story h3,.intro-focus h3,.annual-panel h3{font-family:var(--font-head);font-size:1.28rem;line-height:1.2;color:var(--text);margin-bottom:12px;letter-spacing:-.01em}
-    .intro-story p{margin:0 0 14px;color:var(--text-2);line-height:1.82;font-size:.92rem;text-align:justify;hyphens:auto}
+    .intro-story p{margin:0 0 14px;color:var(--text-2);line-height:1.82;font-size:.80rem;text-align:justify;hyphens:auto}
     .intro-story p:last-child{margin-bottom:0}
     .impact-ribbon{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 18px}
     .impact-ribbon span{
@@ -711,6 +716,7 @@
     .brand-text{display:grid;gap:1px;min-width:0}
     .brand-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.74);font-weight:800;line-height:1.1}
     .brand-title{font-size:1rem;font-weight:700;color:#fff;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .header-logo-img{height:42px;width:auto;display:block;flex-shrink:0;border-radius:9px;background:rgba(255,255,255,.92);padding:4px 6px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
     .nav-tabs{
       margin-left:auto;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;
@@ -1523,9 +1529,10 @@
 
 <header class="header">
   <a class="header-brand" href="./index.html">
+    <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán" class="header-logo-img">
     <span class="brand-text">
       <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
-      <span class="brand-title">Tablero dinámico institucional de avances</span>
+      <span class="brand-title">Cooperativa Atitlán Recicla · Tablero de programa</span>
     </span>
   </a>
   <div class="header-stack">
@@ -1609,7 +1616,6 @@
           <div class="hero-eyebrow">Cooperativa · economía circular</div>
           <h1>Cooperativa Atitlán Recicla</h1>
           <div class="hero-period-pill" id="heroPeriodPill">—</div>
-          <p class="hero-lead">Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.</p>
           <div class="hero-tag-row">
             <span class="hero-tag">13 municipios y 5 aldeas</span>
             <span class="hero-tag">64 socias fundadoras</span>
@@ -1671,7 +1677,7 @@
     <section class="toolbar toolbar-compact">
       <select id="periodSelect" hidden></select>
       <div class="card filter"><label for="zoneSelect">Zona</label><select id="zoneSelect"></select></div>
-      <div class="card filter"><label>Último período válido detectado</label><div class="pill" id="latestPeriodPill">—</div></div>
+      <div class="card filter"><label>Período seleccionado</label><div class="pill" id="latestPeriodPill">—</div></div>
     </section>
     <section class="section">
       <div class="section-head"><div><h2>Indicadores clave de desempeño</h2><p id="kpiSubtitle">Lectura del período seleccionado.</p></div></div>
@@ -1694,7 +1700,7 @@
       </article>
       <article class="card panel panel-accent">
         <h3>Semáforo de indicadores</h3>
-        <p class="sub" id="semaforoSubtitle">Cumplimiento del mes y avance acumulado al corte.</p>
+        <p class="sub" id="semaforoSubtitle">Cumplimiento del mes y avance acumulado.</p>
         <div id="semaforoTable"></div>
       </article>
     </section>
@@ -2032,7 +2038,7 @@ function renderAnnualGoals(state){
     card.innerHTML = `
       <small>${escapeHtml(cfg.label)}</small>
       <div class="goal-value">${escapeHtml(formatByUnit(accumulated, cfg.unit))}</div>
-      <div class="goal-caption">Acumulado real al corte</div>
+      <div class="goal-caption">Acumulado real</div>
       <div class="goal-meta">Meta anual: <strong>${escapeHtml(formatByUnit(annualGoal, cfg.unit))}</strong></div>
       <div class="goal-progress"><span class="chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</span></div>
       <div class="progress"><span style="width:${Math.max(0,Math.min(pct*100,100))}%"></span></div>
@@ -2186,7 +2192,7 @@ function renderSemaforo(state){
   const subtitle=document.getElementById("semaforoSubtitle");
 
   if(state.selectedZone==="__all__"){
-    subtitle.textContent="Cumplimiento del mes y avance acumulado al corte del programa.";
+    subtitle.textContent=`Cumplimiento del mes en ${escapeHtml(periodLabel(period))}.`;
     const rows=KPI_IDS.map(id=>metrics[id]).filter(Boolean).map(m=>({
       indicador:m.label,
       mensual:m.monthlyPct,
@@ -2324,53 +2330,73 @@ function renderDiagnostic(state){
   const metrics=getMetricsForSelection(state,period);
   const zoneLabel=getZoneLabel(state.selectedZone);
   const mat=metrics.materiales_generales, inc=metrics.ingreso_bruto_total, pet=metrics.pet, vid=metrics.vidrio;
+  const lbl=escapeHtml(periodLabel(period));
 
-  let strongestZoneText="";
+  // Zona/territorio lider
+  let leaderText="", leaderDetail="";
   if(state.selectedZone==="__all__"){
     const zones=getZonaRows(state,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
-    if(zones.length){
-      strongestZoneText=`La zona con mayor volumen de materiales fue <strong>${escapeHtml(zones[0].zona)}</strong> con <strong>${escapeHtml(formatByUnit(zones[0].total_materiales_qq,"qq"))}</strong>.`;
+    if(zones.length>0){
+      const top=zones[0], total=zones.reduce((s,r)=>s+safeNumber(r.total_materiales_qq),0)||1;
+      const pct=Math.round(safeNumber(top.total_materiales_qq)/total*100);
+      leaderText=`<strong>${escapeHtml(top.zona||"—")}</strong> fue la zona de mayor volumen, aportando <strong>${escapeHtml(formatByUnit(top.total_materiales_qq,"qq"))}</strong> (${pct}% del total del programa) e ingresos de <strong>${escapeHtml(formatByUnit(top.ingreso_bruto_total,"GTQ"))}</strong>.`;
+      if(zones.length>1){
+        const sec=zones[1];
+        leaderDetail=` Le sigue <strong>${escapeHtml(sec.zona||"—")}</strong> con <strong>${escapeHtml(formatByUnit(sec.total_materiales_qq,"qq"))}</strong>.`;
+      }
     }
   }else{
-    const territories=getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone) && hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
-    if(territories.length){
-      strongestZoneText=`Dentro de ${escapeHtml(zoneLabel)}, el territorio con mayor volumen reportado fue <strong>${escapeHtml(territories[0].territorio)}</strong> con <strong>${escapeHtml(formatByUnit(territories[0].total_materiales_qq,"qq"))}</strong>.`;
+    const territories=getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone)&&hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
+    if(territories.length>0){
+      leaderText=`Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, el territorio con mayor recolección fue <strong>${escapeHtml(territories[0].territorio||"—")}</strong> con <strong>${escapeHtml(formatByUnit(territories[0].total_materiales_qq,"qq"))}</strong> e ingresos de <strong>${escapeHtml(formatByUnit(territories[0].ingreso_bruto_total,"GTQ"))}</strong>.`;
     }
   }
 
+  // Texto operativo principal
   const monthlyText = state.selectedZone==="__all__"
-    ? `En <strong>${escapeHtml(periodLabel(period))}</strong>, el programa mostró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables, equivalente a <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> de la meta mensual. El ingreso bruto total del período fue <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>, mientras que PET y vidrio registraron <strong>${escapeHtml(formatByUnit(pet?.valor,pet?.unit))}</strong> y <strong>${escapeHtml(formatByUnit(vid?.valor,vid?.unit))}</strong>, respectivamente.`
-    : `En <strong>${escapeHtml(periodLabel(period))}</strong>, la vista filtrada para <strong>${escapeHtml(zoneLabel)}</strong> registró <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables y un ingreso bruto de <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>. Esa zona aportó <strong>${escapeHtml(formatPercent(mat?.sharePct))}</strong> del volumen total de materiales del programa y <strong>${escapeHtml(formatPercent(inc?.sharePct))}</strong> del ingreso bruto mensual.`;
+    ? `Durante <strong>${lbl}</strong>, la Cooperativa Atitlán Recicla recolectó <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables, lo que representa el <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> de la meta mensual establecida para ese indicador. El ingreso bruto generado en el período alcanzó <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>. En cuanto a materiales estratégicos, el PET acumuló <strong>${escapeHtml(formatByUnit(pet?.valor,pet?.unit))}</strong> y el vidrio <strong>${escapeHtml(formatByUnit(vid?.valor,vid?.unit))}</strong>, reflejando el trabajo de recolección en los distintos municipios y centros de acopio de la cuenca.`
+    : `En <strong>${lbl}</strong>, la zona <strong>${escapeHtml(zoneLabel)}</strong> reportó <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> de materiales reciclables y un ingreso bruto de <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong>. Esta zona concentró el <strong>${escapeHtml(formatPercent(mat?.sharePct))}</strong> del volumen total de materiales del programa en ese período, y aportó el <strong>${escapeHtml(formatPercent(inc?.sharePct))}</strong> del ingreso bruto mensual consolidado.`;
 
+  // Texto de avance anual
   const annualText = state.selectedZone==="__all__"
-    ? `Al corte del período seleccionado, el avance anual acumulado del indicador de materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> respecto de la meta anual esperada al mismo punto del año.`
-    : `Al corte del período seleccionado, la participación acumulada de <strong>${escapeHtml(zoneLabel)}</strong> dentro del total anual del programa para materiales equivale a <strong>${escapeHtml(formatPercent(mat?.annualSharePct))}</strong>.`;
+    ? `En términos de avance anual, el acumulado de materiales recolectados desde enero de <strong>${period?.anio||"—"}</strong> hasta <strong>${lbl}</strong> representa el <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> de la meta anual proporcional esperada para ese mismo punto del año. Este indicador es clave para proyectar el cierre del ciclo y detectar si el ritmo operativo es suficiente para alcanzar los objetivos programáticos anuales.`
+    : `Desde el inicio del año hasta <strong>${lbl}</strong>, la participación acumulada de <strong>${escapeHtml(zoneLabel)}</strong> dentro del total anual del programa para materiales equivale al <strong>${escapeHtml(formatPercent(mat?.annualSharePct))}</strong>. Esta lectura permite identificar si la zona mantiene un aporte sostenido a lo largo del ciclo o si existen meses con caídas que requieren seguimiento focalizado.`;
 
-  const riskText = state.selectedZone==="__all__"
-    ? diagnosisRiskText(metrics)
-    : zoneRiskText(metrics, zoneLabel);
+  // Texto de riesgo
+  const riskText = state.selectedZone==="__all__" ? diagnosisRiskText(metrics) : zoneRiskText(metrics,zoneLabel);
+
+  // Texto de mujeres e ingresos
+  const muj=metrics.ingreso_bruto_mujeres, dlid=metrics.ingreso_diario_lideresa;
+  const mujeresText = muj ? `El ingreso bruto destinado directamente a las lideresas y socias de la cooperativa fue de <strong>${escapeHtml(formatByUnit(muj.valor,muj.unit))}</strong> en <strong>${lbl}</strong>. El ingreso diario promedio por lideresa activa alcanzó <strong>${escapeHtml(formatByUnit(dlid?.valor,dlid?.unit))}</strong>, frente a una meta de <strong>${escapeHtml(formatByUnit(dlid?.meta,dlid?.unit))}</strong>. Este indicador es central para medir el impacto económico real en las mujeres de la cuenca.` : '';
 
   document.getElementById("diagnosticPanel").innerHTML = `
-    <h3 style="margin-top:0">Diagnóstico del período</h3>
+    <h3 style="margin-top:0">Diagnóstico de <strong>${lbl}</strong></h3>
     <p>${monthlyText}</p>
     <p>${annualText}</p>
-    <p>${strongestZoneText || "No se detectó un patrón territorial suficientemente fuerte para resumirlo."}</p>
+    <p>${leaderText}${leaderDetail}</p>
+    ${mujeresText ? `<p>${mujeresText}</p>` : ''}
     <p>${riskText}</p>
+    <div class="diag-grid">
+      <div class="diag-block"><strong>📦 Materiales del período</strong><p>Recolectados: <strong>${escapeHtml(formatByUnit(mat?.valor,mat?.unit))}</strong> · PET: <strong>${escapeHtml(formatByUnit(pet?.valor,pet?.unit))}</strong> · Vidrio: <strong>${escapeHtml(formatByUnit(vid?.valor,vid?.unit))}</strong></p></div>
+      <div class="diag-block"><strong>💰 Ingresos del período</strong><p>Total: <strong>${escapeHtml(formatByUnit(inc?.valor,inc?.unit))}</strong> · Mujeres: <strong>${escapeHtml(formatByUnit(muj?.valor,muj?.unit))}</strong></p></div>
+      <div class="diag-block"><strong>📈 Avance vs meta mensual</strong><p>Materiales: <strong>${escapeHtml(formatPercent(mat?.monthlyPct))}</strong> · Ingreso: <strong>${escapeHtml(formatPercent(inc?.monthlyPct))}</strong></p></div>
+      <div class="diag-block"><strong>📅 Avance acumulado 2026</strong><p>Materiales: <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong> · Ingreso: <strong>${escapeHtml(formatPercent(inc?.annualPct))}</strong></p></div>
+    </div>
   `;
 }
 
 function diagnosisRiskText(metrics){
   const weak = Object.values(metrics).filter(Boolean).filter(m=>m.monthlyPct < 0.85).map(m=>m.label);
-  if(!weak.length) return `La lectura general del mes es favorable: no se observan indicadores clave por debajo del umbral crítico del 85% de su meta mensual.`;
-  if(weak.length===1) return `El principal punto de atención del mes es <strong>${escapeHtml(weak[0])}</strong>, que quedó por debajo del umbral de seguimiento.`;
-  return `Los principales puntos de atención del mes son <strong>${escapeHtml(weak.slice(0,3).join(", "))}</strong>, que se ubicaron por debajo del umbral de seguimiento mensual.`;
+  if(!weak.length) return `La lectura general de <strong>todos los indicadores clave</strong> es favorable: el programa no presenta ningún indicador por debajo del umbral crítico del 85% de cumplimiento mensual. Se recomienda mantener el ritmo operativo y documentar las prácticas que lo sostienen.`;
+  if(weak.length===1) return `El principal indicador de atención es <strong>${escapeHtml(weak[0])}</strong>, que se ubicó por debajo del 85% de su meta mensual. Se recomienda revisar las causas operativas específicas y activar acciones correctivas enfocadas en ese frente.`;
+  return `Los indicadores que requieren atención prioritaria en este período son <strong>${escapeHtml(weak.slice(0,3).join(", "))}</strong>. Todos se ubicaron por debajo del umbral del 85% de cumplimiento mensual. Se recomienda convocar revisión operativa y establecer metas semanales de recuperación.`;
 }
 
 function zoneRiskText(metrics, zoneLabel){
   const low = Object.values(metrics).filter(Boolean).filter(m=>m.sharePct < 0.1).map(m=>m.label);
-  if(!low.length) return `La zona <strong>${escapeHtml(zoneLabel)}</strong> muestra una contribución consistente dentro del programa para el período seleccionado.`;
-  if(low.length===1) return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, el indicador con menor peso relativo fue <strong>${escapeHtml(low[0])}</strong>.`;
-  return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, los indicadores con menor peso relativo fueron <strong>${escapeHtml(low.slice(0,3).join(", "))}</strong>.`;
+  if(!low.length) return `La zona <strong>${escapeHtml(zoneLabel)}</strong> muestra una contribución <strong>consistente y significativa</strong> dentro del programa para el período seleccionado. Su aporte relativo en los principales indicadores está dentro de los rangos esperados.`;
+  if(low.length===1) return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, el indicador <strong>${escapeHtml(low[0])}</strong> presenta el menor peso relativo en el período. Se recomienda verificar la operación en los territorios que conforman esta zona y reforzar la recolección.`;
+  return `Dentro de <strong>${escapeHtml(zoneLabel)}</strong>, los indicadores con menor contribución relativa fueron <strong>${escapeHtml(low.slice(0,3).join(", "))}</strong>. Se sugiere revisar las rutas de recolección y la participación de las lideresas en los territorios de esta zona.`;
 }
 
 function getMetricsForSelection(state, period){
@@ -2586,7 +2612,8 @@ function shareText(pct){
 }
 
 function periodKey(p){ return `${p?.anio}|${p?.mes_num}`; }
-function periodLabel(p){ return p ? `${p.mes||monthName(p.mes_num)} ${p.anio||""}`.trim() : "Sin período"; }
+const MONTH_FULL={1:"Enero",2:"Febrero",3:"Marzo",4:"Abril",5:"Mayo",6:"Junio",7:"Julio",8:"Agosto",9:"Septiembre",10:"Octubre",11:"Noviembre",12:"Diciembre"};
+function periodLabel(p){ return p ? `${MONTH_FULL[p.mes_num]||p.mes||monthName(p.mes_num)} de ${p.anio||""}`.trim() : "Sin período"; }
 function getZoneLabel(zone){ return zone==="__all__" ? "Todas las zonas" : zone; }
 function metricLabel(id){ return METRIC_CONFIG[id]?.label || id; }
 
@@ -2900,9 +2927,18 @@ function renderProBarChart(container, rows, valKey, labelKey, opts){
     setTimeout(function(b,w){ b.setAttribute('width',w); },60+i*80, bar, barW);
 
     /* value label */
-    var valLbl=svgEl('text',{x:padL+barW+8,y:y+barH/2+5,fill:'#516851',
-      'font-size':'11.5','font-weight':'600','font-family':'JetBrains Mono,monospace'});
-    setTimeout(function(el,v){ el.textContent=formatNumber(v)+(unit?' '+unit:''); },60+i*80, valLbl, val);
+    var insidePro=barW>(W-padL-padR)*0.55;
+    var valLbl=svgEl('text',{x:insidePro?padL+barW-9:Math.min(padL+barW+8,W-8),y:y+barH/2+5,
+      'text-anchor':insidePro?'end':'start',
+      fill:insidePro?'rgba(255,255,255,.9)':'#516851',
+      'font-size':'10','font-weight':'600','font-family':'JetBrains Mono,monospace'});
+    setTimeout(function(el,v,bw){
+      var inside=bw>(W-padL-padR)*0.55;
+      el.setAttribute('x',inside?padL+bw-9:Math.min(padL+bw+8,W-8));
+      el.setAttribute('text-anchor',inside?'end':'start');
+      el.setAttribute('fill',inside?'rgba(255,255,255,.9)':'#516851');
+      el.textContent=formatNumber(v)+(unit?' '+unit:'');
+    },60+i*80, valLbl, val, barW);
 
     /* hover */
     var tipHtml = opts.tipFn ? opts.tipFn(row,val) :
@@ -3533,11 +3569,17 @@ function renderZoneBarChart(containerId,state,period,subtitleId,interpId){
       el.setAttribute('x',padL+w-10);
     },80+i*80,badge,barW,pct);
 
-    var valLbl=svgEl('text',{x:padL+barW+8,y:y+barH/2+4,fill:'#516851',
-      'font-size':'11','font-weight':'700','font-family':'JetBrains Mono,monospace'});
+    var insideZone=barW>60;
+    var valLbl=svgEl('text',{x:insideZone?padL+barW-8:padL+barW+8,y:y+barH/2+4,
+      'text-anchor':insideZone?'end':'start',
+      fill:insideZone?'rgba(255,255,255,.92)':'#516851',
+      'font-size':'10','font-weight':'700','font-family':'JetBrains Mono,monospace'});
     setTimeout(function(el,v,w){
+      var inside=w>60;
+      el.setAttribute('x',inside?padL+w-8:Math.min(padL+w+8,W-padR-4));
+      el.setAttribute('text-anchor',inside?'end':'start');
+      el.setAttribute('fill',inside?'rgba(255,255,255,.92)':'#516851');
       el.textContent=formatNumber(v)+' qq';
-      el.setAttribute('x',padL+w+8);
     },80+i*80,valLbl,val,barW);
 
     var inc=formatNumber(safeNumber(row.ingreso_bruto_total));
@@ -3625,6 +3667,36 @@ function renderNewCharts(state){
    EXECUTIVE RENDER
 ═══════════════════════════════════════════════ */
 var execSelectedPeriodKey=null;
+/* ═══════════════════════════════════════════════
+   EXECUTIVE RENDER — versión mejorada
+═══════════════════════════════════════════════ */
+var execSelectedPeriodKey=null;
+
+function renderExecTrendSvg(state, period, metricId){
+  /* Tiny sparkline for exec mode */
+  var rows=getTrendRows(state, period?.anio, metricId);
+  if(!rows||!rows.length) return '<div class="empty" style="height:90px">Sin serie</div>';
+  var W=340,H=90,padL=10,padR=10,padT=10,padB=18;
+  var vals=rows.map(function(r){return safeNumber(r.valor);});
+  var refs=rows.map(function(r){return safeNumber(r.referencia);});
+  var all=vals.concat(refs).filter(Number.isFinite);
+  var minV=Math.min.apply(null,all.concat([0])),maxV=Math.max.apply(null,all.concat([1]));
+  var range=maxV-minV||1;
+  var n=rows.length;
+  var X=function(i){return padL+i*(W-padL-padR)/Math.max(n-1,1);};
+  var Y=function(v){return padT+(1-(v-minV)/range)*(H-padT-padB);};
+  var pts=vals.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+  var rpts=refs.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+  var areaPts=X(0)+','+(H-padB)+' '+vals.map(function(v,i){return X(i)+' '+Y(v);}).join(' ')+' '+X(n-1)+','+(H-padB);
+  var activeIdx=rows.findIndex(function(r){return Number(r.mes_num)===Number(period?.mes_num);});
+  var dots=vals.map(function(v,i){var isA=i===activeIdx;return '<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="'+(isA?4.5:2.5)+'" fill="#fff" stroke="#1c6084" stroke-width="'+(isA?2.5:1.8)+'"/>';}).join('');
+  var labels=rows.map(function(r,i){
+    if(i===0||i===n-1||i===activeIdx) return '<text x="'+X(i)+'" y="'+(H-2)+'" text-anchor="middle" fill="#7b8c99" font-size="8.5" font-family="Sora,sans-serif">'+escapeHtml(monthNameShort(r.mes_num))+'</text>';
+    return '';
+  }).join('');
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;display:block"><defs><linearGradient id="eg'+metricId+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c6084" stop-opacity=".22"/><stop offset="100%" stop-color="#1c6084" stop-opacity="0"/></linearGradient></defs><polygon points="'+areaPts+'" fill="url(#eg'+metricId+')"/><polyline fill="none" stroke="#b2c5cb" stroke-width="1.5" stroke-dasharray="5 4" points="'+rpts+'"/><polyline fill="none" stroke="#1c6084" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="'+pts+'"/>'+dots+labels+'</svg>';
+}
+
 function renderExec(){
   if(!currentData) return;
   var base=buildState(currentData);
@@ -3640,12 +3712,40 @@ function renderExec(){
   var period=getSelectedPeriod(execState);
   var metrics=getMetricsForSelection(execState,period);
   var status=buildProgramStatus(execState,period);
+  var lbl=periodLabel(period);
+
+  /* Status card */
   var sEl=document.getElementById('execStatusBadge'); if(sEl){ sEl.textContent=status.label; sEl.className='exec-status-badge '+status.className; }
-  var pEl=document.getElementById('execPeriodInfo'); if(pEl) pEl.textContent='Período: '+periodLabel(period);
-  var KPIS=[{id:'materiales_generales',label:'Materiales totales'},{id:'ingreso_bruto_total',label:'Ingreso bruto'},{id:'pet',label:'PET recolectado'},{id:'vidrio',label:'Vidrio recolectado'},{id:'ingreso_diario_lideresa',label:'Ingreso diario lideresa'},{id:'participacion_actividades',label:'Participación actividades'}];
+  var pEl=document.getElementById('execPeriodInfo'); if(pEl) pEl.textContent=lbl;
+
+  /* KPI grid — 6 cards with sparkline */
+  var KPIS=[
+    {id:'materiales_generales',label:'Materiales reciclables'},
+    {id:'ingreso_bruto_total',label:'Ingreso bruto total'},
+    {id:'pet',label:'PET recolectado'},
+    {id:'vidrio',label:'Vidrio recolectado'},
+    {id:'ingreso_bruto_mujeres',label:'Ingreso bruto mujeres'},
+    {id:'ingreso_diario_lideresa',label:'Ingreso diario / lideresa'}
+  ];
   var kg=document.getElementById('execKpiGrid');
   if(kg){
-    kg.innerHTML=KPIS.map(function(def){var m=metrics[def.id];if(!m)return '';var pct=m.monthlyPct||0;var bw=Math.max(0,Math.min(pct*100,100)).toFixed(1);return '<div class="exec-kpi"><div class="exec-kpi-label">'+escapeHtml(def.label)+'</div><div class="exec-kpi-value">'+escapeHtml(formatByUnit(m.valor,m.unit))+'</div><div><span class="chip '+semaforoClass(pct)+'">'+escapeHtml(formatPercent(pct))+' de meta</span></div><div class="exec-kpi-bar"><span data-width="'+bw+'" style="width:0"></span></div></div>';}).join('');
+    kg.innerHTML=KPIS.map(function(def){
+      var m=metrics[def.id]; if(!m) return '';
+      var pct=m.monthlyPct||0;
+      var bw=Math.max(0,Math.min(pct*100,100)).toFixed(1);
+      var chipCls=semaforoClass(pct);
+      var spark=renderExecTrendSvg(execState, period, def.id);
+      return '<div class="exec-kpi">'+
+        '<div class="exec-kpi-label">'+escapeHtml(def.label)+'</div>'+
+        '<div class="exec-kpi-value">'+escapeHtml(formatByUnit(m.valor,m.unit))+'</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0">'+
+          '<span class="chip '+chipCls+'">'+escapeHtml(formatPercent(pct))+' meta mensual</span>'+
+          '<span style="font-size:.75rem;color:var(--muted)">Acum. anual: '+escapeHtml(formatPercent(m.annualPct))+'</span>'+
+        '</div>'+
+        '<div style="margin:6px 0 4px">'+spark+'</div>'+
+        '<div class="exec-kpi-bar"><span data-width="'+bw+'" style="width:0"></span></div>'+
+        '</div>';
+    }).join('');
     requestAnimationFrame(function(){
       kg.querySelectorAll('.exec-kpi-bar span').forEach(function(bar,i){
         var target=bar.getAttribute('data-width')||'0';
@@ -3653,16 +3753,74 @@ function renderExec(){
       });
     });
   }
-  var STRIP=[{id:'materiales_generales',label:'Materiales acumulados'},{id:'ingreso_bruto_total',label:'Ingresos acumulados'},{id:'ingreso_bruto_mujeres',label:'Ingresos mujeres acum.'},{id:'vidrio',label:'Vidrio acumulado'}];
-  var st=document.getElementById('execStrip');
-  if(st) st.innerHTML=STRIP.map(function(def){var cfg=METRIC_CONFIG[def.id];if(!cfg)return '';var acc=sumMetricSeries(execState,def.id,period.anio,'__all__',period.mes_num);return '<div class="exec-strip-card"><small>'+escapeHtml(def.label)+'</small><strong>'+escapeHtml(formatByUnit(acc,cfg.unit))+'</strong></div>';}).join('');
-  try{ renderZoneBarChart('execBarChart',execState,period,'execBarSub','execBarInterp'); }catch(e){ console.warn(e); }
-  var aEl=document.getElementById('execAlertPanel');
-  if(aEl){var alerts=[];['materiales_generales','pet','vidrio','ingreso_bruto_total','participacion_actividades'].forEach(function(id){var m=metrics[id];if(!m)return;if(m.monthlyPct<0.85)alerts.push({type:'red',text:m.label+': '+formatPercent(m.monthlyPct)+' de la meta mensual.'});else if(m.monthlyPct<1)alerts.push({type:'yellow',text:m.label+': '+formatPercent(m.monthlyPct)+' — cerca de la meta.'});});if(!alerts.length)alerts.push({type:'green',text:'Sin alertas críticas en el período seleccionado.'});aEl.innerHTML='<div class="alert-list">'+alerts.map(function(a){return '<div class="alert '+a.type+'">'+escapeHtml(a.text)+'</div>';}).join('')+'</div>';}
-  var dEl=document.getElementById('execDiagnosticPanel');
-  if(dEl){var mat=metrics.materiales_generales,inc=metrics.ingreso_bruto_total;var zones=getZonaRows(execState,period).filter(function(r){return hasActivityAggregate(r);}).sort(function(a,b){return safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq);});dEl.innerHTML='<h3 style="margin-top:0">Resumen ejecutivo · '+escapeHtml(periodLabel(period))+'</h3><p>El programa registró <strong>'+escapeHtml(formatByUnit(mat&&mat.valor,mat&&mat.unit))+'</strong> de materiales, alcanzando el <strong>'+escapeHtml(formatPercent(mat&&mat.monthlyPct))+'</strong> de la meta mensual. Ingreso bruto: <strong>'+escapeHtml(formatByUnit(inc&&inc.valor,inc&&inc.unit))+'</strong>.</p><p>Zona con mayor volumen: <strong>'+escapeHtml((zones[0]&&zones[0].zona)||'—')+'</strong>. Avance anual acumulado en materiales: <strong>'+escapeHtml(formatPercent(mat&&mat.annualPct))+'</strong>.</p>';}
-}
 
+  /* Accumulated strip */
+  var STRIP=[
+    {id:'materiales_generales',label:'Materiales acumulados '+period?.anio},
+    {id:'ingreso_bruto_total',label:'Ingresos acumulados '+period?.anio},
+    {id:'ingreso_bruto_mujeres',label:'Ingresos mujeres acum.'},
+    {id:'vidrio',label:'Vidrio acumulado '+period?.anio}
+  ];
+  var st=document.getElementById('execStrip');
+  if(st) st.innerHTML=STRIP.map(function(def){
+    var cfg=METRIC_CONFIG[def.id]; if(!cfg) return '';
+    var acc=sumMetricSeries(execState,def.id,period.anio,'__all__',period.mes_num);
+    var annualGoal=safeNumber(cfg.meta)*11;
+    var pct=annualGoal?acc/annualGoal:0;
+    var bw=Math.max(0,Math.min(pct*100,100)).toFixed(1);
+    var cls=semaforoClassAnnual(pct);
+    return '<div class="exec-strip-card">'+
+      '<small>'+escapeHtml(def.label)+'</small>'+
+      '<strong>'+escapeHtml(formatByUnit(acc,cfg.unit))+'</strong>'+
+      '<div style="margin-top:8px"><span class="chip '+cls+'">'+escapeHtml(formatPercent(pct))+' de meta anual</span></div>'+
+      '<div style="height:4px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:8px"><div style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid));transition:width .8s ease" data-w="'+bw+'"></div></div>'+
+    '</div>';
+  }).join('');
+  requestAnimationFrame(function(){
+    if(st) st.querySelectorAll('[data-w]').forEach(function(el,i){
+      var w=el.getAttribute('data-w')||'0';
+      setTimeout(function(){ el.style.width=w+'%'; }, 120+i*80);
+    });
+  });
+
+  /* Zone bar chart */
+  try{ renderZoneBarChart('execBarChart',execState,period,'execBarSub','execBarInterp'); }catch(e){ console.warn(e); }
+
+  /* Alerts */
+  var aEl=document.getElementById('execAlertPanel');
+  if(aEl){
+    var alerts=[];
+    ['materiales_generales','pet','vidrio','ingreso_bruto_total','participacion_actividades'].forEach(function(id){
+      var m=metrics[id]; if(!m) return;
+      if(m.monthlyPct<0.85) alerts.push({type:'red',text:'<strong>'+escapeHtml(m.label)+'</strong>: '+escapeHtml(formatPercent(m.monthlyPct))+' de meta — brecha de '+escapeHtml(formatByUnit(m.meta-m.valor,m.unit))+'.'});
+      else if(m.monthlyPct<1) alerts.push({type:'yellow',text:'<strong>'+escapeHtml(m.label)+'</strong>: '+escapeHtml(formatPercent(m.monthlyPct))+'— a '+escapeHtml(formatByUnit(m.meta-m.valor,m.unit))+' de la meta.'});
+    });
+    if(!alerts.length) alerts.push({type:'green',text:'✅ Todos los indicadores clave están dentro o por encima de la meta mensual en <strong>'+escapeHtml(lbl)+'</strong>.'});
+    aEl.innerHTML='<div class="alert-list">'+alerts.map(function(a){return '<div class="alert '+a.type+'">'+a.text+'</div>';}).join('')+'</div>';
+  }
+
+  /* Rich diagnostic */
+  var dEl=document.getElementById('execDiagnosticPanel');
+  if(dEl){
+    var mat=metrics.materiales_generales, inc=metrics.ingreso_bruto_total;
+    var muj=metrics.ingreso_bruto_mujeres, dlid=metrics.ingreso_diario_lideresa;
+    var zones=getZonaRows(execState,period).filter(function(r){return hasActivityAggregate(r);}).sort(function(a,b){return safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq);});
+    var territories=getTerritoryRows(execState,period).filter(function(r){return hasActivityAggregate(r);});
+    var topZone=zones[0]||null;
+    var totalMat=zones.reduce(function(s,r){return s+safeNumber(r.total_materiales_qq);},0)||1;
+    dEl.innerHTML=
+      '<h3 style="margin-top:0">Resumen ejecutivo · '+escapeHtml(lbl)+'</h3>'+
+      '<p>En <strong>'+escapeHtml(lbl)+'</strong>, la Cooperativa Atitlán Recicla recolectó <strong>'+escapeHtml(formatByUnit(mat&&mat.valor,mat&&mat.unit))+'</strong> de materiales reciclables, alcanzando el <strong>'+escapeHtml(formatPercent(mat&&mat.monthlyPct))+'</strong> de la meta mensual. El ingreso bruto del período fue <strong>'+escapeHtml(formatByUnit(inc&&inc.valor,inc&&inc.unit))+'</strong>, de los cuales <strong>'+escapeHtml(formatByUnit(muj&&muj.valor,muj&&muj.unit))+'</strong> corresponden directamente a las lideresas y socias de la cooperativa.</p>'+
+      '<p>El ingreso diario promedio por lideresa activa fue de <strong>'+escapeHtml(formatByUnit(dlid&&dlid.valor,dlid&&dlid.unit))+'</strong> frente a una meta de <strong>'+escapeHtml(formatByUnit(dlid&&dlid.meta,dlid&&dlid.unit))+'</strong>. El avance anual acumulado del programa en materiales recolectados equivale al <strong>'+escapeHtml(formatPercent(mat&&mat.annualPct))+'</strong> de la meta proporcional del año.</p>'+
+      (topZone?'<p>La zona con mayor volumen de recolección fue <strong>'+escapeHtml(topZone.zona||'—')+'</strong> con <strong>'+escapeHtml(formatByUnit(topZone.total_materiales_qq,'qq'))+'</strong> ('+(Math.round(safeNumber(topZone.total_materiales_qq)/totalMat*100))+'% del total). Se registraron <strong>'+zones.length+' zonas activas</strong> y <strong>'+territories.length+' territorios</strong> con reportes en el período.</p>':'')+
+      '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px">'+
+        '<div style="padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)"><strong style="display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px">📦 Volumen del período</strong><div style="font-size:.82rem;color:var(--muted)">Total: <strong style="color:var(--text)">'+escapeHtml(formatByUnit(mat&&mat.valor,mat&&mat.unit))+'</strong><br>PET: <strong>'+escapeHtml(formatByUnit(metrics.pet&&metrics.pet.valor,metrics.pet&&metrics.pet.unit))+'</strong> · Vidrio: <strong>'+escapeHtml(formatByUnit(metrics.vidrio&&metrics.vidrio.valor,metrics.vidrio&&metrics.vidrio.unit))+'</strong></div></div>'+
+        '<div style="padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)"><strong style="display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px">💰 Ingresos del período</strong><div style="font-size:.82rem;color:var(--muted)">Total: <strong style="color:var(--text)">'+escapeHtml(formatByUnit(inc&&inc.valor,inc&&inc.unit))+'</strong><br>Mujeres: <strong>'+escapeHtml(formatByUnit(muj&&muj.valor,muj&&muj.unit))+'</strong></div></div>'+
+        '<div style="padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)"><strong style="display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px">📈 Cumplimiento mensual</strong><div style="font-size:.82rem;color:var(--muted)">Materiales: <strong style="color:var(--text)">'+escapeHtml(formatPercent(mat&&mat.monthlyPct))+'</strong> · Ingreso: <strong>'+escapeHtml(formatPercent(inc&&inc.monthlyPct))+'</strong></div></div>'+
+        '<div style="padding:14px 16px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)"><strong style="display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px">📅 Avance acumulado '+escapeHtml(String(period&&period.anio||'—'))+'</strong><div style="font-size:.82rem;color:var(--muted)">Materiales: <strong style="color:var(--text)">'+escapeHtml(formatPercent(mat&&mat.annualPct))+'</strong> · Ingreso: <strong>'+escapeHtml(formatPercent(inc&&inc.annualPct))+'</strong></div></div>'+
+      '</div>';
+  }
+}
 
 /* ═══════════════════════════════════════════════
    PRESENTATION MODE
@@ -3730,274 +3888,305 @@ function buildPresentation(state){
   const period=getSelectedPeriod(state);
   const metrics=getMetricsForSelection(state, period);
   const status=buildProgramStatus(state, period);
+  const lbl=periodLabel(period);
   const zoneRows=getZonaRows(state,period).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
   const territoryRows=(state.selectedZone==='__all__' ? getTerritoryRows(state,period) : getTerritoryRows(state,period).filter(r=>sameZone(r,state.selectedZone))).filter(r=>hasActivityAggregate(r)).sort((a,b)=>safeNumber(b.total_materiales_qq)-safeNumber(a.total_materiales_qq));
   let materialRows=currentData.materialesRaw.length ? currentData.materialesRaw.filter(r=>samePeriodLoose(r,period)) : currentData.materialesResumen.filter(r=>samePeriodLoose(r,period));
   if(state.selectedZone!=='__all__') materialRows=materialRows.filter(r=>sameZoneMaterial(r,state.selectedZone));
-  const materialGroup=aggregate(materialRows,['material'],{cantidad:'sum'}).filter(r=>safeNumber(r.cantidad)>0).sort((a,b)=>safeNumber(b.cantidad)-safeNumber(a.cantidad)).slice(0,5);
-  const trendMetricId=state.selectedIndicatorId || 'materiales_generales';
+  const materialGroup=aggregate(materialRows,['material'],{cantidad:'sum'}).filter(r=>safeNumber(r.cantidad)>0).sort((a,b)=>safeNumber(b.cantidad)-safeNumber(a.cantidad)).slice(0,6);
+  const trendMetricId=state.selectedIndicatorId||'materiales_generales';
   const trendRows=getTrendRows(state, period?.anio, trendMetricId);
   const alerts=buildPresentationAlerts(state);
-  const heroCards=[
-    {label:'Materiales del período',value:formatByUnit(metrics.materiales_generales?.valor,'qq'),sub:`Cumplimiento mensual: ${formatPercent(metrics.materiales_generales?.monthlyPct)}`},
-    {label:'Ingreso bruto total',value:formatByUnit(metrics.ingreso_bruto_total?.valor,'GTQ'),sub:`Avance acumulado: ${formatPercent(metrics.ingreso_bruto_total?.annualPct)}`},
-    {label:'PET recolectado',value:formatByUnit(metrics.pet?.valor,'qq'),sub:`Meta mensual: ${formatByUnit(metrics.pet?.meta,'qq')}`},
-    {label:'Vidrio recolectado',value:formatByUnit(metrics.vidrio?.valor,'qq'),sub:`Meta mensual: ${formatByUnit(metrics.vidrio?.meta,'qq')}`}
-  ];
+  const mat=metrics.materiales_generales, inc=metrics.ingreso_bruto_total;
+  const pet=metrics.pet, vid=metrics.vidrio;
+  const muj=metrics.ingreso_bruto_mujeres, dlid=metrics.ingreso_diario_lideresa;
+  const chipCls = c => semaforoClass(c);
+
+  /* Helper: inline bar svg */
+  function inlineZoneBars(rows){
+    if(!rows.length) return '<p style="color:var(--muted);font-size:.84rem">Sin datos de zona.</p>';
+    const total=rows.reduce((s,r)=>s+safeNumber(r.total_materiales_qq),0)||1;
+    const maxV=safeNumber(rows[0].total_materiales_qq)||1;
+    const COLORS=['#1c6084','#2e6a57','#4ca5bf','#267a46','#0c7070'];
+    return rows.slice(0,5).map((r,i)=>{
+      const v=safeNumber(r.total_materiales_qq);
+      const pct=Math.round(v/total*100);
+      const barW=Math.round(v/maxV*100);
+      const col=COLORS[i%5];
+      return `<div style="display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:.78rem;font-weight:700;color:#17314f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(r.zona||'—')}</span>
+        <div style="height:20px;border-radius:999px;background:rgba(28,96,132,.08);overflow:hidden;position:relative">
+          <div style="height:100%;width:${barW}%;border-radius:999px;background:${col};transition:width .7s ease"></div>
+        </div>
+        <span style="font-size:.75rem;font-weight:800;font-family:var(--font-mono);color:${col};white-space:nowrap">${escapeHtml(formatNumber(v))} qq</span>
+      </div>`;
+    }).join('');
+  }
+
+  /* Helper: inline material pills */
+  function inlineMaterialPills(rows){
+    if(!rows.length) return '<p style="color:var(--muted);font-size:.84rem">Sin datos.</p>';
+    const total=rows.reduce((s,r)=>s+safeNumber(r.cantidad),0)||1;
+    const COLORS=['#1c6084','#2e6a57','#4ca5bf','#267a46','#0c7070','#8b6a17'];
+    return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+      rows.slice(0,6).map((r,i)=>{
+        const pct=Math.round(safeNumber(r.cantidad)/total*100);
+        const col=COLORS[i%6];
+        return `<div style="padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.8);border:1px solid rgba(200,220,240,.9)">
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <span style="width:9px;height:9px;border-radius:50%;background:${col};display:inline-block;flex-shrink:0"></span>
+            <span style="font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:${col}">${pct}%</span>
+          </div>
+          <div style="font-size:.82rem;font-weight:700;color:#17314f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(String(r.material||'—').length>16?String(r.material).slice(0,15)+'…':(r.material||'—'))}</div>
+          <div style="font-size:.74rem;color:#7b8c99;font-family:var(--font-mono)">${escapeHtml(formatNumber(safeNumber(r.cantidad)))}</div>
+        </div>`;
+      }).join('')+
+    '</div>';
+  }
+
+  /* Helper: kpi card large */
+  function presKpi(m, title){
+    if(!m) return `<article class="presentation-card"><small>${escapeHtml(title)}</small><strong>—</strong></article>`;
+    const cls=chipCls(m.monthlyPct);
+    const bw=Math.max(0,Math.min((m.monthlyPct||0)*100,100)).toFixed(1);
+    const abw=Math.max(0,Math.min((m.annualPct||0)*100,100)).toFixed(1);
+    return `<article class="presentation-kpi-pair-card">
+      <div class="pkpi-header">
+        <div class="pkpi-label">${escapeHtml(title)}</div>
+        <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(m.monthlyPct))}</span>
+      </div>
+      <div class="pkpi-value">${escapeHtml(formatByUnit(m.valor,m.unit))}</div>
+      <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(m.meta,m.unit))}</div>
+      <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
+      <div class="pkpi-meta" style="margin-top:8px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(m.annualPct))}</strong></div>
+      <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${abw}%"></div></div>
+    </article>`;
+  }
 
   const track=document.getElementById('presentationTrack');
   const meta=document.getElementById('presentationMeta');
-  if(!track || !meta) return;
+  if(!track||!meta) return;
 
   meta.innerHTML=`
-    <span>Modo presentación</span>
-    <span>${escapeHtml(periodLabel(period))}</span>
-    <span>${escapeHtml(getZoneLabel(state.selectedZone))}</span>
-    <span>${escapeHtml(status.label)}</span>`;
+    <span>📊 Modo presentación</span>
+    <span>📅 ${escapeHtml(lbl)}</span>
+    <span>📍 ${escapeHtml(getZoneLabel(state.selectedZone))}</span>
+    <span class="${status.className}" style="border-radius:999px;padding:4px 10px;font-weight:800">${escapeHtml(status.label)}</span>`;
 
   track.innerHTML=`
-    <!-- SLIDE 1: Portada / Resumen ejecutivo -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Narrativa visual del dashboard</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Resumen ejecutivo de Atitlán Recicla</h2>
-            <p>Vista rápida del período para exponer resultados en reunión. Indicadores clave, estado del programa y contexto territorial en una sola pantalla.</p>
-          </div>
-          <div class="presentation-brand-badge">
-            <img src="./Cooperativa%20RL%20logo.png" alt="Logo de Cooperativa Atitlán Recicla R.L.">
-            <small>Cooperativa de mujeres recicladoras · economía circular · cuenca del Lago de Atitlán</small>
-          </div>
+  <!-- SLIDE 1: PORTADA Y RESUMEN EJECUTIVO -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Reporte de resultados · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Cooperativa Atitlán Recicla</h2>
+          <p>Primera cooperativa de mujeres recicladoras en Centro América · 13 municipios · cuenca del Lago de Atitlán</p>
         </div>
-        <div class="presentation-summary-grid">
-          ${heroCards.map(card=>`<article class="presentation-card"><small>${escapeHtml(card.label)}</small><strong>${escapeHtml(card.value)}</strong><p>${escapeHtml(card.sub)}</p></article>`).join('')}
-        </div>
-        <div class="presentation-highlight-strip">
-          <span>📍 Vista: <strong>${escapeHtml(getZoneLabel(state.selectedZone))}</strong></span>
-          <span>🗺️ Zonas activas: <strong>${escapeHtml(String(zoneRows.length))}</strong></span>
-          <span>📦 Territorios activos: <strong>${escapeHtml(String(territoryRows.length))}</strong></span>
-          <span>⚡ Estado: <strong>${escapeHtml(status.label)}</strong></span>
+        <div class="presentation-brand-badge">
+          <img src="./Cooperativa%20RL%20logo.png" alt="Cooperativa Atitlán Recicla">
+          <small>Economía circular · emprendimiento femenino · 64 socias fundadoras · +900 mujeres indirectas</small>
         </div>
       </div>
-    </section>
+      <div class="presentation-summary-grid">
+        <article class="presentation-card">
+          <small>Materiales recolectados</small>
+          <strong>${escapeHtml(formatByUnit(mat?.valor,'qq'))}</strong>
+          <p>Meta mensual: ${escapeHtml(formatByUnit(mat?.meta,'qq'))}</p>
+          <span class="presentation-chip ${chipCls(mat?.monthlyPct)}">${escapeHtml(formatPercent(mat?.monthlyPct))} de meta</span>
+        </article>
+        <article class="presentation-card">
+          <small>Ingreso bruto total</small>
+          <strong>${escapeHtml(formatByUnit(inc?.valor,'GTQ'))}</strong>
+          <p>Meta mensual: ${escapeHtml(formatByUnit(inc?.meta,'GTQ'))}</p>
+          <span class="presentation-chip ${chipCls(inc?.monthlyPct)}">${escapeHtml(formatPercent(inc?.monthlyPct))} de meta</span>
+        </article>
+        <article class="presentation-card">
+          <small>PET recolectado</small>
+          <strong>${escapeHtml(formatByUnit(pet?.valor,'qq'))}</strong>
+          <p>Meta mensual: ${escapeHtml(formatByUnit(pet?.meta,'qq'))}</p>
+          <span class="presentation-chip ${chipCls(pet?.monthlyPct)}">${escapeHtml(formatPercent(pet?.monthlyPct))} de meta</span>
+        </article>
+        <article class="presentation-card">
+          <small>Vidrio recolectado</small>
+          <strong>${escapeHtml(formatByUnit(vid?.valor,'qq'))}</strong>
+          <p>Meta mensual: ${escapeHtml(formatByUnit(vid?.meta,'qq'))}</p>
+          <span class="presentation-chip ${chipCls(vid?.monthlyPct)}">${escapeHtml(formatPercent(vid?.monthlyPct))} de meta</span>
+        </article>
+      </div>
+      <div class="presentation-highlight-strip">
+        <span>📍 Vista: <strong>${escapeHtml(getZoneLabel(state.selectedZone))}</strong></span>
+        <span>🏘️ Zonas activas: <strong>${escapeHtml(String(zoneRows.length))}</strong></span>
+        <span>📌 Territorios activos: <strong>${escapeHtml(String(territoryRows.length))}</strong></span>
+        <span>⚡ Estado: <strong>${escapeHtml(status.label)}</strong></span>
+        <span>📅 Avance anual materiales: <strong>${escapeHtml(formatPercent(mat?.annualPct))}</strong></span>
+      </div>
+    </div>
+  </section>
 
-    <!-- SLIDE 2: Indicadores de volumen (Materiales + PET) -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Indicadores de volumen</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Materiales y PET recolectado</h2>
-            <p>Indicadores de volumen físico del período. El avance acumulado muestra dónde está el programa respecto a la meta anual.</p>
-          </div>
-        </div>
-        <div class="presentation-kpi-pairs">
-          ${(()=>{
-            const ids=['materiales_generales','pet'];
-            return ids.map(id=>{
-              const row=metrics[id];if(!row)return '';
-              const cls=semaforoClass(row.monthlyPct);
-              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
-              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
-              return `<article class="presentation-kpi-pair-card">
-                <div class="pkpi-header">
-                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
-                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
-                </div>
-                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
-                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
-                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
-              </article>`;
-            }).join('');
-          })()}
+  <!-- SLIDE 2: MATERIALES Y TENDENCIA -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Materiales recolectados · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Volumen físico de materiales</h2>
+          <p>Materiales totales, PET y vidrio del período con tendencia mensual ${escapeHtml(String(period?.anio||''))} y comparativa por zona.</p>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 3: Indicadores de vidrio e ingresos -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Indicadores de vidrio e ingresos</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Vidrio recolectado e ingreso bruto</h2>
-            <p>Indicadores económicos y de vidrio del período. El vidrio es uno de los materiales con mayor peso en el ingreso de la cooperativa.</p>
-          </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${presKpi(mat,'Materiales reciclables totales')}
+          ${presKpi(pet,'PET recolectado')}
         </div>
-        <div class="presentation-kpi-pairs">
-          ${(()=>{
-            const ids=['vidrio','ingreso_bruto_total'];
-            return ids.map(id=>{
-              const row=metrics[id];if(!row)return '';
-              const cls=semaforoClass(row.monthlyPct);
-              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
-              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
-              return `<article class="presentation-kpi-pair-card">
-                <div class="pkpi-header">
-                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
-                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
-                </div>
-                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
-                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
-                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
-              </article>`;
-            }).join('');
-          })()}
+        <article class="presentation-visual-card">
+          <h3>Tendencia mensual · ${escapeHtml(String(period?.anio||''))}</h3>
+          <p>Materiales generales vs meta. El punto resaltado corresponde a ${escapeHtml(lbl)}.</p>
+          <div class="presentation-visual" id="presentationTrendChart" style="flex:1"></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3: INGRESOS Y LIDERESAS -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Ingresos y empoderamiento económico · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Ingresos brutos y lideresas</h2>
+          <p>Indicadores económicos del período: ingreso bruto total, ingreso para mujeres e ingreso diario por lideresa activa.</p>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 4: Indicadores de lideresas y participación -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Indicadores de lideresas y participación</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Ingreso de lideresas y participación</h2>
-            <p>Indicadores que miden el impacto social directo: ingreso diario de las lideresas y su participación en actividades y comercialización.</p>
-          </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${presKpi(inc,'Ingreso bruto total')}
+          ${presKpi(muj,'Ingreso bruto mujeres')}
         </div>
-        <div class="presentation-kpi-pairs">
-          ${(()=>{
-            const ids=['ingreso_diario_lideresa','participacion_actividades'];
-            return ids.map(id=>{
-              const row=metrics[id];if(!row)return '';
-              const cls=semaforoClass(row.monthlyPct);
-              const bw=Math.max(0,Math.min(row.monthlyPct*100,100)).toFixed(1);
-              const annualBw=Math.max(0,Math.min(row.annualPct*100,100)).toFixed(1);
-              return `<article class="presentation-kpi-pair-card">
-                <div class="pkpi-header">
-                  <div class="pkpi-label">${escapeHtml(row.label)}</div>
-                  <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(row.monthlyPct))} de meta mensual</span>
-                </div>
-                <div class="pkpi-value">${escapeHtml(formatByUnit(row.valor,row.unit))}</div>
-                <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(row.meta,row.unit))}</div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${bw}%"></div></div>
-                <div class="pkpi-meta" style="margin-top:6px">Avance anual acumulado: <strong>${escapeHtml(formatPercent(row.annualPct))}</strong></div>
-                <div class="pkpi-bar-wrap"><div class="pkpi-bar" style="width:${annualBw}%"></div></div>
-              </article>`;
-            }).join('');
-          })()}
+        <article class="presentation-visual-card">
+          <h3>Distribución de ingresos por zona</h3>
+          <p>${escapeHtml(lbl)} · Ingreso bruto por zona de operación.</p>
+          <div style="flex:1;overflow:auto;padding-top:6px">
+            ${inlineZoneBars(zoneRows.sort((a,b)=>safeNumber(b.ingreso_bruto_total)-safeNumber(a.ingreso_bruto_total)))}
+          </div>
+          ${dlid ? `<div style="margin-top:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.72);border:1px solid rgba(200,220,240,.9)">
+            <span style="font-size:.72rem;font-weight:800;text-transform:uppercase;color:var(--muted)">Ingreso diario / lideresa activa</span>
+            <div style="font-size:1.35rem;font-weight:600;letter-spacing:-.03em;color:var(--text);margin-top:2px">${escapeHtml(formatByUnit(dlid.valor,dlid.unit))}</div>
+            <span class="presentation-chip ${chipCls(dlid.monthlyPct)}">${escapeHtml(formatPercent(dlid.monthlyPct))} de meta (${escapeHtml(formatByUnit(dlid.meta,dlid.unit))})</span>
+          </div>` : ''}
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4: COMPOSICIÓN Y ZONAS -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Composición de materiales y cobertura territorial · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>¿Qué materiales y qué zonas lideran?</h2>
+          <p>Mezcla de materiales del período y distribución del volumen físico por zona de operación.</p>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 5: Panel completo de indicadores -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Todos los indicadores</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Panel completo de indicadores</h2>
-            <p>Todos los indicadores del período en una vista consolidada. Conservan metas, semáforos y avance acumulado anual.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;flex:1;min-height:0">
+        <article class="presentation-visual-card">
+          <h3>Composición de materiales</h3>
+          <p>${escapeHtml(lbl)} · Participación relativa por tipo de material.</p>
+          <div class="presentation-visual" id="presentationDonutChart" style="flex:1"></div>
+        </article>
+        <article class="presentation-visual-card">
+          <h3>Volumen recolectado por zona</h3>
+          <p>${escapeHtml(lbl)} · Materiales en qq por zona activa.</p>
+          <div style="flex:1;overflow:auto;padding-top:6px">
+            ${inlineZoneBars(zoneRows)}
           </div>
-        </div>
-        <div class="presentation-metric-grid" style="flex:1;align-content:start">
-          ${KPI_IDS.map(id=>{ const row=metrics[id]; if(!row) return ''; const chipClass=state.selectedZone==='__all__'?semaforoClass(row.monthlyPct):shareClass(row.sharePct); const chipText=state.selectedZone==='__all__'?`${formatPercent(row.monthlyPct)} del mes`:`${formatPercent(row.sharePct)} del total`; const foot=state.selectedZone==='__all__'?`Avance anual: ${formatPercent(row.annualPct)}`:`Acumulado zona: ${formatPercent(row.annualSharePct)}`; return `<article class="presentation-card"><small>${escapeHtml(row.label)}</small><strong>${escapeHtml(formatByUnit(row.valor,row.unit))}</strong><p>${escapeHtml(foot)}</p><span class="presentation-chip ${chipClass}">${escapeHtml(chipText)}</span></article>`; }).join('')}
+          <div style="margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.7);border:1px solid rgba(200,220,240,.9);font-size:.8rem;color:var(--muted)">
+            ${zoneRows.length} zonas activas · ${territoryRows.length} territorios con reporte
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5: METAS ANUALES ACUMULADAS -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Avance hacia metas anuales ${escapeHtml(String(period?.anio||'2026'))}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>¿Cómo va el programa en el año?</h2>
+          <p>Acumulado real desde enero de ${escapeHtml(String(period?.anio||'2026'))} hasta <strong>${escapeHtml(lbl)}</strong> comparado con la meta anual esperada proporcional al período.</p>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 6: Tendencia histórica + zonas -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Tendencia y zonas</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Cómo evoluciona el período y dónde se concentra el volumen</h2>
-            <p>Serie histórica del indicador seleccionado combinada con la comparativa territorial por zona.</p>
-          </div>
-        </div>
-        <div class="presentation-columns">
-          <article class="presentation-visual-card">
-            <h3>Tendencia de ${escapeHtml(metricLabel(trendMetricId))}</h3>
-            <p>${escapeHtml(getZoneLabel(state.selectedZone))} · ${escapeHtml(String(period?.anio||'—'))}</p>
-            <div class="presentation-visual" id="presentationTrendChart"></div>
-          </article>
-          <article class="presentation-list-card">
-            <h3>Liderazgo por zona</h3>
-            <p>Volumen reportado en ${escapeHtml(periodLabel(period))}.</p>
-            <div class="presentation-list">
-              ${zoneRows.slice(0,5).map((row,idx)=>`<div class="presentation-list-item"><div class="presentation-rank">${idx+1}</div><div><strong>${escapeHtml(row.zona||'—')}</strong><span>Ingreso bruto Q ${escapeHtml(formatNumber(safeNumber(row.ingreso_bruto_total)))}</span></div><em>${escapeHtml(formatNumber(safeNumber(row.total_materiales_qq)))} qq</em></div>`).join('') || '<div class="presentation-alert-box green">No hay zonas con datos para mostrar.</div>'}
+      <div class="presentation-goal-grid" style="flex:1;align-content:start">
+        ${ANNUAL_GOAL_IDS.slice(0,6).map(id=>{
+          const cfg=METRIC_CONFIG[id]; if(!cfg) return '';
+          const annualGoal=safeNumber(cfg.meta)*11;
+          const accumulated=sumMetricSeries(state,id,period.anio,'__all__',period.mes_num);
+          const pct=annualGoal?accumulated/annualGoal:0;
+          const cls=semaforoClassAnnual(pct);
+          const bw=Math.max(0,Math.min(pct*100,100)).toFixed(1);
+          return `<article class="presentation-card">
+            <small>${escapeHtml(cfg.label)}</small>
+            <strong>${escapeHtml(formatByUnit(accumulated,cfg.unit))}</strong>
+            <p>Meta anual total: ${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</p>
+            <div style="height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin:8px 0 6px">
+              <div style="height:100%;width:${bw}%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid))"></div>
             </div>
-          </article>
+            <span class="presentation-chip ${cls}">${escapeHtml(formatPercent(pct))} del objetivo anual</span>
+          </article>`;
+        }).join('')}
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6: MIX DE MATERIALES (tabla top) -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Detalle de materiales · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Mix de materiales recolectados</h2>
+          <p>Tipos de material, cantidades y participación relativa en el volumen del período. PET y vidrio son los materiales estratégicos.</p>
         </div>
       </div>
-    </section>
+      <div style="flex:1;overflow:auto">
+        ${inlineMaterialPills(materialGroup)}
+      </div>
+      <div class="presentation-highlight-strip" style="margin-top:12px">
+        ${materialGroup[0]?`<span>🏅 Dominante: <strong>${escapeHtml(materialGroup[0].material||'—')}</strong> (${Math.round(safeNumber(materialGroup[0].cantidad)/(materialGroup.reduce((s,r)=>s+safeNumber(r.cantidad),0)||1)*100)}%)</span>`:''}
+        ${materialGroup.length>1?`<span>📦 ${escapeHtml(String(materialGroup.length))} materiales activos</span>`:''}
+        <span>📍 Zona: ${escapeHtml(getZoneLabel(state.selectedZone))}</span>
+      </div>
+    </div>
+  </section>
 
-    <!-- SLIDE 7: Composición de materiales -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Composición y materiales</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Qué materiales dominan la operación</h2>
-            <p>Mezcla de materiales del período: concentración, participación relativa y oportunidades de diversificación.</p>
-          </div>
-        </div>
-        <div class="presentation-columns">
-          <article class="presentation-visual-card">
-            <h3>Composición por material</h3>
-            <p>${escapeHtml(periodLabel(period))} · ${escapeHtml(getZoneLabel(state.selectedZone))}</p>
-            <div class="presentation-visual" id="presentationDonutChart"></div>
-          </article>
-          <article class="presentation-list-card">
-            <h3>Top materiales</h3>
-            <p>Participación relativa dentro del volumen registrado.</p>
-            <div class="presentation-list">
-              ${materialGroup.map((row,idx)=>{ const total=materialGroup.reduce((sum,r)=>sum+safeNumber(r.cantidad),0)||1; const pct=Math.round((safeNumber(row.cantidad)/total)*100); return `<div class="presentation-list-item"><div class="presentation-rank">${idx+1}</div><div><strong>${escapeHtml(row.material||'—')}</strong><span>${escapeHtml(String(pct))}% del mix</span></div><em>${escapeHtml(formatNumber(safeNumber(row.cantidad)))}</em></div>`; }).join('') || '<div class="presentation-alert-box green">No hay materiales para este corte.</div>'}
-            </div>
-          </article>
+  <!-- SLIDE 7: ALERTAS Y MENSAJE DE CIERRE -->
+  <section class="presentation-slide">
+    <div class="presentation-slide-inner">
+      <div class="presentation-kicker">Alertas operativas y cierre · ${escapeHtml(lbl)}</div>
+      <div class="presentation-title-row">
+        <div>
+          <h2>Puntos de atención y mensaje de cierre</h2>
+          <p>Señales clave del período para enfocar las decisiones del equipo operativo y la junta directiva.</p>
         </div>
       </div>
-    </section>
-
-    <!-- SLIDE 8: Metas anuales acumuladas -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Metas anuales</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Avance acumulado hacia metas 2026</h2>
-            <p>Progreso real acumulado desde enero hasta el corte actual versus las metas anuales oficiales del programa.</p>
-          </div>
+      <div class="presentation-alerts" style="flex:1">
+        <div class="presentation-alert-stack">
+          ${alerts.map(a=>`<div class="presentation-alert-box ${a.type}">${escapeHtml(a.text)}</div>`).join('')}
         </div>
-        <div class="presentation-goal-grid" style="flex:1;align-content:start">
-          ${ANNUAL_GOAL_IDS.slice(0,6).map(id=>{ const cfg=METRIC_CONFIG[id]; if(!cfg) return ''; const annualGoal=safeNumber(cfg.meta)*11; const accumulated=sumMetricSeries(state,id,period.anio,'__all__',period.mes_num); const pct=annualGoal?accumulated/annualGoal:0; const cls=semaforoClassAnnual(pct); const bw=Math.max(0,Math.min(pct*100,100)).toFixed(1); return `<article class="presentation-card"><small>${escapeHtml(cfg.label)}</small><strong>${escapeHtml(formatByUnit(accumulated,cfg.unit))}</strong><p>Meta anual: ${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</p><div style="height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin:8px 0 4px"><div style="height:100%;width:${bw}%;border-radius:999px;background:linear-gradient(90deg,var(--sky),var(--blue-mid))"></div></div><span class="presentation-chip ${cls}">${escapeHtml(formatPercent(pct))} acumulado</span></article>`; }).join('')}
+        <div class="presentation-note">
+          <h3>Resumen del período</h3>
+          <p>En <strong>${escapeHtml(lbl)}</strong>, la Cooperativa Atitlán Recicla recolectó <strong>${escapeHtml(formatByUnit(mat?.valor,'qq'))}</strong> de materiales y generó <strong>${escapeHtml(formatByUnit(inc?.valor,'GTQ'))}</strong> de ingreso bruto, de los cuales <strong>${escapeHtml(formatByUnit(muj?.valor,'GTQ'))}</strong> fueron directamente para las socias.</p>
+          <p>${zoneRows.length ? `La zona líder fue <strong>${escapeHtml(zoneRows[0]?.zona||'—')}</strong> con <strong>${escapeHtml(formatByUnit(zoneRows[0]?.total_materiales_qq,'qq'))}</strong>.${materialGroup.length ? ` El material predominante fue <strong>${escapeHtml(materialGroup[0]?.material||'—')}</strong>.` : ''}` : 'No hay suficiente actividad territorial para destacar una zona líder.'}</p>
+          <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.78rem;color:var(--muted)">Cooperativa Atitlán Recicla · economía circular · cuenca del Lago de Atitlán · ${escapeHtml(lbl)}</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>`;
 
-    <!-- SLIDE 9: Alertas y cierre -->
-    <section class="presentation-slide">
-      <div class="presentation-slide-inner">
-        <div class="presentation-kicker">Alertas y mensaje final</div>
-        <div class="presentation-title-row">
-          <div>
-            <h2>Lecturas para cerrar la presentación</h2>
-            <p>Alertas operativas del período y mensaje de cierre para enfocar la conversación en decisiones concretas.</p>
-          </div>
-        </div>
-        <div class="presentation-alerts" style="flex:1">
-          <div class="presentation-alert-stack">
-            ${alerts.map(alert=>`<div class="presentation-alert-box ${alert.type}">${escapeHtml(alert.text)}</div>`).join('')}
-          </div>
-          <div class="presentation-note">
-            <h3>Mensaje de cierre</h3>
-            <p>En <strong>${escapeHtml(periodLabel(period))}</strong>, Atitlán Recicla reporta <strong>${escapeHtml(formatByUnit(metrics.materiales_generales?.valor,'qq'))}</strong> de materiales y <strong>${escapeHtml(formatByUnit(metrics.ingreso_bruto_total?.valor,'GTQ'))}</strong> de ingreso bruto total.</p>
-            <p>${zoneRows.length ? `La zona con mayor volumen es <strong>${escapeHtml(zoneRows[0].zona||'—')}</strong>, mientras que ${materialGroup.length ? `el material dominante es <strong>${escapeHtml(materialGroup[0].material||'—')}</strong>.` : 'no se identificó un material dominante.'}` : 'No hay suficiente actividad territorial para destacar una zona líder.'}</p>
-            <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Cooperativa Atitlán Recicla · tablero ejecutivo de operación, territorio e ingresos · ${escapeHtml(periodLabel(period))}</p>
-          </div>
-        </div>
-      </div>
-    </section>`;
-
-  renderPresentationTrendChart('presentationTrendChart', state, period, trendMetricId, trendRows);
+  renderPresentationTrendChart('presentationTrendChart', state, period, 'materiales_generales', trendRows);
   try{ renderDonutChart('presentationDonutChart', state, period); }catch(e){ console.warn('presentation donut', e); }
   buildPresentationDots();
   gotoPresentationSlide(Math.min(presentationIndex, track.children.length-1));
@@ -4187,8 +4376,7 @@ document.body.classList.add('view-full');
 
   function patchStaticDom(){
     const heroLead=q('.hero-lead');
-    if(heroLead){
-      heroLead.innerHTML='Un tablero para seguir la operación, el impacto territorial y la generación de ingresos de la Cooperativa Atitlán Recicla. Este tablero dinámico se posiciona automáticamente en el <strong>último período con datos reales</strong>.';
+    if(heroLead){ heroLead.remove(); }
     }
     const supportStrip=q('.support-strip');
     if(supportStrip) supportStrip.remove();
@@ -4411,11 +4599,11 @@ document.body.classList.add('view-full');
     const gapMonthly=Number.isFinite(goalMonthly) ? goalMonthly-currentValue : null;
     let note='';
     if(usingDetail && keyOfPeriod(detailPeriod)!==keyOfPeriod(period)){
-      note=`El detalle por material/municipio/recolector está publicado hasta ${labelLong(detailPeriod)}. Para esta lectura se usa ese último corte disponible.`;
+      note='';
     }else if(usingDetail){
-      note=`La lectura detallada proviene de materiales_raw.csv con corte en ${labelLong(detailPeriod)}.`;
+      note='';
     }else{
-      note=`La lectura usa total_mes.csv, zona_mes.csv y territorio_mes.csv con corte en ${labelLong(period)}.`;
+      note='';
     }
     return {
       period,
@@ -4548,7 +4736,7 @@ document.body.classList.add('view-full');
       copy:`Indica qué parte del <strong>${escapeHtml(cfg.label)}</strong> del programa explica <strong>${escapeHtml(scopeLabel)}</strong> en el período efectivo.`
     });
     cards.push({
-      label:'Acumulado del filtro al corte',
+      label:'Acumulado del filtro',
       valueText:formatByUnit(ctx.accumulated, cfg.unit),
       metaTitle:'Suma acumulada hasta el período efectivo',
       refText:`Período acumulado: <strong>${escapeHtml(effectiveLabel)}</strong>`,
@@ -4621,12 +4809,17 @@ document.body.classList.add('view-full');
     const svgRows=rows.map((r,idx)=>{
       const y=padT + idx*(barH+gap);
       const w=(safeNumber(r.value)/max)*plotW;
+      const valText=escapeHtml(formatByUnit(r.value, unit));
+      const insideBar = w > 100;
+      const valX = insideBar ? padL+w-10 : Math.min(padL+w+10, width-padR-10);
+      const valAnchor = insideBar ? 'end' : 'start';
+      const valFill = insideBar ? 'rgba(255,255,255,.95)' : '#17314f';
       return `
         <g>
-          <text x="${padL-14}" y="${y+16}" text-anchor="end" fill="#5b7387" font-size="12" font-family="Sora,sans-serif" font-weight="700">${escapeHtml(r.label)}</text>
+          <text x="${padL-14}" y="${y+16}" text-anchor="end" fill="#5b7387" font-size="11" font-family="Sora,sans-serif" font-weight="700">${escapeHtml(r.label)}</text>
           <rect x="${padL}" y="${y}" width="${plotW}" height="${barH}" rx="12" fill="#edf5f7"></rect>
           <rect x="${padL}" y="${y}" width="${Math.max(w, 6)}" height="${barH}" rx="12" fill="url(#incomeBar)"></rect>
-          <text x="${Math.min(padL + w + 10, width - padR)}" y="${y+16}" fill="#17314f" font-size="12" font-family="Sora,sans-serif" font-weight="800">${escapeHtml(formatByUnit(r.value, unit))}</text>
+          <text x="${valX}" y="${y+16}" text-anchor="${valAnchor}" fill="${valFill}" font-size="10.5" font-family="Sora,sans-serif" font-weight="800">${valText}</text>
         </g>`;
     }).join('');
     return `<svg viewBox="0 0 ${width} ${height}" class="chart"><defs><linearGradient id="incomeBar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2e6a57"></stop><stop offset="100%" stop-color="#4ca5bf"></stop></linearGradient></defs>${svgRows}</svg>`;
@@ -4733,7 +4926,7 @@ document.body.classList.add('view-full');
           <div class="kpi-pillar"><span class="kpi-pillar-track"></span><span class="kpi-pillar-fill" style="height:${Math.max(8,Math.min(pct*100,100))}%"></span></div>
           <div class="kpi-reading">
             <div class="kpi-value" data-value="${parts.number!=null?parts.number:''}" data-prefix="${escapeHtml(parts.prefix)}" data-suffix="${escapeHtml(parts.suffix)}" data-decimals="${parts.decimals}">${escapeHtml(parts.text)}</div>
-            <div class="kpi-meta">Acumulado real al corte</div>
+            <div class="kpi-meta">Acumulado real del período</div>
             <div class="kpi-ref">Meta anual: <strong>${escapeHtml(formatByUnit(annualGoal,cfg.unit))}</strong></div>
           </div>
         </div>
