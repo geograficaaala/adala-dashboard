@@ -922,11 +922,11 @@
       height: 100%;
       border-radius: inherit;
       transition: width .9s cubic-bezier(.25,.46,.45,.94);
-      background: linear-gradient(90deg, var(--lake-light), var(--lake));
+      background: linear-gradient(90deg, #b7ddb0, #8ec886); /* verde pálido — rezagado */
     }
-    .mbar > span.over { background: linear-gradient(90deg, #3e9d73, var(--forest)); }
-    .mbar > span.warn { background: linear-gradient(90deg, #e8b94f, #c98f2f); }
-    .mbar > span.bad  { background: linear-gradient(90deg, #e07878, #c95555); }
+    .mbar > span.mid  { background: linear-gradient(90deg, #6dbf67, #4da84a); } /* verde medio */
+    .mbar > span.good { background: linear-gradient(90deg, #3e9d73, #2e7a5f); } /* verde — en ruta */
+    .mbar > span.over { background: linear-gradient(90deg, #1c7a4f, #155d3c); } /* verde oscuro — excelente */
     .metric-subgroup {
       margin-top: 10px;
       display: grid;
@@ -958,7 +958,7 @@
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #d7a62a 0%, #bf8d20 100%);
+      background: linear-gradient(90deg, #6dbf67, #4da84a);
     }
     .metric-subfill.pending {
       width: 0 !important;
@@ -975,27 +975,71 @@
       display: block;
       height: 100%;
       border-radius: inherit;
-      background: linear-gradient(90deg, var(--lake-light), var(--lake));
+      background: linear-gradient(90deg, #b7ddb0, #8ec886);
       transition: width .9s cubic-bezier(.25,.46,.45,.94);
     }
-    .bar > span.over { background: linear-gradient(90deg, #3e9d73, var(--forest)); }
-    .bar > span.warn { background: linear-gradient(90deg, #e8b94f, #c98f2f); }
-    .bar > span.bad  { background: linear-gradient(90deg, #e07878, #c95555); }
+    .bar > span.mid  { background: linear-gradient(90deg, #6dbf67, #4da84a); }
+    .bar > span.good { background: linear-gradient(90deg, #3e9d73, #2e7a5f); }
+    .bar > span.over { background: linear-gradient(90deg, #1c7a4f, #155d3c); }
 
     .program-footer {
       margin-top: 4px;
       padding-top: 8px;
       border-top: 1px solid var(--line);
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
     }
-    .program-badges {
+
+    /* Barra de avance mensual por programa */
+    .prog-score-wrap {
+      margin: 4px 0 16px;
+      padding: 14px 18px 12px;
+      background: rgba(28, 96, 132, .04);
+      border: 1px solid rgba(28, 96, 132, .14);
+      border-radius: 16px;
+    }
+    .prog-score-header {
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+    .prog-score-label {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      color: var(--lake);
+    }
+    .prog-score-value {
+      font-family: var(--font-head);
+      font-size: 1.3rem;
+      line-height: 1;
+      color: var(--lake-deep);
+      letter-spacing: -.025em;
+      white-space: nowrap;
+    }
+    .prog-score-track {
+      height: 9px;
+      border-radius: 999px;
+      background: rgba(28, 96, 132, .10);
+      overflow: hidden;
+    }
+    .prog-score-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--lake-light), var(--lake-deep));
+      transition: width 1s cubic-bezier(.25,.46,.45,.94);
+    }
+    .prog-score-sub {
+      margin-top: 6px;
+      font-size: .75rem;
+      color: var(--muted);
+      font-weight: 600;
     }
 
     .btn {
@@ -1791,9 +1835,9 @@ function avg(arr){
 function sortByMonth(rows){ return rows.sort((a,b) => (Number(a.mes_num||0) - Number(b.mes_num||0))) }
 function barClass(pct){
   if (pct >= 100) return 'over';
-  if (pct >= 80)  return '';
-  if (pct >= 50)  return 'warn';
-  return 'bad';
+  if (pct >= 80)  return 'good';
+  if (pct >= 50)  return 'mid';
+  return '';  /* verde pálido por defecto */
 }
 
 /* ────────────────────────────────
@@ -2032,7 +2076,7 @@ async function loadAtitlan(cfg){
   const keyMetrics = [
     {
       label: 'Colecta de materiales reciclables',
-      acumDisplay: `${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq / 815 toneladas métricas`,
+      acumDisplay: `${fmt(acumMateriales)} / ${fmt(META_ANUAL_MATERIALES)} qq`,
       pct: pctMateriales,
       pctDisplay: `${fmtPct(pctMateriales)} de avance con respecto a meta anual`,
       barPct: pctMateriales
@@ -2046,10 +2090,13 @@ async function loadAtitlan(cfg){
     },
     {
       label: 'Ingresos medios diarios por lideresas',
-      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ / ${fmt(META_DIARIA_LIDERESA)} GTQ diarios`,
+      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ/día en ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'} — meta mensual: ${fmt(META_DIARIA_LIDERESA)} GTQ/día`,
       pct: pctLideresa,
-      pctDisplay: `${fmtPct(pctLideresa)} de avance de este indicador con respecto al mes de corte`,
-      barPct: pctLideresa
+      pctDisplay: pctLideresa >= 100
+        ? `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día, superando la meta mensual en ${fmtPct(pctLideresa - 100)}`
+        : `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día — ${fmtPct(pctLideresa)} de la meta mensual (${fmt(META_DIARIA_LIDERESA)} GTQ/día)`,
+      barPct: pctLideresa,
+      isMensual: true
     }
   ];
 
@@ -2217,14 +2264,14 @@ async function loadEPC(cfg){
 
   const keyMetrics = [
     {
-      label:'Visita sostenida a docentes capacitados durante el desarrollo de la Fase 2 del programa EPC, de 50 centros educativos de los niveles Primaria Segundo Ciclo, Básico y Diversificado de los 13 municipios de la Cuenca del Lago de Atitlán.',
+      label:'Visitas de fortalecimiento de las capacidades técnicas de docentes en los contenidos del Módulo 1 al módulo 7 a través de la metodología Epc, fase 2 Co-Facilitación y Empoderamiento',
       acumDisplay:`${docentesVisitasRealizadas} / ${docentesVisitasMeta} visitas sostenidas a ${fmt(docentesPorVisita)} docentes`,
       pct:pctDocentes,
       pctDisplay:`${fmtPct(pctDocentes)} de avance con respecto a meta anual`,
       barPct:pctDocentes
     },
     {
-      label:'Visita sostenida a estudiantes capacitados con el beneficio del programa Educando para Conservar 2026.',
+      label:'Visita de fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los estudiantes en los módulos 1 al 7.',
       acumDisplay:`${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} visitas sostenidas a ${fmt(estudiantesPorVisita)} estudiantes`,
       pct:pctEstudiantes,
       pctDisplay:`${fmtPct(pctEstudiantes)} de avance con respecto a meta anual`,
@@ -2356,7 +2403,8 @@ async function loadReforestacion(cfg){
       acumDisplay: `${fmt(arbolesAcum)} / ${fmt(arbolesMeta)} árboles`,
       pct: pctArboles,
       pctDisplay: `${fmtPct(pctArboles)} de avance con respecto a meta anual`,
-      barPct: pctArboles
+      barPct: pctArboles,
+      inactive: !siembraActiva
     },
     {
       label: '1 unidad de análisis SIG creada con especialización en cartografía forestal temática a través del eje de la CODEMA-Sololá.',
@@ -2401,6 +2449,19 @@ async function loadReforestacion(cfg){
    RENDER MÉTRICAS
 ──────────────────────────────── */
 function metricRow(m){
+  /* Indicador inactivo en este corte (ej. siembra fuera de temporada) */
+  if (m.inactive) {
+    return `
+    <div class="metric-row">
+      <div class="mname">${m.label}</div>
+      <div class="mcol-acum" style="grid-column:2/-1">
+        <div class="metric-primary" style="color:var(--muted);font-style:italic">
+          Indicador no activo en este corte · se activa a partir de julio
+        </div>
+        <div class="mbar"><span style="width:0%"></span></div>
+      </div>
+    </div>
+  `;}
   const pct = Number(m.pct);
   const barPct = Number.isFinite(Number(m.barPct)) ? Number(m.barPct) : pct;
   const hasPct = Number.isFinite(barPct);
@@ -2443,6 +2504,7 @@ function metricRow(m){
 ──────────────────────────────── */
 function programCard(p){
   const [chipClass, chipText] = statusClass(p.score);
+  const scoreFill = Math.min(Math.max(Number(p.score || 0), 0), 100);
   return `
     <article class="card program-card">
       <div class="program-head">
@@ -2451,6 +2513,16 @@ function programCard(p){
           <div class="program-title">${p.name}</div>
         </div>
         <span class="chip ${chipClass}">${chipText}</span>
+      </div>
+      <div class="prog-score-wrap">
+        <div class="prog-score-header">
+          <span class="prog-score-label">${p.scoreLabel}</span>
+          <span class="prog-score-value">${fmtPct(p.score)}</span>
+        </div>
+        <div class="prog-score-track">
+          <div class="prog-score-fill" style="width:${scoreFill}%"></div>
+        </div>
+        <div class="prog-score-sub">Corte: ${safe(p.latestLabel)}</div>
       </div>
       <div class="metric-list">
         <div class="metric-header">
@@ -2461,10 +2533,6 @@ function programCard(p){
         ${p.metrics.map(metricRow).join('')}
       </div>
       <div class="program-footer">
-        <div class="program-badges">
-          <span class="chip neutral">${p.scoreLabel}: ${fmtPct(p.score)}</span>
-          <span class="chip sky">Período: ${safe(p.periodKey)}</span>
-        </div>
         <a class="btn" href="${p.dashboard}">
           Abrir tablero dinámico
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
