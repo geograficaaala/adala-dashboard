@@ -172,37 +172,7 @@
       text-decoration: none;
       min-width: 0;
     }
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(76,165,191,.96) 0 18%, transparent 20%),
-        linear-gradient(160deg, var(--lake-deep) 0%, var(--lake) 60%, var(--forest) 100%);
-      position: relative;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.15), 0 8px 18px rgba(22,58,95,.18);
-      flex-shrink: 0;
-    }
-    .brand-mark::before,
-    .brand-mark::after {
-      content: '';
-      position: absolute;
-      left: 8px;
-      right: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.88);
-    }
-    .brand-mark::before {
-      bottom: 12px;
-      height: 4px;
-      transform: rotate(-4deg);
-    }
-    .brand-mark::after {
-      bottom: 7px;
-      height: 3px;
-      opacity: .85;
-      transform: rotate(3deg);
-    }
+    /* brand-mark eliminado */
     .brand-text {
       display: grid;
       gap: 1px;
@@ -226,21 +196,30 @@
       text-overflow: ellipsis;
     }
 
-    .header-logo {
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      margin-left: 18px;
-    }
-    .header-logo img {
+    .header-logo-img {
       height: 44px;
       width: auto;
       display: block;
+      flex-shrink: 0;
       filter: brightness(0) invert(1);
       opacity: .92;
     }
+    .footer-mark {
+      margin-left: auto;
+      align-self: end;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+    }
+    .footer-mark img {
+      width: 148px;
+      max-width: 100%;
+      height: auto;
+      opacity: .96;
+    }
     @media (max-width: 640px) {
-      .header-logo { display: none; }
+      .header-logo-img { height: 34px; }
+      .footer-mark { justify-self: start; }
     }
 
     .nav-tabs {
@@ -1196,8 +1175,9 @@
       margin: 0 auto;
       padding: 34px 0 30px;
       display: grid;
-      grid-template-columns: 1.25fr .85fr .85fr;
+      grid-template-columns: minmax(0,1.35fr) repeat(2,minmax(180px,.7fr)) auto;
       gap: 28px;
+      align-items: start;
       position: relative;
       z-index: 1;
     }
@@ -1550,7 +1530,7 @@
 
 <header class="header">
   <a class="header-brand" href="#">
-    <span class="brand-mark" aria-hidden="true"></span>
+    <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán" class="header-logo-img">
     <span class="brand-text">
       <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
       <span class="brand-title">Tablero dinámico institucional de avances</span>
@@ -1563,10 +1543,6 @@
     <button class="nav-tab" data-page="grafica" role="tab">Comparativo</button>
     <button class="nav-tab" data-page="matriz" role="tab">Matriz</button>
   </nav>
-
-  <div class="header-logo" aria-hidden="true">
-    <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán">
-  </div>
 </header>
 
 <div class="page active" id="page-resumen">
@@ -1759,7 +1735,6 @@
   <div class="footer-wrap">
     <section class="footer-brand">
       <div class="footer-brandline">
-        <span class="brand-mark" aria-hidden="true"></span>
         <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
       </div>
       <p class="footer-copy">
@@ -1797,6 +1772,10 @@
           <span>Instagram</span>
         </a>
       </div>
+    </section>
+
+    <section class="footer-mark" aria-label="Sello institucional">
+      <img src="./chill_lago.png" alt="Símbolo institucional AALA" onerror="this.style.display='none'">
     </section>
   </div>
 </footer>
