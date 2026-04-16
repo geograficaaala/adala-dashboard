@@ -226,6 +226,23 @@
       text-overflow: ellipsis;
     }
 
+    .header-logo {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      margin-left: 18px;
+    }
+    .header-logo img {
+      height: 44px;
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1);
+      opacity: .92;
+    }
+    @media (max-width: 640px) {
+      .header-logo { display: none; }
+    }
+
     .nav-tabs {
       margin-left: auto;
       display: flex;
@@ -1547,7 +1564,9 @@
     <button class="nav-tab" data-page="matriz" role="tab">Matriz</button>
   </nav>
 
-  
+  <div class="header-logo" aria-hidden="true">
+    <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán">
+  </div>
 </header>
 
 <div class="page active" id="page-resumen">
@@ -1587,7 +1606,7 @@
         <div class="ribbon-sub">Con datos publicados y seguimiento institucional continuo.</div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Último corte institucional</div>
+        <div class="ribbon-label">Al presente mes</div>
         <div class="ribbon-value" id="kpiLatest">—</div>
         <div class="ribbon-sub" id="kpiLatestSub"></div>
       </article>
@@ -1612,7 +1631,7 @@
           <div class="story-points" aria-label="Claves de lectura institucional">
             <article class="story-point">
               <span>Seguimiento</span>
-              <p>Una sola vista para entender el estado institucional del corte más reciente.</p>
+              <p>Una sola vista para entender el estado institucional al presente mes.</p>
             </article>
             <article class="story-point">
               <span>Comparación</span>
@@ -1630,7 +1649,7 @@
         <div class="signal-top">
           <div>
             <div class="section-kicker">Panorama institucional</div>
-            <h2 class="section-title">Semáforo al último corte</h2>
+            <h2 class="section-title">Semáforo al presente mes</h2>
           </div>
           <div class="signal-score" id="kpiHealthHero">—</div>
         </div>
@@ -1648,7 +1667,7 @@
           <article class="signal-stat">
             <div class="mini-label">Programas y proyectos con cumplimiento</div>
             <div class="mini-value" id="kpiOnTrack">—</div>
-            <div class="mini-sub">Con promedio al menos 80% del esperado al corte.</div>
+            <div class="mini-sub">Con promedio al menos 80% del esperado al presente mes.</div>
           </article>
           <article class="signal-stat">
             <div class="mini-label">Programas y proyectos con alerta</div>
@@ -1657,7 +1676,7 @@
           </article>
         </div>
         <div class="signal-latest">
-          <div class="mini-label">Último corte disponible</div>
+          <div class="mini-label">Al presente mes</div>
           <div class="mini-value" id="kpiLatestHero">—</div>
           <div class="mini-sub" id="kpiLatestHeroSub"></div>
         </div>
@@ -1669,7 +1688,7 @@
         <div class="section-kicker">Cómo leer el tablero</div>
         <h2 class="section-title">Programas y proyectos comparados con su propia ruta</h2>
         <p class="prose">
-          Aquí no se mezclan resultados de naturaleza distinta. La intención es ofrecer una lectura clara del cumplimiento institucional, mostrando qué programas y proyectos avanzan conforme a lo esperado, cuáles requieren atención y cómo se ve el panorama general del corte.
+          Aquí no se mezclan resultados de naturaleza distinta. La intención es ofrecer una lectura clara del cumplimiento institucional, mostrando qué programas y proyectos avanzan conforme a lo esperado, para sus propias metas, cuáles requieren atención y cómo se ve el panorama general al presente mes.
         </p>
         <div class="capsule-stack" aria-label="Guía rápida de lectura">
           <div class="capsule">El resumen ejecutivo condensa el estado actual de los programas y proyectos.</div>
@@ -1729,7 +1748,7 @@
 <div class="page" id="page-matriz">
   <div class="wrap">
     <article class="card matrix-card">
-      <div class="section-kicker">Matriz institucional de corte</div>
+      <div class="section-kicker">Matriz institucional al presente mes</div>
       <h2 class="section-title">Estado resumido por programas y proyectos</h2>
       <div id="matrixWrap" class="empty">Cargando matriz...</div>
     </article>
@@ -2090,11 +2109,11 @@ async function loadAtitlan(cfg){
     },
     {
       label: 'Ingresos medios diarios por lideresas',
-      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ/día en ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'} — meta mensual: ${fmt(META_DIARIA_LIDERESA)} GTQ/día`,
+      acumDisplay: `${fmt(ingresoLideresaVal, 1)} GTQ/día en ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'} — meta mensual: ${fmt(META_DIARIA_LIDERESA)} GTQ/día`,
       pct: pctLideresa,
       pctDisplay: pctLideresa >= 100
-        ? `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día, superando la meta mensual en ${fmtPct(pctLideresa - 100)}`
-        : `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el mes de corte'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día — ${fmtPct(pctLideresa)} de la meta mensual (${fmt(META_DIARIA_LIDERESA)} GTQ/día)`,
+        ? `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día, superando la meta mensual en ${fmtPct(pctLideresa - 100)}`
+        : `En ${safe(latest.mes) !== '—' ? safe(latest.mes) : 'el presente mes'}, las lideresas generaron ${fmt(ingresoLideresaVal, 1)} GTQ/día — ${fmtPct(pctLideresa)} de la meta mensual (${fmt(META_DIARIA_LIDERESA)} GTQ/día)`,
       barPct: pctLideresa,
       isMensual: true
     }
@@ -2171,9 +2190,9 @@ async function loadConservando(cfg){
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
     score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
+    scoreLabel:'Promedio vs esperado al presente mes',
     metrics:keyMetrics,
-    sourceSummary:'Valor fijo · corte marzo 2026'
+    sourceSummary:'Valor fijo · marzo 2026'
   };
 }
 
@@ -2225,9 +2244,9 @@ async function loadFM(cfg){
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
     score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
+    scoreLabel:'Promedio vs esperado al presente mes',
     metrics:keyMetrics,
-    sourceSummary:'Valor fijo · corte marzo 2026'
+    sourceSummary:'Valor fijo · marzo 2026'
   };
 }
 
@@ -2259,7 +2278,7 @@ async function loadEPC(cfg){
     cumplioVisita,
     cumplioVisita,
     pctAvanceFormacion,
-    (actividadesVal / 16) * 100
+    (actividadesVal / 13) * 100
   ]);
 
   const keyMetrics = [
@@ -2298,9 +2317,9 @@ async function loadEPC(cfg){
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
     score:score || 0,
-    scoreLabel:'Promedio vs esperado al corte',
+    scoreLabel:'Promedio vs esperado al presente mes',
     metrics:keyMetrics,
-    sourceSummary:'Valor fijo · corte marzo 2026'
+    sourceSummary:'Valor fijo · marzo 2026'
   };
 }
 
@@ -2449,14 +2468,14 @@ async function loadReforestacion(cfg){
    RENDER MÉTRICAS
 ──────────────────────────────── */
 function metricRow(m){
-  /* Indicador inactivo en este corte (ej. siembra fuera de temporada) */
+  /* Indicador inactivo al presente mes (ej. siembra fuera de temporada) */
   if (m.inactive) {
     return `
     <div class="metric-row">
       <div class="mname">${m.label}</div>
       <div class="mcol-acum" style="grid-column:2/-1">
         <div class="metric-primary" style="color:var(--muted);font-style:italic">
-          Indicador no activo en este corte · se activa a partir de julio
+          Indicador no activo al presente mes · se activa a partir de julio
         </div>
         <div class="mbar"><span style="width:0%"></span></div>
       </div>
@@ -2611,7 +2630,7 @@ function renderMatrix(programs){
       <thead><tr>
         <th>Programa / Proyecto</th>
         <th>Fuente</th>
-        <th>Último corte</th>
+        <th>Al presente mes</th>
         <th>Promedio vs esperado</th>
         <th>Estado</th>
         <th>Tablero dinámico</th>
