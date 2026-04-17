@@ -3,7 +3,7 @@ row_number,module_name,fecha,anio,mes_num,mes_nombre,periodo,registro_valido,est
 2,pirdes,2026-02-04,2026,2,Febrero,2026-02,True,OK,False,Sololá,Diagnóstico,True,3.0,3.0,0.0,Sí,
 3,pirdes,2026-02-06,2026,2,Febrero,2026-02,True,OK,False,San Antonio Palopó,Diagnóstico,True,2.0,2.0,0.0,Sí,
 4,pirdes,2026-02-09,2026,2,Febrero,2026-02,True,OK,False,Sololá,Revisión técnica,True,3.0,3.0,0.0,Sí,
-5,pirdes,2026-02-12,2026,2,Febrero,2026-02,True,OK,False,San Antonio Palopó,Diagnóstico,True,1.0,1.0,0.0,Sí,
+5,pirdes,2026-02-12,2026,2,Febrero,2026-02,True,OK,False,Sololá,Diagnóstico,True,1.0,1.0,0.0,Sí,
 6,pirdes,2026-02-17,2026,2,Febrero,2026-02,True,OK,False,Sololá,Revisión técnica,True,3.0,3.0,0.0,Sí,
 7,pirdes,2026-02-19,2026,2,Febrero,2026-02,True,OK,False,San Antonio Palopó,Diagnóstico,True,1.0,1.0,,Sí,
 8,pirdes,,,,,,False,,False,,,False,,,,,
