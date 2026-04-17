@@ -2265,45 +2265,72 @@ async function loadConservando(cfg){
 }
 
 async function loadFM(cfg){
-  const municipiosVal = 6;
-  const personasVal = 52;
-  const asistVal = 2;
-  const estudiosVal = 2;
-  const pirdesVal = 2;
+  // ── Nueva lógica de indicadores acordada ──────────────────────────────────
+  // Indicador 1: Capacitaciones compuesto (4 ejes × 25 personas = 100%)
+  //   Ejes: SNIP · SIG · Recolección digital · Cumplimiento legal
+  //   Cada eje que alcanza ≥25 personas capacitadas = 25% del indicador
+  const META_PERSONAS_EJE = 25;
+  const ejesData = [
+    { label:'SNIP',               personas: 0  },
+    { label:'SIG',                personas: 23 },
+    { label:'Recolección digital',personas: 0  },
+    { label:'Cumplimiento legal', personas: 31 },
+  ];
+  const ejesOk = ejesData.filter(e => e.personas >= META_PERSONAS_EJE).length; // ejes que cumplen
+  const pctCap = ejesOk / 4; // 0, 0.25, 0.5, 0.75 o 1.0
 
-  const pctFortalecimiento = Math.min((municipiosVal / 15) * 100, (personasVal / 75) * 100);
-  const pctAsistencia = (asistVal / 3) * 100;
-  const pctResiduos = Math.min((estudiosVal / 2) * 100, (pirdesVal / 5) * 100);
+  // Indicador 2: Estudios de caracterización finalizados
+  //   Solo cuentan los con estado_estudio === 'Finalizado'. Meta: 5. Cada uno = 20%.
+  const estFin = 1;           // estudios con estado = Finalizado al corte
+  const META_EST = 5;
+  const pctEst = Math.min(estFin / META_EST, 1);
 
-  const esperadoCorte = (3 / 12) * 100; // enero-marzo 2026
-  // Cap cada componente a 100 para no inflar; score global máx 90%
-  const score = Math.min(avg([
-    Math.min((pctFortalecimiento / esperadoCorte) * 100, 100),
-    Math.min((pctAsistencia     / esperadoCorte) * 100, 100),
-    Math.min((pctResiduos       / esperadoCorte) * 100, 100)
-  ]), 90);
+  // Indicador 3: PIRDES finalizados
+  //   Solo cuentan los con estado_pirdes === 'Finalizado'. Meta: 5. Cada uno = 20%.
+  const pirdFin = 0;          // PIRDES con estado = Finalizado al corte
+  const META_PIRD = 5;
+  const pctPird = Math.min(pirdFin / META_PIRD, 1);
+
+  // Indicador 4: Reuniones CODEMA / eje agua y saneamiento
+  const reunVal = 4;
+  const META_REUN = 10;
+  const pctReun = Math.min(reunVal / META_REUN, 1);
+
+  // Score global: promedio de los 4 indicadores (cap 90% para no inflar)
+  const score = Math.min(avg([pctCap, pctEst, pctPird, pctReun]) * 100, 90);
 
   const keyMetrics = [
     {
-      label:'15 municipios con al menos 75 técnicos, operarios y otro personal capacitado en SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental en saneamiento y agua.',
-      acumDisplay:`${fmt(municipiosVal)} / 15 municipios · ${fmt(personasVal)} / 75 personas`,
-      pct:pctFortalecimiento,
-      pctDisplay:`${fmtPct(pctFortalecimiento)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctFortalecimiento
+      label:'Personal municipal capacitado en 4 ejes temáticos: SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental. Cada eje requiere ≥25 personas capacitadas.',
+      acumDisplay:`${ejesOk}/4 ejes cumplidos · ${ejesData.map(e => e.label+': '+e.personas+'p').join(' · ')}`,
+      pct: pctCap * 100,
+      pctDisplay:`${fmtPct(pctCap * 100)} del indicador compuesto — ${ejesOk} de 4 ejes con ≥25 personas capacitadas al mes de marzo`,
+      barPct: pctCap * 100,
+      temporality:'Indicador compuesto: cada eje que alcanza 25 personas = 25% de cumplimiento'
     },
     {
-      label:'3 asistencias técnicas para perfilar e impulsar proyectos priorizados de agua y saneamiento (alcantarillado, tratamiento de aguas residuales y/o desechos sólidos) con fondos CODEDE.',
-      acumDisplay:`${fmt(asistVal)} / 3 asistencias`,
-      pct:pctAsistencia,
-      pctDisplay:`${fmtPct(pctAsistencia)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctAsistencia
+      label:'Estudios de caracterización de residuos sólidos finalizados. Meta anual: 5 estudios. Solo los estudios en estado "Finalizado" cuentan. Cada estudio finalizado = 20%.',
+      acumDisplay:`${estFin} / ${META_EST} estudios finalizados`,
+      pct: pctEst * 100,
+      pctDisplay:`${fmtPct(pctEst * 100)} de avance — ${estFin} estudio${estFin !== 1 ? 's' : ''} finalizado${estFin !== 1 ? 's' : ''} de los ${META_EST} que constituyen la meta anual`,
+      barPct: pctEst * 100,
+      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     },
     {
-      label:'2 nuevos estudios de caracterización de residuos y desechos sólidos del sector comercial y de mercados y al menos 5 PIRDES implementados.',
-      acumDisplay:`${fmt(estudiosVal)} / 2 estudios · ${fmt(pirdesVal)} / 5 PIRDES`,
-      pct:pctResiduos,
-      pctDisplay:`${fmtPct(pctResiduos)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctResiduos
+      label:'PIRDES municipales finalizados. Meta anual: 5 PIRDES. Solo los PIRDES en estado "Finalizado" cuentan. Cada PIRDES finalizado = 20%.',
+      acumDisplay:`${pirdFin} / ${META_PIRD} PIRDES finalizados`,
+      pct: pctPird * 100,
+      pctDisplay:`${fmtPct(pctPird * 100)} de avance — ${pirdFin} PIRDES finalizado${pirdFin !== 1 ? 's' : ''} de los ${META_PIRD} que constituyen la meta anual`,
+      barPct: pctPird * 100,
+      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+    },
+    {
+      label:'Reuniones del eje de agua y saneamiento / CODEMA y mesas técnicas departamentales.',
+      acumDisplay:`${fmt(reunVal)} / ${fmt(META_REUN)} reuniones CODEMA acumuladas`,
+      pct: pctReun * 100,
+      pctDisplay:`${fmtPct(pctReun * 100)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
+      barPct: pctReun * 100,
+      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
     }
   ];
 
@@ -2311,9 +2338,9 @@ async function loadFM(cfg){
     ...cfg,
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
-    score:score || 0,
-    scoreLabel:'Promedio vs esperado al presente mes',
-    metrics:keyMetrics,
+    score: score || 0,
+    scoreLabel:'Promedio de los 4 indicadores estratégicos',
+    metrics: keyMetrics,
     sourceSummary:'Valor fijo · marzo 2026'
   };
 }
