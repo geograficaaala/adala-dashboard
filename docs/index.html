@@ -1995,6 +1995,13 @@ async function initCoverageMap(){
 /* ────────────────────────────────
    PROGRAMAS CONFIG
 ──────────────────────────────── */
+const TUL_DASHBOARD_URL = (() => {
+  const path = (window.location.pathname || '').toLowerCase();
+  const isDocsDir = path.includes('/docs/') || path.endsWith('/docs') || path.endsWith('/docs/');
+  if (window.location.protocol === 'file:' && !isDocsDir) return './docs/index_tul.html';
+  return './index_tul.html';
+})();
+
 const PROGRAMS = [
   {
     id: 'atitlan_recicla',
@@ -2045,7 +2052,7 @@ const PROGRAMS = [
     id: 'manejo_tul',
     name: 'Manejo de Tul',
     source: 'ArcGIS Survey123',
-    dashboard: './index_tul.html',
+    dashboard: TUL_DASHBOARD_URL,
     loader: loadTul
   }
 ];
