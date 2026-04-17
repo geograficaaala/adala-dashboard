@@ -1572,6 +1572,7 @@
           <span class="pill">Reforestación</span>
           <span class="pill">Reciclaje</span>
           <span class="pill">Agua y saneamiento</span>
+          <span class="pill">Manejo de Tul</span>
         </div>
       </article>
 
@@ -1590,7 +1591,7 @@
     <section class="dashboard-ribbon stagger-3" aria-label="Resumen institucional">
       <article class="ribbon-item">
         <div class="ribbon-label">Programas y proyectos activos</div>
-        <div class="ribbon-value" id="kpiPrograms">4</div>
+        <div class="ribbon-value" id="kpiPrograms">6</div>
         <div class="ribbon-sub">Con datos publicados y seguimiento institucional continuo.</div>
       </article>
       <article class="ribbon-item">
@@ -2039,6 +2040,13 @@ const PROGRAMS = [
     totalUrl: './data/reforestacion/total_mes.csv',
     indUrl: './data/reforestacion/institucional_indicadores.csv',
     loader: loadReforestacion
+  },
+  {
+    id: 'manejo_tul',
+    name: 'Manejo de Tul',
+    source: 'ArcGIS Survey123',
+    dashboard: './index_tul.html',
+    loader: loadTul
   }
 ];
 
@@ -2357,6 +2365,70 @@ async function loadFM(cfg){
     scoreLabel:'Promedio de los 3 indicadores estratégicos',
     metrics: keyMetrics,
     sourceSummary:'Cálculo corregido con avance acumulado · febrero 2026'
+  };
+}
+
+/* ────────────────────────────────
+   MANEJO DE TUL · DATOS PRECARGADOS (Survey123 · abril 2026)
+   Pipeline ArcGIS → CSV pendiente; datos hardcodeados hasta conexión.
+──────────────────────────────── */
+const TUL_DATA = [
+  { fecha:'2026-02-09', municipio:'San Marcos La Laguna',    tipo:'Siembra',       metros:30  },
+  { fecha:'2026-02-13', municipio:'Santa Cruz La Laguna',    tipo:'Siembra',       metros:115 },
+  { fecha:'2026-02-27', municipio:'San Antonio Palopó',      tipo:'Siembra',       metros:110 },
+  { fecha:'2026-03-09', municipio:'Santa Catarina Palopó',   tipo:'Mantenimiento', metros:20  },
+  { fecha:'2026-03-13', municipio:'San Pedro La Laguna',     tipo:'Siembra',       metros:95  },
+  { fecha:'2026-03-27', municipio:'San Antonio Palopó',      tipo:'Siembra',       metros:130 },
+  { fecha:'2026-04-10', municipio:'San Juan La Laguna',      tipo:'Siembra',       metros:105 },
+];
+
+async function loadTul(cfg){
+  // ── Acumulados por mes ──────────────────────────────────────────────────
+  // Feb: 3 jornadas, 255 ml siembra | Mar: 3 jornadas, 225 ml siembra | Abr: 1 jornada, 105 ml
+  const META_ML_ANUAL      = 800;
+  const META_ML_MENSUAL    = 200;
+  const META_JORNADAS_MES  = 2;
+
+  const acumMetrosSiembra = TUL_DATA.filter(r => r.tipo === 'Siembra').reduce((s,r) => s + r.metros, 0); // 585
+  const acumJornadas      = TUL_DATA.length; // 7
+  // Meses transcurridos con actividad (feb, mar, abr = 3)
+  const mesesConActividad = 3;
+  const metaJornadasEsperada = META_JORNADAS_MES * mesesConActividad; // 6 esperadas
+  const metaMLEsperada       = META_ML_MENSUAL   * mesesConActividad; // 600 esperadas
+
+  const pctJornadas = (acumJornadas / metaJornadasEsperada) * 100;  // 7/6 = 116.7%
+  const pctML       = (acumMetrosSiembra / metaMLEsperada) * 100;   // 585/600 = 97.5%
+  const pctAnual    = (acumMetrosSiembra / META_ML_ANUAL) * 100;    // 585/800 = 73.1%
+
+  const score = avg([Math.min(pctJornadas, 100), Math.min(pctML, 100)]);
+
+  const keyMetrics = [
+    {
+      label: '2 jornadas mensuales de siembra y mantenimiento de tul en municipios ribereños del Lago de Atitlán.',
+      acumDisplay: `${fmt(acumJornadas)} / ${fmt(metaJornadasEsperada)} jornadas acumuladas a abril (meta mensual: ${META_JORNADAS_MES} jornadas)`,
+      pct: pctJornadas,
+      pctDisplay: `${fmtPct(pctJornadas)} de avance acumulado hasta el mes de abril con respecto a lo esperado — superando la meta mensual acumulada`,
+      barPct: Math.min(pctJornadas, 100),
+      temporality: 'Este indicador tiene por temporalidad desde febrero a diciembre de 2026'
+    },
+    {
+      label: '800 metros lineales de tul sembrados a lo largo de las orillas del Lago de Atitlán durante 2026.',
+      acumDisplay: `${fmt(acumMetrosSiembra)} / ${fmt(META_ML_ANUAL)} metros lineales sembrados`,
+      pct: pctAnual,
+      pctDisplay: `${fmtPct(pctAnual)} de avance acumulado hasta el mes de abril con respecto a meta anual · ${fmtPct(pctML)} vs lo esperado al corte`,
+      barPct: pctAnual,
+      temporality: 'Este indicador tiene por temporalidad desde febrero a diciembre de 2026'
+    }
+  ];
+
+  return {
+    ...cfg,
+    latestLabel: 'Abril 2026',
+    periodKey: '2026-04',
+    score: score || 0,
+    scoreLabel: 'Promedio de cumplimiento vs metas mensuales acumuladas',
+    metrics: keyMetrics,
+    sourceSummary: 'ArcGIS Survey123 · abril 2026'
   };
 }
 
