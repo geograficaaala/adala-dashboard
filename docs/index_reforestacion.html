@@ -1511,6 +1511,57 @@
     .map-card h3{font-size:1.9rem;line-height:1.2}
     .map-card p.sub{font-size:1rem;line-height:1.6;color:var(--muted)}
 
+    /* --- Reforestación · tarjetas KPI con estilo Atitlán Recicla --- */
+    .kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .kpis-complementary{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .kpi{
+      position:relative;overflow:hidden;isolation:isolate;min-height:228px;
+      padding:20px 20px 18px 22px;border-top:none!important;border-left:4px solid transparent;
+      background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%);
+      display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;
+      opacity:0;transform:translateY(16px);
+      animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) forwards;
+      animation-delay:var(--delay,0ms);
+    }
+    .kpi::before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#2b6b60 0%,#1c6084 100%);opacity:.95}
+    .kpi::after{content:'';position:absolute;right:-36px;top:-40px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(28,96,132,.11) 0%,transparent 72%);opacity:0;transform:scale(.92);transition:opacity .22s ease,transform .22s ease;z-index:0}
+    .kpi>*{position:relative;z-index:1}
+    .kpi:hover::after{opacity:1;transform:scale(1)}
+    .kpi:hover{border-left-color:#1c6084}
+    .kpi-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;margin:0}
+    .kpi-label{font-size:.72rem;font-weight:700;letter-spacing:.12em;color:#6b7f90;line-height:1.45;text-transform:uppercase;min-height:2.3em}
+    .kpi-value{font-family:var(--font-mono);font-size:clamp(1.9rem,2.2vw,2.55rem);font-weight:500;color:#17314f;letter-spacing:-.05em;line-height:.98}
+    .kpi-meta{font-size:.84rem;line-height:1.62;color:#4c6478}
+    .kpi-meta strong{color:#17314f}
+    .kpi-readings{display:grid;gap:6px;align-content:start}
+    .kpi-state{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+    .kpi-state::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.42}
+    .kpi-state.green{background:var(--green-soft);color:var(--green)}
+    .kpi-state.yellow{background:var(--gold-soft);color:var(--gold)}
+    .kpi-state.red{background:var(--red-soft);color:var(--red)}
+    .kpi-state.muted{background:#edf5f3;color:#6b7f90}
+    .kpi-state.blue{background:#d9ecf1;color:#1c6084}
+    .progress{height:8px;background:#dde8e4;position:relative;margin-top:auto}
+    .progress::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 50%,transparent 100%);transform:translateX(-130%);animation:trackSweep 1.3s ease .5s 1 forwards}
+    .progress>span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#4ca5bf 0%,#1c6084 55%,#2e6a57 100%);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset;transition:width .9s cubic-bezier(.22,1,.36,1)}
+    .kpi-component-tag{display:inline-flex;align-items:center;gap:6px;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#2e6a57}
+    .kpi-component-tag::before{content:'';width:10px;height:2px;border-radius:999px;background:linear-gradient(90deg,#2e6a57,#4ca5bf)}
+    .kpi-grid-note{font-size:.78rem;color:#6b7f90}
+    @keyframes kpiReveal{to{opacity:1;transform:none}}
+    @keyframes trackSweep{to{transform:translateX(120%)}}
+    @media(max-width:1180px){
+      .kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .kpis-complementary{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:900px){
+      .kpis,.kpis-complementary{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:640px){
+      .kpis,.kpis-complementary{grid-template-columns:1fr}
+      .kpi{padding:18px 16px 16px 18px;min-height:unset}
+    }
+
+
   </style>
 
 </head>
@@ -1685,6 +1736,11 @@
       <div class="kpis" id="kpiGrid"></div>
     </section>
 
+    <section class="section">
+      <div class="section-head"><div><h2>KPIs mensuales complementarios</h2><p>Lectura operativa de SIG, vivero y otras actividades. Estos indicadores complementan el seguimiento del programa sin alterar la lógica de los KPIs anuales.</p></div></div>
+      <div class="kpis kpis-complementary" id="kpiComplementGrid"></div>
+    </section>
+
     <div class="section-divider">Tendencia histórica y cumplimiento</div>
     <section class="section grid-2" aria-hidden="true" style="display:none">
       <article class="card panel panel-accent" id="avancePanel">
@@ -1834,6 +1890,75 @@ const DATA_URLS = {
   indicators: './data/reforestacion/institucional_indicadores.csv',
   metadata: './data/reforestacion/metadata_publicacion.csv'
 };
+
+
+const COMPLEMENTARY_KPI_SEED = [
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:3800 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:150 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:72 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4100 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:4 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:160 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:78 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4200 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:7 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:155 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:80 },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 }
+];
+
+function buildComplementaryRows(seed){
+  const acc = {};
+  return seed.map(item => {
+    const prev = acc[item.kpi_id] || 0;
+    const valorAcumulado = prev + safeNumber(item.valor_mes);
+    acc[item.kpi_id] = valorAcumulado;
+    const metaAcumulada = safeNumber(item.meta_mensual) * safeNumber(item.mes_num);
+    const pctMes = safeNumber(item.meta_mensual) > 0 ? safeNumber(item.valor_mes) / safeNumber(item.meta_mensual) : 0;
+    const pctAcum = metaAcumulada > 0 ? valorAcumulado / metaAcumulada : 0;
+    return {
+      ...item,
+      valor_acumulado: valorAcumulado,
+      meta_acumulada: metaAcumulada,
+      pct_cumpl_mes: pctMes,
+      pct_cumpl_acum: pctAcum,
+      semaforo_mes: pctToSemaforo(pctMes),
+      semaforo_acum: pctToSemaforo(pctAcum)
+    };
+  });
+}
+
+function pctToSemaforo(pct){
+  const n = safeNumber(pct);
+  if (n >= 1) return 'verde';
+  if (n >= 0.75) return 'azul';
+  if (n >= 0.4) return 'amarillo';
+  if (n > 0) return 'rojo';
+  return 'gris';
+}
+
+const COMPLEMENTARY_KPI_ROWS = buildComplementaryRows(COMPLEMENTARY_KPI_SEED);
+
+function getComplementaryRowsForPeriod(period){
+  return COMPLEMENTARY_KPI_ROWS.filter(r => String(r.periodo_clave) === String(period));
+}
 
 const KPI_CONFIG = [
   {
@@ -2044,27 +2169,73 @@ function overallStatus(row){
   return {status:'muted', label:'Sin exigibilidad'};
 }
 
+function animateProgressBars(scope=document){
+  if (!scope) return;
+  scope.querySelectorAll('.progress > span, .exec-kpi-bar span, .pkpi-bar').forEach(bar => {
+    const target = bar.getAttribute('data-width') || bar.style.width || '0%';
+    bar.style.width = '0%';
+    requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = target; }));
+  });
+}
+
 function renderKpis(row){
-  document.getElementById('kpiGrid').innerHTML = KPI_CONFIG.map(cfg => {
+  const grid = document.getElementById('kpiGrid');
+  grid.innerHTML = KPI_CONFIG.map((cfg, idx) => {
     const val = safeNumber(row[cfg.valueField]);
     const meta = safeNumber(row[cfg.metaField]);
     const pct = clampPct(row[cfg.pctField]);
     const monthly = safeNumber(row[cfg.monthlyField]);
     return `
-      <article class="card kpi">
+      <article class="card kpi" style="--delay:${idx * 60}ms">
         <div class="kpi-top">
           <div>
             <div class="kpi-label">${escapeHtml(cfg.title)}</div>
             <div class="kpi-value">${escapeHtml(formatByUnit(val, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</div>
           </div>
-          <span class="chip ${semaforoClass(row[cfg.semaforoField])}">${escapeHtml(row[cfg.semaforoField] || '—')}</span>
+          <span class="kpi-state ${semaforoClass(row[cfg.semaforoField])}">${escapeHtml(row[cfg.semaforoField] || '—')}</span>
         </div>
-        <div class="kpi-meta">Meta anual: <strong>${escapeHtml(formatByUnit(meta, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
-        <div class="kpi-meta">Aporte del mes: <strong>${escapeHtml(formatByUnit(monthly, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
-        <div class="kpi-meta">${escapeHtml(cfg.note(row))}</div>
-        <div class="progress"><span style="width:${pct}%"></span></div>
+        <div class="kpi-readings">
+          <div class="kpi-meta">Meta anual: <strong>${escapeHtml(formatByUnit(meta, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+          <div class="kpi-meta">Aporte del mes: <strong>${escapeHtml(formatByUnit(monthly, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+          <div class="kpi-meta">${escapeHtml(cfg.note(row))}</div>
+        </div>
+        <div class="progress"><span data-width="${pct}%" style="width:${pct}%"></span></div>
       </article>`;
   }).join('');
+  animateProgressBars(grid);
+}
+
+function renderComplementaryKpis(){
+  const period = state.selectedPeriod;
+  const rows = getComplementaryRowsForPeriod(period);
+  const grid = document.getElementById('kpiComplementGrid');
+  if (!grid) return;
+  if (!rows.length){
+    grid.innerHTML = `<article class="card panel"><p class="kpi-grid-note">No hay KPIs complementarios cargados para el período seleccionado.</p></article>`;
+    return;
+  }
+  grid.innerHTML = rows.map((item, idx) => {
+    const monthlyPct = Math.max(0, Math.min(100, safeNumber(item.pct_cumpl_mes) * 100));
+    const accumPct = Math.max(0, Math.min(100, safeNumber(item.pct_cumpl_acum) * 100));
+    return `
+      <article class="card kpi" style="--delay:${idx * 45}ms">
+        <div class="kpi-top">
+          <div>
+            <div class="kpi-component-tag">${escapeHtml(item.componente)}</div>
+            <div class="kpi-label">${escapeHtml(item.kpi_nombre)}</div>
+            <div class="kpi-value">${escapeHtml(formatByUnit(item.valor_mes, item.unidad))}</div>
+          </div>
+          <span class="kpi-state ${semaforoClass(item.semaforo_mes)}">${escapeHtml(item.semaforo_mes)}</span>
+        </div>
+        <div class="kpi-readings">
+          <div class="kpi-meta">Meta mensual: <strong>${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</strong></div>
+          <div class="kpi-meta">Acumulado anual al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> de <strong>${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</strong></div>
+          <div class="kpi-meta">Cumplimiento del mes: <strong>${escapeHtml(formatPercent(item.pct_cumpl_mes))}</strong> · acumulado: <strong>${escapeHtml(formatPercent(item.pct_cumpl_acum))}</strong></div>
+        </div>
+        <div class="progress"><span data-width="${monthlyPct}%" style="width:${monthlyPct}%"></span></div>
+      </article>`;
+  }).join('');
+  animateProgressBars(grid);
 }
 
 function renderExecutive(row){
@@ -2072,10 +2243,12 @@ function renderExecutive(row){
   document.getElementById('execStatusBadge').textContent = status.label;
   document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último corte Marzo 2026`;
   document.getElementById('execPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
-  document.getElementById('execKpiGrid').innerHTML = KPI_CONFIG.map(cfg => {
+  const execGrid = document.getElementById('execKpiGrid');
+  execGrid.innerHTML = KPI_CONFIG.map(cfg => {
     const pct = clampPct(row[cfg.pctField]);
-    return `<div class="exec-kpi"><div class="exec-kpi-label">${escapeHtml(cfg.title)}</div><div class="exec-kpi-value">${escapeHtml(formatPercent(row[cfg.pctField]))}</div><div>${escapeHtml(formatByUnit(row[cfg.valueField], cfg.unit, cfg.unit==='unidad'?2:undefined))}</div><div class="exec-kpi-bar"><span style="width:${pct}%"></span></div></div>`;
+    return `<div class="exec-kpi"><div class="exec-kpi-label">${escapeHtml(cfg.title)}</div><div class="exec-kpi-value">${escapeHtml(formatPercent(row[cfg.pctField]))}</div><div>${escapeHtml(formatByUnit(row[cfg.valueField], cfg.unit, cfg.unit==='unidad'?2:undefined))}</div><div class="exec-kpi-bar"><span data-width="${pct}%" style="width:${pct}%"></span></div></div>`;
   }).join('');
+  animateProgressBars(execGrid);
 
   document.getElementById('execStrip').innerHTML = `
     <div class="exec-strip-card"><small>Cartografía</small><strong>${escapeHtml(formatPercent(row.pct_cartografia_acum))}</strong></div>
@@ -2248,8 +2421,24 @@ function buildPresentation(){
       </div>
       <div class="pkpi-value">${escapeHtml(value)}</div>
       <div class="pkpi-meta">Meta anual: ${escapeHtml(metaValue)}</div>
-      <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" style="width:${pct}%"></div></div>
+      <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" data-width="${pct}%" style="width:${pct}%"></div></div>
       <div class="pkpi-meta" style="margin-top:6px">Aporte del mes: <strong>${escapeHtml(formatByUnit(row[cfg.monthlyField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+    </article>`;
+  }).join('');
+
+  const complementRows = getComplementaryRowsForPeriod(row.periodo_clave || state.selectedPeriod);
+  const complementCards = complementRows.map(item => {
+    const pct = Math.max(0, Math.min(100, safeNumber(item.pct_cumpl_mes) * 100));
+    const cls = semaforoClass(item.semaforo_mes);
+    return `<article class="presentation-kpi-pair-card">
+      <div class="pkpi-header">
+        <div class="pkpi-label">${escapeHtml(item.kpi_nombre)}</div>
+        <span class="presentation-chip ${cls}">${escapeHtml(item.componente)}</span>
+      </div>
+      <div class="pkpi-value">${escapeHtml(formatByUnit(item.valor_mes, item.unidad))}</div>
+      <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</div>
+      <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" data-width="${pct}%" style="width:${pct}%"></div></div>
+      <div class="pkpi-meta" style="margin-top:6px">Acumulado al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> / ${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</div>
     </article>`;
   }).join('');
 
@@ -2303,6 +2492,21 @@ function buildPresentation(){
         </div>
         <div class="presentation-kpi-pairs">
           ${metricCards}
+        </div>
+      </div>
+    </section>
+
+    <section class="presentation-slide">
+      <div class="presentation-slide-inner">
+        <div class="presentation-kicker">KPIs mensuales complementarios</div>
+        <div class="presentation-title-row">
+          <div>
+            <h2>SIG, vivero y soporte operativo</h2>
+            <p>Esta capa mensual complementa la lectura anual del programa y ayuda a explicar mejor el avance operativo del primer trimestre sin tocar la lógica de los KPIs principales.</p>
+          </div>
+        </div>
+        <div class="presentation-kpi-pairs">
+          ${complementCards}
         </div>
       </div>
     </section>
@@ -2376,6 +2580,8 @@ function gotoPresentationSlide(index){
   presentationIndex = Math.max(0, Math.min(index, total - 1));
   track.style.transform = `translateX(-${presentationIndex * 100}%)`;
   dots.forEach((dot, idx) => dot.classList.toggle('active', idx === presentationIndex));
+  const activeSlide = track.children[presentationIndex];
+  if (activeSlide) setTimeout(() => animateProgressBars(activeSlide), 40);
 }
 
 function openPresentation(){
@@ -2387,6 +2593,10 @@ function openPresentation(){
   overlay.setAttribute('aria-hidden','false');
   document.body.classList.add('presentation-open');
   document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    const activeSlide = document.querySelector('#presentationTrack .presentation-slide');
+    if (activeSlide) animateProgressBars(activeSlide);
+  }, 60);
 }
 
 function closePresentation(){
@@ -2410,6 +2620,7 @@ function render(){
   const row = getSelectedRow();
   renderHero(row);
   renderKpis(row);
+  renderComplementaryKpis();
   renderExecutive(row);
   renderAlerts(row);
   renderTable();
