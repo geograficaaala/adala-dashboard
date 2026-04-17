@@ -2265,308 +2265,98 @@ async function loadConservando(cfg){
 }
 
 async function loadFM(cfg){
-  // ── Nueva lógica de indicadores acordada ──────────────────────────────────
-  // Indicador 1: Capacitaciones compuesto (4 ejes × 25 personas = 100%)
-  //   Ejes: SNIP · SIG · Recolección digital · Cumplimiento legal
-  //   Cada eje que alcanza ≥25 personas capacitadas = 25% del indicador
+  // ── Lógica corregida según el sheet de Fortalecimiento Municipal ───────────
+  // Corte actual del archivo: febrero 2026.
+  // La tarjeta general usa avance acumulado anual, no metas fijas por mes.
+
+  // Indicador 1: capacitación por 4 ejes temáticos.
+  // Cada eje aporta 25% del indicador y se topa con una meta mínima de 25 personas.
   const META_PERSONAS_EJE = 25;
   const ejesData = [
-    { label:'SNIP',               personas: 0  },
-    { label:'SIG',                personas: 23 },
-    { label:'Recolección digital',personas: 0  },
-    { label:'Cumplimiento legal', personas: 31 },
+    { label:'SNIP', personas: 0 },
+    { label:'SIG', personas: 5 },
+    { label:'Recolección digital de datos', personas: 0 },
+    { label:'Cumplimiento legal ambiental', personas: 28 },
   ];
-  const ejesOk = ejesData.filter(e => e.personas >= META_PERSONAS_EJE).length; // ejes que cumplen
-  const pctCap = ejesOk / 4; // 0, 0.25, 0.5, 0.75 o 1.0
+  const pctCap = (
+    ejesData.reduce((acc, eje) => acc + Math.min((Number(eje.personas || 0) / META_PERSONAS_EJE), 1), 0) / 4
+  );
 
-  // Indicador 2: Estudios de caracterización finalizados
-  //   Solo cuentan los con estado_estudio === 'Finalizado'. Meta: 5. Cada uno = 20%.
-  const estFin = 1;           // estudios con estado = Finalizado al corte
-  const META_EST = 5;
+  // Indicador 2: estudios de caracterización.
+  // En la tarjeta general solo cuentan los estudios ya finalizados.
+  const estFin = 2;
+  const META_EST = 2;
   const pctEst = Math.min(estFin / META_EST, 1);
 
-  // Indicador 3: PIRDES finalizados
-  //   Solo cuentan los con estado_pirdes === 'Finalizado'. Meta: 5. Cada uno = 20%.
-  const pirdFin = 0;          // PIRDES con estado = Finalizado al corte
+  // Indicador 3: PIRDES.
+  // En la tarjeta general el avance se calcula por fases acumuladas.
+  // Se eliminaron las fases "Implementación" y "Validación".
   const META_PIRD = 5;
-  const pctPird = Math.min(pirdFin / META_PIRD, 1);
+  const PIRDES_PHASE_WEIGHTS = {
+    'Acercamiento': 0.25,
+    'Diagnóstico': 0.50,
+    'Actualización': 0.75,
+    'Revisión técnica': 1.00,
+    'Finalizado': 1.00
+  };
+  const pirdesRows = [
+    { municipio:'San Antonio Palopó', fase:'Diagnóstico' },
+    { municipio:'Sololá', fase:'Diagnóstico' },
+    { municipio:'San Antonio Palopó', fase:'Diagnóstico' },
+    { municipio:'Sololá', fase:'Revisión técnica' },
+    { municipio:'Sololá', fase:'Diagnóstico' },
+    { municipio:'Sololá', fase:'Revisión técnica' },
+    { municipio:'San Antonio Palopó', fase:'Diagnóstico' }
+  ];
+  const pirdesPhasePoints = pirdesRows.reduce(
+    (acc, row) => acc + (PIRDES_PHASE_WEIGHTS[row.fase] || 0),
+    0
+  );
+  const pctPird = Math.min(pirdesPhasePoints / META_PIRD, 1);
+  const pirdesDiag = pirdesRows.filter(r => r.fase === 'Diagnóstico').length;
+  const pirdesRevTec = pirdesRows.filter(r => r.fase === 'Revisión técnica').length;
+  const pirdesFinalizados = pirdesRows.filter(r => r.fase === 'Finalizado').length;
 
-  // Indicador 4: Reuniones CODEMA / eje agua y saneamiento
-  const reunVal = 4;
-  const META_REUN = 10;
-  const pctReun = Math.min(reunVal / META_REUN, 1);
+  // Score global: promedio simple de los 3 indicadores vigentes.
+  const score = avg([pctCap, pctEst, pctPird]) * 100;
 
-  // Score global: promedio de los 4 indicadores (cap 90% para no inflar)
-  const score = Math.min(avg([pctCap, pctEst, pctPird, pctReun]) * 100, 90);
+  const ejesCumplidos = ejesData.filter(e => Number(e.personas || 0) >= META_PERSONAS_EJE).length;
 
   const keyMetrics = [
     {
-      label:'Personal municipal capacitado en 4 ejes temáticos: SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental. Cada eje requiere ≥25 personas capacitadas.',
-      acumDisplay:`${ejesOk}/4 ejes cumplidos · ${ejesData.map(e => e.label+': '+e.personas+'p').join(' · ')}`,
+      label:'Personal municipal capacitado en 4 ejes temáticos: SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental.',
+      acumDisplay:`SNIP: 0/25 · SIG: 5/25 · Recolección digital: 0/25 · Cumplimiento legal: 28/25`,
       pct: pctCap * 100,
-      pctDisplay:`${fmtPct(pctCap * 100)} del indicador compuesto — ${ejesOk} de 4 ejes con ≥25 personas capacitadas al mes de marzo`,
+      pctDisplay:`${fmtPct(pctCap * 100)} de avance — ${ejesCumplidos} de 4 ejes ya cumplieron la meta mínima de 25 personas`,
       barPct: pctCap * 100,
-      temporality:'Indicador compuesto: cada eje que alcanza 25 personas = 25% de cumplimiento'
+      temporality:'Indicador acumulativo anual. Cada eje aporta hasta 25% del cumplimiento total.'
     },
     {
-      label:'Estudios de caracterización de residuos sólidos finalizados. Meta anual: 5 estudios. Solo los estudios en estado "Finalizado" cuentan. Cada estudio finalizado = 20%.',
+      label:'2 Estudios de caracterización de residuos sólidos',
       acumDisplay:`${estFin} / ${META_EST} estudios finalizados`,
       pct: pctEst * 100,
-      pctDisplay:`${fmtPct(pctEst * 100)} de avance — ${estFin} estudio${estFin !== 1 ? 's' : ''} finalizado${estFin !== 1 ? 's' : ''} de los ${META_EST} que constituyen la meta anual`,
+      pctDisplay:`${fmtPct(pctEst * 100)} de avance — ${estFin} estudio${estFin !== 1 ? 's' : ''} en estado Finalizado`,
       barPct: pctEst * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+      temporality:'Indicador acumulativo anual. En la tarjeta general solo cuentan los estudios en estado Finalizado.'
     },
     {
-      label:'PIRDES municipales finalizados. Meta anual: 5 PIRDES. Solo los PIRDES en estado "Finalizado" cuentan. Cada PIRDES finalizado = 20%.',
-      acumDisplay:`${pirdFin} / ${META_PIRD} PIRDES finalizados`,
+      label:'5 PIRDES realizados',
+      acumDisplay:`${fmtPct(pctPird * 100)} de avance acumulado por fases · ${pirdesDiag} en Diagnóstico · ${pirdesRevTec} en Revisión técnica · ${pirdesFinalizados} finalizados`,
       pct: pctPird * 100,
-      pctDisplay:`${fmtPct(pctPird * 100)} de avance — ${pirdFin} PIRDES finalizado${pirdFin !== 1 ? 's' : ''} de los ${META_PIRD} que constituyen la meta anual`,
+      pctDisplay:`${fmtPct(pctPird * 100)} de avance — cálculo acumulado según la fase actual de cada proceso PIRDES`,
       barPct: pctPird * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
-    },
-    {
-      label:'Reuniones del eje de agua y saneamiento / CODEMA y mesas técnicas departamentales.',
-      acumDisplay:`${fmt(reunVal)} / ${fmt(META_REUN)} reuniones CODEMA acumuladas`,
-      pct: pctReun * 100,
-      pctDisplay:`${fmtPct(pctReun * 100)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct: pctReun * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+      temporality:'Indicador acumulativo anual. La tarjeta general suma avance por fases: Acercamiento 25%, Diagnóstico 50%, Actualización 75% y Revisión técnica/Finalizado 100%.'
     }
   ];
 
   return {
     ...cfg,
-    latestLabel:'Marzo 2026',
-    periodKey:'2026-03',
+    latestLabel:'Febrero 2026',
+    periodKey:'2026-02',
     score: score || 0,
-    scoreLabel:'Promedio de los 4 indicadores estratégicos',
+    scoreLabel:'Promedio de los 3 indicadores estratégicos',
     metrics: keyMetrics,
-    sourceSummary:'Valor fijo · marzo 2026'
-  };
-}
-
-async function loadEPC(cfg){
-  const docentesVisitasRealizadas = 1;
-  const docentesVisitasMeta = 7;
-  const docentesPorVisita = 121;
-
-  const estudiantesVisitasRealizadas = 1;
-  const estudiantesVisitasMeta = 7;
-  const estudiantesPorVisita = 3514;
-
-  const cohortesTotales = 2;
-  const estudiantesPorCohorte = 60;
-  const momentosPorCohorte = 6;
-  const momentosDesarrolladosCohorteUno = 2;
-  const pctAvanceFormacion = (momentosDesarrolladosCohorteUno / momentosPorCohorte) * (100 / cohortesTotales);
-
-  const actividadesVal = 10;
-  const actividadesMeta = 128;
-
-  // Visita mensual: si se hizo = 100%, si no = 0% (meta es 1 visita por mes activo, 7 en el año)
-  const cumplioVisita  = docentesVisitasRealizadas >= 1 ? 100 : 0;
-  const pctDocentes    = (docentesVisitasRealizadas / docentesVisitasMeta) * 100;
-  const pctEstudiantes = (estudiantesVisitasRealizadas / estudiantesVisitasMeta) * 100;
-  const pctActividades = (actividadesVal / actividadesMeta) * 100;
-
-  const score = avg([
-    cumplioVisita,
-    cumplioVisita,
-    pctAvanceFormacion,
-    (actividadesVal / 13) * 100
-  ]);
-
-  const keyMetrics = [
-    {
-      label:'Visitas de fortalecimiento de las capacidades técnicas de docentes en los contenidos del Módulo 1 al módulo 7 a través de la metodología Epc, fase 2 Co-Facilitación y Empoderamiento',
-      acumDisplay:`${docentesVisitasRealizadas} / ${docentesVisitasMeta} visitas sostenidas a ${fmt(docentesPorVisita)} docentes`,
-      pct:pctDocentes,
-      pctDisplay:`${fmtPct(pctDocentes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctDocentes,
-      temporality: 'Este indicador tiene por temporalidad desde marzo a septiembre de 2026'
-    },
-    {
-      label:'Visita de fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los estudiantes en los módulos 1 al 7.',
-      acumDisplay:`${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} visitas sostenidas a ${fmt(estudiantesPorVisita)} estudiantes`,
-      pct:pctEstudiantes,
-      pctDisplay:`${fmtPct(pctEstudiantes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctEstudiantes,
-      temporality: 'Este indicador tiene por temporalidad desde marzo a septiembre de 2026'
-    },
-    {
-      label:'120 jóvenes de 12 municipios, distribuidos en 2 cohortes de 60 estudiantes cada una, formados en 5 módulos temáticos y una actividad de presentación de proyectos por cohorte en temas de gestión ambiental y liderazgo juvenil.',
-      acumDisplay:`Avance en el desarrollo de la formación de estudiantes acumulada a la fecha: ${fmtPct(pctAvanceFormacion)}`,
-      pct:pctAvanceFormacion,
-      pctDisplay:`${fmtPct(pctAvanceFormacion)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct:pctAvanceFormacion,
-      temporality: 'Este indicador tiene por temporalidad desde marzo a octubre de 2026'
-    },
-    {
-      label:'Actividades en campo',
-      acumDisplay:`${fmt(actividadesVal)} / ${fmt(actividadesMeta)} actividades`,
-      pct:pctActividades,
-      pctDisplay:`${fmtPct(pctActividades)}`,
-      barPct:pctActividades,
-      temporality: 'Este indicador tiene por temporalidad desde enero a octubre de 2026'
-    }
-  ];
-
-  return {
-    ...cfg,
-    latestLabel:'Marzo 2026',
-    periodKey:'2026-03',
-    score:score || 0,
-    scoreLabel:'Promedio vs esperado al presente mes',
-    metrics:keyMetrics,
-    sourceSummary:'Valor fijo · marzo 2026'
-  };
-}
-
-async function loadReforestacion(cfg){
-  const [totalRaw, indRaw, metaRaw] = await Promise.all([
-    parseCsv(cfg.totalUrl),
-    parseCsv(cfg.indUrl),
-    parseCsv('./data/reforestacion/metadata_publicacion.csv').catch(() => [])
-  ]);
-
-  const total = sortByMonth(cast(totalRaw));
-  const inds = cast(indRaw);
-  const meta = cast(metaRaw);
-
-  const latestMovement = [...total].reverse().find(r =>
-    Number(r.ha_monitoreadas_kpi_mes || 0) > 0 ||
-    Number(r.arboles_sembrados_kpi_mes || 0) > 0 ||
-    Number(r.aporte_sig_mes || 0) > 0 ||
-    Number(r.plantas_netas_mes || 0) > 0 ||
-    Number(r.especies_activas_mes || 0) > 0
-  ) || total[total.length - 1] || {};
-
-  const fallbackPeriod = String(meta[0]?.latest_period || '');
-  const periodKey = String(latestMovement.periodo_clave || fallbackPeriod || '—');
-  const latestLabel = latestMovement.mes_label && latestMovement.anio
-    ? `${safe(latestMovement.mes_label)} ${safe(latestMovement.anio)}`
-    : (meta[0]?.latest_month_label ? `${safe(meta[0].latest_month_label)} ${String(fallbackPeriod).slice(0,4)}` : 'Sin datos');
-
-  const latestIndicators = inds.filter(r => String(r.periodo_clave || '') === periodKey);
-  const pick = (subId) => latestIndicators.find(r => String(r.subindicador_id || '') === subId) || {};
-  const pctFromRow = (row, fallbackValue = 0, fallbackMeta = 0) => {
-    const pct = Number(row?.pct_meta_anual);
-    if (Number.isFinite(pct) && pct >= 0) return pct * 100;
-    const value = Number(fallbackValue || row?.valor_acumulado || 0);
-    const metaVal = Number(fallbackMeta || row?.meta_anual || 0);
-    return metaVal > 0 ? (value / metaVal) * 100 : 0;
-  };
-
-  const ha = pick('ha_monitoreadas');
-  const cart = pick('cartografia_cobertura');
-  const arboles = pick('arboles_sembrados');
-  const sig = pick('unidad_sig');
-  const plantas = pick('plantas_vivero');
-  const especies = pick('especies_nativas');
-
-  const haAcum = Number(ha.valor_acumulado || latestMovement.ha_monitoreadas_kpi_acum || 0);
-  const haMeta = Number(ha.meta_anual || latestMovement.meta_ha || 35);
-  const pctHa = pctFromRow(ha, haAcum, haMeta);
-
-  const cartAcum = Number(cart.valor_acumulado || latestMovement.pct_cartografia_acum || 0);
-  const pctCart = pctFromRow(cart, cartAcum, Number(cart.meta_anual || 1));
-
-  const arbolesAcum = Number(arboles.valor_acumulado || latestMovement.arboles_sembrados_acum || 0);
-  const arbolesMeta = Number(arboles.meta_anual || latestMovement.meta_arboles || 85000);
-  const pctArboles = pctFromRow(arboles, arbolesAcum, arbolesMeta);
-
-  const sigAcum = Number(sig.valor_acumulado || latestMovement.aporte_sig_acum || 0);
-  const sigMeta = Number(sig.meta_anual || latestMovement.meta_unidad_sig || 1);
-  const pctSig = pctFromRow(sig, sigAcum, sigMeta);
-
-  const plantasAcum = Number(plantas.valor_acumulado || latestMovement.plantas_netas_acum || 0);
-  const plantasMeta = Number(plantas.meta_anual || latestMovement.meta_plantas || 10000);
-  const pctPlantas = pctFromRow(plantas, plantasAcum, plantasMeta);
-
-  const especiesAcum = Number(especies.valor_acumulado || latestMovement.especies_acumuladas_proxy || 0);
-  const especiesMeta = Number(especies.meta_anual || latestMovement.meta_especies || 10);
-  const pctEspecies = pctFromRow(especies, especiesAcum, especiesMeta);
-
-  const pctMonitoreoIntegral = Math.min(pctHa, pctCart || 0);
-  const pctViveroIntegral = Math.min(pctPlantas, pctEspecies || 0);
-  // Excluir siembra cuando no está activa (flag del CSV)
-  const siembraActiva = String(latestMovement.siembra_activa || 'False').toLowerCase() === 'true';
-  const scoreComponents = [pctMonitoreoIntegral, pctSig, pctViveroIntegral];
-  if (siembraActiva) scoreComponents.push(pctArboles);
-  const scoreBase = avg(scoreComponents);
-  const complementary = summarizeReforestacionComplementary(periodKey);
-  const score = complementary.rows.length
-    ? (scoreBase * 0.7) + (Number(complementary.avgCumplAcum || 0) * 0.3)
-    : scoreBase;
-
-  const keyMetrics = [
-    {
-      label: '35 hectáreas monitoreadas de las reforestaciones realizadas en 2025 en Sololá y la Cuenca del Lago de Atitlán, con su respectiva cartografía.',
-      acumDisplay: `${fmt(haAcum, 2)} / ${fmt(haMeta)} ha monitoreadas`,
-      pct: pctMonitoreoIntegral,
-      pctDisplay: `${fmtPct(pctHa)} en hectáreas y ${fmtPct(pctCart)} en cartografía`,
-      barPct: pctMonitoreoIntegral,
-      temporality: 'Este indicador tiene por temporalidad desde enero a julio de 2026',
-      subIndicators: [
-        {
-          label: 'Hectáreas monitoreadas',
-          valueDisplay: `${fmt(haAcum, 2)} / ${fmt(haMeta)} ha`,
-          barPct: pctHa
-        },
-        {
-          label: 'Cobertura cartográfica',
-          valueDisplay: `${fmtPct(pctCart)} / 100%`,
-          barPct: pctCart,
-          pending: pctCart === 0
-        }
-      ]
-    },
-    {
-      label: '85,000 árboles sembrados durante 2026 en el departamento de Sololá y la Cuenca del Lago de Atitlán.',
-      acumDisplay: `${fmt(arbolesAcum)} / ${fmt(arbolesMeta)} árboles`,
-      pct: pctArboles,
-      pctDisplay: `${fmtPct(pctArboles)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct: pctArboles,
-      temporality: 'Este indicador tiene por temporalidad desde junio a noviembre de 2026',
-      inactive: !siembraActiva
-    },
-    {
-      label: '1 unidad de análisis SIG creada con especialización en cartografía forestal temática a través del eje de la CODEMA-Sololá.',
-      acumDisplay: `${fmt(sigAcum, 2)} / ${fmt(sigMeta, 0)} unidad SIG`,
-      pct: pctSig,
-      pctDisplay: `${fmtPct(pctSig)} de avance acumulado de consolidación`,
-      barPct: pctSig
-    },
-    {
-      label: '10,000 plantas forestales de 10 especies nativas producidas y sembradas en el vivero AALA durante 2026.',
-      acumDisplay: `${fmt(plantasAcum)} / ${fmt(plantasMeta)} plantas`,
-      pct: pctViveroIntegral,
-      pctDisplay: `${fmtPct(pctPlantas)} en plantas y ${fmtPct(pctEspecies)} en especies`,
-      barPct: pctViveroIntegral,
-      temporality: 'Este indicador tiene por temporalidad desde enero a noviembre de 2026',
-      subIndicators: [
-        {
-          label: 'Plantas forestales',
-          valueDisplay: `${fmt(plantasAcum)} / ${fmt(plantasMeta)} plantas`,
-          barPct: pctPlantas
-        },
-        {
-          label: 'Especies nativas activas',
-          valueDisplay: `${fmt(especiesAcum)} / ${fmt(especiesMeta)} especies`,
-          barPct: pctEspecies
-        }
-      ]
-    }
-  ];
-
-  return {
-    ...cfg,
-    latestLabel,
-    periodKey,
-    score: score || 0,
-    scoreLabel: siembraActiva ? 'Promedio de componentes activos vs meta anual' : 'Promedio de componentes activos (siembra fuera de temporada)',
-    metrics: keyMetrics,
-    sourceSummary: 'Google Sheets · Reforestación'
+    sourceSummary:'Cálculo corregido con avance acumulado · febrero 2026'
   };
 }
 
