@@ -246,34 +246,196 @@
     @media (max-width: 1160px){.prep-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.chart-grid{grid-template-columns:1fr}.chart-body{grid-template-columns:1fr}}
     @media (max-width: 780px){.prep-grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr}.hero-side.logo-only{min-height:260px}}
 
+
+
+    /* ── EPC ajustes de identidad, ejecutivo y presentación ── */
+    .header-logo-img{height:42px;width:auto;display:block;flex-shrink:0;border-radius:9px;background:rgba(255,255,255,.92);padding:4px 6px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+    .view-switcher{display:inline-flex;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px;gap:3px}
+    .view-btn{width:auto;display:inline-flex;align-items:center;gap:8px;text-decoration:none;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);font-weight:700;font-size:.84rem;transition:.2s ease;cursor:pointer}
+    .view-btn:hover{background:rgba(255,255,255,.18);transform:translateY(-1px);color:#fff}
+    .view-btn.active{background:rgba(255,255,255,.94);color:#17314f;border-color:transparent;box-shadow:0 8px 18px rgba(6,24,42,.16)}
+    .present-btn{background:linear-gradient(135deg,#2e6a57 0%,#1f7b62 100%);color:#fff!important;border-color:transparent!important;box-shadow:0 8px 24px rgba(46,106,87,.22);display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:700;font-size:.84rem;cursor:pointer;transition:.2s ease;border:none}
+    .present-btn:hover{background:linear-gradient(135deg,#265a4b 0%,#1d6c57 100%);transform:translateY(-1px)}
+    .hero-main h1{font-family:var(--font-body);font-size:clamp(2.2rem,4vw,4rem);font-weight:800;line-height:.96;letter-spacing:-.05em;color:var(--text);margin-bottom:14px;background:none;-webkit-text-fill-color:initial}
+    .hero-lead{max-width:74ch;font-size:.82rem;line-height:1.82;color:var(--text-2);text-align:justify;display:grid;gap:12px}
+    .hero-main .source-inline{display:none!important}
+    .hero-side.logo-only{padding:20px;background:linear-gradient(180deg,rgba(255,255,255,.96) 0%,rgba(243,247,245,.98) 100%);border:1px solid rgba(208,220,236,.95);box-shadow:var(--shadow-sm)}
+
+    /* Gráfica anual con paleta verde y texto negro */
+    .chart-card{padding:22px;background:linear-gradient(180deg,#ffffff 0%,#f4fbf7 100%)}
+    .chart-item{background:linear-gradient(180deg,#ffffff 0%,#f7fcf8 100%);border-color:#d9e8de}
+    .chart-item:hover{border-color:#bfd8c8}
+    .chart-label,.chart-primary-value,.metric-chip strong,.chart-track-note,.chart-track-pct{color:#132018}
+    .chart-sub,.chart-primary-label,.chart-primary-copy,.metric-chip span{color:#4f6a58}
+    .chart-badge.active{background:#ebf7ef;color:#1f6b47;border:1px solid #cbe8d5}
+    .chart-badge.closed{background:#eef4ef;color:#4f6a58;border:1px solid #dbe7de}
+    .chart-badge.pending{background:#f4f7f4;color:#728277;border:1px solid #e3ebe5}
+    .metric-chip{background:#eff7f1;border-color:#d8e7dd}
+    .chart-track{background:#eef5f0;border-color:#d5e5da;flex-wrap:wrap;row-gap:6px;padding-top:10px;padding-bottom:10px;min-height:56px}
+    .chart-fill{background:linear-gradient(90deg,#2d8b57 0%,#63c787 100%);box-shadow:0 8px 22px rgba(45,139,87,.22)}
+    .chart-item.closed .chart-fill{background:linear-gradient(90deg,#7ead8d 0%,#b9d9c2 100%)}
+    .chart-primary-value{font-size:clamp(1.28rem,1.8vw,1.7rem);line-height:1.15;word-break:break-word}
+    .chart-track-note,.chart-track-pct{white-space:normal;line-height:1.4}
+    .chart-track-pct{margin-left:auto;text-align:right}
+
+    /* Ejecutiva */
+    .panel{padding:20px 22px}
+    .panel h3{font-family:var(--font-body);font-size:1.08rem;font-weight:800;color:var(--text);margin-bottom:4px;letter-spacing:-.02em}
+    .panel p.sub{margin:0 0 14px;color:var(--muted);font-size:.82rem;line-height:1.6}
+    .exec-status-card{padding:24px 22px;background:linear-gradient(150deg,#1c6084 0%,#4ca5bf 60%,#83d0e0 100%);color:#fff;border-radius:24px;box-shadow:0 8px 28px rgba(26,86,168,.22);margin-bottom:18px}
+    .exec-status-card .es-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.72;margin-bottom:4px}
+    .exec-status-card .es-title{font-family:var(--font-body);font-size:1.35rem;font-weight:800;line-height:1.2;margin-bottom:10px;letter-spacing:-.03em}
+    .exec-status-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:14px;font-weight:700;font-size:.85rem;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.24);color:#fff;margin-bottom:12px}
+    .exec-status-badge::before{content:'●';font-size:.52em}
+    .exec-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+    .exec-kpi-card{padding:18px 18px 16px;border-radius:22px;background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%);border:1px solid #dfe9e5;box-shadow:var(--shadow-sm)}
+    .exec-kpi-card small{display:block;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px}
+    .exec-kpi-card strong{display:block;font-family:var(--font-mono);font-size:1.75rem;line-height:1.02;color:var(--text)}
+    .exec-kpi-card p{margin-top:7px;color:var(--text-2);font-size:.8rem;line-height:1.55}
+    .exec-kpi-chip,.chip{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .chip.green,.exec-kpi-chip.green{background:var(--green-soft);color:var(--green)}
+    .chip.yellow,.exec-kpi-chip.yellow{background:var(--gold-soft);color:var(--gold)}
+    .chip.red,.exec-kpi-chip.red{background:var(--red-soft);color:var(--red)}
+    .chip.blue,.exec-kpi-chip.blue{background:var(--blue-soft);color:var(--blue)}
+    .chip.gray,.exec-kpi-chip.gray{background:#eef3f6;color:#607285}
+    .chip.purple,.exec-kpi-chip.purple{background:rgba(123,79,196,.12);color:#7b4fc4}
+    .exec-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .exec-strip-card{padding:16px 18px;border-radius:22px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border:1px solid #dfe9e5;box-shadow:var(--shadow-sm)}
+    .exec-strip-card small{display:block;font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+    .exec-strip-card strong{font-family:var(--font-mono);font-size:1.08rem;color:var(--text)}
+    .exec-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+    .exec-diag{padding:22px 24px;font-size:.84rem;line-height:1.82;border-left:4px solid var(--green);background:linear-gradient(to right,var(--green-pale) 0%,#fff 55%)}
+    .exec-diag h3{font-family:var(--font-body);font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);letter-spacing:-.02em}
+    .exec-diag p{color:var(--muted);margin-bottom:10px;text-align:justify}
+    .exec-diag p:last-child{margin-bottom:0}
+    .exec-diag strong{color:var(--green)}
+    .alert-list{display:grid;gap:8px}
+    .alert{padding:10px 14px;border-radius:14px;border-left:4px solid;font-size:.84rem;line-height:1.55}
+    .alert.red{background:var(--red-soft);border-color:var(--red);color:#5c1212}
+    .alert.yellow{background:var(--gold-soft);border-color:var(--gold);color:#503900}
+    .alert.green{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+    .alert.blue{background:var(--blue-soft);border-color:var(--blue);color:#163a5f}
+    .exec-progress-list{display:grid;gap:10px}
+    .exec-progress-row{display:grid;grid-template-columns:minmax(180px,1.1fr) minmax(170px,2fr) auto;gap:12px;align-items:center}
+    .exec-progress-label{font-size:.82rem;font-weight:700;color:var(--text)}
+    .exec-progress-track{height:10px;border-radius:999px;background:#eaf3ed;overflow:hidden;border:1px solid #d9e8de}
+    .exec-progress-bar{display:block;height:100%;width:0;background:linear-gradient(90deg,#2d8b57,#63c787);border-radius:999px}
+    .exec-progress-pct{font-family:var(--font-mono);font-size:.8rem;font-weight:700;color:var(--text)}
+
+    /* Presentación tipo overlay */
+    .presentation-overlay{position:fixed;inset:0;z-index:500;display:none;flex-direction:column;background:linear-gradient(160deg,rgba(10,22,42,.97) 0%,rgba(18,36,60,.97) 50%,rgba(8,24,40,.96) 100%);backdrop-filter:blur(24px) saturate(.7);-webkit-backdrop-filter:blur(24px) saturate(.7)}
+    .presentation-overlay.open{display:flex}
+    .presentation-chrome{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 28px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
+    .presentation-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .presentation-meta span{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.02em}
+    .presentation-actions{display:flex;align-items:center;gap:7px}
+    .pres-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:999px;padding:9px 18px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--font-body);font-size:.82rem;font-weight:700;cursor:pointer;transition:transform .2s ease,background .2s ease;border:1px solid rgba(255,255,255,.14)}
+    .pres-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.18)}
+    .pres-btn.primary{background:linear-gradient(135deg,var(--green-mid),var(--green));border-color:transparent;box-shadow:0 4px 18px rgba(29,158,104,.35)}
+    .pres-btn.primary:hover{background:linear-gradient(135deg,var(--green),var(--green-mid))}
+    .presentation-stage-wrap{flex:1;min-height:0;display:flex;flex-direction:column;padding:20px 32px 0;overflow:hidden}
+    .presentation-stage{flex:1;min-height:0;overflow:hidden;border-radius:24px 24px 0 0;box-shadow:0 -8px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+    .presentation-track{display:flex;height:100%;transition:transform .48s cubic-bezier(.22,.61,.36,1)}
+    .pres-slide{flex:0 0 100%;height:100%;background:linear-gradient(148deg,#f5fafd 0%,#ebf5fc 40%,#dfedf8 100%);color:var(--text);padding:32px 40px 26px;position:relative;overflow:auto}
+    .pres-slide::before{content:'';position:absolute;inset:auto -8% -22% auto;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(76,165,191,.18),transparent 68%);pointer-events:none}
+    .pres-slide::after{content:'';position:absolute;left:-100px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(46,106,87,.09),transparent 70%);pointer-events:none}
+    .pres-inner{position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column;gap:16px}
+    .pres-kicker{display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid var(--line-soft);font-size:.71rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--green);width:fit-content;flex-shrink:0}
+    .pres-kicker::before{content:'';width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--green-mid),#4ca5bf)}
+    .pres-title-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;flex-shrink:0}
+    .pres-title-row h2{font-family:var(--font-body);font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.04;letter-spacing:-.04em;margin:0 0 6px;max-width:680px;font-weight:800}
+    .pres-title-row p{font-size:.87rem;line-height:1.7;color:var(--text-2);max-width:680px;text-align:justify}
+    .pres-brand-badge{display:grid;justify-items:end;gap:10px;text-align:right;flex-shrink:0}
+    .pres-brand-badge img{width:130px;max-width:100%}
+    .pres-card-grid{display:grid;gap:12px}
+    .pres-card-grid-4{grid-template-columns:repeat(4,1fr)}
+    .pres-card-grid-3{grid-template-columns:repeat(3,1fr)}
+    .pres-card-grid-2{grid-template-columns:1fr 1fr}
+    .pres-card{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:16px 18px;box-shadow:0 6px 22px rgba(23,50,58,.09)}
+    .pres-card small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+    .pres-card strong{display:block;font-size:1.45rem;line-height:1.05;font-family:var(--font-mono);font-weight:500;color:var(--text)}
+    .pres-card p{margin-top:6px;color:var(--text-2);font-size:.8rem;line-height:1.55}
+    .pres-chip{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .pres-chip.green{background:var(--green-soft);color:var(--green)}
+    .pres-chip.yellow{background:var(--gold-soft);color:var(--gold)}
+    .pres-chip.red{background:var(--red-soft);color:var(--red)}
+    .pres-chip.blue{background:var(--blue-soft);color:var(--blue)}
+    .pres-chip.gray{background:#eef3f6;color:#607285}
+    .pres-chip.purple{background:rgba(123,79,196,.12);color:#7b4fc4}
+    .pres-kpi-pair{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:18px 20px;box-shadow:0 6px 22px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+    .pres-kpi-label{font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+    .pres-kpi-value{font-family:var(--font-mono);font-size:1.55rem;font-weight:500;color:var(--text);line-height:1.05;letter-spacing:-.03em}
+    .pres-kpi-meta{font-size:.79rem;color:var(--muted);line-height:1.5}
+    .pres-bar-wrap{height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:4px}
+    .pres-bar{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+    .pres-bar.green{background:linear-gradient(90deg,#54b97e,var(--green))}
+    .pres-bar.yellow{background:linear-gradient(90deg,#e3ba45,var(--gold))}
+    .pres-bar.red{background:linear-gradient(90deg,#df8c8c,var(--red))}
+    .pres-bar.blue{background:linear-gradient(90deg,#83d0e0,var(--blue))}
+    .pres-bar.gray{background:linear-gradient(90deg,#b5c3cf,#7b8fa0)}
+    .pres-note{padding:20px 22px;border-radius:22px;background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);box-shadow:0 8px 28px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:10px}
+    .pres-note h3{font-family:var(--font-body);font-size:1.2rem;font-weight:800;margin-bottom:2px;letter-spacing:-.02em}
+    .pres-note p{font-size:.88rem;line-height:1.78;color:var(--text-2);text-align:justify}
+    .pres-alert-box{padding:13px 16px;border-radius:16px;font-size:.85rem;line-height:1.6;border:1px solid transparent}
+    .pres-alert-box.red{background:var(--red-soft);color:var(--red);border-color:rgba(143,28,28,.15)}
+    .pres-alert-box.yellow{background:var(--gold-soft);color:var(--gold);border-color:rgba(122,85,0,.18)}
+    .pres-alert-box.green{background:var(--green-pale);color:var(--green);border-color:rgba(21,122,80,.15)}
+    .pres-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 32px 16px;flex-shrink:0}
+    .pres-dots{display:flex;gap:7px;align-items:center}
+    .pres-dot{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.28);cursor:pointer;transition:transform .2s ease,background .2s ease}
+    .pres-dot.active{background:#fff;transform:scale(1.2)}
+    .pres-counter{font-family:var(--font-mono);font-size:.82rem;background:rgba(255,255,255,.1);padding:6px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
+
+    @media (max-width:1180px){
+      .exec-kpi-grid,.exec-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .exec-row-2{grid-template-columns:1fr}
+      .pres-card-grid-4{grid-template-columns:repeat(2,1fr)}
+      .pres-card-grid-3{grid-template-columns:1fr 1fr}
+      .exec-progress-row{grid-template-columns:1fr}
+    }
+    @media (max-width:900px){
+      .pres-title-row{flex-direction:column}
+      .pres-brand-badge{justify-items:start;text-align:left}
+    }
+    @media (max-width:640px){
+      .exec-kpi-grid,.exec-strip,.pres-card-grid-4,.pres-card-grid-3,.pres-card-grid-2{grid-template-columns:1fr}
+      .presentation-chrome,.pres-footer-bar{padding-left:16px;padding-right:16px}
+      .presentation-stage-wrap{padding-left:16px;padding-right:16px}
+      .pres-slide{padding:24px 22px 22px}
+    }
+
 </style>
 </head>
 <body>
   <header class="header">
-    <a class="header-brand" href="./index.html">
-      <span class="brand-text">
-        <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
-        <span class="brand-title">Tablero dinámico institucional de avances</span>
-      </span>
-    </a>
-    <div class="header-stack">
-      <nav class="nav-tabs" aria-label="Navegación de la página">
-        <a class="nav-tab active" href="#resumen">Resumen</a>
-        <a class="nav-tab" href="#cobertura">Cobertura</a>
-        <a class="nav-tab" href="#operativos">Operativos</a>
-      </nav>
-      <div class="header-utility">
-        <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
-        <button class="present-btn" id="presentationToggle" type="button" aria-pressed="false"><span class="back-arrow">&#10697;</span><span class="present-btn-label">Modo presentación</span></button>
-        <div class="status-pill muted" id="estadoGlobal">Cargando corte</div>
-        <div class="status-pill muted" id="periodoActivoPill">Corte de lectura</div>
-        <div class="period-rack">
-          <span class="period-rack-label">Período de lectura</span>
-          <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
-        </div>
+  <a class="header-brand" href="./index.html">
+    <img class="header-logo-img" src="./aala_logo.png" alt="AALA">
+    <span class="brand-text">
+      <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
+      <span class="brand-title">Educando para Conservar · Tablero de programa</span>
+    </span>
+  </a>
+  <div class="header-stack">
+    <nav class="nav-tabs" aria-label="Navegación">
+      <a class="nav-tab active" href="#resumen">Resumen</a>
+      <a class="nav-tab" href="#cobertura">Cobertura</a>
+      <a class="nav-tab" href="#operativos">Operativos</a>
+      <a class="nav-tab" href="#grafica-operativos">Metas anuales</a>
+    </nav>
+    <div class="header-utility">
+      <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+      <div class="view-switcher" role="group" aria-label="Cambiar vista">
+        <button class="view-btn active" id="btnFull" type="button" onclick="switchView('full')">Tablero completo</button>
+        <button class="view-btn" id="btnExec" type="button" onclick="switchView('exec')">Resumen ejecutivo</button>
+      </div>
+      <button class="present-btn" type="button" id="btnPresentation">&#9654; Presentación</button>
+      <div class="period-rack">
+        <span class="period-rack-label">Período</span>
+        <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
   <main class="wrap" id="mainWrap">
     <div class="loading" id="loadingState">
@@ -283,58 +445,72 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-wrap">
-      <section class="footer-brand">
-        <div class="footer-brandline">
-          <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
-        </div>
-        <p class="footer-copy">
-          La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.
-        </p>
-      </section>
-      <section class="footer-col">
-        <h3>Contacto y sitio</h3>
-        <div class="footer-links">
-          <a href="https://amigosdeatitlan.org/" target="_blank" rel="noreferrer noopener">
-            <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.7 2.8 4.1 5.8 4.1 9S14.7 18.2 12 21c-2.7-2.8-4.1-5.8-4.1-9S9.3 5.8 12 3z"></path></svg></span>
-            <span>Página web</span>
-          </a>
-          <a href="https://www.youtube.com/@asociacionamigosdellagodea2358" target="_blank" rel="noreferrer noopener">
-            <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.4-4.8z"></path><path d="M10 15.5v-7l6 3.5-6 3.5z" fill="#1b4f68"></path></svg></span>
-            <span>YouTube</span>
-          </a>
-          <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener">
-            <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-7.4H16l.4-3h-2.9V8.7c0-.9.3-1.5 1.6-1.5h1.4V4.5c-.2 0-1-.1-2-.1-2 0-3.4 1.2-3.4 3.6v2.6H9v3h2.1V21h2.4z"></path></svg></span>
-            <span>Facebook</span>
-          </a>
-        </div>
-      </section>
-      <section class="footer-col">
-        <h3>Redes</h3>
-        <div class="footer-links">
-          <a href="https://www.linkedin.com/in/aala-atitl%C3%A1n-3653a0325/" target="_blank" rel="noreferrer noopener">
-            <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.94 8.5H3.56V20h3.38V8.5zM5.25 7A1.97 1.97 0 1 0 5.2 3a1.97 1.97 0 0 0 .05 4zm5.28 13h3.38v-5.6c0-1.5.29-3 2.15-3 1.83 0 1.86 1.7 1.86 3.1V20h3.38v-6.2c0-3.05-.66-5.4-4.22-5.4-1.7 0-2.84.94-3.3 1.83h-.05V8.5h-3.2c.04.97 0 11.5 0 11.5z"></path></svg></span>
-            <span>LinkedIn</span>
-          </a>
-          <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener">
-            <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.2" cy="6.8" r="1"></circle></svg></span>
-            <span>Instagram</span>
-          </a>
-        </div>
-      </section>
-      <section class="footer-mark" aria-label="Sello institucional">
-        <img src="./chill_lago.png" alt="Símbolo institucional AALA" onerror="this.style.display='none'">
-      </section>
-    </div>
-  </footer>
-
-  <div class="presentation-hint" id="presentationHint" aria-live="polite" aria-hidden="true">
-    <span class="presentation-hint-title" id="presentationTitle">Resumen</span>
-    <span class="presentation-hint-count" id="presentationCount">1/1</span>
-    <span class="presentation-hint-keys">&#8592; &#8594; navegar · Esc salir</span>
+  <div class="footer-wrap">
+    <section class="footer-brand">
+      <div class="footer-brandline">
+        <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
+      </div>
+      <p class="footer-copy">La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.</p>
+    </section>
+    <section class="footer-col">
+      <h3>Contacto y sitio</h3>
+      <div class="footer-links">
+        <a href="https://amigosdeatitlan.org/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.7 2.8 4.1 5.8 4.1 9S14.7 18.2 12 21c-2.7-2.8-4.1-5.8-4.1-9S9.3 5.8 12 3z"></path></svg></span>
+          <span>Página web</span>
+        </a>
+        <a href="https://www.youtube.com/@asociacionamigosdellagodea2358" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A29.6 29.6 0 0 0 2 12a29.6 29.6 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A29.6 29.6 0 0 0 22 12a29.6 29.6 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z"></path></svg></span>
+          <span>YouTube</span>
+        </a>
+        <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6H17V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4V11H7.5v3h2.8v8h3.2Z"></path></svg></span>
+          <span>Facebook</span>
+        </a>
+      </div>
+    </section>
+    <section class="footer-col">
+      <h3>Redes sociales</h3>
+      <div class="footer-links">
+        <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
+          <span>Instagram</span>
+        </a>
+        <a href="https://www.linkedin.com/in/aala-atitl%C3%A1n-3653a0325/" target="_blank" rel="noreferrer noopener">
+          <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.9 8.1a1.9 1.9 0 1 1 0-3.8 1.9 1.9 0 0 1 0 3.8ZM5.2 9.8h3.3V19H5.2V9.8Zm5.2 0h3.2v1.3h.1c.4-.8 1.5-1.6 3.1-1.6 3.3 0 3.9 2.1 3.9 4.9V19h-3.3v-4c0-.9 0-2.1-1.3-2.1s-1.5 1-1.5 2V19h-3.3V9.8Z"></path></svg></span>
+          <span>LinkedIn</span>
+        </a>
+      </div>
+    </section>
+    <section class="footer-mark" aria-label="Imagen institucional">
+      <img src="./chill_lago.png" alt="AALA — Cuenca del Lago de Atitlán">
+    </section>
   </div>
+</footer>
 
-  <script>
+  <div class="presentation-overlay" id="presentationOverlay" aria-hidden="true">
+  <div class="presentation-chrome">
+    <div class="presentation-meta" id="presentationMeta">
+      <span>Modo presentación</span>
+    </div>
+    <div class="presentation-actions">
+      <button class="pres-btn" type="button" onclick="prevSlide()">&#8592; Anterior</button>
+      <button class="pres-btn" type="button" onclick="nextSlide()">Siguiente &#8594;</button>
+      <button class="pres-btn primary" type="button" onclick="closePresentation()">&#215; Cerrar</button>
+    </div>
+  </div>
+  <div class="presentation-stage-wrap">
+    <div class="presentation-stage">
+      <div class="presentation-track" id="presentationTrack"></div>
+    </div>
+  </div>
+  <div class="pres-footer-bar">
+    <div class="pres-dots" id="presDots"></div>
+    <div class="pres-counter" id="presCounter">1 / 1</div>
+  </div>
+</div>
+
+<script>
     const PATHS = {
       total: [
         './data/educando_para_conservar/total_mes.csv',
@@ -983,15 +1159,269 @@
     }
 
 
+
+
+    function statusClassFromEstatus(status){
+      const s = String(status || '').toLowerCase();
+      if(s.includes('verde')) return 'green';
+      if(s.includes('amar')) return 'yellow';
+      if(s.includes('rojo')) return 'red';
+      if(s.includes('gris')) return 'gray';
+      return 'blue';
+    }
+
+    function ratioClass(value){
+      const n = Number(value);
+      if(!Number.isFinite(n) || n <= 0) return 'gray';
+      if(n >= 1) return 'green';
+      if(n >= 0.85) return 'yellow';
+      return 'red';
+    }
+
+    function indicatorRowsForPeriod(){
+      return indicatorsForPeriod().slice().sort((a,b)=>Number(a.orden_dashboard||999)-Number(b.orden_dashboard||999));
+    }
+
+    function indicatorById(id){
+      return indicatorRowsForPeriod().find(r=>String(r.indicator_id)===String(id)) || {};
+    }
+
+    function presentationChipClass(value){
+      const n = Number(value);
+      if(!Number.isFinite(n) || n <= 0) return 'gray';
+      if(n >= 1) return 'green';
+      if(n >= 0.85) return 'yellow';
+      return 'red';
+    }
+
+    function executiveKpiMarkup(row){
+      const items = [
+        { id:'docentes_capacitados', title:'Docentes capacitados', value:Number(row.docentes_mes||0), unit:'personas', copy:'Docentes alcanzados en el mes con desarrollo de módulos del material EPC.' },
+        { id:'estudiantes_epc', title:'Estudiantes beneficiados', value:Number(row.estudiantes_epc_mes||0), unit:'estudiantes', copy:'Participación estudiantil registrada en la cobertura pedagógica del período.' },
+        { id:'centros_cobertura', title:'Centros alcanzados', value:Number(row.centros_mes||0), unit:'centros', copy:'Centros educativos cubiertos por el programa durante el corte activo.' },
+        { id:'municipios_actividad_pedagogica', title:'Municipios con actividad', value:Number(row.municipios_mes||0), unit:'municipios', copy:'Municipios con actividad pedagógica y despliegue territorial efectivo.' }
+      ];
+      return items.map(item=>{
+        const ind = indicatorById(item.id);
+        const cls = statusClassFromEstatus(ind.estatus);
+        const pct = Number(ind.pct_vs_esperado || 0);
+        const chip = Number(row.mes_num||0) < ACTIVE_START_MONTH ? 'Preparación' : fmtPct(pct);
+        return `
+          <article class="exec-kpi-card">
+            <small>${esc(item.title)}</small>
+            <strong>${fmt(item.value)}</strong>
+            <p>${esc(item.copy)}</p>
+            <span class="exec-kpi-chip ${cls}">${esc(chip)}</span>
+          </article>`;
+      }).join('');
+    }
+
+    function executiveStripMarkup(row){
+      const items = [
+        { label:'Actividades de campo', value:fmt(row.actividades_campo_mes||0), chip:'blue', chipText:'Presente mes' },
+        { label:'Asistentes diplomado marzo', value:fmt(row.diplomado_marzo_asistentes_mes||0), chip:'purple', chipText:'Cohorte marzo' },
+        { label:'Inscritos diplomado junio', value:fmt(row.diplomado_junio_inscritos_mes||0), chip:'purple', chipText:'Próxima cohorte' },
+        { label:'Coordinaciones clave', value:fmt(row.coordinaciones_clave_mes||0), chip:'green', chipText:'Gestión mensual' }
+      ];
+      return items.map(item=>`
+        <article class="exec-strip-card">
+          <small>${esc(item.label)}</small>
+          <strong>${esc(item.value)}</strong>
+          <span class="chip ${item.chip}">${esc(item.chipText)}</span>
+        </article>`).join('');
+    }
+
+    function executiveProgressMarkup(row){
+      const items = annualOperationalRows(row)
+        .filter(item => item.status !== 'pending' || Number(row.mes_num||0) >= (Number(item.start)||0))
+        .slice(0, 8);
+      return `<div class="exec-progress-list">${items.map(item=>{
+        const pct = item.pct == null ? 0 : Number(item.pct || 0);
+        return `
+          <div class="exec-progress-row">
+            <div class="exec-progress-label">${esc(item.label)}</div>
+            <div class="exec-progress-track"><span class="exec-progress-bar" style="width:${Math.max(0,Math.min(100,(item.visualPct||0)*100))}%"></span></div>
+            <div class="exec-progress-pct">${item.pct == null ? 'Pend.' : fmtPct(pct)}</div>
+          </div>`;
+      }).join('')}</div>`;
+    }
+
+    function executiveAlertsData(row){
+      const alerts = [];
+      const low = annualOperationalRows(row).filter(item => item.status === 'active' && Number(item.pct||0) < 0.85);
+      if(String(row.alertas_texto||'').trim()) alerts.push({ cls:'yellow', text:String(row.alertas_texto).trim() });
+      low.slice(0,3).forEach(item=>alerts.push({ cls:'red', text:`${item.label} se ubica en ${fmtPct(item.pct)} del objetivo anual al corte.` }));
+      if(!alerts.length){
+        alerts.push({ cls:'green', text:'No se detectan alertas críticas en el corte seleccionado. La lectura mensual se mantiene alineada con el ritmo esperado del programa.' });
+      }
+      return alerts;
+    }
+
+    function executiveAlertsMarkup(row){
+      return `<div class="alert-list">${executiveAlertsData(row).map(item=>`<div class="alert ${item.cls}">${esc(item.text)}</div>`).join('')}</div>`;
+    }
+
+    function executiveDiagnosticMarkup(row){
+      const latestText = `${monthName(row.mes_num)} ${row.anio || ''}`.trim();
+      const prep = PREP_CONFIG.map(cfg => Number(row[cfg.key] || 0)).reduce((a,b)=>a+b,0);
+      const annual = annualOperationalRows(row);
+      const greenCount = annual.filter(item => Number(item.pct||0) >= 1).length;
+      const yellowCount = annual.filter(item => Number(item.pct||0) > 0 && Number(item.pct||0) < 1).length;
+      return `
+        <h3>Resumen ejecutivo · ${esc(latestText)}</h3>
+        <p><strong>Lectura general.</strong> El programa Educando para Conservar presenta su corte operativo en <strong>${esc(latestText)}</strong>. La cobertura pedagógica del mes alcanza <strong>${fmt(row.docentes_mes||0)}</strong> docentes, <strong>${fmt(row.estudiantes_epc_mes||0)}</strong> estudiantes, <strong>${fmt(row.centros_mes||0)}</strong> centros educativos y <strong>${fmt(row.municipios_mes||0)}</strong> municipios con actividad pedagógica.</p>
+        <p><strong>Avance y gestión.</strong> En el componente táctico, se observan <strong>${greenCount}</strong> indicadores con cumplimiento acumulado favorable y <strong>${yellowCount}</strong> indicadores en seguimiento. Además, el corte registra <strong>${fmt(row.actividades_campo_mes||0)}</strong> actividades de campo y <strong>${fmt(row.coordinaciones_clave_mes||0)}</strong> coordinaciones clave para sostener la implementación territorial.</p>
+        <p><strong>Contexto programático.</strong> ${esc(String(row.logros_texto || '').trim() || 'Sin observaciones narrativas registradas para este período.')}</p>
+        ${prep > 0 ? `<p><strong>Preparación y diplomado.</strong> El programa también acumuló <strong>${fmt(prep)}</strong> acciones o registros asociados a preparación metodológica, diagnóstico e inducción, junto con el despliegue del componente de diplomado juvenil.</p>` : ''}
+      `;
+    }
+
+    function switchView(mode){
+      state.view = mode === 'exec' ? 'exec' : 'full';
+      document.body.classList.toggle('exec-view', state.view === 'exec');
+      const full = document.getElementById('fullView');
+      const exec = document.getElementById('execView');
+      if(full) full.style.display = state.view === 'full' ? '' : 'none';
+      if(exec) exec.style.display = state.view === 'exec' ? '' : 'none';
+      document.getElementById('btnFull')?.classList.toggle('active', state.view === 'full');
+      document.getElementById('btnExec')?.classList.toggle('active', state.view === 'exec');
+      document.getElementById('btnFull')?.setAttribute('aria-pressed', state.view === 'full' ? 'true' : 'false');
+      document.getElementById('btnExec')?.setAttribute('aria-pressed', state.view === 'exec' ? 'true' : 'false');
+    }
+
+    let slideIndex = 0;
+    let controlsBound = false;
+
+    function presentationSlidesCount(){
+      return document.querySelectorAll('#presentationTrack .pres-slide').length;
+    }
+
+    function buildPresentationDots(){
+      const dots = document.getElementById('presDots');
+      const count = presentationSlidesCount();
+      if(!dots) return;
+      dots.innerHTML = Array.from({ length: count }, (_, idx)=>`<button class="pres-dot ${idx===slideIndex?'active':''}" type="button" aria-label="Ir a la diapositiva ${idx+1}" onclick="gotoSlide(${idx})"></button>`).join('');
+      document.getElementById('presCounter').textContent = `${Math.min(slideIndex + 1, Math.max(count,1))} / ${Math.max(count,1)}`;
+    }
+
+    function gotoSlide(idx){
+      const track = document.getElementById('presentationTrack');
+      const count = presentationSlidesCount();
+      if(!track || !count) return;
+      slideIndex = (idx + count) % count;
+      track.style.transform = `translateX(-${slideIndex * 100}%)`;
+      buildPresentationDots();
+    }
+
+    function nextSlide(){ gotoSlide(slideIndex + 1); }
+    function prevSlide(){ gotoSlide(slideIndex - 1); }
+
+    function buildPresentation(){
+      const row = periodRow();
+      const latestText = `${monthName(row.mes_num)} ${row.anio || ''}`.trim();
+      const annual = annualOperationalRows(row);
+      const prepItems = PREP_CONFIG.map(cfg => ({ cfg, value:Number(row[cfg.key] || 0) })).filter(item => item.value > 0);
+      const alerts = executiveAlertsData(row);
+      const track = document.getElementById('presentationTrack');
+      const meta = document.getElementById('presentationMeta');
+      if(meta) meta.innerHTML = `<span>Modo presentación</span><span>${esc(latestText)}</span><span>Educando para Conservar</span>`;
+      if(!track) return;
+      track.innerHTML = `
+        <section class="pres-slide"><div class="pres-inner">
+          <div class="pres-kicker">Reporte de resultados · ${esc(latestText)}</div>
+          <div class="pres-title-row">
+            <div>
+              <h2>Educando para Conservar</h2>
+              <p>Programa de educación ambiental de AALA orientado a fortalecer capacidades técnicas, pedagógicas y comunitarias para el uso del material de referencia EPC y la promoción de buenas prácticas ambientales en la cuenca del Lago de Atitlán.</p>
+            </div>
+            <div class="pres-brand-badge"><img src="./EPC-RGB.png" alt="Logo EPC" onerror="this.style.display='none'"></div>
+          </div>
+          <div class="pres-card-grid pres-card-grid-4">
+            <div class="pres-card"><small>Docentes</small><strong>${fmt(row.docentes_mes||0)}</strong><p>Personas alcanzadas en el presente mes.</p></div>
+            <div class="pres-card"><small>Estudiantes</small><strong>${fmt(row.estudiantes_epc_mes||0)}</strong><p>Participación estudiantil en cobertura pedagógica.</p></div>
+            <div class="pres-card"><small>Centros</small><strong>${fmt(row.centros_mes||0)}</strong><p>Centros educativos con actividad del programa.</p></div>
+            <div class="pres-card"><small>Municipios</small><strong>${fmt(row.municipios_mes||0)}</strong><p>Municipios con actividad pedagógica efectiva.</p></div>
+          </div>
+          <div class="pres-note"><h3>Contexto del programa</h3><p>El “Diplomado juvenil de liderazgo y gestión ambiental en el Lago de Atitlán” tiene como objetivo fomentar en jóvenes estudiantes, docentes y líderes comunitarios, la adquisición de habilidades y conocimientos necesarios para que a futuro puedan incidir en espacios a nivel comunitario y analizar las necesidades socio ambientales propias de la comunidad. Además, se pretende orientarlos en el beneficio que conlleva analizar necesidades y construir de manera participativa propuestas de proyectos socio ambientales para la mejora social y ambiental de las comunidades del Lago Atitlán.</p></div>
+        </div></section>
+
+        <section class="pres-slide"><div class="pres-inner">
+          <div class="pres-kicker">Cobertura pedagógica</div>
+          <div class="pres-title-row"><div><h2>Indicadores de cobertura del período</h2><p>Lectura ejecutiva de la presencia territorial y pedagógica del programa en el corte activo.</p></div></div>
+          <div class="pres-card-grid pres-card-grid-2">
+            ${COVERAGE_CONFIG.map(cfg=>{ const d = coverageKpiData(cfg,row); return `<div class="pres-kpi-pair"><div class="pres-kpi-label">${esc(d.label)}</div><div class="pres-kpi-value">${esc(d.valueText)}</div><div class="pres-kpi-meta">${esc(d.line1)}</div><span class="pres-chip ${d.tone==='tone-green'?'green':d.tone==='tone-yellow'?'yellow':d.tone==='tone-red'?'red':'gray'}">${esc(d.chip)}</span><div class="pres-bar-wrap"><div class="pres-bar ${d.tone==='tone-green'?'green':d.tone==='tone-yellow'?'yellow':d.tone==='tone-red'?'red':'gray'}" style="width:${Math.max(0,Math.min(100,d.progressWidth))}%"></div></div></div>`; }).join('')}
+          </div>
+        </div></section>
+
+        <section class="pres-slide"><div class="pres-inner">
+          <div class="pres-kicker">Metas anuales</div>
+          <div class="pres-title-row"><div><h2>Avance acumulado de actividades priorizadas</h2><p>Comparación del acumulado registrado al presente mes frente a la meta anual de las actividades tácticas del programa.</p></div></div>
+          <div class="pres-card-grid pres-card-grid-2">
+            ${annual.map(item=>`<div class="pres-kpi-pair"><div class="pres-kpi-label">${esc(item.label)}</div><div class="pres-kpi-value">${item.pct == null ? 'Pendiente' : fmtPct(item.pct)}</div><div class="pres-kpi-meta">${fmt(item.actual)} de ${fmt(item.annualTarget)} · ${esc(item.window)}</div><span class="pres-chip ${item.pct == null ? 'gray' : presentationChipClass(item.pct)}">${item.status === 'pending' ? 'Programado' : item.status === 'closed' ? 'Ventana cerrada' : 'Activo'}</span><div class="pres-bar-wrap"><div class="pres-bar ${item.pct == null ? 'gray' : presentationChipClass(item.pct)}" style="width:${Math.max(0,Math.min(100,(item.visualPct||0)*100))}%"></div></div></div>`).join('')}
+          </div>
+        </div></section>
+
+        <section class="pres-slide"><div class="pres-inner">
+          <div class="pres-kicker">Preparación y diplomado</div>
+          <div class="pres-title-row"><div><h2>Lectura complementaria del período</h2><p>Indicadores de inducción, coordinación y despliegue del diplomado juvenil para enriquecer la comprensión ejecutiva del programa.</p></div></div>
+          <div class="pres-card-grid pres-card-grid-4">
+            <div class="pres-card"><small>Actividades de campo</small><strong>${fmt(row.actividades_campo_mes||0)}</strong><p>Acciones de campo registradas en el mes.</p></div>
+            <div class="pres-card"><small>Asistentes diplomado marzo</small><strong>${fmt(row.diplomado_marzo_asistentes_mes||0)}</strong><p>Participantes de la cohorte de marzo.</p></div>
+            <div class="pres-card"><small>Inscritos diplomado junio</small><strong>${fmt(row.diplomado_junio_inscritos_mes||0)}</strong><p>Base de jóvenes para la siguiente cohorte.</p></div>
+            <div class="pres-card"><small>Coordinaciones clave</small><strong>${fmt(row.coordinaciones_clave_mes||0)}</strong><p>Gestiones y articulaciones institucionales del período.</p></div>
+          </div>
+          ${prepItems.length ? `<div class="pres-card-grid pres-card-grid-3">${prepItems.map(item=>`<div class="pres-card"><small>${esc(item.cfg.label)}</small><strong>${fmt(item.value)}</strong><p>${esc(item.cfg.narrative(item.value, row))}</p></div>`).join('')}</div>` : ''}
+        </div></section>
+
+        <section class="pres-slide"><div class="pres-inner">
+          <div class="pres-kicker">Alertas y cierre</div>
+          <div class="pres-title-row"><div><h2>Señales para la toma de decisiones</h2><p>Resumen de alertas, logros narrativos y mensajes de cierre listos para exposición o revisión gerencial.</p></div></div>
+          <div class="pres-card-grid pres-card-grid-2">
+            <div class="pres-note"><h3>Logros del corte</h3><p>${esc(String(row.logros_texto || '').trim() || 'Sin observaciones registradas para este período.')}</p></div>
+            <div class="pres-note"><h3>Alertas operativas</h3>${alerts.map(item=>`<div class="pres-alert-box ${item.cls}">${esc(item.text)}</div>`).join('')}</div>
+          </div>
+        </div></section>`;
+      slideIndex = 0;
+      buildPresentationDots();
+      gotoSlide(0);
+    }
+
+    function openPresentation(){
+      buildPresentation();
+      const overlay = document.getElementById('presentationOverlay');
+      overlay?.classList.add('open');
+      overlay?.setAttribute('aria-hidden','false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePresentation(){
+      const overlay = document.getElementById('presentationOverlay');
+      overlay?.classList.remove('open');
+      overlay?.setAttribute('aria-hidden','true');
+      document.body.style.overflow = '';
+    }
+
+    function bindGlobalControls(){
+      if(controlsBound) return;
+      controlsBound = true;
+      document.getElementById('btnPresentation')?.addEventListener('click', openPresentation);
+      document.addEventListener('keydown', (e)=>{
+        const overlay = document.getElementById('presentationOverlay');
+        if(!overlay?.classList.contains('open')) return;
+        if(e.key==='ArrowRight'){ e.preventDefault(); nextSlide(); }
+        if(e.key==='ArrowLeft'){ e.preventDefault(); prevSlide(); }
+        if(e.key==='Escape'){ e.preventDefault(); closePresentation(); }
+      });
+      document.getElementById('presentationOverlay')?.addEventListener('click', (e)=>{
+        if(e.target === document.getElementById('presentationOverlay')) closePresentation();
+      });
+    }
+
     function renderAll(){
       const row = periodRow();
       const meta = (state.data.metadata||[])[0] || {};
       const status = computeProgramStatus(row);
       const latestText = meta.latest_month_label ? `${meta.latest_month_label} ${String(meta.latest_period||'').slice(0,4)}` : monthName(row.mes_num);
-      document.getElementById('estadoGlobal').className = `status-pill ${status.cls}`;
-      document.getElementById('estadoGlobal').textContent = status.text;
-      document.getElementById('periodoActivoPill').className = 'status-pill period-current';
-      document.getElementById('periodoActivoPill').textContent = `${monthName(row.mes_num)} ${row.anio || ''}`.trim() || 'Corte de lectura';
 
       const coverageCards = COVERAGE_CONFIG.map((cfg, idx) => renderKpiCard(coverageKpiData(cfg, row), idx)).join('');
       const opCards = OP_CONFIG.map((cfg, idx) => renderKpiCard(operationalKpiData(cfg, row), idx)).join('');
@@ -999,57 +1429,85 @@
       const annualChart = operationalAnnualChartMarkup(row);
 
       document.getElementById('mainWrap').innerHTML = `
-        <section class="hero present-slide" id="resumen">
-          <article class="card hero-main">
-            <div class="hero-eyebrow">Programa · educación ambiental</div>
-            <h1>Educando para Conservar</h1>
-            <div class="hero-period-pill">${esc(monthName(row.mes_num))} ${esc(String(row.anio || '').trim())}</div>
-            <p class="hero-lead">“Educando para Conservar” (EPC), es un programa que tiene por objetivo contribuir a la mejora de la calidad educativa medioambiental de los pobladores del departamento de Sololá, a través del fortalecimiento de las capacidades técnicas para el uso del material de referencia Educando para Conservar, para que en forma conjunta, planificada y ordenada, fomente y se practiquen las buenas prácticas ambientales, el manejo sustentable de los recursos naturales y la capacidad de gestión ambiental. </p>
-            <div class="source-inline">Fuentes de lectura: <strong>total_mes.csv</strong>, <strong>institucional_indicadores.csv</strong> y <strong>metadata_publicacion.csv</strong>.</div>
-            <div class="hero-grid">
-              <div class="mini-item">
-                <div class="mini-label">Período activo</div>
-                <div class="mini-value">${esc(monthName(row.mes_num))}</div>
-              </div>
-              <div class="mini-item">
-                <div class="mini-label">Último mes publicado</div>
-                <div class="mini-value">${esc(latestText)}</div>
-              </div>
-              <div class="mini-item">
-                <div class="mini-label">Ciclo pedagógico</div>
-                <div class="mini-value">Mar–Sep</div>
-              </div>
-            </div>
-          </article>
-          <article class="card hero-side logo-only" aria-label="Identidad visual del programa">
-            <div class="program-logo-card">
-              <img src="./EPC-RGB.png" alt="Logo Educando para Conservar" onerror="this.style.display='none'">
-            </div>
-          </article>
-        </section>
-
-        <section class="section present-slide" id="cobertura">
-          <div class="section-head">
-            <div>
-              <div class="section-title">Cobertura pedagógica del período (Desarrollo de módulos de material EPC)</div>
-            </div>
+        <div id="execView" style="display:none">
+          <div class="exec-status-card">
+            <div class="es-label">Estado del programa</div>
+            <div class="es-title">Educando para Conservar</div>
+            <div class="exec-status-badge">${esc(status.text)}</div>
+            <div style="font-size:.82rem;opacity:.84;margin-top:4px">Período activo: <strong>${esc(monthName(row.mes_num))} ${esc(String(row.anio || '').trim())}</strong> · Último mes publicado: <strong>${esc(latestText)}</strong></div>
           </div>
-          <div class="kpis" id="coverageGrid">${coverageCards || '<div class="empty">No hay indicadores de cobertura para este corte.</div>'}</div>
-        </section>
-
-        ${prepCards}
-
-        <section class="section present-slide" id="operativos">
-          <div class="section-head">
-            <div>
-              <div class="section-title">Avance en el cumplimiento de indicadores operativos priorizados sobre metas mensuales</div>
-            </div>
-            <div class="section-chip">Metas mensuales por actividad</div>
+          <div class="exec-kpi-grid">${executiveKpiMarkup(row)}</div>
+          <div class="exec-strip">${executiveStripMarkup(row)}</div>
+          <div class="exec-row-2">
+            <article class="card panel">
+              <h3>Avance acumulado vs meta anual</h3>
+              <p class="sub">Progreso real acumulado de las actividades tácticas del programa frente a sus metas anuales al período seleccionado.</p>
+              ${executiveProgressMarkup(row)}
+            </article>
+            <article class="card panel">
+              <h3>Alertas operativas</h3>
+              <p class="sub">Indicadores, ventanas o notas que conviene vigilar en el corte activo.</p>
+              ${executiveAlertsMarkup(row)}
+            </article>
           </div>
-          <div class="kpis" id="opsGrid">${opCards || '<div class="empty">No hay indicadores operativos para este corte.</div>'}</div>
-        </section>
+          <article class="card exec-diag">${executiveDiagnosticMarkup(row)}</article>
+        </div>
 
-        ${annualChart}
+        <div id="fullView">
+          <section class="hero present-slide" id="resumen">
+            <article class="card hero-main">
+              <div class="hero-eyebrow">Programa · educación ambiental</div>
+              <h1>Educando para Conservar</h1>
+              <div class="hero-period-pill">${esc(monthName(row.mes_num))} ${esc(String(row.anio || '').trim())}</div>
+              <div class="hero-lead">
+                <p>“Educando para Conservar” (EPC), es un programa que tiene por objetivo contribuir a la mejora de la calidad educativa medioambiental de los pobladores del departamento de Sololá, a través del fortalecimiento de las capacidades técnicas para el uso del material de referencia Educando para Conservar, para que en forma conjunta, planificada y ordenada, fomente y se practiquen las buenas prácticas ambientales, el manejo sustentable de los recursos naturales y la capacidad de gestión ambiental.</p>
+                <p>El “Diplomado juvenil de liderazgo y gestión ambiental en el Lago de Atitlán” tiene como objetivo fomentar en jóvenes estudiantes, docentes y líderes comunitarios, la adquisición de habilidades y conocimientos necesarios para que a futuro puedan incidir en espacios a nivel comunitario y analizar las necesidades socio ambientales propias de la comunidad. Además, se pretende orientarlos en el beneficio que conlleva analizar necesidades y construir de manera participativa propuestas de proyectos socio ambientales para la mejora social y ambiental de las comunidades del Lago Atitlán.</p>
+              </div>
+              <div class="hero-grid">
+                <div class="mini-item">
+                  <div class="mini-label">Período activo</div>
+                  <div class="mini-value">${esc(monthName(row.mes_num))}</div>
+                </div>
+                <div class="mini-item">
+                  <div class="mini-label">Último mes publicado</div>
+                  <div class="mini-value">${esc(latestText)}</div>
+                </div>
+                <div class="mini-item">
+                  <div class="mini-label">Ciclo pedagógico</div>
+                  <div class="mini-value">Mar–Sep</div>
+                </div>
+              </div>
+            </article>
+            <article class="card hero-side logo-only" aria-label="Identidad visual del programa">
+              <div class="program-logo-card">
+                <img src="./EPC-RGB.png" alt="Logo Educando para Conservar" onerror="this.style.display='none'">
+              </div>
+            </article>
+          </section>
+
+          <section class="section present-slide" id="cobertura">
+            <div class="section-head">
+              <div>
+                <div class="section-title">Cobertura pedagógica del período (Desarrollo de módulos de material EPC)</div>
+              </div>
+            </div>
+            <div class="kpis" id="coverageGrid">${coverageCards || '<div class="empty">No hay indicadores de cobertura para este corte.</div>'}</div>
+          </section>
+
+          ${prepCards}
+
+          <section class="section present-slide" id="operativos">
+            <div class="section-head">
+              <div>
+                <div class="section-title">Avance en el cumplimiento de indicadores operativos priorizados sobre metas mensuales</div>
+              </div>
+              <div class="section-chip">Metas mensuales por actividad</div>
+            </div>
+            <div class="kpis" id="opsGrid">${opCards || '<div class="empty">No hay indicadores operativos para este corte.</div>'}</div>
+          </section>
+
+          ${annualChart}
+        </div>
       `;
 
       requestAnimationFrame(()=>{
@@ -1072,7 +1530,7 @@
         document.querySelectorAll('.kpi-value[data-value], .prep-value[data-value]').forEach((node,i)=>{
           if(node.dataset.value!=='') setTimeout(()=>animateMetricValue(node), 160 + i*90);
         });
-        refreshPresentationState();
+        switchView(state.view || 'full');
       });
     }
 
@@ -1088,7 +1546,8 @@
         state.periodo = periodos.length ? periodos[periodos.length-1].periodo_clave : '';
         buildPills(total);
         renderAll();
-        bindPresentationControls();
+        bindGlobalControls();
+        switchView(state.view || 'full');
         document.getElementById('loadingState')?.remove();
       }catch(err){
         console.error(err);
