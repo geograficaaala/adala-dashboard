@@ -2042,6 +2042,72 @@ const PROGRAMS = [
   }
 ];
 
+
+/* ────────────────────────────────
+   REFORESTACIÓN · KPIs COMPLEMENTARIOS (respaldo temporal)
+──────────────────────────────── */
+const REFORESTACION_KPI_COMPLEMENTARIOS_SEED = [
+  { periodo_clave:'2026-01', mes_num:1, componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:3800 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:150 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:72 },
+  { periodo_clave:'2026-01', mes_num:1, componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+
+  { periodo_clave:'2026-02', mes_num:2, componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4100 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:4 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:160 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:78 },
+  { periodo_clave:'2026-02', mes_num:2, componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+
+  { periodo_clave:'2026-03', mes_num:3, componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4200 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:7 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:155 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:80 },
+  { periodo_clave:'2026-03', mes_num:3, componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 }
+];
+
+function buildReforestacionComplementaryRows(seed){
+  const accum = {};
+  return seed.map(item => {
+    const prev = accum[item.kpi_id] || 0;
+    const valorAcumulado = prev + Number(item.valor_mes || 0);
+    accum[item.kpi_id] = valorAcumulado;
+    const metaAcumulada = Number(item.meta_mensual || 0) * Number(item.mes_num || 0);
+    const pctMes = Number(item.meta_mensual || 0) > 0 ? (Number(item.valor_mes || 0) / Number(item.meta_mensual || 1)) * 100 : 0;
+    const pctAcum = metaAcumulada > 0 ? (valorAcumulado / metaAcumulada) * 100 : 0;
+    return {
+      ...item,
+      valor_acumulado: valorAcumulado,
+      meta_acumulada: metaAcumulada,
+      pct_cumpl_mes: pctMes,
+      pct_cumpl_acum: pctAcum
+    };
+  });
+}
+const REFORESTACION_KPI_COMPLEMENTARIOS = buildReforestacionComplementaryRows(REFORESTACION_KPI_COMPLEMENTARIOS_SEED);
+
+function summarizeReforestacionComplementary(periodKey){
+  const rows = REFORESTACION_KPI_COMPLEMENTARIOS.filter(r => String(r.periodo_clave) === String(periodKey));
+  return {
+    rows,
+    avgCumplMes: avg(rows.map(r => Number(r.pct_cumpl_mes || 0))),
+    avgCumplAcum: avg(rows.map(r => Number(r.pct_cumpl_acum || 0)))
+  };
+}
+
+
 /* ────────────────────────────────
    LOADERS
 ──────────────────────────────── */
@@ -2400,7 +2466,11 @@ async function loadReforestacion(cfg){
   const siembraActiva = String(latestMovement.siembra_activa || 'False').toLowerCase() === 'true';
   const scoreComponents = [pctMonitoreoIntegral, pctSig, pctViveroIntegral];
   if (siembraActiva) scoreComponents.push(pctArboles);
-  const score = avg(scoreComponents);
+  const scoreBase = avg(scoreComponents);
+  const complementary = summarizeReforestacionComplementary(periodKey);
+  const score = complementary.rows.length
+    ? (scoreBase * 0.7) + (Number(complementary.avgCumplAcum || 0) * 0.3)
+    : scoreBase;
 
   const keyMetrics = [
     {
