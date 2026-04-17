@@ -1098,12 +1098,13 @@ function buildMonthPills(){
   });
 }
 
-function goalSeriesForIndicator(id){
+function goalSeriesForIndicator(id, rows=state.total){
+  const baseRows=Array.isArray(rows)&&rows.length?rows:state.total;
   const map={litros_aceite_recolectados_mes:GOALS.aceiteAnual/12,litros_agua_protegidos_mes:GOALS.aguaAnual/12,
     jabones_producidos_mes:GOALS.jabonesProducidosMensual,municipios_visitados_mes:GOALS.municipiosMetaMes};
-  if(id==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
-  if(id==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
-  if(map[id]) return state.total.map(()=>map[id]);
+  if(id==='jornadas_recoleccion_ciclo_mes') return baseRows.map(()=>1);
+  if(id==='pruebas_jabon_liquido_mes') return baseRows.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
+  if(map[id]) return baseRows.map(()=>map[id]);
   return null;
 }
 function formatTrendValue(v,unit){
@@ -1306,10 +1307,11 @@ function renderProgressChart(){
 function renderTrendChart(){
   const indicatorId = document.getElementById('trendIndicator').value;
   const option = TREND_OPTIONS.find(o=>o.id===indicatorId)||TREND_OPTIONS[0];
-  const rawData = state.total.map(r=>toNum(r[indicatorId]));
-  const labels  = state.total.map(r=>monthShortLabel(r.periodo_clave));
-  const refSeries = goalSeriesForIndicator(indicatorId);
-  const activeIdx = state.periods.indexOf(String(state.period));
+  const trendRows = rowsToPeriod();
+  const rawData = trendRows.map(r=>toNum(r[indicatorId]));
+  const labels  = trendRows.map(r=>monthShortLabel(r.periodo_clave));
+  const refSeries = goalSeriesForIndicator(indicatorId, trendRows);
+  const activeIdx = trendRows.length ? trendRows.length-1 : -1;
 
   const container = document.getElementById('trendChart')?.parentElement;
   if(!container) return;
@@ -1324,14 +1326,23 @@ function renderTrendChart(){
 
   const W=880, H=320, PAD_L=68, PAD_R=24, PAD_T=28, PAD_B=52;
   const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
-  const allVals=[...rawData,...(refSeries||[])].filter(v=>Number.isFinite(v)&&v>0);
+  const allVals=[...rawData,...(refSeries||[])].filter(v=>Number.isFinite(v)&&v>=0);
   if(!allVals.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos numéricos disponibles para este indicador.</p>'; return; }
-  const minV=Math.min(...allVals)*0.92, maxV=Math.max(...allVals)*1.06;
-  const scale=niceScale(Math.max(0,minV), maxV,5);
+  const minRaw=Math.min(...allVals), maxRaw=Math.max(...allVals);
+  const spread=Math.max(maxRaw-minRaw,Math.abs(maxRaw)*0.12,1);
+  const scale=niceScale(Math.max(0,minRaw-spread*0.18), maxRaw+spread*0.12,5);
   const n=rawData.length;
 
   const X=i=>PAD_L+i*(plotW/Math.max(n-1,1));
   const Y=v=>PAD_T+plotH-((v-scale.min)/(scale.max-scale.min))*plotH;
+  const limit=(val,min,max)=>Math.max(min,Math.min(max,val));
+  const boxOverlap=(a,b,pad=8)=>!!(a&&b&&a.x+a.w+pad>b.x&&b.x+b.w+pad>a.x&&a.y+a.h+pad>b.y&&b.y+b.h+pad>a.y);
+  const fitBox=(box)=>({
+    x:limit(box.x,PAD_L+2,W-PAD_R-box.w-2),
+    y:limit(box.y,PAD_T+2,PAD_T+plotH-box.h-2),
+    w:box.w,
+    h:box.h
+  });
 
   const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
   const defs=svgNS('defs');
@@ -1359,17 +1370,15 @@ function renderTrendChart(){
   });
 
   // Reference band (if exists) — shaded area between ref and actual
+  let refLabelBox=null;
   if(refSeries){
     const bandPts = rawData.map((v,i)=>`${X(i)},${Y(Math.max(v,refSeries[i]))}`).join(' ');
     const bandPts2 = rawData.map((v,i)=>`${X(i)},${Y(Math.min(v,refSeries[i]))}`).reverse().join(' ');
     svg.appendChild(svgNS('polygon',{points:`${bandPts} ${bandPts2}`,fill:'rgba(198,152,63,.08)',stroke:'none'}));
-    // Ref dashed line
     const refPts=refSeries.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
     svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#c6983f','stroke-width':'1.8','stroke-dasharray':'7 5','stroke-linecap':'round',points:refPts}));
-    // Ref label
     const lastRefY=Y(refSeries.at(-1));
-    svg.appendChild(svgRect(W-PAD_R-48,lastRefY-9,48,16,{fill:'rgba(198,152,63,.12)',rx:'8',stroke:'rgba(198,152,63,.3)','stroke-width':'1'}));
-    svg.appendChild(svgText(W-PAD_R-24,lastRefY+4,'Meta',{'text-anchor':'middle',fill:'#a17820','font-size':'9.5','font-weight':'700'}));
+    refLabelBox=fitBox({x:W-PAD_R-52,y:lastRefY-9,w:52,h:16});
   }
 
   // Active period vertical band
@@ -1381,21 +1390,53 @@ function renderTrendChart(){
   const areaPts=[`${X(0)},${PAD_T+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PAD_T+plotH}`].join(' ');
   svg.appendChild(svgNS('polygon',{points:areaPts,fill:'url(#trendArea)'}));
 
-  // Main line (smooth polyline with slight smoothing)
+  // Main line
   const linePts=rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
   svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#1c6084','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',points:linePts}));
 
-  // Min/Max annotations
+  // Active callout placement
+  let activeCalloutBox=null;
+  if(activeIdx>=0){
+    const activeValue=formatTrendValue(rawData[activeIdx],option.unit);
+    const bw=Math.max(92,Math.min(150,activeValue.length*6.6+22));
+    const bh=26;
+    const cx=X(activeIdx), cy=Y(rawData[activeIdx]);
+    let bx=cx-bw/2;
+    if(cx>W-PAD_R-bw/2-10) bx=cx-bw-12;
+    if(cx<PAD_L+bw/2+10) bx=cx+12;
+    let by=cy-42;
+    if(by<PAD_T+2) by=cy+16;
+    activeCalloutBox=fitBox({x:bx,y:by,w:bw,h:bh});
+    if(refLabelBox&&boxOverlap(activeCalloutBox,refLabelBox,10)){
+      refLabelBox=fitBox({x:refLabelBox.x,y:activeCalloutBox.y+activeCalloutBox.h+8,w:refLabelBox.w,h:refLabelBox.h});
+      if(boxOverlap(activeCalloutBox,refLabelBox,10)) refLabelBox=fitBox({x:W-PAD_R-refLabelBox.w-2,y:activeCalloutBox.y-refLabelBox.h-8,w:refLabelBox.w,h:refLabelBox.h});
+    }
+  }
+
+  if(refLabelBox){
+    svg.appendChild(svgRect(refLabelBox.x,refLabelBox.y,refLabelBox.w,refLabelBox.h,{fill:'rgba(198,152,63,.12)',rx:'8',stroke:'rgba(198,152,63,.3)','stroke-width':'1'}));
+    svg.appendChild(svgText(refLabelBox.x+refLabelBox.w/2,refLabelBox.y+11,'Meta',{'text-anchor':'middle',fill:'#a17820','font-size':'9.5','font-weight':'700'}));
+  }
+
+  // Min/Max annotations with collision avoidance
   const maxIdx=rawData.indexOf(Math.max(...rawData)), minIdx=rawData.indexOf(Math.min(...rawData));
+  let maxBadgeBox=null;
   if(maxIdx>=0&&n>2){
-    svg.appendChild(svgCircle(X(maxIdx),Y(rawData[maxIdx]),5,{fill:'#fff',stroke:'#2e8b5e','stroke-width':'2.5'}));
-    svg.appendChild(svgRect(X(maxIdx)-24,Y(rawData[maxIdx])-22,48,14,{fill:'rgba(46,139,94,.12)',rx:'7',stroke:'rgba(46,139,94,.25)','stroke-width':'1'}));
-    svg.appendChild(svgText(X(maxIdx),Y(rawData[maxIdx])-12,'Máx',{'text-anchor':'middle',fill:'#2e8b5e','font-size':'9','font-weight':'800'}));
+    const maxCx=X(maxIdx), maxCy=Y(rawData[maxIdx]);
+    svg.appendChild(svgCircle(maxCx,maxCy,5,{fill:'#fff',stroke:'#2e8b5e','stroke-width':'2.5'}));
+    maxBadgeBox=fitBox({x:maxCx-24,y:maxCy-22,w:48,h:14});
+    if(activeCalloutBox&&boxOverlap(maxBadgeBox,activeCalloutBox,8)) maxBadgeBox=fitBox({x:maxCx-54,y:maxCy+10,w:48,h:14});
+    if(refLabelBox&&boxOverlap(maxBadgeBox,refLabelBox,8)) maxBadgeBox=fitBox({x:maxCx-24,y:maxCy-38,w:48,h:14});
+    svg.appendChild(svgRect(maxBadgeBox.x,maxBadgeBox.y,maxBadgeBox.w,maxBadgeBox.h,{fill:'rgba(46,139,94,.12)',rx:'7',stroke:'rgba(46,139,94,.25)','stroke-width':'1'}));
+    svg.appendChild(svgText(maxBadgeBox.x+maxBadgeBox.w/2,maxBadgeBox.y+10,'Máx',{'text-anchor':'middle',fill:'#2e8b5e','font-size':'9','font-weight':'800'}));
   }
   if(minIdx>=0&&n>2&&minIdx!==maxIdx){
-    svg.appendChild(svgCircle(X(minIdx),Y(rawData[minIdx]),5,{fill:'#fff',stroke:'#c05050','stroke-width':'2.5'}));
-    svg.appendChild(svgRect(X(minIdx)-18,Y(rawData[minIdx])+8,36,14,{fill:'rgba(192,80,80,.10)',rx:'7',stroke:'rgba(192,80,80,.22)','stroke-width':'1'}));
-    svg.appendChild(svgText(X(minIdx),Y(rawData[minIdx])+19,'Mín',{'text-anchor':'middle',fill:'#c05050','font-size':'9','font-weight':'800'}));
+    const minCx=X(minIdx), minCy=Y(rawData[minIdx]);
+    svg.appendChild(svgCircle(minCx,minCy,5,{fill:'#fff',stroke:'#c05050','stroke-width':'2.5'}));
+    let minBadgeBox=fitBox({x:minCx-18,y:minCy+8,w:36,h:14});
+    if(activeCalloutBox&&boxOverlap(minBadgeBox,activeCalloutBox,8)) minBadgeBox=fitBox({x:minCx-18,y:minCy-24,w:36,h:14});
+    svg.appendChild(svgRect(minBadgeBox.x,minBadgeBox.y,minBadgeBox.w,minBadgeBox.h,{fill:'rgba(192,80,80,.10)',rx:'7',stroke:'rgba(192,80,80,.22)','stroke-width':'1'}));
+    svg.appendChild(svgText(minBadgeBox.x+minBadgeBox.w/2,minBadgeBox.y+10,'Mín',{'text-anchor':'middle',fill:'#c05050','font-size':'9','font-weight':'800'}));
   }
 
   // Data points + tooltips
@@ -1405,10 +1446,10 @@ function renderTrendChart(){
     if(isActive){
       svg.appendChild(svgCircle(cx,cy,14,{fill:'rgba(28,96,132,.08)',stroke:'none'}));
       svg.appendChild(svgCircle(cx,cy,8,{fill:'#173e63',stroke:'#fff','stroke-width':'3',filter:'url(#glow)'}));
-      // Active tooltip callout
-      const bw=88, bh=26, bx=cx-bw/2, by=cy-42;
-      svg.appendChild(svgRect(bx,Math.max(4,by),bw,bh,{fill:'#173e63',rx:'8',stroke:'rgba(255,255,255,.12)','stroke-width':'1'}));
-      svg.appendChild(svgText(cx,Math.max(4,by)+17,formatTrendValue(v,option.unit).slice(0,16),{'text-anchor':'middle',fill:'#fff','font-size':'10.5','font-weight':'700'}));
+      if(activeCalloutBox){
+        svg.appendChild(svgRect(activeCalloutBox.x,activeCalloutBox.y,activeCalloutBox.w,activeCalloutBox.h,{fill:'#173e63',rx:'8',stroke:'rgba(255,255,255,.12)','stroke-width':'1'}));
+        svg.appendChild(svgText(activeCalloutBox.x+activeCalloutBox.w/2,activeCalloutBox.y+17,formatTrendValue(v,option.unit).slice(0,18),{'text-anchor':'middle',fill:'#fff','font-size':'10.5','font-weight':'700'}));
+      }
     } else {
       const dot=svgCircle(cx,cy,4.5,{fill:'#fff',stroke:'#1c6084','stroke-width':'2',style:'cursor:pointer'});
       const tipHtml=`<strong>${labels[i]}</strong><br>${option.label}: <strong>${formatTrendValue(v,option.unit)}</strong>${refSeries?`<br>Referencia: <strong>${formatTrendValue(refSeries[i],option.unit)}</strong>`:''}`;
@@ -1437,7 +1478,6 @@ function renderTrendChart(){
   yLabelEl.textContent=option.unit; svg.appendChild(yLabelEl);
 
   // Legend
-  const legendItems=[[{fill:'#1c6084'},'stroke','Valor real'],...(refSeries?[[{fill:'#c6983f'},'dash','Referencia mensual']]:[]),(activeIdx>=0?[[{fill:'#173e63'},'dot','Período activo']]:[])[0]||[]].filter(Boolean);
   let lx=PAD_L;
   [[null,'━','#1c6084','Valor real'],[null,'┅','#c6983f','Referencia mensual'],...(activeIdx>=0?[[null,'●','#173e63','Período activo']]:[])]
     .filter((_,i)=>i===0||(refSeries&&i===1)||(activeIdx>=0&&i===2))
