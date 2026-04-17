@@ -518,7 +518,7 @@
           <article class="card panel">
             <h3>Avance acumulado vs esperado</h3>
             <p class="sub" id="progressChartSub">Compara el avance real acumulado de cada indicador estratégico contra lo esperado al período seleccionado.</p>
-            <div class="viz-wrap"><canvas id="progressChart"></canvas></div>
+            <div class="viz-wrap" id="progressChartHost"><canvas id="progressChart"></canvas></div>
           </article>
           <article class="card panel">
             <div class="panel-top">
@@ -528,14 +528,14 @@
               </div>
               <select class="indicator-select" id="trendIndicator"></select>
             </div>
-            <div class="viz-wrap"><canvas id="trendChart"></canvas></div>
+            <div class="viz-wrap" id="trendChartHost"><canvas id="trendChart"></canvas></div>
           </article>
         </div>
         <div class="chart-grid section" style="margin-top:18px">
           <article class="card panel">
             <h3>Cadena de valor del jabón</h3>
             <p class="sub" id="soapChartSub">Producción y venta de jabón de hotel y de tocador en el período, con tasa de conversión venta/producción.</p>
-            <div class="viz-wrap"><canvas id="soapChart"></canvas></div>
+            <div class="viz-wrap" id="soapChartHost"><canvas id="soapChart"></canvas></div>
           </article>
           <article class="card panel">
             <h3>Resumen operativo del período</h3>
@@ -1098,13 +1098,12 @@ function buildMonthPills(){
   });
 }
 
-function goalSeriesForIndicator(id, rows=state.total){
-  const baseRows=Array.isArray(rows)&&rows.length?rows:state.total;
+function goalSeriesForIndicator(id){
   const map={litros_aceite_recolectados_mes:GOALS.aceiteAnual/12,litros_agua_protegidos_mes:GOALS.aguaAnual/12,
     jabones_producidos_mes:GOALS.jabonesProducidosMensual,municipios_visitados_mes:GOALS.municipiosMetaMes};
-  if(id==='jornadas_recoleccion_ciclo_mes') return baseRows.map(()=>1);
-  if(id==='pruebas_jabon_liquido_mes') return baseRows.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
-  if(map[id]) return baseRows.map(()=>map[id]);
+  if(id==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
+  if(id==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
+  if(map[id]) return state.total.map(()=>map[id]);
   return null;
 }
 function formatTrendValue(v,unit){
@@ -1191,7 +1190,7 @@ function renderProgressChart(){
     return (months/12)*100;
   });
 
-  const container = document.getElementById('progressChart')?.parentElement;
+  const container = document.getElementById('progressChartHost');
   if(!container) return;
   container.innerHTML = '';
   container.style.minHeight='auto';container.style.height='auto';
@@ -1305,15 +1304,20 @@ function renderProgressChart(){
 
 /* ── Chart 2: ADVANCED TIME SERIES with annotations ── */
 function renderTrendChart(){
-  const indicatorId = document.getElementById('trendIndicator').value;
+  const sel = document.getElementById('trendIndicator');
+  if(!sel) return;
+  const indicatorId = sel.value;
   const option = TREND_OPTIONS.find(o=>o.id===indicatorId)||TREND_OPTIONS[0];
-  const trendRows = rowsToPeriod();
-  const rawData = trendRows.map(r=>toNum(r[indicatorId]));
-  const labels  = trendRows.map(r=>monthShortLabel(r.periodo_clave));
-  const refSeries = goalSeriesForIndicator(indicatorId, trendRows);
-  const activeIdx = trendRows.length ? trendRows.length-1 : -1;
 
-  const container = document.getElementById('trendChart')?.parentElement;
+  const activeFullIdx = state.periods.indexOf(String(state.period));
+  const visibleRows = activeFullIdx>=0 ? state.total.slice(0,activeFullIdx+1) : state.total.slice();
+  const rawData = visibleRows.map(r=>toNum(r[indicatorId]));
+  const labels  = visibleRows.map(r=>monthShortLabel(r.periodo_clave));
+  const fullRefSeries = goalSeriesForIndicator(indicatorId);
+  const refSeries = fullRefSeries ? fullRefSeries.slice(0,visibleRows.length) : null;
+  const activeIdx = visibleRows.length ? visibleRows.length-1 : -1;
+
+  const container = document.getElementById('trendChartHost');
   if(!container) return;
   container.innerHTML = '';
   container.style.minHeight='auto';
@@ -1328,38 +1332,62 @@ function renderTrendChart(){
   const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
   const allVals=[...rawData,...(refSeries||[])].filter(v=>Number.isFinite(v)&&v>=0);
   if(!allVals.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos numéricos disponibles para este indicador.</p>'; return; }
-  const minRaw=Math.min(...allVals), maxRaw=Math.max(...allVals);
-  const spread=Math.max(maxRaw-minRaw,Math.abs(maxRaw)*0.12,1);
-  const scale=niceScale(Math.max(0,minRaw-spread*0.18), maxRaw+spread*0.12,5);
+
+  const spread = Math.max(...allVals)-Math.min(...allVals);
+  const minV = Math.max(0, Math.min(...allVals) - Math.max(spread*0.12, Math.max(...allVals)*0.04, 1));
+  const maxV = Math.max(...allVals) + Math.max(spread*0.16, Math.max(...allVals)*0.06, 1);
+  const scale=niceScale(minV, maxV, 5);
   const n=rawData.length;
 
   const X=i=>PAD_L+i*(plotW/Math.max(n-1,1));
-  const Y=v=>PAD_T+plotH-((v-scale.min)/(scale.max-scale.min))*plotH;
-  const limit=(val,min,max)=>Math.max(min,Math.min(max,val));
-  const boxOverlap=(a,b,pad=8)=>!!(a&&b&&a.x+a.w+pad>b.x&&b.x+b.w+pad>a.x&&a.y+a.h+pad>b.y&&b.y+b.h+pad>a.y);
-  const fitBox=(box)=>({
-    x:limit(box.x,PAD_L+2,W-PAD_R-box.w-2),
-    y:limit(box.y,PAD_T+2,PAD_T+plotH-box.h-2),
-    w:box.w,
-    h:box.h
-  });
+  const Y=v=>PAD_T+plotH-((v-scale.min)/(scale.max-scale.min||1))*plotH;
 
   const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
   const defs=svgNS('defs');
 
-  // Area gradient
   const areaGrad=svgNS('linearGradient',{id:'trendArea',x1:'0',y1:'0',x2:'0',y2:'1'});
   areaGrad.appendChild(svgNS('stop',{offset:'0%','stop-color':'#1c6084','stop-opacity':'0.22'}));
   areaGrad.appendChild(svgNS('stop',{offset:'100%','stop-color':'#1c6084','stop-opacity':'0.01'}));
   defs.appendChild(areaGrad);
 
-  // Glow filter for active point
   const glowFilter=svgNS('filter',{id:'glow',x:'-60%',y:'-60%',width:'220%',height:'220%'});
   const fe=svgNS('feGaussianBlur',{stdDeviation:'3','result':'blur'});
-  const feMerge=svgNS('feMerge'); const feMergeN1=svgNS('feMergeNode',{in:'blur'}); const feMergeN2=svgNS('feMergeNode',{in:'SourceGraphic'});
-  feMerge.appendChild(feMergeN1); feMerge.appendChild(feMergeN2); glowFilter.appendChild(fe); glowFilter.appendChild(feMerge);
+  const feMerge=svgNS('feMerge');
+  feMerge.appendChild(svgNS('feMergeNode',{in:'blur'}));
+  feMerge.appendChild(svgNS('feMergeNode',{in:'SourceGraphic'}));
+  glowFilter.appendChild(fe); glowFilter.appendChild(feMerge);
   defs.appendChild(glowFilter);
   svg.appendChild(defs);
+
+  const occupied = [];
+  function overlaps(box){
+    return occupied.some(o => !(box.x+box.w<o.x || o.x+o.w<box.x || box.y+box.h<o.y || o.y+o.h<box.y));
+  }
+  function reserve(box){ occupied.push(box); return box; }
+
+  function placeBadge(cx, cy, text, styles={}, preferred='top'){
+    const width = Math.max(34, text.length*7.2 + 16);
+    const height = 16;
+    const candidates = {
+      top:    {x:cx-width/2, y:cy-26},
+      bottom: {x:cx-width/2, y:cy+10},
+      right:  {x:cx+10,      y:cy-8},
+      left:   {x:cx-width-10,y:cy-8}
+    };
+    const order = [preferred,'right','left','bottom','top'].filter((v,i,a)=>a.indexOf(v)===i);
+    let picked = candidates[order[0]];
+    for(const key of order){
+      const candidate = {...candidates[key]};
+      candidate.x = clamp(candidate.x, PAD_L+2, W-PAD_R-width-2);
+      candidate.y = clamp(candidate.y, 4, H-PAD_B-height-4);
+      candidate.w = width; candidate.h = height;
+      if(!overlaps(candidate)){ picked = candidate; break; }
+      picked = candidate;
+    }
+    reserve(picked);
+    svg.appendChild(svgRect(picked.x,picked.y,width,height,{fill:styles.fill||'rgba(23,49,79,.1)',rx:'8',stroke:styles.stroke||'rgba(23,49,79,.18)','stroke-width':'1'}));
+    svg.appendChild(svgText(picked.x+width/2,picked.y+11,text,{'text-anchor':'middle',fill:styles.text||'#17314f','font-size':'9.5','font-weight':'800'}));
+  }
 
   // Grid + Y axis ticks
   scale.ticks.forEach(v=>{
@@ -1369,16 +1397,22 @@ function renderTrendChart(){
     svg.appendChild(svgText(PAD_L-10,y+4,fmtAxis(v,option.unit),{'text-anchor':'end',fill:'#8aa0ad','font-size':'10.5'}));
   });
 
-  // Reference band (if exists) — shaded area between ref and actual
-  let refLabelBox=null;
-  if(refSeries){
+  // Reference band (if exists)
+  if(refSeries && refSeries.length===rawData.length){
     const bandPts = rawData.map((v,i)=>`${X(i)},${Y(Math.max(v,refSeries[i]))}`).join(' ');
     const bandPts2 = rawData.map((v,i)=>`${X(i)},${Y(Math.min(v,refSeries[i]))}`).reverse().join(' ');
     svg.appendChild(svgNS('polygon',{points:`${bandPts} ${bandPts2}`,fill:'rgba(198,152,63,.08)',stroke:'none'}));
+
     const refPts=refSeries.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
     svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#c6983f','stroke-width':'1.8','stroke-dasharray':'7 5','stroke-linecap':'round',points:refPts}));
-    const lastRefY=Y(refSeries.at(-1));
-    refLabelBox=fitBox({x:W-PAD_R-52,y:lastRefY-9,w:52,h:16});
+
+    const refAnchorX = n===1 ? X(0) : X(n-1);
+    const refAnchorY = Y(refSeries.at(-1));
+    placeBadge(refAnchorX, refAnchorY, 'Meta', {
+      fill:'rgba(198,152,63,.12)',
+      stroke:'rgba(198,152,63,.3)',
+      text:'#a17820'
+    }, refAnchorY < PAD_T+plotH*0.35 ? 'bottom' : 'top');
   }
 
   // Active period vertical band
@@ -1386,70 +1420,58 @@ function renderTrendChart(){
     svg.appendChild(svgRect(X(activeIdx)-16,PAD_T,32,plotH,{fill:'rgba(28,96,132,.06)',rx:'8'}));
   }
 
-  // Area fill
-  const areaPts=[`${X(0)},${PAD_T+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PAD_T+plotH}`].join(' ');
+  const areaPts = n===1
+    ? `${X(0)-1},${PAD_T+plotH} ${X(0)},${Y(rawData[0])} ${X(0)+1},${PAD_T+plotH}`
+    : [`${X(0)},${PAD_T+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PAD_T+plotH}`].join(' ');
   svg.appendChild(svgNS('polygon',{points:areaPts,fill:'url(#trendArea)'}));
 
-  // Main line
-  const linePts=rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  const linePts = n===1
+    ? `${X(0)-0.1},${Y(rawData[0])} ${X(0)+0.1},${Y(rawData[0])}`
+    : rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
   svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#1c6084','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',points:linePts}));
 
-  // Active callout placement
-  let activeCalloutBox=null;
-  if(activeIdx>=0){
-    const activeValue=formatTrendValue(rawData[activeIdx],option.unit);
-    const bw=Math.max(92,Math.min(150,activeValue.length*6.6+22));
-    const bh=26;
-    const cx=X(activeIdx), cy=Y(rawData[activeIdx]);
-    let bx=cx-bw/2;
-    if(cx>W-PAD_R-bw/2-10) bx=cx-bw-12;
-    if(cx<PAD_L+bw/2+10) bx=cx+12;
-    let by=cy-42;
-    if(by<PAD_T+2) by=cy+16;
-    activeCalloutBox=fitBox({x:bx,y:by,w:bw,h:bh});
-    if(refLabelBox&&boxOverlap(activeCalloutBox,refLabelBox,10)){
-      refLabelBox=fitBox({x:refLabelBox.x,y:activeCalloutBox.y+activeCalloutBox.h+8,w:refLabelBox.w,h:refLabelBox.h});
-      if(boxOverlap(activeCalloutBox,refLabelBox,10)) refLabelBox=fitBox({x:W-PAD_R-refLabelBox.w-2,y:activeCalloutBox.y-refLabelBox.h-8,w:refLabelBox.w,h:refLabelBox.h});
-    }
+  const maxVal = Math.max(...rawData);
+  const minVal = Math.min(...rawData);
+  const maxIdx = rawData.indexOf(maxVal);
+  const minIdx = rawData.indexOf(minVal);
+
+  if(maxIdx>=0 && n>1){
+    svg.appendChild(svgCircle(X(maxIdx),Y(rawData[maxIdx]),5,{fill:'#fff',stroke:'#2e8b5e','stroke-width':'2.5'}));
+    placeBadge(X(maxIdx), Y(rawData[maxIdx]), 'Máx', {
+      fill:'rgba(46,139,94,.12)',
+      stroke:'rgba(46,139,94,.25)',
+      text:'#2e8b5e'
+    }, 'top');
+  }
+  if(minIdx>=0 && n>1 && minIdx!==maxIdx){
+    svg.appendChild(svgCircle(X(minIdx),Y(rawData[minIdx]),5,{fill:'#fff',stroke:'#c05050','stroke-width':'2.5'}));
+    placeBadge(X(minIdx), Y(rawData[minIdx]), 'Mín', {
+      fill:'rgba(192,80,80,.10)',
+      stroke:'rgba(192,80,80,.22)',
+      text:'#c05050'
+    }, 'bottom');
   }
 
-  if(refLabelBox){
-    svg.appendChild(svgRect(refLabelBox.x,refLabelBox.y,refLabelBox.w,refLabelBox.h,{fill:'rgba(198,152,63,.12)',rx:'8',stroke:'rgba(198,152,63,.3)','stroke-width':'1'}));
-    svg.appendChild(svgText(refLabelBox.x+refLabelBox.w/2,refLabelBox.y+11,'Meta',{'text-anchor':'middle',fill:'#a17820','font-size':'9.5','font-weight':'700'}));
-  }
-
-  // Min/Max annotations with collision avoidance
-  const maxIdx=rawData.indexOf(Math.max(...rawData)), minIdx=rawData.indexOf(Math.min(...rawData));
-  let maxBadgeBox=null;
-  if(maxIdx>=0&&n>2){
-    const maxCx=X(maxIdx), maxCy=Y(rawData[maxIdx]);
-    svg.appendChild(svgCircle(maxCx,maxCy,5,{fill:'#fff',stroke:'#2e8b5e','stroke-width':'2.5'}));
-    maxBadgeBox=fitBox({x:maxCx-24,y:maxCy-22,w:48,h:14});
-    if(activeCalloutBox&&boxOverlap(maxBadgeBox,activeCalloutBox,8)) maxBadgeBox=fitBox({x:maxCx-54,y:maxCy+10,w:48,h:14});
-    if(refLabelBox&&boxOverlap(maxBadgeBox,refLabelBox,8)) maxBadgeBox=fitBox({x:maxCx-24,y:maxCy-38,w:48,h:14});
-    svg.appendChild(svgRect(maxBadgeBox.x,maxBadgeBox.y,maxBadgeBox.w,maxBadgeBox.h,{fill:'rgba(46,139,94,.12)',rx:'7',stroke:'rgba(46,139,94,.25)','stroke-width':'1'}));
-    svg.appendChild(svgText(maxBadgeBox.x+maxBadgeBox.w/2,maxBadgeBox.y+10,'Máx',{'text-anchor':'middle',fill:'#2e8b5e','font-size':'9','font-weight':'800'}));
-  }
-  if(minIdx>=0&&n>2&&minIdx!==maxIdx){
-    const minCx=X(minIdx), minCy=Y(rawData[minIdx]);
-    svg.appendChild(svgCircle(minCx,minCy,5,{fill:'#fff',stroke:'#c05050','stroke-width':'2.5'}));
-    let minBadgeBox=fitBox({x:minCx-18,y:minCy+8,w:36,h:14});
-    if(activeCalloutBox&&boxOverlap(minBadgeBox,activeCalloutBox,8)) minBadgeBox=fitBox({x:minCx-18,y:minCy-24,w:36,h:14});
-    svg.appendChild(svgRect(minBadgeBox.x,minBadgeBox.y,minBadgeBox.w,minBadgeBox.h,{fill:'rgba(192,80,80,.10)',rx:'7',stroke:'rgba(192,80,80,.22)','stroke-width':'1'}));
-    svg.appendChild(svgText(minBadgeBox.x+minBadgeBox.w/2,minBadgeBox.y+10,'Mín',{'text-anchor':'middle',fill:'#c05050','font-size':'9','font-weight':'800'}));
-  }
-
-  // Data points + tooltips
   rawData.forEach((v,i)=>{
     const isActive=i===activeIdx;
     const cx=X(i), cy=Y(v);
     if(isActive){
       svg.appendChild(svgCircle(cx,cy,14,{fill:'rgba(28,96,132,.08)',stroke:'none'}));
       svg.appendChild(svgCircle(cx,cy,8,{fill:'#173e63',stroke:'#fff','stroke-width':'3',filter:'url(#glow)'}));
-      if(activeCalloutBox){
-        svg.appendChild(svgRect(activeCalloutBox.x,activeCalloutBox.y,activeCalloutBox.w,activeCalloutBox.h,{fill:'#173e63',rx:'8',stroke:'rgba(255,255,255,.12)','stroke-width':'1'}));
-        svg.appendChild(svgText(activeCalloutBox.x+activeCalloutBox.w/2,activeCalloutBox.y+17,formatTrendValue(v,option.unit).slice(0,18),{'text-anchor':'middle',fill:'#fff','font-size':'10.5','font-weight':'700'}));
-      }
+
+      const calloutText = formatTrendValue(v,option.unit);
+      const bw = Math.max(84, Math.min(136, calloutText.length*7.1 + 22));
+      const bh = 26;
+      const preferLeft = cx > W - PAD_R - (bw/2 + 14);
+      const bxRaw = preferLeft ? cx-bw-12 : cx+12;
+      const bx = clamp(bxRaw, PAD_L+4, W-PAD_R-bw-2);
+      const by = clamp(cy-13, 4, PAD_T+plotH-bh-2);
+
+      svg.appendChild(svgLine(cx,cy,bx+(preferLeft?bw:0),by+bh/2,{stroke:'rgba(23,62,99,.28)','stroke-width':'1.4'}));
+      svg.appendChild(svgRect(bx,by,bw,bh,{fill:'#173e63',rx:'8',stroke:'rgba(255,255,255,.12)','stroke-width':'1'}));
+      svg.appendChild(svgText(bx+bw/2,by+17,calloutText.slice(0,22),{'text-anchor':'middle',fill:'#fff','font-size':'10.5','font-weight':'700'}));
+
+      reserve({x:bx,y:by,w:bw,h:bh});
     } else {
       const dot=svgCircle(cx,cy,4.5,{fill:'#fff',stroke:'#1c6084','stroke-width':'2',style:'cursor:pointer'});
       const tipHtml=`<strong>${labels[i]}</strong><br>${option.label}: <strong>${formatTrendValue(v,option.unit)}</strong>${refSeries?`<br>Referencia: <strong>${formatTrendValue(refSeries[i],option.unit)}</strong>`:''}`;
@@ -1459,7 +1481,6 @@ function renderTrendChart(){
     }
   });
 
-  // X axis labels
   const step=Math.max(1,Math.ceil(n/8));
   rawData.forEach((_,i)=>{
     if(i%step!==0&&i!==n-1&&i!==activeIdx) return;
@@ -1473,11 +1494,10 @@ function renderTrendChart(){
     }
   });
 
-  // Y axis label
   const yLabelEl=svgNS('text',{x:'12',y:PAD_T+plotH/2,'text-anchor':'middle',fill:'#8aa0ad','font-size':'10','transform':`rotate(-90,12,${PAD_T+plotH/2})`});
-  yLabelEl.textContent=option.unit; svg.appendChild(yLabelEl);
+  yLabelEl.textContent=option.unit;
+  svg.appendChild(yLabelEl);
 
-  // Legend
   let lx=PAD_L;
   [[null,'━','#1c6084','Valor real'],[null,'┅','#c6983f','Referencia mensual'],...(activeIdx>=0?[[null,'●','#173e63','Período activo']]:[])]
     .filter((_,i)=>i===0||(refSeries&&i===1)||(activeIdx>=0&&i===2))
@@ -1500,7 +1520,7 @@ function renderSoapChart(){
   const total_prod=pH+pT, total_vend=sH+sT;
   const conv_H=pH?sH/pH:0, conv_T=pT?sT/pT:0;
 
-  const container=document.getElementById('soapChart')?.parentElement;
+  const container=document.getElementById('soapChartHost');
   if(!container) return;
   container.innerHTML='';
   container.style.minHeight='auto';container.style.height='auto';
