@@ -4,276 +4,44 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Conservando Atitlán · AALA</title>
-  <meta name="description" content="Tablero dinámico del programa Conservando Atitlán de la Asociación Amigos del Lago de Atitlán.">
+  <meta name="description" content="Tablero dinámico del programa Conservando Atitlán — Asociación Amigos del Lago de Atitlán.">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <style>
     :root{
-      --bg:#f4f8f7;
-      --surface:#ffffff;
-      --surface-2:#f1f6f5;
-      --surface-3:#e7efec;
-      --text:#17314f;
-      --text-2:#35546d;
-      --muted:#6d8294;
-      --line:#d7e2de;
-      --line-soft:#e8efec;
-      --lake-deep:#173e63;
-      --lake:#1c6084;
-      --lake-light:#4ca5bf;
-      --lake-soft:#d9ecf1;
-      --forest:#2e6a57;
-      --forest-soft:#ddefe6;
-      --forest-pale:#f1faf5;
-      --sand:#c6983f;
-      --sand-soft:#f7ecd6;
-      --sand-pale:#fbf6ed;
-      --danger:#b85656;
-      --danger-soft:#f5dada;
-      --danger-pale:#fff5f5;
-      --shadow-xs:0 1px 3px rgba(18,42,66,.04),0 2px 10px rgba(18,42,66,.04);
+      --bg:#f4f8f7; --surface:#fff; --surface-2:#f1f6f5; --surface-3:#e7efec;
+      --text:#17314f; --text-2:#35546d; --muted:#6d8294;
+      --line:#d7e2de; --line-soft:#e8efec;
+      --lake-deep:#173e63; --lake:#1c6084; --lake-light:#4ca5bf; --lake-soft:#d9ecf1;
+      --forest:#2e6a57; --forest-mid:#24916d; --forest-soft:#ddefe6; --forest-pale:#f1faf5;
+      --sand:#c6983f; --sand-soft:#f7ecd6; --sand-pale:#fbf6ed;
+      --danger:#b85656; --danger-soft:#f5dada;
       --shadow-sm:0 6px 20px rgba(18,42,66,.06),0 2px 8px rgba(18,42,66,.04);
       --shadow:0 14px 34px rgba(18,42,66,.08),0 4px 14px rgba(18,42,66,.05);
       --shadow-lg:0 20px 50px rgba(18,42,66,.12),0 6px 16px rgba(18,42,66,.06);
-      --radius:24px;
-      --radius-md:18px;
-      --radius-sm:14px;
-      --radius-xs:10px;
+      --radius:24px; --radius-md:18px; --radius-sm:14px; --radius-xs:10px;
       --font-head:'Lora', Georgia, serif;
       --font-body:'Sora', system-ui, sans-serif;
       --font-mono:'JetBrains Mono', monospace;
-      --header-h:92px;
     }
-    * , *::before, *::after{box-sizing:border-box;margin:0;padding:0}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth}
     body{
       font-family:var(--font-body);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(76,165,191,.12) 0%, transparent 32%),
+      background:radial-gradient(circle at 0% 0%, rgba(76,165,191,.12) 0%, transparent 32%),
         radial-gradient(circle at 100% 100%, rgba(46,106,87,.07) 0%, transparent 26%),
         linear-gradient(180deg,#f7faf7 0%,#f1f7f4 100%);
-      color:var(--text);
-      min-height:100vh;
-      line-height:1.65;
+      color:var(--text); min-height:100vh; line-height:1.65;
       -webkit-font-smoothing:antialiased;
     }
-    body::before{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background:
-        radial-gradient(ellipse 60% 45% at 10% 15%, rgba(28,96,132,.07) 0%, transparent 60%),
+    body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+      background:radial-gradient(ellipse 60% 45% at 10% 15%, rgba(28,96,132,.07) 0%, transparent 60%),
         radial-gradient(ellipse 55% 40% at 80% 10%, rgba(76,165,191,.06) 0%, transparent 60%),
-        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(46,106,87,.05) 0%, transparent 60%);
-    }
-    body::after{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-      background-image:radial-gradient(circle 1px at 1px 1px, rgba(28,96,132,.05) 1px, transparent 0);
-      background-size:36px 36px;opacity:.5;
-    }
-    a{color:inherit}
-    img{max-width:100%;display:block}
-    .page{position:relative;z-index:1}
+        radial-gradient(ellipse 70% 50% at 50% 100%, rgba(46,106,87,.05) 0%, transparent 60%);}
+    a{color:inherit} img{max-width:100%;display:block}
 
-    .header{
-      position:sticky;top:0;z-index:220;
-      display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
-      padding:14px 22px 10px;
-      background:linear-gradient(135deg, rgba(22,58,95,.96) 0%, rgba(28,96,132,.95) 60%, rgba(76,165,191,.93) 100%);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      box-shadow:0 12px 34px rgba(12,33,63,.18);
-      border-bottom:1px solid rgba(255,255,255,.1);
-    }
-    .header-brand{text-decoration:none;display:flex;align-items:center;gap:12px;min-width:260px}
-    .header-badge{
-      width:34px;height:34px;border-radius:12px;
-      background:linear-gradient(135deg,rgba(255,255,255,.25),rgba(255,255,255,.08));
-      border:1px solid rgba(255,255,255,.2);
-      display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)
-    }
-    .header-badge::before{content:'';width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--lake-light),#9fe3f0)}
-    .brand-text{display:flex;flex-direction:column;line-height:1.08}
-    .brand-kicker{font-size:.7rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.84)}
-    .brand-title{font-size:1.25rem;font-weight:800;color:#fff}
-    .header-stack{display:flex;flex-direction:column;gap:10px;align-items:flex-end;flex:1}
-    .nav-tabs{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-    .nav-tab{text-decoration:none;color:rgba(255,255,255,.85);padding:8px 15px;border-radius:999px;font-size:.82rem;font-weight:700;border:1px solid transparent;transition:.2s ease}
-    .nav-tab:hover,.nav-tab.active{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.12);color:#fff}
-    .header-utility{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .back,.present-btn,.mini-pill{
-      display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;text-decoration:none;
-      background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);
-      color:#fff;font-size:.82rem;font-weight:700;transition:.2s ease;cursor:pointer
-    }
-    .back:hover,.present-btn:hover,.mini-pill:hover{transform:translateY(-1px);background:rgba(255,255,255,.18)}
-    .back-arrow{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);font-size:.75rem}
-    .present-btn{background:linear-gradient(135deg,rgba(46,106,87,.95),rgba(28,96,132,.95))}
-    .period-rack{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12)}
-    .period-rack-label{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
-    .month-pills{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
-    .month-pill{padding:8px 13px;border-radius:999px;border:none;background:transparent;color:rgba(255,255,255,.72);font-family:var(--font-body);font-size:.78rem;font-weight:800;cursor:pointer;transition:.2s ease}
-    .month-pill:hover:not(:disabled){background:rgba(255,255,255,.12);color:#fff}
-    .month-pill.active{background:#fff;color:var(--lake-deep);box-shadow:0 5px 16px rgba(7,20,40,.18)}
-    .month-pill:disabled{opacity:.34;cursor:default}
-
-    .wrap{max-width:1500px;margin:0 auto;padding:26px 22px 40px}
-    .hero{display:grid;grid-template-columns:1.45fr .75fr;gap:18px;margin-bottom:20px;align-items:stretch}
-    .card{background:var(--surface);border:1px solid var(--line-soft);border-radius:var(--radius);box-shadow:var(--shadow-sm)}
-    .hero-main{padding:34px 34px 28px;background:linear-gradient(135deg,#183f66 0%,#265f89 58%,#59b1c3 100%);color:#fff;position:relative;overflow:hidden}
-    .hero-main::before{content:'';position:absolute;right:-70px;bottom:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%)}
-    .hero-main::after{content:'';position:absolute;left:-90px;top:-100px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}
-    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.76);margin-bottom:12px}
-    .hero-eyebrow::before{content:'';width:22px;height:2px;border-radius:999px;background:rgba(255,255,255,.58)}
-    .hero-main h1{font-family:var(--font-head);font-size:clamp(2.4rem,4.8vw,4.45rem);line-height:.95;margin-bottom:14px;letter-spacing:-.03em}
-    .hero-lead{font-size:1.02rem;max-width:860px;color:rgba(255,255,255,.92);text-align:justify}
-    .hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-    .hero-badges span{display:inline-flex;align-items:center;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);font-size:.82rem;font-weight:700;color:#fff}
-    .hero-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:20px}
-    .hero-meta .meta-box{padding:15px 16px;border-radius:20px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
-    .meta-box small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px}
-    .meta-box strong{display:block;font-family:var(--font-mono);font-size:1.18rem;color:#fff}
-    .hero-side{padding:22px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,#fff 0%,#f3f8f7 100%)}
-    .logo-frame{background:linear-gradient(180deg,#f8fbfb 0%,#ffffff 100%);border:1px solid var(--line-soft);border-radius:30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7);display:grid;place-items:center;padding:28px;min-height:310px}
-    .logo-frame img{max-width:96%;max-height:250px;object-fit:contain}
-    .hero-status{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
-    .status-note{padding:14px 16px;border-radius:20px;background:var(--surface-2);border:1px solid var(--line-soft)}
-    .status-note small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .status-note strong{display:block;color:var(--text);font-size:.96rem}
-
-    .section{margin-top:24px}
-    .section-head{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:16px;flex-wrap:wrap}
-    .section-kicker{font-size:.76rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--forest)}
-    .section-head h2{font-size:2rem;line-height:1.08;color:var(--text);letter-spacing:-.03em}
-    .section-head p{max-width:900px;color:var(--text-2);text-align:justify}
-
-    .kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .kpi-card{padding:24px 22px 18px;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px;min-height:300px;opacity:0;transform:translateY(14px);animation:fadeUp .55s ease forwards}
-    .kpi-card::before{content:'';position:absolute;left:0;top:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(23,49,79,.08),transparent)}
-    .kpi-head{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:start}
-    .kpi-marker{width:10px;height:84px;border-radius:999px;background:var(--line);box-shadow:inset 0 0 0 6px rgba(255,255,255,.4)}
-    .kpi-copy{min-width:0}
-    .kpi-label{font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-    .kpi-value{display:flex;align-items:flex-end;gap:6px;flex-wrap:wrap;line-height:.9}
-    .kpi-value strong{font-size:clamp(2.1rem,3.2vw,3.2rem);letter-spacing:-.06em;color:#08172e}
-    .kpi-value span{font-size:1rem;font-weight:800;color:var(--text-2);padding-bottom:8px}
-    .kpi-status{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-    .status-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;font-size:.82rem;font-weight:800}
-    .status-chip::before{content:'●';font-size:.56em}
-    .status-note-inline{font-size:.82rem;color:var(--text-2);text-align:right;max-width:200px}
-    .expected{font-size:.96rem;font-weight:700;color:var(--muted)}
-    .kpi-lines{display:grid;gap:10px;color:var(--text-2)}
-    .kpi-lines p{font-size:.98rem;text-align:justify}
-    .kpi-lines strong{color:var(--text)}
-    .kpi-bar{margin-top:auto;height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden}
-    .kpi-bar span{display:block;height:100%;width:0;border-radius:999px;transition:width 1.05s cubic-bezier(.2,.8,.2,1)}
-    .tone-green .kpi-marker,.tone-green .kpi-bar span{background:linear-gradient(180deg,#54b97e 0%, var(--forest) 100%)}
-    .tone-yellow .kpi-marker,.tone-yellow .kpi-bar span{background:linear-gradient(180deg,#e3ba45 0%, var(--sand) 100%)}
-    .tone-red .kpi-marker,.tone-red .kpi-bar span{background:linear-gradient(180deg,#df8c8c 0%, var(--danger) 100%)}
-    .tone-blue .kpi-marker,.tone-blue .kpi-bar span{background:linear-gradient(180deg,#83d0e0 0%, var(--lake) 100%)}
-    .tone-gray .kpi-marker,.tone-gray .kpi-bar span{background:linear-gradient(180deg,#b5c3cf 0%, #7b8fa0 100%)}
-    .tone-green .status-chip{background:var(--forest-soft);color:var(--forest)}
-    .tone-yellow .status-chip{background:var(--sand-soft);color:var(--sand)}
-    .tone-red .status-chip{background:var(--danger-soft);color:var(--danger)}
-    .tone-blue .status-chip{background:var(--lake-soft);color:var(--lake)}
-    .tone-gray .status-chip{background:#eef3f6;color:#607285}
-    .tone-green{background:linear-gradient(180deg,#fff 0%, #fbfffd 100%)}
-    .tone-yellow{background:linear-gradient(180deg,#fff 0%, #fffdf7 100%)}
-    .tone-red{background:linear-gradient(180deg,#fff 0%, #fff9f9 100%)}
-    .tone-blue{background:linear-gradient(180deg,#fff 0%, #f9fcff 100%)}
-    .tone-gray{background:linear-gradient(180deg,#fff 0%, #fafcfd 100%)}
-
-    .chart-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
-    .panel{padding:22px;background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(248,252,251,.98) 100%)}
-    .panel h3{font-size:1.32rem;line-height:1.15;margin-bottom:6px;color:var(--text)}
-    .panel .sub{color:var(--text-2);margin-bottom:18px;text-align:justify}
-    .viz-wrap{position:relative;min-height:380px;padding:12px 12px 8px;border-radius:22px;background:linear-gradient(180deg,rgba(246,250,252,.95) 0%,rgba(255,255,255,.98) 100%);border:1px solid rgba(23,49,79,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.85)}
-    .viz-wrap::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(circle at 14% 12%, rgba(76,165,191,.08), transparent 34%), radial-gradient(circle at 88% 12%, rgba(198,152,63,.08), transparent 28%)}
-    .viz-wrap canvas{position:relative;z-index:1}
-    canvas{max-width:100%}
-    .panel-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
-    .indicator-select{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--text);font-family:var(--font-body);font-weight:700;min-width:260px}
-    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .summary-cell{padding:16px;border-radius:18px;background:var(--surface-2);border:1px solid var(--line-soft)}
-    .summary-cell small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-    .summary-cell strong{display:block;font-size:1.28rem;color:var(--text);font-family:var(--font-mono)}
-    .summary-cell span{display:block;font-size:.9rem;color:var(--text-2);margin-top:6px}
-
-    .diagnostic-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
-    .prose{font-size:1rem;color:var(--text-2);text-align:justify}
-    .prose p + p{margin-top:14px}
-    .diagnostic-list{display:grid;gap:10px}
-    .diag-item{padding:16px;border-radius:18px;border:1px solid var(--line-soft);background:var(--surface-2)}
-    .diag-item h4{font-size:1rem;margin-bottom:6px;color:var(--text)}
-    .diag-item p{font-size:.95rem;color:var(--text-2);text-align:justify}
-
-    .site-footer{margin-top:36px;padding:26px 22px 32px;background:#18344e;color:#f4f8fb;position:relative;z-index:1}
-    .footer-wrap{max-width:1500px;margin:0 auto;display:grid;grid-template-columns:1.3fr .85fr .85fr;gap:22px;align-items:start}
-    .footer-title{font-size:1.15rem;font-weight:800;margin-bottom:10px}
-    .footer-copy{color:rgba(244,248,251,.82);text-align:justify}
-    .footer-col h3{font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(244,248,251,.72);margin-bottom:10px}
-    .footer-links{display:grid;gap:10px}
-    .footer-links a{display:flex;align-items:center;gap:10px;text-decoration:none;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#fff;transition:.2s ease}
-    .footer-links a:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
-    .social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center}
-
-    .presentation-overlay{position:fixed;inset:0;background:rgba(8,20,36,.72);backdrop-filter:blur(12px);display:none;align-items:stretch;justify-content:stretch;padding:0;z-index:300}
-    .presentation-overlay.open{display:flex}
-    .presentation-shell{width:100vw;height:100vh;background:linear-gradient(180deg,#eff5fb 0%,#f9fcff 100%);display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-    .presentation-top,.presentation-bottom{padding:16px 24px;background:linear-gradient(135deg,#163b61 0%,#1c5f84 60%,#4ca5bf 100%);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .presentation-stage{padding:0;overflow:hidden;background:linear-gradient(180deg,#f6fbff 0%,#edf5fb 100%);position:relative}
-    .slide{display:none;height:100%;overflow:auto;padding:34px 36px 40px;animation:fadeSlide .32s ease}
-    .slide.active{display:block}
-    .presentation-btn{border:none}
-    .presentation-btn.secondary{background:rgba(255,255,255,.14)}
-    .presentation-hint{font-size:.82rem;color:rgba(255,255,255,.86)}
-    .presentation-stage .hero,.presentation-stage .chart-grid,.presentation-stage .diagnostic-grid{grid-template-columns:1fr 1fr}
-    .presentation-stage .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .presentation-stage .section{margin-top:0}
-    .presentation-stage .section-head h2{font-size:2.2rem}
-    .presentation-image-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .presentation-image-card{background:#fff;border:1px solid rgba(23,49,79,.08);border-radius:24px;padding:18px;box-shadow:0 16px 38px rgba(18,42,66,.08)}
-    .presentation-image-card h3{font-size:1.08rem;margin-bottom:8px;color:var(--text)}
-    .presentation-image-card p{font-size:.94rem;color:var(--text-2);margin-bottom:14px;text-align:justify}
-    .presentation-image-card img{width:100%;height:auto;border-radius:18px;border:1px solid rgba(23,49,79,.06);background:#f8fbff}
-    .presentation-summary-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
-    .presentation-summary-list .summary-cell{background:#fff}
-
-    .loading-state,.error-state{padding:32px;border-radius:22px;background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);text-align:center;color:var(--text-2)}
-    .hidden{display:none!important}
-
-    @keyframes fadeUp{to{opacity:1;transform:none}}
-    @keyframes fadeSlide{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
-    @media (max-width:1180px){
-      .hero,.chart-grid,.diagnostic-grid,.footer-wrap{grid-template-columns:1fr}
-      .hero-meta{grid-template-columns:repeat(2,1fr)}
-      .kpi-grid,.summary-grid{grid-template-columns:1fr}
-      .header-stack{align-items:flex-start}
-      .header-utility{justify-content:flex-start}
-    }
-    @media (max-width:980px){
-      .presentation-stage .hero,.presentation-stage .chart-grid,.presentation-stage .diagnostic-grid,.presentation-image-grid,.presentation-summary-list{grid-template-columns:1fr}
-      .presentation-stage .kpi-grid{grid-template-columns:1fr}
-      .slide{padding:22px 18px 28px}
-    }
-    @media (max-width:760px){
-      .wrap{padding:18px 14px 28px}
-      .header{padding:12px 14px 10px}
-      .brand-title{font-size:1.02rem}
-      .hero-main{padding:24px 20px 20px}
-      .hero-main h1{font-size:2.5rem}
-      .hero-meta{grid-template-columns:1fr 1fr}
-      .hero-status{grid-template-columns:1fr}
-      .kpi-head{grid-template-columns:auto 1fr}
-      .kpi-status{grid-column:2;align-items:flex-start;text-align:left}
-    }
-  
-
-    /* === Consistencia visual con Atitlán Recicla · header/footer/KPI === */
-    .wrap{
-      width:min(1700px, calc(100vw - 24px));
-      max-width:none;
-      padding:26px 0 40px;
-    }
+    /* ── HEADER (identical to index.html / atitlan recicla) ── */
     .header{
       position:sticky;top:0;z-index:400;min-height:82px;display:flex;align-items:center;gap:18px;
       padding:12px 28px;border-bottom:1px solid rgba(255,255,255,.10);
@@ -283,209 +51,344 @@
       animation:fadeDown .45s ease both;
     }
     .header-brand{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0}
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;position:relative;flex-shrink:0;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(76,165,191,.96) 0 18%, transparent 20%),
-        linear-gradient(160deg, #163a5f 0%, #1c6084 60%, #2e6a57 100%);
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 8px 18px rgba(22,58,95,.18);
-    }
-    .brand-mark::before,.brand-mark::after{content:'';position:absolute;left:8px;right:8px;border-radius:999px;background:rgba(255,255,255,.88)}
-    .brand-mark::before{bottom:12px;height:4px;transform:rotate(-4deg)}
-    .brand-mark::after{bottom:7px;height:3px;opacity:.85;transform:rotate(3deg)}
+    .header-logo-img{height:42px;width:auto;display:block;flex-shrink:0;border-radius:9px;
+      background:rgba(255,255,255,.92);padding:4px 6px;box-shadow:0 2px 8px rgba(0,0,0,.18)}
     .brand-text{display:grid;gap:1px;min-width:0}
     .brand-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.74);font-weight:800;line-height:1.1}
     .brand-title{font-size:1rem;font-weight:700;color:#fff;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .header-stack{margin-left:auto;display:grid;gap:10px;min-width:0;justify-items:end}
+    .nav-tabs{display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;}
+    .nav-tab{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      border-radius:999px;padding:10px 16px;border:none;font:700 .79rem/1 var(--font-body);
+      color:rgba(255,255,255,.78);background:transparent;white-space:nowrap;transition:all .2s ease;}
+    .nav-tab:hover{background:rgba(255,255,255,.10);color:#fff}
+    .nav-tab.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
     .header-utility{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-    .nav-tabs{
-      margin-left:auto;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;
-    }
-    .nav-tab{
-      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
-      border-radius:999px;padding:10px 16px;border:none;font:700 .79rem/1 var(--font-body);
-      color:rgba(255,255,255,.78);background:transparent;white-space:nowrap;transition:all .2s ease;
-    }
-    .nav-tab:hover{background:rgba(255,255,255,.10);color:#fff}
-    .nav-tab.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
-    .back,.view-btn,.present-btn{
-      width:auto;display:inline-flex;align-items:center;gap:8px;text-decoration:none;
+    .back,.view-btn{width:auto;display:inline-flex;align-items:center;gap:8px;text-decoration:none;
       padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);
-      background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);font-weight:700;font-size:.84rem;box-shadow:none;
-      transition:.2s ease;cursor:pointer;
-    }
-    .back:hover,.view-btn:hover,.present-btn:hover{background:rgba(255,255,255,.18);transform:translateY(-1px);color:#fff}
+      background:rgba(255,255,255,.12);color:rgba(255,255,255,.88);font-weight:700;font-size:.84rem;
+      transition:.2s ease;cursor:pointer;}
+    .back:hover,.view-btn:hover{background:rgba(255,255,255,.18);transform:translateY(-1px);color:#fff}
     .back-arrow{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.18);font-size:.75rem}
-    .present-btn{background:linear-gradient(135deg,#2e6a57 0%,#1f7b62 100%);color:#fff;border-color:transparent;box-shadow:0 12px 24px rgba(46,106,87,.16)}
-    .present-btn:hover{background:linear-gradient(135deg,#265a4b 0%,#1d6c57 100%)}
-    .period-rack{
-      display:flex;align-items:center;gap:10px;padding:6px 10px 6px 14px;border-radius:999px;
-      background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12);
-    }
-    .period-rack-label{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
-    .month-pills{display:flex;gap:5px;align-items:center;flex-wrap:wrap;background:transparent;border:none;padding:0;box-shadow:none}
-    .month-pill{
-      width:auto;text-align:center;padding:8px 13px;border-radius:999px;border:none;background:transparent;
-      color:rgba(255,255,255,.72);font-family:var(--font-body);font-size:.78rem;font-weight:800;cursor:pointer;transition:.2s ease;
-    }
-    .month-pill:hover:not(:disabled){background:rgba(255,255,255,.12);color:#fff}
-    .month-pill.active{background:#fff;color:#163a5f;box-shadow:0 5px 16px rgba(7,20,40,.18)}
-    .month-pill:disabled{opacity:.34;cursor:default}
-
-    .site-footer{
-      margin-top:34px;background:linear-gradient(145deg, #18324c 0%, #1b4f68 62%, #2b6b60 100%);color:rgba(255,255,255,.92);position:relative;overflow:hidden;
-    }
-    .site-footer::before{
-      content:'';position:absolute;inset:auto -10% -120px -10%;height:220px;
-      background:radial-gradient(60px 20px at 0 100%, rgba(255,255,255,.12) 50%, transparent 52%) repeat-x;
-      background-size:140px 90px;opacity:.55;pointer-events:none;
-    }
-    .footer-wrap{
-      width:min(1700px, calc(100vw - 24px));margin:0 auto;padding:34px 0 30px;
-      display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:28px;position:relative;z-index:1;
-    }
-    .footer-brand{display:grid;gap:12px;max-width:50ch}
-    .footer-brandline{display:flex;align-items:center;gap:12px}
-    .footer-title{font-size:1.1rem;font-weight:700;line-height:1.2}
-    .footer-copy{color:rgba(255,255,255,.8);font-size:.92rem;line-height:1.75;text-align:justify}
-    .footer-col h3{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;color:rgba(255,255,255,.76)}
-    .footer-links{display:grid;gap:10px}
-    .footer-links a{color:#fff;text-decoration:none;font-size:.92rem;font-weight:600;opacity:.92;width:fit-content;display:inline-flex;align-items:center;gap:10px}
-    .social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.96);flex-shrink:0}
-    .social-icon svg{width:18px;height:18px;display:block}
-    .footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
-
-    .kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .kpi{position:relative;overflow:hidden;isolation:isolate;min-height:228px;
-      padding:20px 20px 18px 22px;border-top:none;border-left:4px solid transparent;
-      background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%);
-      display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;
-      opacity:0;transform:translateY(16px);animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--delay,0ms);
-    }
-    .kpi::before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#2b6b60 0%,#1c6084 100%);opacity:.95}
-    .kpi::after{content:'';position:absolute;right:-36px;top:-40px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(28,96,132,.11) 0%,transparent 72%);opacity:0;transform:scale(.92);transition:opacity .22s ease,transform .22s ease;z-index:0}
-    .kpi > *{position:relative;z-index:1}
-    .kpi:hover::after{opacity:1;transform:scale(1)}
-    .kpi:hover{border-left-color:#1c6084}
-    .kpi-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;margin:0}
-    .kpi-label{font-size:.72rem;letter-spacing:.12em;color:#6b7f90;line-height:1.45;font-weight:800;text-transform:uppercase}
-    .kpi-figure{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:center}
-    .kpi-pillar{position:relative;width:18px;height:94px;display:flex;align-items:flex-end;justify-content:center;flex-shrink:0}
-    .kpi-pillar-track{position:absolute;inset:0;border-radius:999px;background:#e3ece7}
-    .kpi-pillar-fill{position:absolute;left:0;right:0;bottom:0;height:0;border-radius:999px;background:linear-gradient(180deg,#83d0e0 0%, #1c6084 100%);transition:height .95s cubic-bezier(.22,1,.36,1)}
-    .kpi-reading{display:grid;gap:4px;align-content:start;min-width:0}
-    .kpi-value{font-family:var(--font-mono);font-size:clamp(2.05rem,3vw,3.05rem);font-weight:500;color:#08172e;line-height:.95;letter-spacing:-.06em}
-    .kpi-achieved{font-size:1.02rem;font-weight:800;color:#17314f}
-    .kpi-reference{font-size:.95rem;font-weight:700;color:#8aa0ad}
-    .kpi-reference strong{color:#5c7282}
-    .kpi-readings{display:grid;gap:8px;align-content:start}
-    .kpi-meta{font-size:.95rem;line-height:1.6;color:#4c6478;text-align:justify}
-    .kpi-meta strong{color:#17314f}
-    .kpi-progress-line{height:6px;border-radius:999px;background:#dde8e4;position:relative;overflow:hidden;margin-top:auto}
-    .kpi-progress-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 50%,transparent 100%);transform:translateX(-130%);animation:trackSweep 1.3s ease .5s 1 forwards}
-    .kpi-progress-line span{display:block;height:100%;width:0;border-radius:999px;transition:width .9s cubic-bezier(.22,1,.36,1)}
-    .kpi.tone-green .kpi-achieved{color:var(--forest)}
-    .kpi.tone-yellow .kpi-achieved{color:var(--sand)}
-    .kpi.tone-red .kpi-achieved{color:var(--danger)}
-    .kpi.tone-blue .kpi-achieved{color:var(--lake)}
-    .kpi.tone-gray .kpi-achieved{color:#607285}
-    .kpi.tone-green .kpi-pillar-fill,.kpi.tone-green .kpi-progress-line span{background:linear-gradient(180deg,#54b97e 0%, var(--forest) 100%)}
-    .kpi.tone-yellow .kpi-pillar-fill,.kpi.tone-yellow .kpi-progress-line span{background:linear-gradient(180deg,#e3ba45 0%, var(--sand) 100%)}
-    .kpi.tone-red .kpi-pillar-fill,.kpi.tone-red .kpi-progress-line span{background:linear-gradient(180deg,#df8c8c 0%, var(--danger) 100%)}
-    .kpi.tone-blue .kpi-pillar-fill,.kpi.tone-blue .kpi-progress-line span{background:linear-gradient(180deg,#83d0e0 0%, var(--lake) 100%)}
-    .kpi.tone-gray .kpi-pillar-fill,.kpi.tone-gray .kpi-progress-line span{background:linear-gradient(180deg,#b5c3cf 0%, #7b8fa0 100%)}
-    .kpi-grid .empty{grid-column:1 / -1}
-    @keyframes kpiReveal{to{opacity:1;transform:none}}
-    @keyframes trackSweep{to{transform:translateX(120%)}}
-    @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
-
-    @media (max-width:1180px){
-      .kpi-grid{grid-template-columns:1fr}
-      .footer-wrap{grid-template-columns:1fr}
-      .header-stack{align-items:flex-start;justify-items:start}
-      .header-utility{justify-content:flex-start}
-    }
-    @media (max-width:900px){
-      .header{padding:12px 16px;gap:12px;flex-wrap:wrap}
-      .nav-tabs{margin-left:0;width:100%}
-    }
-    @media (max-width:640px){
-      .wrap{width:min(100vw - 16px, 1000px)}
-      .period-rack{width:100%;justify-content:space-between;border-radius:18px;flex-wrap:wrap}
-      .kpi{padding:18px 16px 16px 18px;min-height:208px}
-      .kpi-figure{grid-template-columns:1fr}
-      .kpi-pillar{display:none}
-      .kpi-value{font-size:2.35rem}
-    }
-
-  
-    /* === Ajuste final: header/footer consistentes con Atitlán Recicla === */
-    .header-brand{gap:0}
-    .brand-mark{display:none!important}
-    .header-stack{flex:1;display:grid;gap:10px}
-    .nav-tabs{
-      margin-left:auto;display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.08);overflow-x:auto;
-    }
-    .nav-tab{
-      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
-      border-radius:999px;padding:10px 16px;border:none;font:700 .79rem/1 var(--font-body);
-      color:rgba(255,255,255,.78);background:transparent;white-space:nowrap;transition:all .2s ease;
-    }
-    .nav-tab:hover{background:rgba(255,255,255,.10);color:#fff}
-    .nav-tab.active{background:rgba(255,255,255,.92);color:#163a5f;box-shadow:0 8px 18px rgba(6,24,42,.20)}
-    .header-utility{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .back,.present-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;text-decoration:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.16);color:#fff;font-size:.82rem;font-weight:700;transition:.2s ease;cursor:pointer}
-    .back:hover,.present-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.18)}
-    .view-switcher{display:inline-flex;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px;gap:3px}
-    .view-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;border:none;background:transparent;font-family:var(--font-body);font-size:.8rem;font-weight:700;color:rgba(255,255,255,.78);cursor:pointer;transition:all .2s ease;text-decoration:none;white-space:nowrap}
-    .view-switcher .view-btn{color:var(--muted)}
-    .view-switcher .view-btn:hover{color:var(--lake-deep);background:rgba(37,117,204,.08)}
-    .view-switcher .view-btn.active{background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));color:#fff;box-shadow:0 2px 10px rgba(37,117,204,.35)}
-    .present-btn{background:linear-gradient(135deg,var(--green-mid),var(--green));color:#fff;box-shadow:0 8px 24px rgba(21,122,80,.18)}
-    .present-btn:hover{color:#fff;background:linear-gradient(135deg,var(--green),#0f6a44);transform:translateY(-1px)}
+    .view-switcher{display:inline-flex;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:4px;gap:3px}
+    .view-btn.active{background:rgba(255,255,255,.94);color:#17314f;border-color:transparent;box-shadow:0 8px 18px rgba(6,24,42,.16)}
+    .present-btn{background:linear-gradient(135deg,#2e6a57 0%,#1f7b62 100%);color:#fff!important;border-color:transparent!important;box-shadow:0 8px 24px rgba(46,106,87,.22);display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;font-weight:700;font-size:.84rem;cursor:pointer;transition:.2s ease;border:none}
+    .present-btn:hover{background:linear-gradient(135deg,#265a4b 0%,#1d6c57 100%);transform:translateY(-1px)}
     .period-rack{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 14px;border-radius:999px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.12)}
     .period-rack-label{font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.78)}
-    .month-pills{display:flex;gap:5px;align-items:center;flex-wrap:wrap;background:transparent;border:none;padding:0;box-shadow:none}
+    .month-pills{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
     .month-pill{padding:8px 13px;border-radius:999px;border:none;background:transparent;color:rgba(255,255,255,.72);font-family:var(--font-body);font-size:.78rem;font-weight:800;cursor:pointer;transition:.2s ease}
     .month-pill:hover:not(:disabled){background:rgba(255,255,255,.12);color:#fff}
     .month-pill.active{background:#fff;color:var(--lake-deep);box-shadow:0 5px 16px rgba(7,20,40,.18)}
     .month-pill:disabled{opacity:.34;cursor:default}
-    .site-footer{margin-top:34px;background:linear-gradient(145deg, #18324c 0%, #1b4f68 62%, #2b6b60 100%);color:rgba(255,255,255,.92);position:relative;overflow:hidden}
-    .site-footer::before{content:'';position:absolute;inset:auto -10% -120px -10%;height:220px;background:radial-gradient(60px 20px at 0 100%, rgba(255,255,255,.12) 50%, transparent 52%) repeat-x;background-size:140px 90px;opacity:.55;pointer-events:none}
-    .footer-wrap{width:min(1700px, calc(100vw - 24px));margin:0 auto;padding:34px 0 30px;display:grid;grid-template-columns:1.25fr .85fr .85fr;gap:28px;position:relative;z-index:1}
+
+    /* ── LAYOUT ── */
+    .wrap{width:min(1700px,calc(100vw - 24px));margin:0 auto;padding:26px 0 44px}
+
+    /* ── CARD ── */
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.94) 0%, rgba(247,250,248,.96) 100%);
+      border:1px solid #dfe9e5;border-radius:30px;box-shadow:0 14px 34px rgba(18,42,66,.08),0 4px 14px rgba(18,42,66,.05);
+      transition:border-color .25s ease, box-shadow .25s ease, transform .25s ease;}
+    .card:hover{transform:translateY(-2px);box-shadow:0 18px 42px rgba(18,42,66,.10),0 6px 16px rgba(18,42,66,.05);border-color:#cfe0d9}
+
+    /* ── HERO ── */
+    .hero{display:grid;grid-template-columns:1.55fr .82fr;gap:18px;margin-bottom:22px;align-items:stretch}
+    .hero-main{padding:32px 34px 28px;
+      background:linear-gradient(135deg,#173b61 0%,#1e5677 52%,#5caebe 100%);
+      border:none;color:rgba(255,255,255,.92);overflow:hidden;position:relative;}
+    .hero-main::before{content:'';position:absolute;inset:auto -10% -18% auto;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18) 0%,transparent 68%);filter:blur(2px)}
+    .hero-main::after{content:'';position:absolute;left:-90px;top:-80px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.10) 0%,transparent 70%);pointer-events:none}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.76);margin-bottom:12px}
+    .hero-eyebrow::before{content:'';width:22px;height:2px;border-radius:999px;background:rgba(255,255,255,.58)}
+    .hero-main h1{font-family:var(--font-body);font-size:clamp(2.2rem,4vw,4rem);font-weight:800;line-height:.96;letter-spacing:-.05em;color:#fff;margin-bottom:14px}
+    .hero-lead{font-size:.9rem;color:rgba(255,255,255,.9);line-height:1.78;text-align:justify;max-width:68ch;margin-bottom:16px}
+    .hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;margin-bottom:18px}
+    .hero-badges span{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);font-size:.79rem;font-weight:700;color:#fff}
+    .hero-badges span::before{content:'';width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.7);display:inline-block}
+    .hero-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:18px}
+    .meta-box{padding:13px 15px;border-radius:18px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+    .meta-box small{display:block;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.66);margin-bottom:5px}
+    .meta-box strong{display:block;font-family:var(--font-mono);font-size:1.06rem;color:#fff}
+    .hero-side{padding:22px 20px;background:linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(243,247,245,.98) 100%);display:flex;flex-direction:column;gap:14px}
+    .logo-frame{background:linear-gradient(180deg,#f3f8fb 0%,#ffffff 100%);border:1px solid var(--line-soft);border-radius:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.8);display:grid;place-items:center;padding:28px 20px;flex:1;min-height:220px}
+    .logo-frame img{max-width:100%;max-height:200px;object-fit:contain;filter:drop-shadow(0 8px 18px rgba(23,50,58,.10))}
+    .hero-status{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .status-note{padding:12px 14px;border-radius:18px;background:var(--surface-2,#f1f6f5);border:1px solid var(--line-soft)}
+    .status-note small{display:block;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+    .status-note strong{display:block;color:var(--text);font-size:.9rem;line-height:1.3}
+
+    /* ── SECTION ── */
+    .section{margin-top:26px}
+    .section-head{display:flex;justify-content:space-between;gap:18px;align-items:start;margin-bottom:18px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid var(--line-soft)}
+    .section-kicker{font-size:.74rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--forest);margin-bottom:6px}
+    .section-head h2{font-family:var(--font-body);font-size:1.55rem;line-height:1.08;color:var(--text);letter-spacing:-.03em;font-weight:800}
+    .section-head p{max-width:860px;color:var(--text-2);text-align:justify;font-size:.88rem;line-height:1.75}
+
+    /* ── KPI GRID (homogeneous with Atitlán Recicla) ── */
+    .kpi-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .kpi{position:relative;overflow:hidden;isolation:isolate;min-height:230px;
+      padding:20px 20px 18px 22px;
+      background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%);
+      display:grid;grid-template-rows:auto auto 1fr auto;gap:12px;
+      opacity:0;transform:translateY(16px);animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--delay,0ms);}
+    .kpi::before{content:'';position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(180deg,#2b6b60 0%,#1c6084 100%);opacity:.95}
+    .kpi::after{content:'';position:absolute;right:-36px;top:-40px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(28,96,132,.11) 0%,transparent 72%);opacity:0;transform:scale(.92);transition:opacity .22s ease,transform .22s ease;z-index:0}
+    .kpi>*{position:relative;z-index:1}
+    .kpi:hover::after{opacity:1;transform:scale(1)}
+    .kpi.tone-green::before{background:linear-gradient(180deg,#54b97e 0%,var(--forest) 100%)}
+    .kpi.tone-yellow::before{background:linear-gradient(180deg,#e3ba45 0%,var(--sand) 100%)}
+    .kpi.tone-red::before{background:linear-gradient(180deg,#df8c8c 0%,var(--danger) 100%)}
+    .kpi.tone-blue::before{background:linear-gradient(180deg,#83d0e0 0%,var(--lake) 100%)}
+    .kpi.tone-gray::before{background:linear-gradient(180deg,#b5c3cf 0%,#7b8fa0 100%)}
+    .kpi-top{display:block;margin:0}
+    .kpi-label{font-size:1rem;font-weight:600;letter-spacing:-.02em;color:#5f6d81;line-height:1.32;text-transform:none;max-width:22ch;min-height:2.8em}
+    .kpi-figure{display:grid;grid-template-columns:22px 1fr;gap:16px;align-items:end;min-height:110px}
+    .kpi-pillar{position:relative;width:18px;height:84px;display:flex;align-items:flex-end;justify-content:center}
+    .kpi-pillar-track{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10px;height:84px;border-radius:999px;background:#e3ece7}
+    .kpi-pillar-fill{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:10px;height:0;border-radius:999px;background:linear-gradient(180deg,#83d0e0 0%,#1c6084 100%);transition:height .95s cubic-bezier(.22,1,.36,1);box-shadow:0 8px 18px rgba(18,42,66,.12)}
+    .kpi.tone-green .kpi-pillar-fill{background:linear-gradient(180deg,#54b97e 0%,var(--forest) 100%)}
+    .kpi.tone-yellow .kpi-pillar-fill{background:linear-gradient(180deg,#e3ba45 0%,var(--sand) 100%)}
+    .kpi.tone-red .kpi-pillar-fill{background:linear-gradient(180deg,#df8c8c 0%,var(--danger) 100%)}
+    .kpi.tone-blue .kpi-pillar-fill{background:linear-gradient(180deg,#83d0e0 0%,var(--lake) 100%)}
+    .kpi.tone-gray .kpi-pillar-fill{background:linear-gradient(180deg,#b5c3cf 0%,#7b8fa0 100%)}
+    .kpi-reading{display:grid;gap:4px;align-content:end}
+    .kpi-value{font-family:var(--font-body);font-size:clamp(2rem,2.5vw,3.2rem);font-weight:600;color:#091729;line-height:.95;letter-spacing:-.055em;white-space:normal}
+    .kpi-achieved{font-size:.88rem;font-weight:700;color:#17314f;line-height:1.3}
+    .kpi.tone-green .kpi-achieved{color:var(--forest)}
+    .kpi.tone-yellow .kpi-achieved{color:var(--sand)}
+    .kpi.tone-red .kpi-achieved{color:var(--danger)}
+    .kpi.tone-blue .kpi-achieved{color:var(--lake)}
+    .kpi-reference{font-size:.82rem;color:#7a8699;line-height:1.4}
+    .kpi-reference strong{font-weight:600;color:#5f6d81}
+    .kpi-readings{display:grid;gap:7px;align-content:start}
+    .kpi-meta{font-size:.83rem;line-height:1.62;color:#4c6478;text-align:justify}
+    .kpi-meta strong{color:#17314f}
+    .kpi-progress-line{height:5px;background:#e2ebe7;border-radius:999px;overflow:hidden;margin-top:4px;position:relative}
+    .kpi-progress-line::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 50%,transparent 100%);transform:translateX(-130%);animation:trackSweep 1.3s ease .5s 1 forwards}
+    .kpi-progress-line span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#4ca5bf 0%,#1c6084 55%,#2e6a57 100%);box-shadow:0 0 0 1px rgba(255,255,255,.16) inset;transition:width .9s cubic-bezier(.22,1,.36,1)}
+    .kpi.tone-green .kpi-progress-line span{background:linear-gradient(90deg,#54b97e,var(--forest))}
+    .kpi.tone-yellow .kpi-progress-line span{background:linear-gradient(90deg,#e3ba45,var(--sand))}
+    .kpi.tone-red .kpi-progress-line span{background:linear-gradient(90deg,#df8c8c,var(--danger))}
+    .kpi.tone-blue .kpi-progress-line span{background:linear-gradient(90deg,#83d0e0,var(--lake))}
+    @keyframes kpiReveal{to{opacity:1;transform:none}}
+    @keyframes trackSweep{to{transform:translateX(120%)}}
+
+    /* ── CHARTS ── */
+    .chart-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}
+    .panel{padding:24px 24px 22px}
+    .panel h3{font-family:var(--font-body);font-size:1.25rem;font-weight:800;letter-spacing:-.03em;color:var(--text);margin-bottom:5px}
+    .panel .sub{color:var(--text-2);margin-bottom:16px;text-align:justify;font-size:.84rem;line-height:1.7}
+    .panel-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    .viz-wrap{position:relative;min-height:340px;padding:14px 14px 10px;border-radius:22px;
+      background:linear-gradient(180deg,rgba(246,250,252,.95) 0%,rgba(255,255,255,.98) 100%);
+      border:1px solid rgba(23,49,79,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+      overflow:hidden}
+    .viz-wrap canvas{position:relative;z-index:1;max-width:100%}
+    .indicator-select{padding:9px 14px;border-radius:14px;border:1px solid var(--line);background:#fff;color:var(--text);font-family:var(--font-body);font-weight:700;font-size:.84rem;min-width:240px;outline:none}
+    .indicator-select:focus{border-color:var(--lake);box-shadow:0 0 0 3px rgba(28,96,132,.1)}
+
+    /* ── SUMMARY GRID ── */
+    .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .summary-cell{padding:14px;border-radius:18px;background:var(--surface-2,#f1f6f5);border:1px solid var(--line-soft)}
+    .summary-cell small{display:block;font-size:.67rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+    .summary-cell strong{display:block;font-size:1.18rem;color:var(--text);font-family:var(--font-mono)}
+    .summary-cell span{display:block;font-size:.82rem;color:var(--text-2);margin-top:5px}
+
+    /* ── DIAGNOSTIC ── */
+    .diagnostic-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+    .prose{font-size:.84rem;color:var(--text-2);text-align:justify;line-height:1.82}
+    .prose p+p{margin-top:14px}
+    .prose strong{color:var(--text)}
+    .diagnostic-list{display:grid;gap:10px}
+    .diag-item{padding:16px;border-radius:18px;border:1px solid var(--line-soft);background:var(--surface-2,#f1f6f5)}
+    .diag-item h4{font-size:.9rem;font-weight:800;margin-bottom:6px;color:var(--text);letter-spacing:-.01em}
+    .diag-item p{font-size:.83rem;color:var(--text-2);text-align:justify;line-height:1.72}
+    .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+    .diag-block{padding:13px 15px;border-radius:14px;background:rgba(255,255,255,.7);border:1px solid var(--line-soft)}
+    .diag-block strong{display:block;font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;color:var(--text)}
+    .diag-block p{font-size:.81rem;margin:0;color:var(--muted)}
+
+    /* ── EXEC VIEW ── */
+    body.exec-view .section-full-only{display:none!important}
+    .exec-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+    .exec-strip-card{padding:16px 18px;border-radius:22px;background:linear-gradient(180deg,#fff 0%,#fbfdfc 100%);border:1px solid #dfe9e5;box-shadow:var(--shadow-sm)}
+    .exec-strip-card small{display:block;font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+    .exec-strip-card strong{font-family:var(--font-mono);font-size:1.08rem;color:var(--text)}
+    .exec-strip-card .chip{display:inline-flex;align-items:center;margin-top:8px;padding:4px 10px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.04em}
+    .chip.green{background:var(--forest-soft);color:var(--forest)}
+    .chip.yellow{background:var(--sand-soft);color:var(--sand)}
+    .chip.red{background:var(--danger-soft);color:var(--danger)}
+    .chip.blue{background:var(--lake-soft);color:var(--lake)}
+    .chip.gray{background:#eef3f6;color:#607285}
+    .exec-status-card{padding:24px 22px;
+      background:linear-gradient(150deg,var(--lake) 0%,var(--lake-light) 60%,#83d0e0 100%);
+      color:#fff;border-radius:var(--radius);box-shadow:0 8px 28px rgba(26,86,168,.22);margin-bottom:18px}
+    .exec-status-card .es-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;opacity:.72;margin-bottom:4px}
+    .exec-status-card .es-title{font-family:var(--font-body);font-size:1.35rem;font-weight:800;line-height:1.2;margin-bottom:10px;letter-spacing:-.03em}
+    .exec-status-badge{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--radius-sm);font-weight:700;font-size:.85rem;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.24);color:#fff;margin-bottom:12px}
+    .exec-status-badge::before{content:'●';font-size:.52em}
+    .exec-row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+    .exec-diag{padding:22px 24px;font-size:.84rem;line-height:1.82;
+      border-left:4px solid var(--forest);
+      background:linear-gradient(to right,var(--forest-pale) 0%,#fff 55%)}
+    .exec-diag h3{font-family:var(--font-body);font-size:1.15rem;font-weight:800;color:var(--text);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line-soft);letter-spacing:-.02em}
+    .exec-diag p{color:var(--muted);margin-bottom:10px;text-align:justify}
+    .exec-diag p:last-child{margin-bottom:0}
+    .exec-diag strong{color:var(--forest)}
+    .alert-list{display:grid;gap:8px}
+    .alert{padding:10px 14px;border-radius:var(--radius-sm);border-left:4px solid;font-size:.84rem;line-height:1.55}
+    .alert.red{background:var(--danger-soft);border-color:var(--danger);color:#5c1212}
+    .alert.yellow{background:var(--sand-soft);border-color:var(--sand);color:#503900}
+    .alert.green{background:var(--forest-soft);border-color:var(--forest);color:var(--forest)}
+    .sparkline-wrap{width:100%;height:80px;overflow:visible}
+
+    /* ── SECTION DIVIDER ── */
+    .section-divider{display:flex;align-items:center;gap:13px;margin:28px 0 16px;
+      color:var(--forest);font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em}
+    .section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;
+      background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+    /* ── FOOTER (identical to index.html) ── */
+    .site-footer{margin-top:34px;background:linear-gradient(145deg,#18324c 0%,#1b4f68 62%,#2b6b60 100%);color:rgba(255,255,255,.92);position:relative;overflow:hidden}
+    .site-footer::before{content:'';position:absolute;inset:auto -10% -120px -10%;height:220px;background:radial-gradient(60px 20px at 0 100%,rgba(255,255,255,.12) 50%,transparent 52%) repeat-x;background-size:140px 90px;opacity:.55;pointer-events:none}
+    .footer-wrap{width:min(1700px,calc(100vw - 24px));margin:0 auto;padding:34px 0 30px;display:grid;grid-template-columns:1.25fr .85fr .85fr auto;gap:28px;position:relative;z-index:1;align-items:start}
     .footer-brand{display:grid;gap:12px;max-width:50ch}
     .footer-brandline{display:flex;align-items:center;gap:12px}
     .footer-title{font-size:1.1rem;font-weight:700;line-height:1.2}
-    .footer-copy{color:rgba(255,255,255,.8);font-size:.92rem;line-height:1.75;text-align:justify}
+    .footer-copy{color:rgba(255,255,255,.8);font-size:.88rem;line-height:1.75;text-align:justify}
     .footer-col h3{font-size:.8rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;color:rgba(255,255,255,.76)}
     .footer-links{display:grid;gap:10px}
-    .footer-links a{color:#fff;text-decoration:none;font-size:.92rem;font-weight:600;opacity:.92;width:fit-content;display:inline-flex;align-items:center;gap:10px;padding:0;border:none;background:none}
-    .footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px;transform:none}
+    .footer-links a{color:#fff;text-decoration:none;font-size:.88rem;font-weight:600;opacity:.92;width:fit-content;display:inline-flex;align-items:center;gap:10px}
+    .footer-links a:hover{opacity:1;text-decoration:underline;text-underline-offset:3px}
     .social-icon{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.96);flex-shrink:0}
     .social-icon svg{width:18px;height:18px;display:block}
-    .exec-view #tendencias,
-    .exec-view #diagnostico{display:none}
-    .exec-view .wrap{padding-top:20px}
-    @media (max-width:1100px){
-      .header-stack{gap:12px}
-      .footer-wrap{grid-template-columns:1fr}
-    }
+    .footer-mark{align-self:end;display:flex;align-items:flex-end;justify-content:flex-end}
+    .footer-mark img{width:148px;max-width:100%;height:auto;opacity:.96}
 
-</style>
+    /* ── PRESENTATION OVERLAY ── */
+    .presentation-overlay{position:fixed;inset:0;z-index:500;
+      display:none;flex-direction:column;
+      background:linear-gradient(160deg,rgba(10,22,42,.97) 0%,rgba(18,36,60,.97) 50%,rgba(8,24,40,.96) 100%);
+      backdrop-filter:blur(24px) saturate(.7);-webkit-backdrop-filter:blur(24px) saturate(.7);}
+    .presentation-overlay.open{display:flex}
+    .presentation-chrome{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 28px;background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
+    .presentation-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .presentation-meta span{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.02em}
+    .presentation-actions{display:flex;align-items:center;gap:7px}
+    .pres-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:999px;padding:9px 18px;background:rgba(255,255,255,.1);color:#fff;font-family:var(--font-body);font-size:.82rem;font-weight:700;cursor:pointer;transition:transform .2s ease,background .2s ease;border:1px solid rgba(255,255,255,.14)}
+    .pres-btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.18)}
+    .pres-btn.primary{background:linear-gradient(135deg,var(--forest-mid),var(--forest));border-color:transparent;box-shadow:0 4px 18px rgba(36,145,109,.35)}
+    .pres-btn.primary:hover{background:linear-gradient(135deg,var(--forest),var(--forest-mid))}
+    .presentation-stage-wrap{flex:1;min-height:0;display:flex;flex-direction:column;padding:20px 32px 0;overflow:hidden}
+    .presentation-stage{flex:1;min-height:0;overflow:hidden;border-radius:24px 24px 0 0;box-shadow:0 -8px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+    .presentation-track{display:flex;height:100%;transition:transform .48s cubic-bezier(.22,.61,.36,1)}
+    .pres-slide{flex:0 0 100%;height:100%;background:linear-gradient(148deg,#f5fafd 0%,#ebf5fc 40%,#dfedf8 100%);color:var(--text);padding:32px 40px 26px;position:relative;overflow:hidden}
+    .pres-slide::before{content:'';position:absolute;inset:auto -8% -22% auto;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(76,165,191,.18),transparent 68%);pointer-events:none}
+    .pres-slide::after{content:'';position:absolute;left:-100px;top:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(46,106,87,.09),transparent 70%);pointer-events:none}
+    .pres-inner{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;gap:16px}
+    .pres-kicker{display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.75);border:1px solid var(--line-soft);font-size:.71rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--lake);width:fit-content;flex-shrink:0}
+    .pres-kicker::before{content:'';width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--forest-mid),#4ca5bf)}
+    .pres-title-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;flex-shrink:0}
+    .pres-title-row h2{font-family:var(--font-body);font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.04;letter-spacing:-.04em;margin:0 0 6px;max-width:640px;font-weight:800}
+    .pres-title-row p{font-size:.87rem;line-height:1.7;color:var(--text-2);max-width:640px;text-align:justify}
+    .pres-brand-badge{display:grid;justify-items:end;gap:10px;text-align:right;flex-shrink:0}
+    .pres-brand-badge img{width:130px;max-width:100%}
+    .pres-card-grid{display:grid;gap:12px}
+    .pres-card-grid-4{grid-template-columns:repeat(4,1fr)}
+    .pres-card-grid-3{grid-template-columns:repeat(3,1fr)}
+    .pres-card-grid-2{grid-template-columns:1fr 1fr}
+    .pres-card{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:16px 18px;box-shadow:0 6px 22px rgba(23,50,58,.09)}
+    .pres-card small{display:block;font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+    .pres-card strong{display:block;font-size:1.45rem;line-height:1.05;font-family:var(--font-mono);font-weight:500;color:var(--text)}
+    .pres-card p{margin-top:6px;color:var(--text-2);font-size:.8rem;line-height:1.55}
+    .pres-chip{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:5px 10px;border-radius:999px;font-size:.7rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+    .pres-chip.green{background:var(--forest-soft);color:var(--forest)}
+    .pres-chip.yellow{background:var(--sand-soft);color:var(--sand)}
+    .pres-chip.red{background:var(--danger-soft);color:var(--danger)}
+    .pres-chip.blue{background:var(--lake-soft);color:var(--lake)}
+    .pres-chip.gray{background:#eef3f6;color:#607285}
+    .pres-kpi-pair{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:18px 20px;box-shadow:0 6px 22px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+    .pres-kpi-label{font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+    .pres-kpi-value{font-family:var(--font-mono);font-size:1.9rem;font-weight:500;color:var(--text);line-height:1;letter-spacing:-.03em}
+    .pres-kpi-meta{font-size:.79rem;color:var(--muted);line-height:1.5}
+    .pres-bar-wrap{height:6px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:4px}
+    .pres-bar{height:100%;border-radius:999px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+    .pres-bar.green{background:linear-gradient(90deg,#54b97e,var(--forest))}
+    .pres-bar.yellow{background:linear-gradient(90deg,#e3ba45,var(--sand))}
+    .pres-bar.red{background:linear-gradient(90deg,#df8c8c,var(--danger))}
+    .pres-bar.blue{background:linear-gradient(90deg,#83d0e0,var(--lake))}
+    .pres-bar.gray{background:linear-gradient(90deg,#b5c3cf,#7b8fa0)}
+    .pres-columns{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;flex:1;min-height:0}
+    .pres-visual-card{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:16px 18px;box-shadow:0 6px 22px rgba(23,50,58,.09);display:flex;flex-direction:column;overflow:hidden}
+    .pres-visual-card h3{font-family:var(--font-body);font-size:1.1rem;font-weight:800;margin-bottom:3px;letter-spacing:-.02em}
+    .pres-visual-card p{color:var(--muted);font-size:.79rem;line-height:1.55;margin-bottom:8px}
+    .pres-chart-img{flex:1;min-height:0;background:linear-gradient(180deg,rgba(244,250,254,.9),rgba(255,255,255,.9));border-radius:14px;border:1px solid var(--line-soft);padding:8px;overflow:hidden;display:grid;place-items:center}
+    .pres-chart-img img{width:100%;height:auto;object-fit:contain;max-height:220px}
+    .pres-list-card{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:16px 18px;box-shadow:0 6px 22px rgba(23,50,58,.09);display:flex;flex-direction:column;overflow:auto}
+    .pres-list-card h3{font-family:var(--font-body);font-size:1.1rem;font-weight:800;margin-bottom:3px;letter-spacing:-.02em}
+    .pres-list-card p{color:var(--muted);font-size:.79rem;margin-bottom:10px}
+    .pres-list-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;background:var(--surface-2,#f1f6f5);border:1px solid var(--line-soft);margin-bottom:8px}
+    .pres-rank{width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--lake-soft);color:var(--lake);font-weight:800;font-size:.82rem;flex-shrink:0}
+    .pres-note{padding:20px 22px;border-radius:22px;background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);box-shadow:0 8px 28px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:10px}
+    .pres-note h3{font-family:var(--font-body);font-size:1.2rem;font-weight:800;margin-bottom:2px;letter-spacing:-.02em}
+    .pres-note p{font-size:.88rem;line-height:1.78;color:var(--text-2);text-align:justify}
+    .pres-alert-box{padding:13px 16px;border-radius:16px;font-size:.85rem;line-height:1.6;border:1px solid transparent}
+    .pres-alert-box.red{background:var(--danger-soft);color:var(--danger);border-color:rgba(184,86,86,.15)}
+    .pres-alert-box.yellow{background:var(--sand-soft);color:var(--sand);border-color:rgba(198,152,63,.18)}
+    .pres-alert-box.green{background:var(--forest-pale);color:var(--forest);border-color:rgba(46,106,87,.15)}
+    .pres-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 32px 16px;flex-shrink:0}
+    .pres-dots{display:flex;gap:7px;align-items:center}
+    .pres-dot{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.28);cursor:pointer;transition:transform .2s ease,background .2s ease}
+    .pres-dot.active{background:#fff;transform:scale(1.2)}
+    .pres-counter{font-family:var(--font-mono);font-size:.82rem;background:rgba(255,255,255,.1);padding:6px 13px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.8)}
+
+    /* ── MISC ── */
+    .empty{padding:18px;border:1.5px dashed var(--line);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--muted);text-align:center;font-size:.85rem}
+    .hidden{display:none!important}
+    .loading-state,.error-state{padding:28px;border-radius:22px;background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);text-align:center;color:var(--text-2);font-size:.9rem}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+    /* ── RESPONSIVE ── */
+    @media (max-width:1500px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:1180px){
+      .hero,.chart-grid,.diagnostic-grid{grid-template-columns:1fr}
+      .hero-meta{grid-template-columns:repeat(2,1fr)}
+      .hero-status{grid-template-columns:1fr 1fr}
+      .kpi-grid{grid-template-columns:1fr}
+      .footer-wrap{grid-template-columns:1fr}
+      .exec-strip{grid-template-columns:repeat(2,1fr)}
+      .exec-row-2{grid-template-columns:1fr}
+      .pres-columns{grid-template-columns:1fr}
+      .pres-card-grid-4{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:900px){
+      .header{padding:12px 16px;gap:12px;flex-wrap:wrap}
+      .nav-tabs{margin-left:0;width:100%}
+      .header-stack{gap:8px}
+      .summary-grid{grid-template-columns:1fr 1fr}
+      .pres-card-grid-3{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width:640px){
+      .wrap{width:min(100vw - 16px,1000px)}
+      .kpi-figure{grid-template-columns:1fr}.kpi-pillar{display:none}
+      .pres-card-grid-4,.pres-card-grid-3,.pres-card-grid-2{grid-template-columns:1fr}
+      .pres-title-row{flex-direction:column}.pres-brand-badge{justify-items:start;text-align:left}
+    }
+  </style>
 </head>
 <body>
-<div class="page">
-  <header class="header">
+
+<header class="header">
   <a class="header-brand" href="./index.html">
+    <img src="./aala_logo.png" alt="Logo AALA" class="header-logo-img">
     <span class="brand-text">
       <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
-      <span class="brand-title">Tablero dinámico institucional de avances</span>
+      <span class="brand-title">Conservando Atitlán · Tablero de programa</span>
     </span>
   </a>
   <div class="header-stack">
-    <nav class="nav-tabs" aria-label="Navegación de la página">
+    <nav class="nav-tabs" aria-label="Navegación">
       <a class="nav-tab active" href="#resumen">Resumen</a>
       <a class="nav-tab" href="#kpis-estrategicos">Indicadores</a>
       <a class="nav-tab" href="#tendencias">Tendencias</a>
@@ -493,45 +396,73 @@
     </nav>
     <div class="header-utility">
       <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
-      <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
+      <div class="view-switcher" role="group">
         <button class="view-btn active" id="btnFull" type="button" onclick="switchView('full')">Tablero completo</button>
         <button class="view-btn" id="btnExec" type="button" onclick="switchView('exec')">Resumen ejecutivo</button>
       </div>
-      <button class="view-btn present-btn" type="button" id="btnPresentation">Modo presentación</button>
+      <button class="present-btn" type="button" id="btnPresentation">&#9654; Presentación</button>
       <div class="period-rack">
-        <span class="period-rack-label">Período de lectura</span>
+        <span class="period-rack-label">Período</span>
         <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
       </div>
     </div>
   </div>
 </header>
 
-  <div class="wrap">
-    <main>
-      <div id="resumen"></div>
+<div class="wrap">
+  <main>
+    <div id="resumen"></div>
 
+    <!-- EXECUTIVE VIEW -->
+    <div id="execView" style="display:none">
+      <div class="exec-status-card">
+        <div class="es-label">Estado del programa</div>
+        <div class="es-title">Conservando Atitlán</div>
+        <div class="exec-status-badge" id="execStatusBadge">Cargando…</div>
+        <div style="font-size:.8rem;opacity:.7" id="execPeriodInfo">—</div>
+      </div>
+      <div class="exec-strip" id="execStrip"></div>
+      <div class="exec-row-2">
+        <article class="card panel">
+          <h3>Avance estratégico acumulado</h3>
+          <p class="sub" id="execChartSub">Progreso real vs esperado al período.</p>
+          <div class="viz-wrap" style="min-height:280px"><canvas id="execProgressChart"></canvas></div>
+        </article>
+        <article class="card panel">
+          <h3>Alertas operativas</h3>
+          <p class="sub">Indicadores bajo umbral en el período.</p>
+          <div id="execAlertPanel"></div>
+        </article>
+      </div>
+      <article class="card exec-diag" id="execDiagPanel"></article>
+    </div>
+
+    <!-- FULL DASHBOARD -->
+    <div id="fullView">
       <section class="hero" id="heroSection">
         <article class="card hero-main">
           <div class="hero-eyebrow">Programa · economía circular y agua</div>
           <h1>Conservando<br>Atitlán</h1>
           <p class="hero-lead">
-            Este tablero dinámico presenta el avance del programa Conservando Atitlán a partir de sus metas anuales, sus metas mensuales y sus hitos operativos. La lectura separa claramente el avance acumulado al corte, el comportamiento del período activo y la operación mensual de recolección, producción y comercialización.
+            Programa de la Asociación Amigos del Lago de Atitlán que recolecta aceite usado de cocina en la cuenca, lo procesa y transforma en jabón artesanal, contribuyendo directamente a proteger el agua del lago. Cada litro recolectado representa miles de litros de agua protegida de la contaminación.
           </p>
           <div class="hero-badges">
-            <span>Recolecta aceite usado de cocina</span>
-            <span>Protege agua en la cuenca</span>
+            <span>Recolecta aceite usado</span>
+            <span>Protege el agua del lago</span>
             <span>Produce y comercializa jabón</span>
-            <span>Fortalece operación municipal</span>
+            <span>Opera en toda la cuenca</span>
           </div>
           <div class="hero-meta">
             <div class="meta-box"><small>Período activo</small><strong id="heroPeriod">—</strong></div>
-            <div class="meta-box"><small>Último corte válido</small><strong id="heroLatest">—</strong></div>
             <div class="meta-box"><small>Jornadas registradas</small><strong id="heroJornadas">—</strong></div>
             <div class="meta-box"><small>Inmuebles atendidos</small><strong id="heroInmuebles">—</strong></div>
+            <div class="meta-box"><small>Municipios visitados</small><strong id="heroMunicipios">—</strong></div>
           </div>
         </article>
         <aside class="card hero-side">
-          <div class="logo-frame"><img id="programLogo" src="./Conservando Atitlán .png" alt="Logo del programa Conservando Atitlán" onerror="this.onerror=null;this.src='./logosatitlan.png';"></div>
+          <div class="logo-frame">
+            <img id="programLogo" src="./Conservando%20Atitl%C3%A1n%20.png" alt="Logo Conservando Atitlán" onerror="this.onerror=null;this.src='./logosatitlan.png';">
+          </div>
           <div class="hero-status">
             <div class="status-note"><small>Estado estratégico</small><strong id="heroStrategic">—</strong></div>
             <div class="status-note"><small>Estado del período</small><strong id="heroMonthly">—</strong></div>
@@ -539,53 +470,42 @@
         </aside>
       </section>
 
-      <section class="section" id="kpis-estrategicos">
+      <section class="section section-full-only" id="kpis-estrategicos">
         <div class="section-head">
           <div>
             <div class="section-kicker">KPIs estratégicos anuales</div>
             <h2>Metas estructurales del programa</h2>
           </div>
-          <p>
-            Esta primera sección muestra el avance acumulado al corte frente a las metas anuales del programa. Cuando el indicador funciona por ciclos o hitos, la lectura se expresa por meses cumplidos, no por el número bruto de registros operativos del período.
-          </p>
+          <p>Avance acumulado real frente a las metas anuales del programa. Cuando el indicador funciona por ciclos o hitos, la lectura se expresa por meses cumplidos, no por registros operativos brutos.</p>
         </div>
         <div class="kpi-grid" id="strategicGrid"></div>
       </section>
 
-      <section class="section" id="cumplimiento-periodo">
+      <section class="section section-full-only" id="cumplimiento-periodo">
         <div class="section-head">
           <div>
             <div class="section-kicker">KPIs operativos del período</div>
-            <h2>Cómo se comportó el mes de lectura</h2>
+            <h2 id="monthlyKpiTitle">Comportamiento del período seleccionado</h2>
           </div>
-          <p>
-            Esta segunda sección ayuda a comprender el desempeño del período actual. Aquí aparecen los indicadores que sí admiten una meta mensual clara, así como algunos datos operativos complementarios para interpretar la actividad del mes.
-          </p>
+          <p id="monthlyKpiDesc">Indicadores que admiten una meta mensual clara y datos operativos complementarios para interpretar la actividad del período.</p>
         </div>
         <div class="kpi-grid" id="monthlyGrid"></div>
       </section>
 
-      <section class="section" id="tendencias">
-        <div class="section-head">
-          <div>
-            <div class="section-kicker">Visualizaciones</div>
-            <h2>Tendencias y lectura comparativa</h2>
-          </div>
-          <p>
-            Las gráficas resumen el avance acumulado frente al esperado al corte, la trayectoria mensual del indicador seleccionado y una lectura operativa de la cadena de producción y venta de jabones del programa.
-          </p>
-        </div>
+      <div class="section-divider">Tendencias y lectura comparativa</div>
+
+      <section class="section section-full-only" id="tendencias">
         <div class="chart-grid">
           <article class="card panel">
-            <h3>Avance acumulado vs esperado al corte</h3>
-            <p class="sub">Compara la posición acumulada de los indicadores estratégicos frente al avance que el programa debería llevar al mes seleccionado.</p>
+            <h3>Avance acumulado vs esperado</h3>
+            <p class="sub" id="progressChartSub">Compara el avance real acumulado de cada indicador estratégico contra lo esperado al período seleccionado.</p>
             <div class="viz-wrap"><canvas id="progressChart"></canvas></div>
           </article>
           <article class="card panel">
             <div class="panel-top">
               <div>
-                <h3>Tendencia mensual del indicador</h3>
-                <p class="sub">Serie histórica del indicador seleccionado, con lectura simple y sin saturar la pantalla.</p>
+                <h3>Tendencia mensual</h3>
+                <p class="sub" id="trendChartSub">Serie histórica del indicador seleccionado con su referencia de meta mensual cuando existe.</p>
               </div>
               <select class="indicator-select" id="trendIndicator"></select>
             </div>
@@ -594,27 +514,27 @@
         </div>
         <div class="chart-grid section" style="margin-top:18px">
           <article class="card panel">
-            <h3>Cadena de valor del jabón en el período</h3>
-            <p class="sub">Compara producción y venta de jabón de hotel y jabón de tocador en el mes activo.</p>
+            <h3>Cadena de valor del jabón</h3>
+            <p class="sub" id="soapChartSub">Producción y venta de jabón de hotel y de tocador en el período, con tasa de conversión venta/producción.</p>
             <div class="viz-wrap"><canvas id="soapChart"></canvas></div>
           </article>
           <article class="card panel">
-            <h3>Resumen de la operación del período</h3>
-            <p class="sub">Datos de contexto para interpretar el movimiento operativo del mes y su acumulado anual al corte.</p>
+            <h3>Resumen operativo del período</h3>
+            <p class="sub" id="summarySubtitle">Datos de contexto para interpretar el movimiento operativo del período y su acumulado anual.</p>
             <div class="summary-grid" id="periodSummary"></div>
           </article>
         </div>
       </section>
 
-      <section class="section" id="diagnostico">
+      <div class="section-divider section-full-only">Diagnóstico narrativo</div>
+
+      <section class="section section-full-only" id="diagnostico">
         <div class="section-head">
           <div>
             <div class="section-kicker">Lectura interpretativa</div>
-            <h2>Diagnóstico del corte seleccionado</h2>
+            <h2 id="diagTitle">Diagnóstico del período seleccionado</h2>
           </div>
-          <p>
-            El diagnóstico traduce el comportamiento de los indicadores a una lectura narrativa corta, para que la persona visitante entienda con rapidez dónde el programa mantiene su ritmo, dónde necesita atención y cuáles son las señales operativas más importantes del mes.
-          </p>
+          <p>Síntesis narrativa del comportamiento del programa para que la persona visitante entienda con rapidez dónde se mantiene el ritmo y cuáles son las señales operativas más importantes.</p>
         </div>
         <div class="diagnostic-grid">
           <article class="card panel">
@@ -632,20 +552,18 @@
       <section class="section hidden" id="errorWrap">
         <div class="error-state" id="errorState">No se pudo cargar la información.</div>
       </section>
-    </main>
-  </div>
+    </div><!-- /fullView -->
+  </main>
+</div>
 
-  <footer class="site-footer">
+<footer class="site-footer">
   <div class="footer-wrap">
     <section class="footer-brand">
       <div class="footer-brandline">
         <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
       </div>
-      <p class="footer-copy">
-        La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.
-      </p>
+      <p class="footer-copy">La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.</p>
     </section>
-
     <section class="footer-col">
       <h3>Contacto y sitio</h3>
       <div class="footer-links">
@@ -657,16 +575,15 @@
           <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.9 2.9 0 0 0-2-2C17.8 4.7 12 4.7 12 4.7s-5.8 0-7.6.5a2.9 2.9 0 0 0-2 2A29.6 29.6 0 0 0 2 12a29.6 29.6 0 0 0 .4 4.8 2.9 2.9 0 0 0 2 2c1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5a2.9 2.9 0 0 0 2-2A29.6 29.6 0 0 0 22 12a29.6 29.6 0 0 0-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z"></path></svg></span>
           <span>YouTube</span>
         </a>
-      </div>
-    </section>
-
-    <section class="footer-col">
-      <h3>Redes sociales</h3>
-      <div class="footer-links">
         <a href="https://www.facebook.com/AmigoAtitlan/?locale=es_LA" target="_blank" rel="noreferrer noopener">
           <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6H17V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.4V11H7.5v3h2.8v8h3.2Z"></path></svg></span>
           <span>Facebook</span>
         </a>
+      </div>
+    </section>
+    <section class="footer-col">
+      <h3>Redes sociales</h3>
+      <div class="footer-links">
         <a href="https://www.instagram.com/amigoslagoatitlan/" target="_blank" rel="noreferrer noopener">
           <span class="social-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
           <span>Instagram</span>
@@ -677,27 +594,35 @@
         </a>
       </div>
     </section>
+    <section class="footer-mark" aria-label="Imagen institucional">
+      <img src="./chill_lago.png" alt="AALA — Cuenca del Lago de Atitlán">
+    </section>
   </div>
 </footer>
-</div>
 
+<!-- PRESENTATION OVERLAY -->
 <div class="presentation-overlay" id="presentationOverlay" aria-hidden="true">
-  <div class="presentation-shell">
-    <div class="presentation-top">
-      <div id="presentationMeta">Modo presentación</div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="present-btn secondary" type="button" id="prevSlideBtn">&#8592; Anterior</button>
-        <button class="present-btn secondary" type="button" id="nextSlideBtn">Siguiente &#8594;</button>
-        <button class="present-btn" type="button" id="closePresentation">Cerrar</button>
-      </div>
+  <div class="presentation-chrome">
+    <div class="presentation-meta" id="presentationMeta">
+      <span>Modo presentación</span>
     </div>
-    <div class="presentation-stage" id="presentationStage"></div>
-    <div class="presentation-bottom">
-      <div id="presentationCounter">1 / 1</div>
-      <div class="presentation-hint">&#8592; y &#8594; para navegar · Esc para cerrar</div>
+    <div class="presentation-actions">
+      <button class="pres-btn" type="button" onclick="prevSlide()">&#8592; Anterior</button>
+      <button class="pres-btn" type="button" onclick="nextSlide()">Siguiente &#8594;</button>
+      <button class="pres-btn primary" type="button" onclick="closePresentation()">&#215; Cerrar</button>
     </div>
   </div>
+  <div class="presentation-stage-wrap">
+    <div class="presentation-stage">
+      <div class="presentation-track" id="presentationTrack"></div>
+    </div>
+  </div>
+  <div class="pres-footer-bar">
+    <div class="pres-dots" id="presDots"></div>
+    <div class="pres-counter" id="presCounter">1 / 1</div>
+  </div>
 </div>
+
 
 <script>
 const PATHS = {
@@ -707,457 +632,336 @@ const PATHS = {
 };
 const MONTHS_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const MONTHS_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const MONTH_FULL = {1:'Enero',2:'Febrero',3:'Marzo',4:'Abril',5:'Mayo',6:'Junio',7:'Julio',8:'Agosto',9:'Septiembre',10:'Octubre',11:'Noviembre',12:'Diciembre'};
 const TREND_OPTIONS = [
-  { id:'jornadas_recoleccion_ciclo_mes', label:'Colectas mensuales cubiertas', unit:'ciclos' },
-  { id:'litros_aceite_recolectados_mes', label:'Aceite usado recolectado', unit:'litros' },
+  { id:'litros_aceite_recolectados_mes', label:'Aceite recolectado', unit:'litros' },
   { id:'litros_agua_protegidos_mes', label:'Agua protegida', unit:'litros' },
   { id:'jabones_producidos_mes', label:'Jabones producidos', unit:'jabones' },
   { id:'jabones_vendidos_mes', label:'Jabones vendidos', unit:'jabones' },
+  { id:'jornadas_recoleccion_ciclo_mes', label:'Colectas mensuales cubiertas', unit:'ciclos' },
   { id:'ingresos_ventas_q_mes', label:'Ventas registradas', unit:'GTQ' },
   { id:'municipios_visitados_mes', label:'Municipios visitados', unit:'municipios' },
   { id:'inmuebles_atendidos_mes', label:'Inmuebles atendidos', unit:'inmuebles' },
   { id:'pruebas_jabon_liquido_mes', label:'Pruebas de jabón líquido', unit:'hitos' }
 ];
 const GOALS = {
-  colectasAnual: 12,
-  aceiteAnual: 80000,
-  aguaAnual: 80000000,
-  jabonesProducidosAnual: 65040,
-  jabonesProducidosMensual: 5420,
-  jabonesVendidosAnual: 51600,
-  municipiosCiclosAnual: 7,
-  municipiosMetaMes: 7,
-  pruebasAnual: 3,
-  pruebasMeses: [3,4,5]
+  colectasAnual:12, aceiteAnual:80000, aguaAnual:80000000,
+  jabonesProducidosAnual:65040, jabonesProducidosMensual:5420,
+  jabonesVendidosAnual:51600, municipiosCiclosAnual:7,
+  municipiosMetaMes:7, pruebasAnual:3, pruebasMeses:[3,4,5]
 };
-let state = {
-  total: [],
-  indicadores: [],
-  metadata: {},
-  periods: [],
-  period: '',
-  charts: {},
-  slideIndex: 0,
-  view: 'full'
-};
+let state = { total:[], indicadores:[], metadata:{}, periods:[], period:'', charts:{}, slideIndex:0, view:'full' };
 
+// ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);
-document.addEventListener('keydown', handlePresentationKeys);
+document.addEventListener('keydown', e=>{
+  const overlay = document.getElementById('presentationOverlay');
+  if(!overlay?.classList.contains('open')) return;
+  if(e.key==='ArrowRight'){e.preventDefault();nextSlide();}
+  if(e.key==='ArrowLeft'){e.preventDefault();prevSlide();}
+  if(e.key==='Escape'){e.preventDefault();closePresentation();}
+});
 
 async function init(){
-  setLoading(true, 'Cargando información del programa…');
+  setLoading(true,'Cargando información del programa…');
   try{
-    const [total, indicadores, metadata] = await Promise.all([
-      fetchCsv(PATHS.total),
-      fetchCsv(PATHS.indicadores),
-      fetchCsv(PATHS.metadata)
+    const [total,indicadores,metadata] = await Promise.all([
+      fetchCsv(PATHS.total), fetchCsv(PATHS.indicadores), fetchCsv(PATHS.metadata)
     ]);
     state.total = total.map(normalizeRow).sort((a,b)=>String(a.periodo_clave).localeCompare(String(b.periodo_clave)));
     state.indicadores = indicadores.map(normalizeRow);
-    state.metadata = metadata.map(normalizeRow)[0] || {};
+    state.metadata = metadata.map(normalizeRow)[0]||{};
     state.periods = state.total.map(r=>String(r.periodo_clave)).filter(Boolean);
-    state.period = String(state.metadata.latest_period || state.periods.at(-1) || '');
+    state.period = String(state.metadata.latest_period||state.periods.at(-1)||'');
     buildMonthPills();
     buildTrendOptions();
-    bindPresentation();
+    document.getElementById('btnPresentation').addEventListener('click',openPresentation);
     switchView('full');
     render();
     setLoading(false);
   }catch(err){
     console.error(err);
-    setError(err?.message || String(err));
+    setError(err?.message||String(err));
   }
 }
 
+// ── DATA ──────────────────────────────────────────────────────────────────────
 function fetchCsv(url){
   return new Promise((resolve,reject)=>{
-    Papa.parse(url,{
-      download:true,
-      header:true,
-      skipEmptyLines:true,
-      complete:(res)=> resolve(res.data || []),
-      error:(err)=> reject(err)
-    });
+    Papa.parse(url,{download:true,header:true,skipEmptyLines:true,
+      complete:res=>resolve(res.data||[]),error:err=>reject(err)});
   });
 }
-
 function normalizeRow(row){
   const out={};
-  for(const [k,v] of Object.entries(row||{})){
-    const key=(k||'').trim();
-    const value=typeof v==='string'?v.trim():v;
-    if(value===''||value==null){ out[key]=''; continue; }
+  for(const[k,v] of Object.entries(row||{})){
+    const key=(k||'').trim(), value=typeof v==='string'?v.trim():v;
+    if(value===''||value==null){out[key]='';continue;}
     const low=String(value).toLowerCase();
-    if(low==='true' || low==='false'){ out[key]=low==='true'; continue; }
+    if(low==='true'||low==='false'){out[key]=low==='true';continue;}
     const num=Number(String(value).replace(/,/g,''));
-    out[key]=Number.isFinite(num) && String(value).match(/^[-+]?\d*\.?\d+$/) ? num : value;
+    out[key]=Number.isFinite(num)&&String(value).match(/^[-+]?\d*\.?\d+$/) ? num : value;
   }
   return out;
 }
-
-function setLoading(on, msg=''){
-  document.getElementById('loadingWrap').classList.toggle('hidden', !on);
-  document.getElementById('loadingState').textContent = msg || 'Cargando…';
+function setLoading(on,msg=''){
+  document.getElementById('loadingWrap').classList.toggle('hidden',!on);
+  document.getElementById('loadingState').textContent=msg||'Cargando…';
   if(on) document.getElementById('errorWrap').classList.add('hidden');
 }
 function setError(msg){
   document.getElementById('errorWrap').classList.remove('hidden');
-  document.getElementById('errorState').textContent = 'No se pudo cargar la información: ' + msg;
+  document.getElementById('errorState').textContent='No se pudo cargar la información: '+msg;
   document.getElementById('loadingWrap').classList.add('hidden');
 }
 
+// ── HELPERS ──────────────────────────────────────────────────────────────────
 function periodLabel(period){
   if(!period) return '—';
-  const [y,m]=String(period).split('-').map(Number);
+  const[y,m]=String(period).split('-').map(Number);
   if(!y||!m) return String(period);
-  return MONTHS_ES[m-1] + ' ' + y;
+  return (MONTH_FULL[m]||MONTHS_ES[m-1])+' de '+y;
 }
 function monthShortLabel(period){
-  const [y,m]=String(period).split('-').map(Number);
-  return !y||!m ? String(period) : (MONTHS_SHORT[m-1] + ' ' + y);
+  const[y,m]=String(period).split('-').map(Number);
+  return!y||!m?String(period):(MONTHS_SHORT[m-1]+' '+y);
 }
-function periodIndex(period){ return state.periods.indexOf(String(period)); }
-function selectedRow(){ return state.total.find(r=>String(r.periodo_clave)===String(state.period)) || null; }
-function rowsToPeriod(){ const idx=periodIndex(state.period); return idx===-1 ? [] : state.total.slice(0, idx+1); }
-function monthsElapsed(){ const row=selectedRow(); return Number(row?.mes_num || (periodIndex(state.period)+1) || 0); }
-function countMonthsWith(predicate){ return rowsToPeriod().filter(predicate).length; }
-function sumRows(field){ return rowsToPeriod().reduce((acc,r)=>acc+toNum(r[field]),0); }
+function monthNumber(period){ return Number(String(period).split('-')[1])||0; }
+function selectedRow(){ return state.total.find(r=>String(r.periodo_clave)===String(state.period))||null; }
+function rowsToPeriod(){ const idx=state.periods.indexOf(String(state.period)); return idx===-1?[]:state.total.slice(0,idx+1); }
+function monthsElapsed(){ const row=selectedRow(); return Number(row?.mes_num||(state.periods.indexOf(String(state.period))+1)||0); }
+function countMonthsWith(fn){ return rowsToPeriod().filter(fn).length; }
+function sumMonths(field){ return rowsToPeriod().reduce((a,r)=>a+toNum(r[field]),0); }
 function toNum(v){ const n=Number(v); return Number.isFinite(n)?n:0; }
-function fmtNumber(v,dec=2){ return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:dec, maximumFractionDigits:dec}); }
-function fmtInteger(v){ return Number(Math.round(v||0)).toLocaleString('en-US'); }
-function fmtMoney(v){ return 'Q ' + fmtNumber(v,2); }
-function fmtPct(v){ return fmtNumber((v||0)*100,2) + '%'; }
-function clamp(v,min,max){ return Math.max(min, Math.min(max,v)); }
-function labelFromStatus(status){ return ({green:'Verde',yellow:'Amarillo',red:'Rojo',blue:'Informativo',gray:'Programado'})[status] || 'Programado'; }
-function chipText(status){ return ({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Dato informativo',gray:'Sin exigibilidad todavía'})[status] || 'Sin exigibilidad todavía'; }
+function fmtN(v,d=2){ return Number(v||0).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function fmtI(v){ return Number(Math.round(v||0)).toLocaleString('en-US'); }
+function fmtQ(v){ return 'Q '+fmtN(v,2); }
+function fmtPct(v){ return fmtN((v||0)*100,1)+'%'; }
+function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+function statusFromRatio(ratio,hasGoal=true){
+  if(!hasGoal) return 'blue';
+  if(!Number.isFinite(ratio)) return 'gray';
+  if(ratio>=1) return 'green';
+  if(ratio>=.8) return 'yellow';
+  return 'red';
+}
+function labelFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Programado'})[s]||'Programado'; }
+function chipTextFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Sin exigibilidad todavía'})[s]||'Sin exigibilidad'; }
+function expectedPruebasAtCut(m){ return GOALS.pruebasMeses.filter(x=>x<=m).length; }
+function escapeHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function chipHtml(status,text){ return `<span class="pres-chip ${status}">${escapeHtml(text)}</span>`; }
 
 function splitDisplayValue(display){
   const raw=String(display==null?'—':display).trim();
   const match=raw.match(/^([^\d\-–]*)(-?\d[\d,]*(?:\.\d+)?)(.*)$/);
-  if(!match){
-    return {prefix:'', number:null, suffix:'', text:raw, decimals:0};
-  }
-  return {
-    prefix:match[1]||'',
-    number:parseFloat(String(match[2]).replace(/,/g,'')),
-    suffix:(match[3]||'').trim(),
-    text:raw,
-    decimals:((match[2].split('.')[1]||'').length)
-  };
+  if(!match) return{prefix:'',number:null,suffix:'',text:raw,decimals:0};
+  return{prefix:match[1]||'',number:parseFloat(String(match[2]).replace(/,/g,'')),suffix:(match[3]||'').trim(),text:raw,decimals:((match[2].split('.')[1]||'').length)};
 }
-
 function animateMetricValue(node){
   if(!node) return;
   const target=Number(node.dataset.value);
   if(!Number.isFinite(target)) return;
-  const prefix=node.dataset.prefix||'';
-  const suffix=node.dataset.suffix||'';
-  const decimals=Number(node.dataset.decimals||0);
-  const magnitude=String(Math.trunc(Math.abs(target))).length;
-  const duration=Math.min(1450, 780 + magnitude*110 + (Math.abs(target) > 999 ? 120 : 0));
+  const prefix=node.dataset.prefix||'', suffix=node.dataset.suffix||'', decimals=Number(node.dataset.decimals||0);
+  const duration=Math.min(1400,780+String(Math.trunc(Math.abs(target))).length*100);
   const start=performance.now();
   function step(now){
-    const t=Math.min(1,(now-start)/duration);
-    const eased=1-Math.pow(1-t,4);
-    const value=target*eased;
-    const formatted=new Intl.NumberFormat('en-US',{
-      minimumFractionDigits:decimals,
-      maximumFractionDigits:decimals
-    }).format(value);
-    node.textContent=(prefix+formatted+(suffix?(' '+suffix):'')).trim();
+    const t=Math.min(1,(now-start)/duration), eased=1-Math.pow(1-t,4);
+    const val=target*eased;
+    const formatted=new Intl.NumberFormat('en-US',{minimumFractionDigits:decimals,maximumFractionDigits:decimals}).format(val);
+    node.textContent=(prefix+formatted+(suffix?' '+suffix:'')).trim();
     if(t<1) requestAnimationFrame(step);
   }
-  node.textContent=(prefix+'0'+(decimals?('.'+''.padStart(decimals,'0')):'')+(suffix?(' '+suffix):'')).trim();
+  node.textContent=(prefix+'0'+(suffix?' '+suffix:'')).trim();
   requestAnimationFrame(step);
 }
-function statusFromRatio(ratio, hasGoal=true){
-  if(!hasGoal) return 'blue';
-  if(!Number.isFinite(ratio)) return 'gray';
-  if(ratio >= 1) return 'green';
-  if(ratio >= .8) return 'yellow';
-  return 'red';
-}
-function sumMonths(field){ return rowsToPeriod().reduce((a,r)=>a + toNum(r[field]), 0); }
-function expectedPruebasAtCut(monthNum){
-  return GOALS.pruebasMeses.filter(m => m <= monthNum).length;
-}
-function strategicStatus(metrics){
-  const ratios = metrics.filter(m=>m.goalType!=='none' && Number.isFinite(m.ratioVsExpected)).map(m=>m.ratioVsExpected);
-  if(!ratios.length) return 'Sin lectura';
-  const avg = ratios.reduce((a,b)=>a+b,0)/ratios.length;
-  return chipText(statusFromRatio(avg, true));
-}
-function monthlyStatus(metrics){
-  const ratios = metrics.filter(m=>m.goalType==='monthly' && Number.isFinite(m.periodRatio)).map(m=>m.periodRatio);
-  if(!ratios.length) return 'Sin lectura';
-  const avg = ratios.reduce((a,b)=>a+b,0)/ratios.length;
-  return chipText(statusFromRatio(avg, true));
-}
 
+// ── METRICS ──────────────────────────────────────────────────────────────────
 function computeStrategicMetrics(){
-  const row = selectedRow();
-  const months = monthsElapsed();
-  const periodCycles = toNum(row?.jornadas_recoleccion_ciclo_mes) > 0 ? 1 : 0;
-  const periodJornadas = toNum(row?.jornadas_codigos_unicos_mes || row?.filas_recoleccion_validas_mes);
-  const colectaAccum = countMonthsWith(r => toNum(r.jornadas_recoleccion_ciclo_mes) > 0);
-  const colectaExpected = months;
-  const aceiteAccum = sumMonths('litros_aceite_recolectados_mes');
-  const aguaAccum = sumMonths('litros_agua_protegidos_mes');
-  const jabProdAccum = sumMonths('jabones_producidos_mes');
-  const jabVendAccum = sumMonths('jabones_vendidos_mes');
-  const pruebasAccum = countMonthsWith(r => GOALS.pruebasMeses.includes(toNum(r.mes_num)) && toNum(r.pruebas_jabon_liquido_mes) > 0);
-  const pruebasExpected = expectedPruebasAtCut(months);
-  const ventasAccum = sumMonths('ingresos_ventas_q_mes');
-  const oilMonthlyGoal = GOALS.aceiteAnual / 12;
-  const waterMonthlyGoal = GOALS.aguaAnual / 12;
-  return [
-    {
-      id:'colectas',
-      title:'Colecta mensual cubierta',
-      value:`${colectaAccum} / ${GOALS.colectasAnual}`,
-      unit:'ciclos',
-      status:statusFromRatio(colectaExpected ? colectaAccum / colectaExpected : NaN, true),
-      expectedText:`Esperado al corte ${colectaExpected} de ${GOALS.colectasAnual} ciclos`,
-      line1:`Acumulado al corte: <strong>${colectaAccum} / ${GOALS.colectasAnual}</strong> ciclos · <strong>${fmtPct(colectaAccum / GOALS.colectasAnual)}</strong> del objetivo anual`,
-      line2:`Período actual: <strong>${periodJornadas}</strong> jornadas individuales registradas, equivalentes a <strong>${periodCycles}</strong> ciclo mensual válido`,
-      progress: clamp((colectaAccum / GOALS.colectasAnual) * 100, 0, 100),
-      ratioVsExpected: colectaExpected ? colectaAccum / colectaExpected : NaN,
-      goalType:'annual'
-    },
-    {
-      id:'aceite',
-      title:'Aceite usado recolectado',
-      value:fmtNumber(aceiteAccum,2),
-      unit:'litros',
-      status:statusFromRatio(aceiteAccum / (oilMonthlyGoal * months), true),
-      expectedText:`Esperado al corte ${fmtNumber(oilMonthlyGoal * months,2)} litros`,
-      line1:`Acumulado real: <strong>${fmtNumber(aceiteAccum,2)}</strong> litros · <strong>${fmtPct(aceiteAccum / GOALS.aceiteAnual)}</strong> del objetivo anual`,
-      line2:`Período actual: <strong>${fmtNumber(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros · meta mensual <strong>${fmtNumber(oilMonthlyGoal,2)}</strong> litros · <strong>${fmtPct(toNum(row?.litros_aceite_recolectados_mes) / oilMonthlyGoal)}</strong> de cumplimiento`,
-      progress: clamp((aceiteAccum / GOALS.aceiteAnual) * 100, 0, 100),
-      ratioVsExpected: aceiteAccum / (oilMonthlyGoal * months),
-      goalType:'annual'
-    },
-    {
-      id:'agua',
-      title:'Agua protegida',
-      value:fmtInteger(aguaAccum),
-      unit:'litros',
-      status:statusFromRatio(aguaAccum / (waterMonthlyGoal * months), true),
-      expectedText:`Esperado al corte ${fmtInteger(waterMonthlyGoal * months)} litros`,
-      line1:`Acumulado real: <strong>${fmtInteger(aguaAccum)}</strong> litros · <strong>${fmtPct(aguaAccum / GOALS.aguaAnual)}</strong> del objetivo anual`,
-      line2:`Período actual: <strong>${fmtInteger(toNum(row?.litros_agua_protegidos_mes))}</strong> litros · meta mensual <strong>${fmtInteger(waterMonthlyGoal)}</strong> litros · <strong>${fmtPct(toNum(row?.litros_agua_protegidos_mes) / waterMonthlyGoal)}</strong> de cumplimiento`,
-      progress: clamp((aguaAccum / GOALS.aguaAnual) * 100, 0, 100),
-      ratioVsExpected: aguaAccum / (waterMonthlyGoal * months),
-      goalType:'annual'
-    },
-    {
-      id:'jabones-producidos',
-      title:'Jabones producidos',
-      value:`${fmtInteger(jabProdAccum)} / ${fmtInteger(GOALS.jabonesProducidosAnual)}`,
-      unit:'jabones',
-      status:statusFromRatio(toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual, true),
-      expectedText:`Esperado al corte ${fmtInteger(GOALS.jabonesProducidosMensual * months)} jabones`,
-      line1:`Acumulado real: <strong>${fmtInteger(jabProdAccum)}</strong> / ${fmtInteger(GOALS.jabonesProducidosAnual)} jabones · <strong>${fmtPct(jabProdAccum / GOALS.jabonesProducidosAnual)}</strong> del objetivo anual`,
-      line2:`Período actual: <strong>${fmtInteger(toNum(row?.jabones_producidos_mes))}</strong> / ${fmtInteger(GOALS.jabonesProducidosMensual)} jabones · <strong>${fmtPct(toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual)}</strong> de la meta mensual`,
-      progress: clamp((jabProdAccum / GOALS.jabonesProducidosAnual) * 100, 0, 100),
-      ratioVsExpected: jabProdAccum / (GOALS.jabonesProducidosMensual * months),
-      goalType:'annual'
-    },
-    {
-      id:'jabones-vendidos',
-      title:'Jabones vendidos',
-      value:`${fmtInteger(jabVendAccum)} / ${fmtInteger(GOALS.jabonesVendidosAnual)}`,
-      unit:'jabones',
-      status:statusFromRatio(jabVendAccum / ((GOALS.jabonesVendidosAnual / 12) * months), true),
-      expectedText:`Esperado al corte ${fmtInteger((GOALS.jabonesVendidosAnual / 12) * months)} jabones`,
-      line1:`Acumulado real: <strong>${fmtInteger(jabVendAccum)}</strong> / ${fmtInteger(GOALS.jabonesVendidosAnual)} jabones · <strong>${fmtPct(jabVendAccum / GOALS.jabonesVendidosAnual)}</strong> del objetivo anual`,
-      line2:`Período actual: <strong>${fmtInteger(toNum(row?.jabones_vendidos_mes))}</strong> jabones vendidos · sin meta mensual explícita para esta lectura`,
-      progress: clamp((jabVendAccum / GOALS.jabonesVendidosAnual) * 100, 0, 100),
-      ratioVsExpected: jabVendAccum / ((GOALS.jabonesVendidosAnual / 12) * months),
-      goalType:'annual'
-    },
-    {
-      id:'pruebas',
-      title:'Pruebas de jabón líquido',
-      value:`${pruebasAccum} / ${GOALS.pruebasAnual}`,
-      unit:'hitos',
-      status: pruebasExpected===0 ? 'gray' : statusFromRatio(pruebasAccum / pruebasExpected, true),
-      expectedText: pruebasExpected===0 ? 'La meta inicia en marzo' : `Esperado al corte ${pruebasExpected} de ${GOALS.pruebasAnual} hitos`,
-      line1:`Acumulado al corte: <strong>${pruebasAccum} / ${GOALS.pruebasAnual}</strong> hitos · <strong>${fmtPct(pruebasAccum / GOALS.pruebasAnual)}</strong> del objetivo anual`,
-      line2: pruebasExpected===0
-        ? `El calendario de pruebas está previsto para <strong>marzo, abril y mayo</strong>.`
-        : `Período actual: <strong>${fmtNumber(toNum(row?.pruebas_jabon_liquido_mes),0)}</strong> pruebas registradas · última ventana evaluada: <strong>${periodLabel(state.period)}</strong>`,
-      progress: clamp((pruebasAccum / GOALS.pruebasAnual) * 100, 0, 100),
-      ratioVsExpected: pruebasExpected===0 ? NaN : (pruebasAccum / pruebasExpected),
-      goalType:'annual'
-    },
-    {
-      id:'ventas',
-      title:'Ventas acumuladas registradas',
-      value:fmtMoney(ventasAccum),
-      unit:'',
+  const row=selectedRow(), months=monthsElapsed();
+  const oilMonthlyGoal=GOALS.aceiteAnual/12, waterMonthlyGoal=GOALS.aguaAnual/12;
+  const colectaAccum=countMonthsWith(r=>toNum(r.jornadas_recoleccion_ciclo_mes)>0);
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes');
+  const aguaAccum=sumMonths('litros_agua_protegidos_mes');
+  const jabProdAccum=sumMonths('jabones_producidos_mes');
+  const jabVendAccum=sumMonths('jabones_vendidos_mes');
+  const pruebasAccum=countMonthsWith(r=>GOALS.pruebasMeses.includes(toNum(r.mes_num))&&toNum(r.pruebas_jabon_liquido_mes)>0);
+  const pruebasExpected=expectedPruebasAtCut(months);
+  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const periodJ=toNum(row?.jornadas_codigos_unicos_mes||row?.filas_recoleccion_validas_mes);
+  const periodC=toNum(row?.jornadas_recoleccion_ciclo_mes)>0?1:0;
+  return[
+    {id:'colectas',title:'Colecta mensual cubierta',
+      value:`${colectaAccum} / ${GOALS.colectasAnual}`,unit:'ciclos',
+      status:statusFromRatio(months?colectaAccum/months:NaN,true),
+      expectedText:`Meta anual: ${GOALS.colectasAnual} ciclos`,
+      line1:`Acumulado real: <strong>${colectaAccum} / ${GOALS.colectasAnual}</strong> ciclos · <strong>${fmtPct(colectaAccum/GOALS.colectasAnual)}</strong> del objetivo anual`,
+      line2:`${periodLabel(state.period)}: <strong>${periodJ}</strong> jornadas registradas, equivalentes a <strong>${periodC}</strong> ciclo mensual válido`,
+      progress:clamp((colectaAccum/GOALS.colectasAnual)*100,0,100),
+      ratioVsExpected:months?colectaAccum/months:NaN,goalType:'annual'},
+    {id:'aceite',title:'Aceite usado recolectado',
+      value:fmtN(aceiteAccum,2),unit:'litros',
+      status:statusFromRatio(aceiteAccum/(oilMonthlyGoal*months),true),
+      expectedText:`Meta mensual: ${fmtN(oilMonthlyGoal,2)} litros`,
+      line1:`Acumulado real: <strong>${fmtN(aceiteAccum,2)}</strong> litros · <strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros · <strong>${fmtPct(toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal)}</strong> de la meta mensual`,
+      progress:clamp((aceiteAccum/GOALS.aceiteAnual)*100,0,100),
+      ratioVsExpected:aceiteAccum/(oilMonthlyGoal*months),goalType:'annual'},
+    {id:'agua',title:'Agua protegida acumulada',
+      value:fmtI(aguaAccum),unit:'litros',
+      status:statusFromRatio(aguaAccum/(waterMonthlyGoal*months),true),
+      expectedText:`Meta mensual: ${fmtI(waterMonthlyGoal)} litros`,
+      line1:`Acumulado real: <strong>${fmtI(aguaAccum)}</strong> litros · <strong>${fmtPct(aguaAccum/GOALS.aguaAnual)}</strong> del objetivo anual`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))}</strong> litros protegidos · <strong>${fmtPct(toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal)}</strong> de meta`,
+      progress:clamp((aguaAccum/GOALS.aguaAnual)*100,0,100),
+      ratioVsExpected:aguaAccum/(waterMonthlyGoal*months),goalType:'annual'},
+    {id:'jabones-prod',title:'Jabones producidos',
+      value:`${fmtI(jabProdAccum)} / ${fmtI(GOALS.jabonesProducidosAnual)}`,unit:'jabones',
+      status:statusFromRatio(toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual,true),
+      expectedText:`Meta mensual: ${fmtI(GOALS.jabonesProducidosMensual)} jabones`,
+      line1:`Acumulado real: <strong>${fmtI(jabProdAccum)}</strong> / ${fmtI(GOALS.jabonesProducidosAnual)} jabones · <strong>${fmtPct(jabProdAccum/GOALS.jabonesProducidosAnual)}</strong> del objetivo anual`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones · <strong>${fmtPct(toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual)}</strong> de la meta mensual`,
+      progress:clamp((jabProdAccum/GOALS.jabonesProducidosAnual)*100,0,100),
+      ratioVsExpected:jabProdAccum/(GOALS.jabonesProducidosMensual*months),goalType:'annual'},
+    {id:'jabones-vend',title:'Jabones vendidos',
+      value:`${fmtI(jabVendAccum)} / ${fmtI(GOALS.jabonesVendidosAnual)}`,unit:'jabones',
+      status:statusFromRatio(jabVendAccum/((GOALS.jabonesVendidosAnual/12)*months),true),
+      expectedText:`Meta anual: ${fmtI(GOALS.jabonesVendidosAnual)} jabones`,
+      line1:`Acumulado real: <strong>${fmtI(jabVendAccum)}</strong> / ${fmtI(GOALS.jabonesVendidosAnual)} jabones · <strong>${fmtPct(jabVendAccum/GOALS.jabonesVendidosAnual)}</strong> del objetivo anual`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.jabones_vendidos_mes))}</strong> jabones vendidos en el período`,
+      progress:clamp((jabVendAccum/GOALS.jabonesVendidosAnual)*100,0,100),
+      ratioVsExpected:jabVendAccum/((GOALS.jabonesVendidosAnual/12)*months),goalType:'annual'},
+    {id:'pruebas',title:'Pruebas de jabón líquido',
+      value:`${pruebasAccum} / ${GOALS.pruebasAnual}`,unit:'hitos',
+      status:pruebasExpected===0?'gray':statusFromRatio(pruebasAccum/pruebasExpected,true),
+      expectedText:pruebasExpected===0?'La meta inicia en marzo':`${pruebasExpected} hitos esperados`,
+      line1:`Acumulado: <strong>${pruebasAccum} / ${GOALS.pruebasAnual}</strong> hitos · <strong>${fmtPct(pruebasAccum/GOALS.pruebasAnual)}</strong> del objetivo anual`,
+      line2:pruebasExpected===0?`Calendario de pruebas previsto para <strong>marzo, abril y mayo</strong>.`:`${periodLabel(state.period)}: <strong>${fmtN(toNum(row?.pruebas_jabon_liquido_mes),0)}</strong> pruebas registradas`,
+      progress:clamp((pruebasAccum/GOALS.pruebasAnual)*100,0,100),
+      ratioVsExpected:pruebasExpected===0?NaN:pruebasAccum/pruebasExpected,goalType:'annual'},
+    {id:'ventas',title:'Ventas acumuladas',
+      value:fmtQ(ventasAccum),unit:'',
       status:'blue',
-      expectedText:'Sin meta mensual fija para esta lectura',
-      line1:`Acumulado real al corte: <strong>${fmtMoney(ventasAccum)}</strong>`,
-      line2:`Período actual: <strong>${fmtMoney(toNum(row?.ingresos_ventas_q_mes))}</strong> · lectura informativa de comercialización`,
-      progress: clamp((toNum(row?.ingresos_ventas_q_mes) / Math.max(ventasAccum, 1)) * 100, 0, 100),
-      ratioVsExpected: NaN,
-      goalType:'none'
-    }
+      expectedText:'Lectura informativa',
+      line1:`Acumulado real: <strong>${fmtQ(ventasAccum)}</strong>`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong> en ventas registradas`,
+      progress:clamp((toNum(row?.ingresos_ventas_q_mes)/Math.max(ventasAccum,1))*100,0,100),
+      ratioVsExpected:NaN,goalType:'none'}
   ];
 }
 
 function computeMonthlyMetrics(){
-  const row = selectedRow();
-  const months = monthsElapsed();
-  const municipalitiesCycles = countMonthsWith(r => toNum(r.municipios_visitados_mes) >= GOALS.municipiosMetaMes);
-  const municipalityExpected = Math.min(months, GOALS.municipiosCiclosAnual);
-  const oilMonthlyGoal = GOALS.aceiteAnual / 12;
-  const waterMonthlyGoal = GOALS.aguaAnual / 12;
-  const periodVentas = toNum(row?.ingresos_ventas_q_mes);
-  return [
-    {
-      id:'municipios',
-      title:'Cobertura mensual de municipios',
-      value:`${municipalitiesCycles} / ${GOALS.municipiosCiclosAnual}`,
-      unit:'ciclos',
-      status:statusFromRatio(municipalityExpected ? municipalitiesCycles / municipalityExpected : NaN, true),
-      expectedText:`Esperado al corte ${municipalityExpected} de ${GOALS.municipiosCiclosAnual} ciclos`,
-      line1:`Avance operativo anual: <strong>${municipalitiesCycles} / ${GOALS.municipiosCiclosAnual}</strong> ciclos completos · <strong>${fmtPct(municipalitiesCycles / GOALS.municipiosCiclosAnual)}</strong>`,
-      line2:`Período actual: <strong>${fmtInteger(toNum(row?.municipios_visitados_mes))}</strong> de ${GOALS.municipiosMetaMes} municipios · el mes cuenta como <strong>${toNum(row?.municipios_visitados_mes) >= GOALS.municipiosMetaMes ? 'ciclo cumplido' : 'ciclo incompleto'}</strong>`,
-      progress: clamp((municipalitiesCycles / GOALS.municipiosCiclosAnual) * 100, 0, 100),
-      periodRatio: toNum(row?.municipios_visitados_mes) / GOALS.municipiosMetaMes,
-      goalType:'monthly'
-    },
-    {
-      id:'inmuebles',
-      title:'Inmuebles atendidos',
-      value:fmtInteger(toNum(row?.inmuebles_atendidos_mes)),
-      unit:'inmuebles',
+  const row=selectedRow(), months=monthsElapsed();
+  const oilMonthlyGoal=GOALS.aceiteAnual/12, waterMonthlyGoal=GOALS.aguaAnual/12;
+  const munCycles=countMonthsWith(r=>toNum(r.municipios_visitados_mes)>=GOALS.municipiosMetaMes);
+  const munExpected=Math.min(months,GOALS.municipiosCiclosAnual);
+  const periodVentas=toNum(row?.ingresos_ventas_q_mes);
+  return[
+    {id:'municipios',title:'Cobertura de municipios',
+      value:`${munCycles} / ${GOALS.municipiosCiclosAnual}`,unit:'ciclos',
+      status:statusFromRatio(munExpected?munCycles/munExpected:NaN,true),
+      expectedText:`${GOALS.municipiosMetaMes} municipios por ciclo completo`,
+      line1:`Avance anual: <strong>${munCycles} / ${GOALS.municipiosCiclosAnual}</strong> ciclos completos · <strong>${fmtPct(munCycles/GOALS.municipiosCiclosAnual)}</strong>`,
+      line2:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong> municipios · ${toNum(row?.municipios_visitados_mes)>=GOALS.municipiosMetaMes?'<strong>ciclo cumplido</strong>':'<strong>ciclo incompleto</strong>'}`,
+      progress:clamp((munCycles/GOALS.municipiosCiclosAnual)*100,0,100),
+      periodRatio:toNum(row?.municipios_visitados_mes)/GOALS.municipiosMetaMes,goalType:'monthly'},
+    {id:'inmuebles',title:'Inmuebles atendidos',
+      value:fmtI(toNum(row?.inmuebles_atendidos_mes)),unit:'inmuebles',
       status:'blue',
       expectedText:'Dato operativo del período',
-      line1:`Período actual: <strong>${fmtInteger(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles atendidos`,
-      line2:`Acumulado al corte: <strong>${fmtInteger(sumMonths('inmuebles_atendidos_mes'))}</strong> inmuebles`,
-      progress: clamp((toNum(row?.inmuebles_atendidos_mes) / Math.max(sumMonths('inmuebles_atendidos_mes'), 1)) * 100, 0, 100),
-      periodRatio: NaN,
-      goalType:'none'
-    },
-    {
-      id:'aceite-mes',
-      title:'Aceite recolectado del período',
-      value:fmtNumber(toNum(row?.litros_aceite_recolectados_mes),2),
-      unit:'litros',
-      status:statusFromRatio(toNum(row?.litros_aceite_recolectados_mes) / oilMonthlyGoal, true),
-      expectedText:`Esperado mensual ${fmtNumber(oilMonthlyGoal,2)} litros`,
-      line1:`Resultado del período: <strong>${fmtNumber(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros`,
-      line2:`Meta mensual: <strong>${fmtNumber(oilMonthlyGoal,2)}</strong> litros · <strong>${fmtPct(toNum(row?.litros_aceite_recolectados_mes) / oilMonthlyGoal)}</strong> de cumplimiento`,
-      progress: clamp((toNum(row?.litros_aceite_recolectados_mes) / oilMonthlyGoal) * 100, 0, 100),
-      periodRatio: toNum(row?.litros_aceite_recolectados_mes) / oilMonthlyGoal,
-      goalType:'monthly'
-    },
-    {
-      id:'agua-mes',
-      title:'Agua protegida del período',
-      value:fmtInteger(toNum(row?.litros_agua_protegidos_mes)),
-      unit:'litros',
-      status:statusFromRatio(toNum(row?.litros_agua_protegidos_mes) / waterMonthlyGoal, true),
-      expectedText:`Esperado mensual ${fmtInteger(waterMonthlyGoal)} litros`,
-      line1:`Resultado del período: <strong>${fmtInteger(toNum(row?.litros_agua_protegidos_mes))}</strong> litros`,
-      line2:`Meta mensual: <strong>${fmtInteger(waterMonthlyGoal)}</strong> litros · <strong>${fmtPct(toNum(row?.litros_agua_protegidos_mes) / waterMonthlyGoal)}</strong> de cumplimiento`,
-      progress: clamp((toNum(row?.litros_agua_protegidos_mes) / waterMonthlyGoal) * 100, 0, 100),
-      periodRatio: toNum(row?.litros_agua_protegidos_mes) / waterMonthlyGoal,
-      goalType:'monthly'
-    },
-    {
-      id:'produccion-mes',
-      title:'Producción del período',
-      value:fmtInteger(toNum(row?.jabones_producidos_mes)),
-      unit:'jabones',
-      status:statusFromRatio(toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual, true),
-      expectedText:`Esperado mensual ${fmtInteger(GOALS.jabonesProducidosMensual)} jabones`,
-      line1:`Resultado del período: <strong>${fmtInteger(toNum(row?.jabones_producidos_mes))}</strong> jabones`,
-      line2:`Meta mensual: <strong>${fmtInteger(GOALS.jabonesProducidosMensual)}</strong> jabones · <strong>${fmtPct(toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual)}</strong> de cumplimiento`,
-      progress: clamp((toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual) * 100, 0, 100),
-      periodRatio: toNum(row?.jabones_producidos_mes) / GOALS.jabonesProducidosMensual,
-      goalType:'monthly'
-    },
-    {
-      id:'ventas-mes',
-      title:'Ventas registradas del período',
-      value:fmtMoney(periodVentas),
-      unit:'',
+      line1:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles atendidos`,
+      line2:`Acumulado: <strong>${fmtI(sumMonths('inmuebles_atendidos_mes'))}</strong> inmuebles`,
+      progress:clamp((toNum(row?.inmuebles_atendidos_mes)/Math.max(sumMonths('inmuebles_atendidos_mes'),1))*100,0,100),
+      periodRatio:NaN,goalType:'none'},
+    {id:'aceite-mes',title:'Aceite recolectado en el período',
+      value:fmtN(toNum(row?.litros_aceite_recolectados_mes),2),unit:'litros',
+      status:statusFromRatio(toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal,true),
+      expectedText:`Meta mensual: ${fmtN(oilMonthlyGoal,2)} litros`,
+      line1:`${periodLabel(state.period)}: <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros recolectados`,
+      line2:`Meta mensual: <strong>${fmtN(oilMonthlyGoal,2)}</strong> litros · cumplimiento: <strong>${fmtPct(toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal)}</strong>`,
+      progress:clamp((toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal)*100,0,100),
+      periodRatio:toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal,goalType:'monthly'},
+    {id:'agua-mes',title:'Agua protegida en el período',
+      value:fmtI(toNum(row?.litros_agua_protegidos_mes)),unit:'litros',
+      status:statusFromRatio(toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal,true),
+      expectedText:`Meta mensual: ${fmtI(waterMonthlyGoal)} litros`,
+      line1:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))}</strong> litros protegidos`,
+      line2:`Meta mensual: <strong>${fmtI(waterMonthlyGoal)}</strong> litros · cumplimiento: <strong>${fmtPct(toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal)}</strong>`,
+      progress:clamp((toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal)*100,0,100),
+      periodRatio:toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal,goalType:'monthly'},
+    {id:'produccion-mes',title:'Jabones producidos en el período',
+      value:fmtI(toNum(row?.jabones_producidos_mes)),unit:'jabones',
+      status:statusFromRatio(toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual,true),
+      expectedText:`Meta mensual: ${fmtI(GOALS.jabonesProducidosMensual)} jabones`,
+      line1:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones producidos`,
+      line2:`Meta mensual: <strong>${fmtI(GOALS.jabonesProducidosMensual)}</strong> jabones · cumplimiento: <strong>${fmtPct(toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual)}</strong>`,
+      progress:clamp((toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual)*100,0,100),
+      periodRatio:toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual,goalType:'monthly'},
+    {id:'ventas-mes',title:'Ventas registradas en el período',
+      value:fmtQ(periodVentas),unit:'',
       status:'blue',
       expectedText:'Lectura informativa del período',
-      line1:`Resultado del período: <strong>${fmtMoney(periodVentas)}</strong>`,
-      line2:`Acumulado al corte: <strong>${fmtMoney(sumMonths('ingresos_ventas_q_mes'))}</strong> · sin meta mensual fija`,
-      progress: clamp((periodVentas / Math.max(sumMonths('ingresos_ventas_q_mes'), 1)) * 100, 0, 100),
-      periodRatio: NaN,
-      goalType:'none'
-    }
+      line1:`${periodLabel(state.period)}: <strong>${fmtQ(periodVentas)}</strong> en ventas`,
+      line2:`Acumulado: <strong>${fmtQ(sumMonths('ingresos_ventas_q_mes'))}</strong> · sin meta mensual fija`,
+      progress:clamp((periodVentas/Math.max(sumMonths('ingresos_ventas_q_mes'),1))*100,0,100),
+      periodRatio:NaN,goalType:'none'}
   ];
 }
 
-function buildMonthPills(){
-  const host=document.getElementById('monthPills');
-  host.innerHTML='';
-  state.periods.forEach(period=>{
-    const btn=document.createElement('button');
-    btn.type='button';
-    btn.className='month-pill' + (period===state.period ? ' active' : '');
-    btn.textContent=MONTHS_SHORT[Number(String(period).split('-')[1])-1] || period;
-    btn.addEventListener('click', ()=>{ state.period=period; render(); });
-    host.appendChild(btn);
-  });
-}
-
-function buildTrendOptions(){
-  const sel=document.getElementById('trendIndicator');
-  sel.innerHTML = TREND_OPTIONS.map(o=>`<option value="${o.id}">${o.label}</option>`).join('');
-  sel.value = 'litros_aceite_recolectados_mes';
-  sel.addEventListener('change', renderCharts);
-}
-
+// ── RENDER ────────────────────────────────────────────────────────────────────
 function render(){
   buildMonthPills();
-  renderHero();
-  const strategic = computeStrategicMetrics();
-  const monthly = computeMonthlyMetrics();
-  renderKpiGrid('strategicGrid', strategic);
-  renderKpiGrid('monthlyGrid', monthly);
+  const strategic=computeStrategicMetrics(), monthly=computeMonthlyMetrics();
+  renderHero(strategic,monthly);
+  renderKpiGrid('strategicGrid',strategic);
+  renderKpiGrid('monthlyGrid',monthly);
   renderPeriodSummary();
   renderCharts();
-  renderDiagnostic(strategic, monthly);
-  buildPresentationSlides();
+  renderDiagnostic(strategic,monthly);
+  renderExec(strategic,monthly);
+  buildPresentation(strategic,monthly);
+  updateSectionSubtitles();
 }
 
-function renderHero(){
-  const row=selectedRow();
-  document.getElementById('heroPeriod').textContent = monthShortLabel(state.period).toUpperCase();
-  document.getElementById('heroLatest').textContent = periodLabel(state.metadata.latest_period || state.period);
-  document.getElementById('heroJornadas').textContent = fmtInteger(toNum(row?.jornadas_codigos_unicos_mes || row?.filas_recoleccion_validas_mes));
-  document.getElementById('heroInmuebles').textContent = fmtInteger(toNum(row?.inmuebles_atendidos_mes));
-  const s = computeStrategicMetrics();
-  const m = computeMonthlyMetrics();
-  document.getElementById('heroStrategic').textContent = strategicStatus(s);
-  document.getElementById('heroMonthly').textContent = monthlyStatus(m);
+function updateSectionSubtitles(){
+  const lbl=periodLabel(state.period);
+  const el=id=>document.getElementById(id);
+  if(el('monthlyKpiTitle')) el('monthlyKpiTitle').textContent='Comportamiento de '+lbl;
+  if(el('monthlyKpiDesc')) el('monthlyKpiDesc').textContent=`Indicadores operativos del período ${lbl} con su meta mensual y avance del programa.`;
+  if(el('diagTitle')) el('diagTitle').textContent='Diagnóstico de '+lbl;
+  if(el('summarySubtitle')) el('summarySubtitle').textContent=`Datos operativos de ${lbl} y su acumulado en el año.`;
+  if(el('progressChartSub')) el('progressChartSub').textContent=`Progreso real vs esperado por indicador estratégico — ${lbl}.`;
+  if(el('trendChartSub')) el('trendChartSub').textContent=`Serie histórica con línea de meta mensual cuando existe. Período activo: ${lbl}.`;
+  if(el('soapChartSub')) el('soapChartSub').textContent=`Producción y venta de jabón en ${lbl}, con tasa de conversión.`;
 }
 
-function renderKpiGrid(id, metrics){
+function renderHero(strategic,monthly){
+  const row=selectedRow(), lbl=periodLabel(state.period);
+  document.getElementById('heroPeriod').textContent=lbl;
+  document.getElementById('heroJornadas').textContent=fmtI(toNum(row?.jornadas_codigos_unicos_mes||row?.filas_recoleccion_validas_mes));
+  document.getElementById('heroInmuebles').textContent=fmtI(toNum(row?.inmuebles_atendidos_mes));
+  document.getElementById('heroMunicipios').textContent=fmtI(toNum(row?.municipios_visitados_mes));
+  const sRatios=strategic.filter(m=>m.goalType!=='none'&&Number.isFinite(m.ratioVsExpected)).map(m=>m.ratioVsExpected);
+  const sAvg=sRatios.length?sRatios.reduce((a,b)=>a+b,0)/sRatios.length:NaN;
+  document.getElementById('heroStrategic').textContent=chipTextFromStatus(statusFromRatio(sAvg,!!sRatios.length));
+  const mRatios=monthly.filter(m=>m.goalType==='monthly'&&Number.isFinite(m.periodRatio)).map(m=>m.periodRatio);
+  const mAvg=mRatios.length?mRatios.reduce((a,b)=>a+b,0)/mRatios.length:NaN;
+  document.getElementById('heroMonthly').textContent=chipTextFromStatus(statusFromRatio(mAvg,!!mRatios.length));
+}
+
+function renderKpiGrid(id,metrics){
   const host=document.getElementById(id);
   host.innerHTML='';
   metrics.forEach((metric,idx)=>{
+    const tone=metric.status||'gray';
+    const displayValue=[metric.value,metric.unit].filter(Boolean).join(' ');
+    const parts=splitDisplayValue(displayValue);
+    const progressWidth=Math.max(0,Math.min(Number(metric.progress||0),100));
+    const pillarHeight=Math.max(8,Math.min(progressWidth,100));
     const card=document.createElement('article');
-    const tone = metric.status || 'gray';
-    const displayValue = [metric.value, metric.unit].filter(Boolean).join(' ');
-    const parts = splitDisplayValue(displayValue);
-    const progressWidth = Math.max(0, Math.min(Number(metric.progress||0), 100));
-    const pillarHeight = Math.max(8, Math.min(progressWidth, 100));
     card.className=`card kpi tone-${tone}`;
-    card.style.setProperty('--delay', `${idx * 80}ms`);
-    card.innerHTML = `
-      <div class="kpi-top">
-        <div class="kpi-label">${escapeHtml(metric.title)}</div>
-      </div>
+    card.style.setProperty('--delay',`${idx*80}ms`);
+    card.innerHTML=`
+      <div class="kpi-top"><div class="kpi-label">${escapeHtml(metric.title)}</div></div>
       <div class="kpi-figure">
         <div class="kpi-pillar" aria-hidden="true">
           <span class="kpi-pillar-track"></span>
@@ -1173,23 +977,22 @@ function renderKpiGrid(id, metrics){
         <div class="kpi-meta">${metric.line1}</div>
         <div class="kpi-meta">${metric.line2}</div>
       </div>
-      <div class="kpi-progress-line"><span data-width="${progressWidth}"></span></div>
-    `;
+      <div class="kpi-progress-line"><span data-width="${progressWidth}"></span></div>`;
     host.appendChild(card);
   });
-  if(!host.children.length) host.innerHTML = `<div class="empty">No se encontraron indicadores para el período seleccionado.</div>`;
+  if(!host.children.length) host.innerHTML='<div class="empty">No se encontraron indicadores para el período seleccionado.</div>';
   requestAnimationFrame(()=>{
     host.querySelectorAll('.kpi-pillar-fill').forEach((bar,i)=>{
       const target=bar.dataset.height||'0%';
-      setTimeout(()=>{ bar.style.height=target; }, 120 + i*120);
+      setTimeout(()=>{bar.style.height=target;},120+i*120);
     });
     host.querySelectorAll('.kpi-progress-line > span').forEach((bar,i)=>{
       const target=bar.dataset.width||'0';
-      setTimeout(()=>{ bar.style.width=`${target}%`; }, 180 + i*120);
+      setTimeout(()=>{bar.style.width=`${target}%`;},180+i*120);
     });
     host.querySelectorAll('.kpi-value[data-value]').forEach((node,i)=>{
       if(node.dataset.value==='') return;
-      setTimeout(()=>animateMetricValue(node), 240 + i*120);
+      setTimeout(()=>animateMetricValue(node),240+i*120);
     });
   });
 }
@@ -1198,406 +1001,480 @@ function renderPeriodSummary(){
   const row=selectedRow();
   const host=document.getElementById('periodSummary');
   const cells=[
-    {label:'Aceite del período', value:fmtNumber(toNum(row?.litros_aceite_recolectados_mes),2)+' litros', meta:'Acumulado: '+fmtNumber(sumMonths('litros_aceite_recolectados_mes'),2)+' litros'},
-    {label:'Agua protegida', value:fmtInteger(toNum(row?.litros_agua_protegidos_mes))+' litros', meta:'Acumulado: '+fmtInteger(sumMonths('litros_agua_protegidos_mes'))+' litros'},
-    {label:'Jabones producidos', value:fmtInteger(toNum(row?.jabones_producidos_mes))+' jabones', meta:'Acumulado: '+fmtInteger(sumMonths('jabones_producidos_mes'))+' jabones'},
-    {label:'Jabones vendidos', value:fmtInteger(toNum(row?.jabones_vendidos_mes))+' jabones', meta:'Acumulado: '+fmtInteger(sumMonths('jabones_vendidos_mes'))+' jabones'},
-    {label:'Ventas del período', value:fmtMoney(toNum(row?.ingresos_ventas_q_mes)), meta:'Acumulado: '+fmtMoney(sumMonths('ingresos_ventas_q_mes'))},
-    {label:'Municipios visitados', value:fmtInteger(toNum(row?.municipios_visitados_mes))+' municipios', meta:'Inmuebles atendidos: '+fmtInteger(toNum(row?.inmuebles_atendidos_mes))}
+    {label:'Aceite del período',value:fmtN(toNum(row?.litros_aceite_recolectados_mes),2)+' litros',meta:'Acumulado: '+fmtN(sumMonths('litros_aceite_recolectados_mes'),2)+' litros'},
+    {label:'Agua protegida',value:fmtI(toNum(row?.litros_agua_protegidos_mes))+' litros',meta:'Acumulado: '+fmtI(sumMonths('litros_agua_protegidos_mes'))+' litros'},
+    {label:'Jabones producidos',value:fmtI(toNum(row?.jabones_producidos_mes))+' jabones',meta:'Acumulado: '+fmtI(sumMonths('jabones_producidos_mes'))+' jabones'},
+    {label:'Jabones vendidos',value:fmtI(toNum(row?.jabones_vendidos_mes))+' jabones',meta:'Acumulado: '+fmtI(sumMonths('jabones_vendidos_mes'))+' jabones'},
+    {label:'Ventas del período',value:fmtQ(toNum(row?.ingresos_ventas_q_mes)),meta:'Acumulado: '+fmtQ(sumMonths('ingresos_ventas_q_mes'))},
+    {label:'Municipios visitados',value:fmtI(toNum(row?.municipios_visitados_mes))+' municipios',meta:'Inmuebles: '+fmtI(toNum(row?.inmuebles_atendidos_mes))}
   ];
-  host.innerHTML = cells.map(c=>`<div class="summary-cell"><small>${escapeHtml(c.label)}</small><strong>${escapeHtml(c.value)}</strong><span>${escapeHtml(c.meta)}</span></div>`).join('');
+  host.innerHTML=cells.map(c=>`<div class="summary-cell"><small>${escapeHtml(c.label)}</small><strong>${escapeHtml(c.value)}</strong><span>${escapeHtml(c.meta)}</span></div>`).join('');
 }
 
+// ── CHARTS ────────────────────────────────────────────────────────────────────
+function makeGradient(chart,from,to,horiz=false){
+  const{ctx,chartArea}=chart||{};
+  if(!chartArea) return from;
+  const g=horiz?ctx.createLinearGradient(chartArea.left,0,chartArea.right,0):ctx.createLinearGradient(0,chartArea.top,0,chartArea.bottom);
+  g.addColorStop(0,from);g.addColorStop(1,to);return g;
+}
+function getChart(ctxId,config){
+  const existing=state.charts[ctxId];
+  if(existing) existing.destroy();
+  state.charts[ctxId]=new Chart(document.getElementById(ctxId),config);
+  return state.charts[ctxId];
+}
+function buildTrendOptions(){
+  const sel=document.getElementById('trendIndicator');
+  sel.innerHTML=TREND_OPTIONS.map(o=>`<option value="${o.id}">${o.label}</option>`).join('');
+  sel.value='litros_aceite_recolectados_mes';
+  sel.addEventListener('change',renderTrendChart);
+  sel.addEventListener('click',e=>e.stopPropagation());
+  sel.addEventListener('mousedown',e=>e.stopPropagation());
+}
+function buildMonthPills(){
+  const host=document.getElementById('monthPills');
+  host.innerHTML='';
+  state.periods.forEach(period=>{
+    const m=Number(String(period).split('-')[1]);
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='month-pill'+(period===state.period?' active':'');
+    btn.textContent=MONTHS_SHORT[m-1]||period;
+    btn.title=periodLabel(period);
+    btn.addEventListener('click',()=>{state.period=period;render();});
+    host.appendChild(btn);
+  });
+}
 function renderCharts(){
   renderProgressChart();
   renderTrendChart();
   renderSoapChart();
 }
-
-function getChart(ctxId, config){
-  const existing = state.charts[ctxId];
-  if(existing) existing.destroy();
-  const ctx=document.getElementById(ctxId);
-  state.charts[ctxId] = new Chart(ctx, config);
-  return state.charts[ctxId];
-}
-
 function renderProgressChart(){
-  const metrics = computeStrategicMetrics().filter(m=>m.goalType!=='none');
-  const monthNum = monthsElapsed();
-  const expectedPct = metrics.map(m=>{
-    if(m.id==='colectas') return (monthNum / GOALS.colectasAnual) * 100;
-    if(m.id==='aceite') return (monthNum / 12) * 100;
-    if(m.id==='agua') return (monthNum / 12) * 100;
-    if(m.id==='jabones-producidos') return (monthNum / 12) * 100;
-    if(m.id==='jabones-vendidos') return (monthNum / 12) * 100;
-    if(m.id==='pruebas') return (expectedPruebasAtCut(monthNum) / GOALS.pruebasAnual) * 100;
-    return 0;
+  const metrics=computeStrategicMetrics().filter(m=>m.goalType!=='none');
+  const months=monthsElapsed();
+  const expectedPct=metrics.map(m=>{
+    if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
+    if(m.id==='pruebas') return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+    return(months/12)*100;
   });
+  const commonTooltip={backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
+    callbacks:{
+      label:ctx=>`${ctx.dataset.label}: ${fmtN(ctx.parsed.x,1)}%`,
+      afterBody:items=>{if(!items?.length)return'';const i=items[0].dataIndex;const gap=metrics[i].progress-expectedPct[i];return`Brecha: ${gap>=0?'+':''}${fmtN(gap,1)} puntos`;}
+    }};
   getChart('progressChart',{
     type:'bar',
     data:{
       labels:metrics.map(m=>m.title),
       datasets:[
-        {
-          label:'Acumulado real',
-          data:metrics.map(m=>Number(m.progress.toFixed(2))),
-          borderRadius:999,
-          borderSkipped:false,
-          barThickness:18,
-          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(85,181,202,.86)',true)
-        },
-        {
-          label:'Esperado al corte',
-          data:expectedPct.map(v=>Number(v.toFixed(2))),
-          borderRadius:999,
-          borderSkipped:false,
-          barThickness:10,
-          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(234,218,185,.95)','rgba(206,160,70,.55)',true),
-          borderColor:'rgba(198,152,63,.95)',
-          borderWidth:1.2
-        }
+        {label:'Acumulado real',data:metrics.map(m=>Number(m.progress.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:16,
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(76,165,191,.82)',true)},
+        {label:'Esperado al período',data:expectedPct.map(v=>Number(v.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:9,
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(234,218,185,.9)','rgba(206,160,70,.5)',true),borderColor:'rgba(198,152,63,.9)',borderWidth:1.2}
       ]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      indexAxis:'y',
-      interaction:{mode:'index', intersect:false},
-      animation:{duration:900, easing:'easeOutQuart'},
-      plugins:{
-        legend:{position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
-        tooltip:{
-          backgroundColor:'rgba(15,32,52,.94)',
-          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
-          callbacks:{
-            label:(ctx)=>`${ctx.dataset.label}: ${fmtNumber(ctx.parsed.x,2)}%`,
-            afterBody:(items)=>{
-              if(!items?.length) return '';
-              const i = items[0].dataIndex;
-              const gap = metrics[i].progress - expectedPct[i];
-              return `Brecha: ${gap >= 0 ? '+' : ''}${fmtNumber(gap,2)} puntos`;
-            }
-          }
-        }
-      },
-      scales:{
-        x:{beginAtZero:true,max:100, grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>v+'%'}},
-        y:{grid:{display:false}, border:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}}
-      }
-    }
-  });
-}
-
-function renderTrendChart(){
-  const indicatorId=document.getElementById('trendIndicator').value;
-  const option=TREND_OPTIONS.find(o=>o.id===indicatorId) || TREND_OPTIONS[0];
-  const data = state.total.map(r=>toNum(r[indicatorId]));
-  const labels = state.total.map(r=>monthShortLabel(r.periodo_clave));
-  const expectedSeries = goalSeriesForIndicator(indicatorId);
-  getChart('trendChart',{
-    data:{
-      labels,
-      datasets:[
-        {
-          type:'line',
-          label:option.label,
-          data,
-          tension:.38,
-          fill:true,
-          borderColor:'#1c6084',
-          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(112,194,215,.34)','rgba(112,194,215,.03)'),
-          borderWidth:3,
-          pointBackgroundColor:'#173e63',
-          pointBorderColor:'#fff',
-          pointBorderWidth:2,
-          pointRadius:4,
-          pointHoverRadius:7,
-          pointHoverBackgroundColor:'#fff',
-          pointHoverBorderColor:'#1c6084'
-        },
-        ...(expectedSeries ? [{
-          type:'line',
-          label:'Referencia esperada',
-          data:expectedSeries,
-          tension:0,
-          fill:false,
-          borderColor:'rgba(198,152,63,.92)',
-          borderDash:[7,6],
-          borderWidth:2,
-          pointRadius:0,
-          pointHoverRadius:0
-        }] : [])
-      ]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',interaction:{mode:'index',intersect:false},
       animation:{duration:900,easing:'easeOutQuart'},
-      plugins:{
-        legend:{display:!!expectedSeries, position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
-        tooltip:{
-          backgroundColor:'rgba(15,32,52,.94)',
-          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
-          callbacks:{label:(ctx)=>`${ctx.dataset.label}: ${formatTrendValue(ctx.parsed.y, option.unit)}`}
-        }
-      },
+      plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},tooltip:commonTooltip},
       scales:{
-        x:{grid:{display:false}, border:{display:false}, ticks:{color:'#6d8294'}},
-        y:{grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>formatAxisValue(v, option.unit)}}
-      }
-    }
+        x:{beginAtZero:true,max:100,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>v+'%'}},
+        y:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'600'}}}
+      }}
   });
 }
-
-function renderSoapChart(){
-  const row=selectedRow();
-  const producedHotel=toNum(row?.jabones_hotel_producidos_mes);
-  const producedTocador=toNum(row?.jabones_tocador_producidos_mes);
-  const soldHotel=toNum(row?.jabones_hotel_vendidos_mes);
-  const soldTocador=toNum(row?.jabones_tocador_vendidos_mes);
-  const labels=['Jabón hotel','Jabón tocador'];
-  const rates=[producedHotel ? (soldHotel/producedHotel)*100 : 0, producedTocador ? (soldTocador/producedTocador)*100 : 0];
-  getChart('soapChart',{
-    data:{
-      labels,
-      datasets:[
-        {
-          type:'bar',
-          label:'Producido',
-          data:[producedHotel, producedTocador],
-          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(39,119,170,.92)','rgba(117,202,225,.88)'),
-          borderRadius:18,
-          borderSkipped:false,
-          maxBarThickness:46
-        },
-        {
-          type:'bar',
-          label:'Vendido',
-          data:[soldHotel, soldTocador],
-          backgroundColor:(ctx)=>makeGradient(ctx.chart,'rgba(67,138,101,.92)','rgba(145,212,171,.86)'),
-          borderRadius:18,
-          borderSkipped:false,
-          maxBarThickness:46
-        },
-        {
-          type:'line',
-          label:'Conversión venta/producción',
-          data:rates,
-          yAxisID:'y1',
-          tension:.32,
-          borderColor:'rgba(198,152,63,.95)',
-          backgroundColor:'rgba(198,152,63,.18)',
-          borderWidth:2.5,
-          pointRadius:5,
-          pointHoverRadius:7,
-          pointBackgroundColor:'#fff',
-          pointBorderColor:'rgba(198,152,63,.95)',
-          pointBorderWidth:2,
-          fill:false
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      interaction:{mode:'index', intersect:false},
-      animation:{duration:900,easing:'easeOutQuart'},
-      plugins:{
-        legend:{position:'bottom', labels:{usePointStyle:true, boxWidth:10, color:'#35546d', font:{family:'Sora', weight:'700'}}},
-        tooltip:{
-          backgroundColor:'rgba(15,32,52,.94)',
-          titleColor:'#fff', bodyColor:'#eef7ff', padding:12, cornerRadius:14,
-          callbacks:{
-            label:(ctx)=> ctx.dataset.yAxisID==='y1'
-              ? `${ctx.dataset.label}: ${fmtNumber(ctx.parsed.y,2)}%`
-              : `${ctx.dataset.label}: ${fmtInteger(ctx.parsed.y)} jabones`
-          }
-        }
-      },
-      scales:{
-        x:{grid:{display:false}, border:{display:false}, ticks:{color:'#17314f', font:{family:'Sora', weight:'700'}}},
-        y:{beginAtZero:true, grid:{color:'rgba(23,49,79,.06)'}, border:{display:false}, ticks:{color:'#6d8294', callback:(v)=>fmtInteger(v)}},
-        y1:{beginAtZero:true, position:'right', grid:{drawOnChartArea:false}, border:{display:false}, ticks:{color:'#a17820', callback:(v)=>fmtNumber(v,0)+'%'}}
-      }
-    }
-  });
-}
-
-function formatTrendValue(value, unit){
-  if(unit==='GTQ') return fmtMoney(value);
-  if(unit==='litros') return fmtNumber(value,2)+' litros';
-  if(unit==='jabones') return fmtInteger(value)+' jabones';
-  if(unit==='municipios') return fmtInteger(value)+' municipios';
-  if(unit==='inmuebles') return fmtInteger(value)+' inmuebles';
-  if(unit==='hitos' || unit==='ciclos') return fmtNumber(value,0);
-  return fmtNumber(value,2);
-}
-function formatAxisValue(value, unit){
-  if(unit==='GTQ') return 'Q ' + Number(value).toLocaleString('en-US');
-  if(unit==='litros') return Number(value).toLocaleString('en-US');
-  return Number(value).toLocaleString('en-US');
-}
-function makeGradient(chart, fromColor, toColor, horizontal=false){
-  const {ctx, chartArea} = chart || {};
-  if(!chartArea) return fromColor;
-  const g = horizontal ? ctx.createLinearGradient(chartArea.left,0,chartArea.right,0) : ctx.createLinearGradient(0,chartArea.top,0,chartArea.bottom);
-  g.addColorStop(0, fromColor);
-  g.addColorStop(1, toColor);
-  return g;
-}
-function goalSeriesForIndicator(indicatorId){
-  const monthlyGoalMap = {
-    litros_aceite_recolectados_mes: GOALS.aceiteAnual/12,
-    litros_agua_protegidos_mes: GOALS.aguaAnual/12,
-    jabones_producidos_mes: GOALS.jabonesProducidosMensual,
-    municipios_visitados_mes: GOALS.municipiosMetaMes
-  };
-  if(indicatorId==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
-  if(indicatorId==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave)) ? 1 : 0);
-  if(monthlyGoalMap[indicatorId]) return state.total.map(()=>monthlyGoalMap[indicatorId]);
+function goalSeriesForIndicator(id){
+  const map={litros_aceite_recolectados_mes:GOALS.aceiteAnual/12,litros_agua_protegidos_mes:GOALS.aguaAnual/12,
+    jabones_producidos_mes:GOALS.jabonesProducidosMensual,municipios_visitados_mes:GOALS.municipiosMetaMes};
+  if(id==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
+  if(id==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
+  if(map[id]) return state.total.map(()=>map[id]);
   return null;
 }
-function chartImageMarkup(id, title, sub){
-  const canvas = document.getElementById(id);
-  const src = canvas ? canvas.toDataURL('image/png') : '';
-  return `<article class="presentation-image-card"><h3>${escapeHtml(title)}</h3><p>${escapeHtml(sub)}</p>${src ? `<img src="${src}" alt="${escapeHtml(title)}">` : ''}</article>`;
+function formatTrendValue(v,unit){
+  if(unit==='GTQ') return fmtQ(v);
+  if(unit==='litros') return fmtN(v,2)+' litros';
+  if(unit==='jabones') return fmtI(v)+' jabones';
+  if(unit==='municipios') return fmtI(v)+' municipios';
+  if(unit==='inmuebles') return fmtI(v)+' inmuebles';
+  return fmtN(v,2);
 }
-
-function renderDiagnostic(strategic, monthly){
+function renderTrendChart(){
+  const indicatorId=document.getElementById('trendIndicator').value;
+  const option=TREND_OPTIONS.find(o=>o.id===indicatorId)||TREND_OPTIONS[0];
+  const data=state.total.map(r=>toNum(r[indicatorId]));
+  const labels=state.total.map(r=>monthShortLabel(r.periodo_clave));
+  const refSeries=goalSeriesForIndicator(indicatorId);
+  const activePeriodIdx=state.periods.indexOf(String(state.period));
+  getChart('trendChart',{
+    data:{labels,datasets:[
+      {type:'line',label:option.label,data,tension:.35,fill:true,
+        borderColor:'#1c6084',backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(112,194,215,.32)','rgba(112,194,215,.02)'),
+        borderWidth:3,pointBackgroundColor:data.map((_,i)=>i===activePeriodIdx?'#173e63':'#fff'),
+        pointBorderColor:data.map((_,i)=>i===activePeriodIdx?'#fff':'#1c6084'),
+        pointRadius:data.map((_,i)=>i===activePeriodIdx?7:4),
+        pointBorderWidth:data.map((_,i)=>i===activePeriodIdx?3:2),
+        pointHoverRadius:8,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#1c6084'},
+      ...(refSeries?[{type:'line',label:'Referencia mensual',data:refSeries,tension:0,fill:false,
+        borderColor:'rgba(198,152,63,.9)',borderDash:[8,6],borderWidth:2,pointRadius:0,pointHoverRadius:0}]:[])
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{
+        legend:{display:!!refSeries,position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
+        tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
+          callbacks:{label:ctx=>`${ctx.dataset.label}: ${formatTrendValue(ctx.parsed.y,option.unit)}`}}
+      },
+      scales:{
+        x:{grid:{display:false},border:{display:false},ticks:{color:'#6d8294'}},
+        y:{grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>Number(v).toLocaleString('en-US')}}
+      }}
+  });
+}
+function renderSoapChart(){
   const row=selectedRow();
-  const strategicOk = strategic.filter(m=>m.goalType!=='none' && (m.status==='green' || m.status==='yellow')).length;
-  const strategicRisk = strategic.filter(m=>m.status==='red').length;
-  const monthlyRisk = monthly.filter(m=>m.goalType==='monthly' && m.status==='red').length;
-  const prose=document.getElementById('diagnosticProse');
-  prose.innerHTML = `
-    <p>En <strong>${periodLabel(state.period)}</strong>, Conservando Atitlán presenta <strong>${strategicOk}</strong> indicadores estratégicos que mantienen el ritmo esperado o cercano a lo esperado, mientras <strong>${strategicRisk}</strong> indicador estratégico exige atención más inmediata.</p>
-    <p>La lectura acumulada del programa muestra un mejor comportamiento en la <strong>recolección mensual cubierta</strong>, la cadena de <strong>aceite y agua protegida</strong> y la <strong>producción de jabones</strong>. La alerta principal del corte se concentra en el indicador de <strong>jabones vendidos</strong>, que todavía se encuentra por debajo del avance que debería llevar al mes de lectura.</p>
-    <p>En la operación mensual, el tablero registra <strong>${fmtInteger(toNum(row?.municipios_visitados_mes))}</strong> municipios visitados y <strong>${fmtInteger(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles atendidos. ${monthlyRisk>0 ? 'El desempeño del período no es homogéneo y conviene revisar los indicadores en rojo.' : 'El período se sostiene con un comportamiento operativo ordenado.'}</p>
-  `;
-  const list=document.getElementById('diagnosticList');
-  const items=[
-    {title:'Cadena de aceite y agua', body:`El acumulado de aceite llega a ${fmtNumber(sumMonths('litros_aceite_recolectados_mes'),2)} litros y protege ${fmtInteger(sumMonths('litros_agua_protegidos_mes'))} litros de agua al corte.`},
-    {title:'Producción y comercialización', body:`La producción acumulada alcanza ${fmtInteger(sumMonths('jabones_producidos_mes'))} jabones, mientras la venta acumulada suma ${fmtInteger(sumMonths('jabones_vendidos_mes'))} unidades y ${fmtMoney(sumMonths('ingresos_ventas_q_mes'))} en ventas registradas.`},
-    {title:'Lectura del período', body:`En ${periodLabel(state.period)} se registran ${fmtNumber(toNum(row?.litros_aceite_recolectados_mes),2)} litros de aceite, ${fmtInteger(toNum(row?.jabones_producidos_mes))} jabones producidos y ${fmtMoney(toNum(row?.ingresos_ventas_q_mes))} en ventas.`}
-  ];
-  list.innerHTML = items.map(item=>`<article class="diag-item"><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.body)}</p></article>`).join('');
+  const pH=toNum(row?.jabones_hotel_producidos_mes), pT=toNum(row?.jabones_tocador_producidos_mes);
+  const sH=toNum(row?.jabones_hotel_vendidos_mes), sT=toNum(row?.jabones_tocador_vendidos_mes);
+  const rates=[pH?(sH/pH)*100:0, pT?(sT/pT)*100:0];
+  getChart('soapChart',{
+    data:{labels:['Jabón hotel','Jabón tocador'],
+      datasets:[
+        {type:'bar',label:'Producido',data:[pH,pT],
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(39,119,170,.92)','rgba(117,202,225,.88)'),
+          borderRadius:18,borderSkipped:false,maxBarThickness:44},
+        {type:'bar',label:'Vendido',data:[sH,sT],
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(46,106,87,.92)','rgba(84,185,126,.86)'),
+          borderRadius:18,borderSkipped:false,maxBarThickness:44},
+        {type:'line',label:'Conversión venta/producción',data:rates,yAxisID:'y1',tension:.32,
+          borderColor:'rgba(198,152,63,.95)',backgroundColor:'rgba(198,152,63,.14)',borderWidth:2.5,
+          pointRadius:6,pointHoverRadius:8,pointBackgroundColor:'#fff',pointBorderColor:'rgba(198,152,63,.95)',pointBorderWidth:2,fill:false}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      animation:{duration:900,easing:'easeOutQuart'},
+      plugins:{
+        legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
+        tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
+          callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?`${ctx.dataset.label}: ${fmtN(ctx.parsed.y,1)}%`:`${ctx.dataset.label}: ${fmtI(ctx.parsed.y)} jabones`}}
+      },
+      scales:{
+        x:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'700'}}},
+        y:{beginAtZero:true,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>fmtI(v)}},
+        y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},border:{display:false},ticks:{color:'#a17820',callback:v=>fmtN(v,0)+'%'}}
+      }}
+  });
 }
 
-function escapeHtml(str){
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+// ── DIAGNOSTIC ────────────────────────────────────────────────────────────────
+function renderDiagnostic(strategic,monthly){
+  const row=selectedRow(), lbl=periodLabel(state.period);
+  const sOk=strategic.filter(m=>m.goalType!=='none'&&(m.status==='green'||m.status==='yellow')).length;
+  const sRisk=strategic.filter(m=>m.status==='red').length;
+  const mRisk=monthly.filter(m=>m.goalType==='monthly'&&m.status==='red').length;
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes');
+  const aguaAccum=sumMonths('litros_agua_protegidos_mes');
+  const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
+  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const oilMonthlyGoal=GOALS.aceiteAnual/12;
+  const aceiteRatio=toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal;
+  document.getElementById('diagnosticProse').innerHTML=`
+    <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es':''} estratégico${sOk!==1?'s':''} dentro del ritmo esperado${sRisk>0?`, mientras <strong>${sRisk}</strong> indicador${sRisk!==1?'es exigen':'exige'} atención prioritaria`:''}.</p>
+    <p>La cadena de aceite y agua muestra un acumulado de <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite recolectados, lo que representa la protección de <strong>${fmtI(aguaAccum)}</strong> litros de agua de la cuenca del lago. En <strong>${lbl}</strong>, la recolección alcanzó el <strong>${fmtPct(aceiteRatio)}</strong> de la meta mensual de ${fmtN(oilMonthlyGoal,2)} litros.</p>
+    <p>La producción acumulada suma <strong>${fmtI(jabProd)}</strong> jabones y la comercialización ha registrado <strong>${fmtI(jabVend)}</strong> unidades vendidas y <strong>${fmtQ(ventasAccum)}</strong> en ventas acumuladas. ${mRisk>0?'El período muestra indicadores operativos que requieren seguimiento, especialmente en comercialización.':'El período sostiene un comportamiento operativo equilibrado en toda la cadena de producción y venta.'}  </p>
+    <div class="diag-grid">
+      <div class="diag-block"><strong>🫙 Cadena aceite-agua</strong><p>Aceite: <strong>${fmtN(aceiteAccum,2)} litros</strong><br>Agua protegida: <strong>${fmtI(aguaAccum)} litros</strong></p></div>
+      <div class="diag-block"><strong>🧼 Cadena jabones</strong><p>Producidos: <strong>${fmtI(jabProd)}</strong><br>Vendidos: <strong>${fmtI(jabVend)}</strong></p></div>
+      <div class="diag-block"><strong>📅 Período activo</strong><p>${lbl}<br>Municipios: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong></p></div>
+      <div class="diag-block"><strong>💰 Ventas</strong><p>Del período: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong><br>Acumulado: <strong>${fmtQ(ventasAccum)}</strong></p></div>
+    </div>`;
+  document.getElementById('diagnosticList').innerHTML=[
+    {title:'Cadena de aceite y agua',body:`El acumulado de aceite llega a ${fmtN(aceiteAccum,2)} litros, protegiendo ${fmtI(aguaAccum)} litros de agua al período seleccionado. Cada litro de aceite recolectado equivale a aproximadamente 1,000 litros de agua protegida de contaminación.`},
+    {title:'Producción y comercialización',body:`La producción acumulada alcanza ${fmtI(jabProd)} jabones, mientras la venta suma ${fmtI(jabVend)} unidades y ${fmtQ(ventasAccum)} en ventas registradas. La tasa de conversión entre producción y venta es el indicador clave de la sostenibilidad comercial del programa.`},
+    {title:'Operación del período',body:`En ${lbl} se registran ${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)} litros de aceite, ${fmtI(toNum(row?.jabones_producidos_mes))} jabones producidos, ${fmtI(toNum(row?.jabones_vendidos_mes))} jabones vendidos y ${fmtQ(toNum(row?.ingresos_ventas_q_mes))} en ventas. Se visitaron ${fmtI(toNum(row?.municipios_visitados_mes))} municipios atendiendo ${fmtI(toNum(row?.inmuebles_atendidos_mes))} inmuebles.`}
+  ].map(item=>`<article class="diag-item"><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.body)}</p></article>`).join('');
 }
 
+// ── EXECUTIVE VIEW ─────────────────────────────────────────────────────────────
+function renderExec(strategic,monthly){
+  const row=selectedRow(), lbl=periodLabel(state.period);
+  const months=monthsElapsed();
+  const sRatios=strategic.filter(m=>m.goalType!=='none'&&Number.isFinite(m.ratioVsExpected)).map(m=>m.ratioVsExpected);
+  const sAvg=sRatios.length?sRatios.reduce((a,b)=>a+b,0)/sRatios.length:NaN;
+  const sStatus=statusFromRatio(sAvg,!!sRatios.length);
+  const badge=document.getElementById('execStatusBadge');
+  if(badge){badge.textContent=chipTextFromStatus(sStatus);badge.className='exec-status-badge';}
+  const pi=document.getElementById('execPeriodInfo');
+  if(pi) pi.textContent=lbl;
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes'), aguaAccum=sumMonths('litros_agua_protegidos_mes');
+  const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
+  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const strip=document.getElementById('execStrip');
+  if(strip){
+    const stripItems=[
+      {label:'Aceite acumulado',value:fmtN(aceiteAccum,2)+' litros',pct:aceiteAccum/GOALS.aceiteAnual,status:statusFromRatio(aceiteAccum/(GOALS.aceiteAnual/12*months),true)},
+      {label:'Agua protegida',value:fmtI(aguaAccum)+' litros',pct:aguaAccum/GOALS.aguaAnual,status:statusFromRatio(aguaAccum/(GOALS.aguaAnual/12*months),true)},
+      {label:'Jabones producidos',value:fmtI(jabProd),pct:jabProd/GOALS.jabonesProducidosAnual,status:statusFromRatio(jabProd/(GOALS.jabonesProducidosMensual*months),true)},
+      {label:'Ventas acumuladas',value:fmtQ(ventasAccum),pct:null,status:'blue'}
+    ];
+    strip.innerHTML=stripItems.map(s=>`
+      <div class="exec-strip-card">
+        <small>${escapeHtml(s.label)}</small>
+        <strong>${escapeHtml(s.value)}</strong>
+        ${s.pct!==null?`<div style="margin-top:8px"><span class="chip ${s.status}">${fmtPct(s.pct)} del año</span></div>
+        <div style="height:4px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:8px"><div style="height:100%;width:${Math.max(0,Math.min(s.pct*100,100)).toFixed(1)}%;border-radius:999px;background:linear-gradient(90deg,var(--lake-light),var(--lake));transition:width .8s ease"></div></div>`:'<div style="margin-top:8px"><span class="chip blue">Informativo</span></div>'}
+      </div>`).join('');
+  }
+  // Exec progress chart
+  const emetrics=computeStrategicMetrics().filter(m=>m.goalType!=='none');
+  const eexpected=emetrics.map(m=>{
+    if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
+    if(m.id==='pruebas') return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+    return(months/12)*100;
+  });
+  const echartEl=document.getElementById('execProgressChart');
+  if(echartEl&&state.view==='exec'){
+    const existing=state.charts['execProgressChart'];
+    if(existing) existing.destroy();
+    state.charts['execProgressChart']=new Chart(echartEl,{
+      type:'bar',
+      data:{labels:emetrics.map(m=>m.title),datasets:[
+        {label:'Acumulado real',data:emetrics.map(m=>Number(m.progress.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:14,
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(76,165,191,.82)',true)},
+        {label:'Esperado al período',data:eexpected.map(v=>Number(v.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:8,
+          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(234,218,185,.9)','rgba(206,160,70,.5)',true),borderColor:'rgba(198,152,63,.9)',borderWidth:1.2}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',interaction:{mode:'index',intersect:false},
+        animation:{duration:800,easing:'easeOutQuart'},
+        plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
+          tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtN(ctx.parsed.x,1)}%`}}},
+        scales:{x:{beginAtZero:true,max:100,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>v+'%'}},
+          y:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'600'}}}}}
+    });
+  }
+  const eAlerts=document.getElementById('execAlertPanel');
+  if(eAlerts){
+    const allMetrics=[...strategic,...monthly];
+    const alerts=[];
+    allMetrics.forEach(m=>{
+      if(m.goalType==='none') return;
+      const pct=m.goalType==='annual'?m.ratioVsExpected:m.periodRatio;
+      if(!Number.isFinite(pct)) return;
+      if(pct<0.8) alerts.push({type:'red',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} del esperado — brecha de atención`});
+      else if(pct<1) alerts.push({type:'yellow',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} — cerca de la meta`});
+    });
+    if(!alerts.length) alerts.push({type:'green',text:`✅ Todos los indicadores activos están dentro del rango esperado en <strong>${lbl}</strong>.`});
+    eAlerts.innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${a.text}</div>`).join('')}</div>`;
+  }
+  const ediag=document.getElementById('execDiagPanel');
+  if(ediag){
+    ediag.innerHTML=`<h3>Resumen ejecutivo · ${escapeHtml(lbl)}</h3>
+      <p>En <strong>${lbl}</strong>, el programa Conservando Atitlán recolectó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros de aceite usado (meta mensual: ${fmtN(GOALS.aceiteAnual/12,2)} litros) y protegió <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))}</strong> litros de agua. Se produjeron <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones y se vendieron <strong>${fmtI(toNum(row?.jabones_vendidos_mes))}</strong> unidades, generando <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong> en ventas del período.</p>
+      <p>El acumulado del año a la fecha suma <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite recolectados (<strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual) y <strong>${fmtI(jabProd)}</strong> jabones producidos. El programa visitó <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong> municipios y atendió <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles en el período.</p>`;
+  }
+}
 
+// ── VIEW SWITCH ────────────────────────────────────────────────────────────────
 function switchView(mode){
-  state.view = mode === 'exec' ? 'exec' : 'full';
-  document.body.classList.toggle('exec-view', state.view === 'exec');
-  const btnFull=document.getElementById('btnFull');
-  const btnExec=document.getElementById('btnExec');
-  if(btnFull) btnFull.classList.toggle('active', state.view === 'full');
-  if(btnExec) btnExec.classList.toggle('active', state.view === 'exec');
-  if(state.view === 'exec') window.scrollTo({top:0, behavior:'smooth'});
+  state.view=mode;
+  const execView=document.getElementById('execView'), fullView=document.getElementById('fullView');
+  const btnFull=document.getElementById('btnFull'), btnExec=document.getElementById('btnExec');
+  execView.style.display=mode==='exec'?'block':'none';
+  fullView.style.display=mode==='full'?'block':'none';
+  if(btnFull) btnFull.classList.toggle('active',mode==='full');
+  if(btnExec) btnExec.classList.toggle('active',mode==='exec');
+  if(mode==='exec'){
+    window.scrollTo({top:0,behavior:'smooth'});
+    if(state.total.length){const s=computeStrategicMetrics(),m=computeMonthlyMetrics();renderExec(s,m);}
+  }
 }
 
-function handlePresentationKeys(event){
-  const overlay=document.getElementById('presentationOverlay');
-  if(!overlay || !overlay.classList.contains('open')) return;
-  if(event.key === 'ArrowRight'){ event.preventDefault(); moveSlide(1); }
-  if(event.key === 'ArrowLeft'){ event.preventDefault(); moveSlide(-1); }
-  if(event.key === 'Escape'){ event.preventDefault(); closePresentation(); }
-}
-
-function bindPresentation(){
-  document.getElementById('btnPresentation').addEventListener('click', openPresentation);
-  document.getElementById('closePresentation').addEventListener('click', closePresentation);
-  document.getElementById('prevSlideBtn').addEventListener('click', ()=>moveSlide(-1));
-  document.getElementById('nextSlideBtn').addEventListener('click', ()=>moveSlide(1));
-}
-function buildPresentationSlides(){
-  const stage=document.getElementById('presentationStage');
-  const strategicGrid=document.getElementById('strategicGrid');
-  const monthlyGrid=document.getElementById('monthlyGrid');
-  const hero=document.getElementById('heroSection');
-  const summary=document.getElementById('periodSummary');
-  const prose=document.getElementById('diagnosticProse');
-  const list=document.getElementById('diagnosticList');
-  const slides=[];
-
-  const heroSlide=document.createElement('section');
-  heroSlide.className='slide active';
-  heroSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Modo presentación</div><h2>Resumen ejecutivo del programa</h2></div><p>Use las flechas del teclado para avanzar o retroceder entre las vistas clave del corte seleccionado.</p></div>`;
-  heroSlide.appendChild(hero.cloneNode(true));
-  slides.push(heroSlide);
-
-  const strategicSlide=document.createElement('section');
-  strategicSlide.className='slide';
-  strategicSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">KPIs estratégicos</div><h2>Metas estructurales al corte</h2></div><p>Esta vista concentra el avance anual acumulado y los semáforos de atención prioritaria.</p></div>`;
-  const strategicWrap=document.createElement('div');
-  strategicWrap.className='kpi-grid';
-  [...strategicGrid.children].forEach(node=>strategicWrap.appendChild(node.cloneNode(true)));
-  strategicSlide.appendChild(strategicWrap);
-  slides.push(strategicSlide);
-
-  const monthlySlide=document.createElement('section');
-  monthlySlide.className='slide';
-  monthlySlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">KPIs operativos</div><h2>Desempeño del período seleccionado</h2></div><p>Lectura rápida del comportamiento mensual con énfasis en cumplimiento operativo y contexto del corte.</p></div>`;
-  const monthlyWrap=document.createElement('div');
-  monthlyWrap.className='kpi-grid';
-  [...monthlyGrid.children].forEach(node=>monthlyWrap.appendChild(node.cloneNode(true)));
-  monthlySlide.appendChild(monthlyWrap);
-  slides.push(monthlySlide);
-
-  const visualSlide=document.createElement('section');
-  visualSlide.className='slide';
-  visualSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Visualizaciones</div><h2>Tendencias y lectura operativa</h2></div><p>Esta lámina resume la comparación acumulada al corte, la trayectoria mensual del indicador activo y la cadena de valor del jabón para el período de lectura.</p></div><div class="presentation-image-grid">${chartImageMarkup('progressChart','Avance acumulado vs esperado al corte','Comparación directa entre el avance real y lo esperado para cada indicador estratégico.')} ${chartImageMarkup('trendChart','Tendencia mensual del indicador','Serie histórica del indicador seleccionado con su línea de referencia cuando existe.')} ${chartImageMarkup('soapChart','Cadena de valor del jabón','Relación entre producción, venta y conversión para jabón hotel y jabón tocador.')} <article class="presentation-image-card"><h3>Resumen de la operación del período</h3><p>Valores contextuales para acompañar la lectura oral del corte seleccionado.</p><div class="presentation-summary-list"></div></article></div>`;
-  const summaryHost = visualSlide.querySelector('.presentation-summary-list');
-  [...summary.children].forEach(node=>summaryHost.appendChild(node.cloneNode(true)));
-  slides.push(visualSlide);
-
-  const diagSlide=document.createElement('section');
-  diagSlide.className='slide';
-  diagSlide.innerHTML=`<div class="section-head"><div><div class="section-kicker">Diagnóstico</div><h2>Lectura interpretativa del corte</h2></div><p>Una síntesis narrativa para cerrar la presentación y orientar la conversación institucional.</p></div><div class="diagnostic-grid"></div>`;
-  const diagGrid=diagSlide.querySelector('.diagnostic-grid');
-  const proseCard=document.createElement('article');
-  proseCard.className='card panel';
-  const proseWrap=document.createElement('div'); proseWrap.className='prose'; proseWrap.innerHTML = prose.innerHTML; proseCard.appendChild(proseWrap);
-  const listCard=document.createElement('article'); listCard.className='card panel';
-  const listWrap=document.createElement('div'); listWrap.className='diagnostic-list'; listWrap.innerHTML = list.innerHTML; listCard.appendChild(listWrap);
-  diagGrid.appendChild(proseCard); diagGrid.appendChild(listCard);
-  slides.push(diagSlide);
-
-  stage.innerHTML='';
-  slides.forEach(slide=>stage.appendChild(slide));
-  state.slideIndex=0;
-  syncSlideMeta();
-}
+// ── PRESENTATION ──────────────────────────────────────────────────────────────
+let presSlideIndex=0;
 function openPresentation(){
-  document.getElementById('presentationOverlay').classList.add('open');
-  document.getElementById('presentationOverlay').setAttribute('aria-hidden','false');
-  buildPresentationSlides();
+  const overlay=document.getElementById('presentationOverlay');
+  overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+  buildPresentation(computeStrategicMetrics(),computeMonthlyMetrics());
 }
 function closePresentation(){
-  document.getElementById('presentationOverlay').classList.remove('open');
-  document.getElementById('presentationOverlay').setAttribute('aria-hidden','true');
+  const overlay=document.getElementById('presentationOverlay');
+  overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
 }
-function moveSlide(dir){
-  const slides=[...document.querySelectorAll('.presentation-stage .slide')];
-  if(!slides.length) return;
-  state.slideIndex = (state.slideIndex + dir + slides.length) % slides.length;
-  slides.forEach((s,i)=>s.classList.toggle('active', i===state.slideIndex));
-  syncSlideMeta();
+function gotoSlide(idx){
+  const track=document.getElementById('presentationTrack');
+  if(!track) return;
+  const n=track.children.length;
+  if(!n) return;
+  presSlideIndex=(idx+n)%n;
+  track.style.transform=`translateX(-${presSlideIndex*100}%)`;
+  document.querySelectorAll('.pres-dot').forEach((d,i)=>d.classList.toggle('active',i===presSlideIndex));
+  const counter=document.getElementById('presCounter');
+  if(counter) counter.textContent=`${presSlideIndex+1} / ${n}`;
 }
-function syncSlideMeta(){
-  const slides=[...document.querySelectorAll('.presentation-stage .slide')];
-  document.getElementById('presentationCounter').textContent = `${state.slideIndex+1} / ${slides.length || 1}`;
-  document.getElementById('presentationMeta').textContent = `Conservando Atitlán · ${periodLabel(state.period)}`;
+function nextSlide(){gotoSlide(presSlideIndex+1);}
+function prevSlide(){gotoSlide(presSlideIndex-1);}
+function buildPresDots(n){
+  const host=document.getElementById('presDots');host.innerHTML='';
+  for(let i=0;i<n;i++){
+    const btn=document.createElement('button');btn.type='button';
+    btn.className='pres-dot'+(i===0?' active':'');
+    btn.setAttribute('aria-label',`Diapositiva ${i+1}`);
+    btn.onclick=()=>gotoSlide(i);host.appendChild(btn);
+  }
 }
+function presKpiCard(m){
+  const cls=m.status||'gray';
+  const bw=Math.max(0,Math.min((m.ratioVsExpected||0)*100,100)).toFixed(1);
+  return `<div class="pres-kpi-pair">
+    <div class="pres-kpi-label">${escapeHtml(m.title)}</div>
+    <div class="pres-kpi-value">${escapeHtml([m.value,m.unit].filter(Boolean).join(' '))}</div>
+    <div class="pres-kpi-meta">${escapeHtml(m.expectedText)}</div>
+    <div class="pres-bar-wrap"><div class="pres-bar ${cls}" style="width:${bw}%"></div></div>
+    <div style="margin-top:6px">${chipHtml(cls,labelFromStatus(cls))}</div>
+  </div>`;
+}
+function buildPresentation(strategic,monthly){
+  const track=document.getElementById('presentationTrack');
+  const metaEl=document.getElementById('presentationMeta');
+  if(!track||!metaEl) return;
+  const lbl=periodLabel(state.period), row=selectedRow();
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes'), aguaAccum=sumMonths('litros_agua_protegidos_mes');
+  const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
+  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const sRatios=strategic.filter(m=>m.goalType!=='none'&&Number.isFinite(m.ratioVsExpected)).map(m=>m.ratioVsExpected);
+  const sAvg=sRatios.length?sRatios.reduce((a,b)=>a+b,0)/sRatios.length:NaN;
+  const sStatus=statusFromRatio(sAvg,!!sRatios.length);
+  metaEl.innerHTML=`<span>📊 Presentación</span><span>📅 ${escapeHtml(lbl)}</span><span>${chipTextFromStatus(sStatus)}</span>`;
+  const getChartImg=id=>{const c=document.getElementById(id);return c?c.toDataURL('image/png'):null;};
+  const progImg=getChartImg('progressChart'), trendImg=getChartImg('trendChart'), soapImg=getChartImg('soapChart');
+  const slides=[];
+
+  // SLIDE 1 – Portada
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Reporte de resultados · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row">
+      <div><h2>Conservando Atitlán</h2><p>Programa de recolección de aceite, protección del agua y producción de jabón artesanal en la cuenca del Lago de Atitlán. ${escapeHtml(lbl)} · Asociación Amigos del Lago de Atitlán.</p></div>
+      <div class="pres-brand-badge"><img src="./Conservando%20Atitl%C3%A1n%20.png" alt="Conservando Atitlán" onerror="this.onerror=null;this.src='./logosatitlan.png'"><small>Economía circular · agua limpia · cuenca del Lago de Atitlán</small></div>
+    </div>
+    <div class="pres-card-grid pres-card-grid-4">
+      <div class="pres-card"><small>Aceite recolectado (acum.)</small><strong>${escapeHtml(fmtN(aceiteAccum,2))}</strong><p>litros · ${escapeHtml(fmtPct(aceiteAccum/GOALS.aceiteAnual))} del año</p></div>
+      <div class="pres-card"><small>Agua protegida (acum.)</small><strong>${escapeHtml(fmtI(aguaAccum))}</strong><p>litros protegidos</p></div>
+      <div class="pres-card"><small>Jabones producidos (acum.)</small><strong>${escapeHtml(fmtI(jabProd))}</strong><p>jabones · ${escapeHtml(fmtPct(jabProd/GOALS.jabonesProducidosAnual))} del año</p></div>
+      <div class="pres-card"><small>Ventas acumuladas</small><strong>${escapeHtml(fmtQ(ventasAccum))}</strong><p>Período: ${escapeHtml(fmtQ(toNum(row?.ingresos_ventas_q_mes)))}</p></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🫙 ${escapeHtml(fmtN(toNum(row?.litros_aceite_recolectados_mes),2))} litros aceite en el período</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🧼 ${escapeHtml(fmtI(toNum(row?.jabones_producidos_mes)))} jabones producidos</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🏘️ ${escapeHtml(fmtI(toNum(row?.municipios_visitados_mes)))} municipios visitados</span>
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">⚡ Estado: <strong>${escapeHtml(chipTextFromStatus(sStatus))}</strong></span>
+    </div>
+  </div></div>`);
+
+  // SLIDE 2 – KPIs estratégicos
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Indicadores estratégicos · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Metas estructurales del programa</h2><p>Avance acumulado real frente a metas anuales. Colectas, aceite, agua protegida, jabones y pruebas de jabón líquido.</p></div></div>
+    <div class="pres-card-grid pres-card-grid-4" style="flex:1;align-content:start">
+      ${strategic.slice(0,4).map(m=>presKpiCard(m)).join('')}
+    </div>
+  </div></div>`);
+
+  // SLIDE 3 – KPIs estratégicos resto
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Indicadores estratégicos (cont.) · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Jabones, pruebas y ventas</h2><p>Continuación de los indicadores anuales con jabones vendidos, pruebas de jabón líquido y acumulado de ventas.</p></div></div>
+    <div class="pres-card-grid pres-card-grid-3" style="flex:1;align-content:start">
+      ${strategic.slice(4).map(m=>presKpiCard(m)).join('')}
+    </div>
+  </div></div>`);
+
+  // SLIDE 4 – KPIs mensuales
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Indicadores operativos · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Comportamiento del período</h2><p>Indicadores mensuales con meta explícita: municipios, aceite del período, agua del período, producción y ventas.</p></div></div>
+    <div class="pres-card-grid pres-card-grid-3" style="flex:1;align-content:start">
+      ${monthly.slice(0,6).map(m=>{
+        const cls=m.status||'gray';
+        const bw=Math.max(0,Math.min((m.periodRatio||0)*100,100)).toFixed(1);
+        return `<div class="pres-kpi-pair">
+          <div class="pres-kpi-label">${escapeHtml(m.title)}</div>
+          <div class="pres-kpi-value">${escapeHtml([m.value,m.unit].filter(Boolean).join(' '))}</div>
+          <div class="pres-kpi-meta">${escapeHtml(m.expectedText)}</div>
+          <div class="pres-bar-wrap"><div class="pres-bar ${cls}" style="width:${bw}%"></div></div>
+          <div style="margin-top:6px">${chipHtml(cls,labelFromStatus(cls))}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div></div>`);
+
+  // SLIDE 5 – Avance acumulado (chart)
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Análisis comparativo · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Avance real vs esperado</h2><p>Gráfica comparativa del avance acumulado de cada indicador estratégico frente al ritmo esperado para este punto del año.</p></div></div>
+    <div class="pres-columns" style="flex:1">
+      <div class="pres-visual-card">
+        <h3>Avance acumulado vs esperado</h3><p>Barras: real (azul) vs esperado (dorado). Brecha visible en cada indicador.</p>
+        <div class="pres-chart-img">${progImg?`<img src="${progImg}" alt="Avance acumulado">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
+      </div>
+      <div class="pres-list-card">
+        <h3>Resumen operativo</h3><p>${escapeHtml(lbl)}</p>
+        ${[
+          {label:'Aceite del período',val:fmtN(toNum(row?.litros_aceite_recolectados_mes),2)+' litros'},
+          {label:'Agua protegida',val:fmtI(toNum(row?.litros_agua_protegidos_mes))+' litros'},
+          {label:'Jabones producidos',val:fmtI(toNum(row?.jabones_producidos_mes))},
+          {label:'Jabones vendidos',val:fmtI(toNum(row?.jabones_vendidos_mes))},
+          {label:'Ventas del período',val:fmtQ(toNum(row?.ingresos_ventas_q_mes))},
+          {label:'Municipios visitados',val:fmtI(toNum(row?.municipios_visitados_mes))}
+        ].map((item,i)=>`<div class="pres-list-item"><div class="pres-rank">${i+1}</div><div><strong style="font-size:.9rem">${escapeHtml(item.label)}</strong></div><div style="font-family:var(--font-mono);font-size:.85rem;font-weight:700;color:var(--lake)">${escapeHtml(item.val)}</div></div>`).join('')}
+      </div>
+    </div>
+  </div></div>`);
+
+  // SLIDE 6 – Tendencia y cadena de jabón
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Tendencias y cadena de valor · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Trayectoria mensual y cadena del jabón</h2><p>Serie histórica del indicador seleccionado y análisis de la relación producción-venta por tipo de jabón en el período.</p></div></div>
+    <div class="pres-card-grid pres-card-grid-2" style="flex:1">
+      <div class="pres-visual-card">
+        <h3>Tendencia mensual</h3><p>Serie histórica con referencia mensual cuando existe.</p>
+        <div class="pres-chart-img">${trendImg?`<img src="${trendImg}" alt="Tendencia">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
+      </div>
+      <div class="pres-visual-card">
+        <h3>Cadena de valor del jabón</h3><p>Producción, venta y tasa de conversión en ${escapeHtml(lbl)}.</p>
+        <div class="pres-chart-img">${soapImg?`<img src="${soapImg}" alt="Jabones">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
+      </div>
+    </div>
+  </div></div>`);
+
+  // SLIDE 7 – Diagnóstico y cierre
+  const sRisk=strategic.filter(m=>m.status==='red');
+  const sGood=strategic.filter(m=>m.status==='green');
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Diagnóstico y cierre · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Lectura interpretativa y mensaje de cierre</h2><p>Síntesis del comportamiento del programa para orientar la conversación institucional y las decisiones operativas.</p></div></div>
+    <div class="pres-columns" style="flex:1">
+      <div class="pres-note">
+        <h3>Diagnóstico de ${escapeHtml(lbl)}</h3>
+        <p>El programa recolectó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)} litros</strong> de aceite y protegió <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))} litros</strong> de agua en el período. El acumulado del año alcanza <strong>${fmtN(aceiteAccum,2)} litros</strong> de aceite (${fmtPct(aceiteAccum/GOALS.aceiteAnual)} del objetivo anual) y <strong>${fmtI(aguaAccum)} litros</strong> de agua protegida.</p>
+        <p>La producción acumulada llega a <strong>${fmtI(jabProd)}</strong> jabones y la comercialización registra <strong>${fmtI(jabVend)}</strong> unidades vendidas con <strong>${fmtQ(ventasAccum)}</strong> en ventas totales. ${sRisk.length>0?`Los indicadores que requieren atención son: ${sRisk.map(m=>m.title).join(', ')}.`:`Todos los indicadores activos mantienen el ritmo esperado.`}</p>
+        <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.78rem;color:var(--muted)">Conservando Atitlán · cadena aceite-agua-jabón · ${escapeHtml(lbl)}</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;overflow:auto">
+        ${sGood.map(m=>`<div class="pres-alert-box green">✅ <strong>${escapeHtml(m.title)}</strong> — ${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado</div>`).join('')}
+        ${sRisk.map(m=>`<div class="pres-alert-box red">⚠️ <strong>${escapeHtml(m.title)}</strong> — ${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado — requiere atención</div>`).join('')}
+        ${!sRisk.length&&!sGood.length?`<div class="pres-alert-box blue">ℹ️ Sin datos suficientes para clasificar los indicadores.</div>`:''}
+      </div>
+    </div>
+  </div></div>`);
+
+  track.innerHTML=slides.join('');
+  buildPresDots(slides.length);
+  presSlideIndex=0;
+  gotoSlide(0);
+}
+
+document.getElementById('presentationOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('presentationOverlay'))closePresentation();});
 </script>
 </body>
 </html>
