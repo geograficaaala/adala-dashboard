@@ -1051,150 +1051,591 @@ function renderCharts(){
   renderTrendChart();
   renderSoapChart();
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SVG CHART ENGINE — professional scientific visualization system
+// ═══════════════════════════════════════════════════════════════════════════
+
+/* ── Core SVG helpers ── */
+function svgNS(tag, attrs={}, text=''){
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  Object.entries(attrs).forEach(([k,v]) => el.setAttribute(k,v));
+  if(text) el.textContent = text;
+  return el;
+}
+function svgPath(d, attrs={}){ return svgNS('path', {d, ...attrs}); }
+function svgRect(x,y,w,h,attrs={}){ return svgNS('rect', {x,y,width:w,height:h,...attrs}); }
+function svgText(x,y,text,attrs={}){ return svgNS('text', {x,y,...attrs}, text); }
+function svgLine(x1,y1,x2,y2,attrs={}){ return svgNS('line', {x1,y1,x2,y2,...attrs}); }
+function svgCircle(cx,cy,r,attrs={}){ return svgNS('circle', {cx,cy,r,...attrs}); }
+
+/* ── Tooltip ── */
+let _tip = null;
+function getTip(){
+  if(!_tip){ _tip=document.createElement('div'); _tip.id='svgTip';
+    _tip.style.cssText='position:fixed;z-index:9999;pointer-events:none;background:rgba(12,28,52,.95);color:#fff;padding:10px 14px;border-radius:12px;font-size:12.5px;line-height:1.55;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);font-family:Sora,sans-serif;opacity:0;transition:opacity .1s;max-width:280px;white-space:normal';
+    document.body.appendChild(_tip); }
+  return _tip;
+}
+function showTip(e, html){
+  const t=getTip(); t.innerHTML=html; t.style.opacity='1';
+  const x=e.clientX+16, y=e.clientY-10;
+  t.style.left=(x+t.offsetWidth>window.innerWidth?x-t.offsetWidth-28:x)+'px';
+  t.style.top=(y<0?4:y)+'px';
+}
+function hideTip(){ getTip().style.opacity='0'; }
+
+/* ── Nice axis ticks ── */
+function niceScale(min, max, tickCount=5){
+  const range = max - min || 1;
+  let step = Math.pow(10, Math.floor(Math.log10(range/tickCount)));
+  const err = tickCount / (range/step);
+  if(err <= 0.15) step *= 10;
+  else if(err <= 0.35) step *= 5;
+  else if(err <= 0.75) step *= 2;
+  const niceMin = Math.floor(min/step)*step;
+  const niceMax = Math.ceil(max/step)*step;
+  const ticks = [];
+  for(let v=niceMin; v<=niceMax+step*0.001; v+=step) ticks.push(parseFloat(v.toPrecision(10)));
+  return { min:niceMin, max:niceMax, step, ticks };
+}
+function fmtAxis(v, unit){
+  if(unit==='GTQ'||unit==='Q') return v>=1000 ? 'Q '+fmtCompact(v) : 'Q '+fmtN(v,0);
+  if(unit==='litros') return v>=1000000 ? fmtCompact(v)+' M' : v>=1000 ? fmtCompact(v)+' k' : fmtN(v,0);
+  if(unit==='jabones'||unit==='inmuebles') return v>=1000 ? fmtCompact(v)+' k' : fmtI(v);
+  return fmtCompact(v);
+}
+function fmtCompact(v){
+  if(v>=1000000) return fmtN(v/1000000,1)+'M';
+  if(v>=1000) return fmtN(v/1000,1)+'k';
+  return fmtN(v,1);
+}
+
+/* ── Chart 1: BULLET + DIVERGENCE CHART (Progress) ── */
 function renderProgressChart(){
-  const metrics=computeStrategicMetrics().filter(m=>m.goalType!=='none');
-  const months=monthsElapsed();
-  const expectedPct=metrics.map(m=>{
+  const metrics = computeStrategicMetrics().filter(m=>m.goalType!=='none');
+  const months  = monthsElapsed();
+  const expected = metrics.map(m=>{
+    if(m.id==='colectas') return (months/GOALS.colectasAnual)*100;
+    if(m.id==='pruebas')  return (expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+    return (months/12)*100;
+  });
+
+  const container = document.getElementById('progressChart')?.parentElement;
+  if(!container) return;
+  container.innerHTML = '';
+
+  const W=900, ROW_H=54, PAD_L=196, PAD_R=70, PAD_T=28, PAD_B=44;
+  const H = PAD_T + metrics.length*ROW_H + PAD_B;
+  const plotW = W-PAD_L-PAD_R;
+
+  const svg = svgNS('svg', {viewBox:`0 0 ${W} ${H}`, style:'width:100%;height:auto;display:block;overflow:visible', 'font-family':'Sora,sans-serif'});
+  const defs = svgNS('defs');
+
+  // Gradients
+  const colors = metrics.map(m => m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
+  metrics.forEach((m,i)=>{
+    const [c1,c2]=colors[i];
+    const g=svgNS('linearGradient',{id:`pg${i}`,x1:'0',y1:'0',x2:'1',y2:'0'});
+    g.appendChild(svgNS('stop',{offset:'0%','stop-color':c1}));
+    g.appendChild(svgNS('stop',{offset:'100%','stop-color':c2}));
+    defs.appendChild(g);
+  });
+  svg.appendChild(defs);
+
+  // Column header
+  svg.appendChild(svgText(PAD_L, PAD_T-8, '% acumulado real', {'text-anchor':'start',fill:'#8aa0ad','font-size':'10','font-weight':'700','letter-spacing':'0.08em','text-transform':'uppercase'}));
+  svg.appendChild(svgText(W-PAD_R, PAD_T-8, '100%', {'text-anchor':'end',fill:'#8aa0ad','font-size':'10'}));
+
+  // Grid lines at 25/50/75/100
+  [0,25,50,75,100].forEach(v=>{
+    const x = PAD_L + (v/100)*plotW;
+    svg.appendChild(svgLine(x,PAD_T-4,x,H-PAD_B+4, {stroke: v===0?'#c5d5dc':'rgba(23,49,79,.07)', 'stroke-width': v===0?'1.5':'1', 'stroke-dasharray': v===0?'':'4 3'}));
+    if(v>0) svg.appendChild(svgText(x, H-PAD_B+16, v+'%', {'text-anchor':'middle',fill:'#8aa0ad','font-size':'10.5'}));
+  });
+
+  metrics.forEach((m,i)=>{
+    const y0 = PAD_T + i*ROW_H;
+    const cx = PAD_L + (m.progress/100)*plotW;
+    const ex = PAD_L + (expected[i]/100)*plotW;
+    const [c1]=colors[i];
+    const gap = m.progress - expected[i];
+
+    // Row background alternating
+    if(i%2===0) svg.appendChild(svgRect(0, y0-2, W, ROW_H, {fill:'rgba(23,49,79,.022)', rx:'4'}));
+
+    // Indicator label (truncated)
+    const labelEl = svgText(PAD_L-12, y0+ROW_H/2+4, m.title.length>28?m.title.slice(0,27)+'…':m.title,
+      {'text-anchor':'end',fill:'#17314f','font-size':'11.5','font-weight':'600'});
+    svg.appendChild(labelEl);
+
+    // Background track
+    svg.appendChild(svgRect(PAD_L, y0+ROW_H/2-9, plotW, 18, {fill:'rgba(23,49,79,.05)', rx:'9'}));
+
+    // Progress bar (animated)
+    const bar = svgRect(PAD_L, y0+ROW_H/2-9, 0, 18, {fill:`url(#pg${i})`, rx:'9', style:'transition:width .9s cubic-bezier(.22,1,.36,1)'});
+    svg.appendChild(bar);
+    setTimeout(()=>bar.setAttribute('width', Math.max(4,(m.progress/100)*plotW).toFixed(1)), 80+i*70);
+
+    // Expected marker (vertical line + triangle)
+    const expGroup = svgNS('g');
+    expGroup.appendChild(svgLine(ex, y0+ROW_H/2-12, ex, y0+ROW_H/2+12, {stroke:'#c6983f','stroke-width':'2','stroke-dasharray':'3 2'}));
+    expGroup.appendChild(svgNS('polygon',{points:`${ex-5},${y0+ROW_H/2-14} ${ex+5},${y0+ROW_H/2-14} ${ex},${y0+ROW_H/2-8}`, fill:'#c6983f', opacity:'.9'}));
+    svg.appendChild(expGroup);
+
+    // Gap annotation right side
+    const gapX = Math.max(cx, ex) + 10;
+    const gapColor = gap>=0 ? '#2e8b5e' : '#c05050';
+    const gapText = (gap>=0?'+':'')+fmtN(gap,1)+'pp';
+    const pill = svgNS('g', {style:'cursor:default'});
+    pill.appendChild(svgRect(W-PAD_R+4, y0+ROW_H/2-9, PAD_R-8, 18, {fill:gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)', rx:'9', stroke:gap>=0?'rgba(46,139,94,.25)':'rgba(192,80,80,.25)','stroke-width':'1'}));
+    pill.appendChild(svgText(W-PAD_R/2, y0+ROW_H/2+5, gapText, {'text-anchor':'middle',fill:gapColor,'font-size':'10.5','font-weight':'800'}));
+    svg.appendChild(pill);
+
+    // % label on bar end
+    if(m.progress>8){
+      const labelInside = m.progress>30;
+      const lx = labelInside ? PAD_L + (m.progress/100)*plotW - 8 : PAD_L + (m.progress/100)*plotW + 8;
+      svg.appendChild(svgText(lx, y0+ROW_H/2+4.5, fmtN(m.progress,1)+'%',
+        {'text-anchor':labelInside?'end':'start', fill:labelInside?'rgba(255,255,255,.95)':'#17314f', 'font-size':'10', 'font-weight':'800'}));
+    }
+
+    // Hover zone
+    const hitZone = svgRect(0, y0, W, ROW_H, {fill:'transparent', style:'cursor:pointer'});
+    const tipHtml = `<strong style="font-size:13px">${m.title}</strong><br>
+      Real: <strong>${fmtN(m.progress,1)}%</strong> acumulado<br>
+      Esperado: <strong>${fmtN(expected[i],1)}%</strong> al período<br>
+      Brecha: <strong style="color:${gap>=0?'#6ed89a':'#f08080'}">${gap>=0?'+':''}${fmtN(gap,1)} pp</strong><br>
+      <span style="opacity:.75;font-size:11px">${m.line1.replace(/<[^>]+>/g,'')}</span>`;
+    hitZone.addEventListener('mousemove', e=>showTip(e, tipHtml));
+    hitZone.addEventListener('mouseleave', hideTip);
+    svg.appendChild(hitZone);
+  });
+
+  // Legend
+  const legendY = H-16;
+  [[`url(#pg0)`, 'Avance real acumulado'], ['#c6983f', 'Esperado al período ▲'], ['#2e8b5e', 'Brecha positiva (+pp)'], ['#c05050','Brecha negativa (−pp)']].forEach(([col,label],i)=>{
+    const lx = 40 + i*200;
+    const isGrad = col.startsWith('url');
+    if(!isGrad){
+      const r = svgRect(lx, legendY-7, 14, 10, {fill:col, rx:'5', opacity:'.85'});
+      svg.appendChild(r);
+    } else {
+      const r = svgRect(lx, legendY-7, 14, 10, {fill:'url(#pg0)', rx:'5'});
+      svg.appendChild(r);
+    }
+    svg.appendChild(svgText(lx+18, legendY+3, label, {fill:'#6d8294','font-size':'10.5','font-weight':'600'}));
+  });
+
+  container.appendChild(svg);
+  container.style.minHeight='';
+  container.style.padding='14px 10px 8px';
+}
+
+/* ── Chart 2: ADVANCED TIME SERIES with annotations ── */
+function renderTrendChart(){
+  const indicatorId = document.getElementById('trendIndicator').value;
+  const option = TREND_OPTIONS.find(o=>o.id===indicatorId)||TREND_OPTIONS[0];
+  const rawData = state.total.map(r=>toNum(r[indicatorId]));
+  const labels  = state.total.map(r=>monthShortLabel(r.periodo_clave));
+  const refSeries = goalSeriesForIndicator(indicatorId);
+  const activeIdx = state.periods.indexOf(String(state.period));
+
+  const container = document.getElementById('trendChart')?.parentElement;
+  if(!container) return;
+  container.innerHTML = '';
+
+  if(!rawData.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos disponibles</p>'; return; }
+
+  const W=880, H=320, PAD_L=68, PAD_R=24, PAD_T=28, PAD_B=52;
+  const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
+  const allVals=[...rawData,...(refSeries||[])].filter(Number.isFinite);
+  const minV=Math.min(...allVals)*0.97, maxV=Math.max(...allVals)*1.04;
+  const scale=niceScale(minV>0?minV*0.95:minV, maxV,5);
+  const n=rawData.length;
+
+  const X=i=>PAD_L+i*(plotW/Math.max(n-1,1));
+  const Y=v=>PAD_T+plotH-((v-scale.min)/(scale.max-scale.min))*plotH;
+
+  const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
+  const defs=svgNS('defs');
+
+  // Area gradient
+  const areaGrad=svgNS('linearGradient',{id:'trendArea',x1:'0',y1:'0',x2:'0',y2:'1'});
+  areaGrad.appendChild(svgNS('stop',{offset:'0%','stop-color':'#1c6084','stop-opacity':'0.22'}));
+  areaGrad.appendChild(svgNS('stop',{offset:'100%','stop-color':'#1c6084','stop-opacity':'0.01'}));
+  defs.appendChild(areaGrad);
+
+  // Glow filter for active point
+  const glowFilter=svgNS('filter',{id:'glow',x:'-60%',y:'-60%',width:'220%',height:'220%'});
+  const fe=svgNS('feGaussianBlur',{stdDeviation:'3','result':'blur'});
+  const feMerge=svgNS('feMerge'); const feMergeN1=svgNS('feMergeNode',{in:'blur'}); const feMergeN2=svgNS('feMergeNode',{in:'SourceGraphic'});
+  feMerge.appendChild(feMergeN1); feMerge.appendChild(feMergeN2); glowFilter.appendChild(fe); glowFilter.appendChild(feMerge);
+  defs.appendChild(glowFilter);
+  svg.appendChild(defs);
+
+  // Grid + Y axis ticks
+  scale.ticks.forEach(v=>{
+    const y=Y(v);
+    if(y<PAD_T-4||y>PAD_T+plotH+4) return;
+    svg.appendChild(svgLine(PAD_L-6,y,W-PAD_R,y,{stroke:'rgba(23,49,79,.08)','stroke-width':'1'}));
+    svg.appendChild(svgText(PAD_L-10,y+4,fmtAxis(v,option.unit),{'text-anchor':'end',fill:'#8aa0ad','font-size':'10.5'}));
+  });
+
+  // Reference band (if exists) — shaded area between ref and actual
+  if(refSeries){
+    const bandPts = rawData.map((v,i)=>`${X(i)},${Y(Math.max(v,refSeries[i]))}`).join(' ');
+    const bandPts2 = rawData.map((v,i)=>`${X(i)},${Y(Math.min(v,refSeries[i]))}`).reverse().join(' ');
+    svg.appendChild(svgNS('polygon',{points:`${bandPts} ${bandPts2}`,fill:'rgba(198,152,63,.08)',stroke:'none'}));
+    // Ref dashed line
+    const refPts=refSeries.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+    svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#c6983f','stroke-width':'1.8','stroke-dasharray':'7 5','stroke-linecap':'round',points:refPts}));
+    // Ref label
+    const lastRefY=Y(refSeries.at(-1));
+    svg.appendChild(svgRect(W-PAD_R-48,lastRefY-9,48,16,{fill:'rgba(198,152,63,.12)',rx:'8',stroke:'rgba(198,152,63,.3)','stroke-width':'1'}));
+    svg.appendChild(svgText(W-PAD_R-24,lastRefY+4,'Meta',{'text-anchor':'middle',fill:'#a17820','font-size':'9.5','font-weight':'700'}));
+  }
+
+  // Active period vertical band
+  if(activeIdx>=0){
+    svg.appendChild(svgRect(X(activeIdx)-16,PAD_T,32,plotH,{fill:'rgba(28,96,132,.06)',rx:'8'}));
+  }
+
+  // Area fill
+  const areaPts=[`${X(0)},${PAD_T+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PAD_T+plotH}`].join(' ');
+  svg.appendChild(svgNS('polygon',{points:areaPts,fill:'url(#trendArea)'}));
+
+  // Main line (smooth polyline with slight smoothing)
+  const linePts=rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  svg.appendChild(svgNS('polyline',{fill:'none',stroke:'#1c6084','stroke-width':'2.5','stroke-linecap':'round','stroke-linejoin':'round',points:linePts}));
+
+  // Min/Max annotations
+  const maxIdx=rawData.indexOf(Math.max(...rawData)), minIdx=rawData.indexOf(Math.min(...rawData));
+  if(maxIdx>=0&&n>2){
+    svg.appendChild(svgCircle(X(maxIdx),Y(rawData[maxIdx]),5,{fill:'#fff',stroke:'#2e8b5e','stroke-width':'2.5'}));
+    svg.appendChild(svgRect(X(maxIdx)-24,Y(rawData[maxIdx])-22,48,14,{fill:'rgba(46,139,94,.12)',rx:'7',stroke:'rgba(46,139,94,.25)','stroke-width':'1'}));
+    svg.appendChild(svgText(X(maxIdx),Y(rawData[maxIdx])-12,'Máx',{'text-anchor':'middle',fill:'#2e8b5e','font-size':'9','font-weight':'800'}));
+  }
+  if(minIdx>=0&&n>2&&minIdx!==maxIdx){
+    svg.appendChild(svgCircle(X(minIdx),Y(rawData[minIdx]),5,{fill:'#fff',stroke:'#c05050','stroke-width':'2.5'}));
+    svg.appendChild(svgRect(X(minIdx)-18,Y(rawData[minIdx])+8,36,14,{fill:'rgba(192,80,80,.10)',rx:'7',stroke:'rgba(192,80,80,.22)','stroke-width':'1'}));
+    svg.appendChild(svgText(X(minIdx),Y(rawData[minIdx])+19,'Mín',{'text-anchor':'middle',fill:'#c05050','font-size':'9','font-weight':'800'}));
+  }
+
+  // Data points + tooltips
+  rawData.forEach((v,i)=>{
+    const isActive=i===activeIdx;
+    const cx=X(i), cy=Y(v);
+    if(isActive){
+      svg.appendChild(svgCircle(cx,cy,14,{fill:'rgba(28,96,132,.08)',stroke:'none'}));
+      svg.appendChild(svgCircle(cx,cy,8,{fill:'#173e63',stroke:'#fff','stroke-width':'3',filter:'url(#glow)'}));
+      // Active tooltip callout
+      const bw=88, bh=26, bx=cx-bw/2, by=cy-42;
+      svg.appendChild(svgRect(bx,Math.max(4,by),bw,bh,{fill:'#173e63',rx:'8',stroke:'rgba(255,255,255,.12)','stroke-width':'1'}));
+      svg.appendChild(svgText(cx,Math.max(4,by)+17,formatTrendValue(v,option.unit).slice(0,16),{'text-anchor':'middle',fill:'#fff','font-size':'10.5','font-weight':'700'}));
+    } else {
+      const dot=svgCircle(cx,cy,4.5,{fill:'#fff',stroke:'#1c6084','stroke-width':'2',style:'cursor:pointer'});
+      const tipHtml=`<strong>${labels[i]}</strong><br>${option.label}: <strong>${formatTrendValue(v,option.unit)}</strong>${refSeries?`<br>Referencia: <strong>${formatTrendValue(refSeries[i],option.unit)}</strong>`:''}`;
+      dot.addEventListener('mousemove',e=>showTip(e,tipHtml));
+      dot.addEventListener('mouseleave',hideTip);
+      svg.appendChild(dot);
+    }
+  });
+
+  // X axis labels
+  const step=Math.max(1,Math.ceil(n/8));
+  rawData.forEach((_,i)=>{
+    if(i%step!==0&&i!==n-1&&i!==activeIdx) return;
+    const x=X(i), y=H-PAD_B+18;
+    const isActive=i===activeIdx;
+    if(isActive){
+      svg.appendChild(svgRect(x-26,y-1,52,16,{fill:'rgba(23,62,99,.1)',rx:'8'}));
+      svg.appendChild(svgText(x,y+11,labels[i],{'text-anchor':'middle',fill:'#17314f','font-size':'10.5','font-weight':'800'}));
+    } else {
+      svg.appendChild(svgText(x,y+11,labels[i],{'text-anchor':'middle',fill:'#8aa0ad','font-size':'10'}));
+    }
+  });
+
+  // Y axis label
+  const yLabelEl=svgNS('text',{x:'12',y:PAD_T+plotH/2,'text-anchor':'middle',fill:'#8aa0ad','font-size':'10','transform':`rotate(-90,12,${PAD_T+plotH/2})`});
+  yLabelEl.textContent=option.unit; svg.appendChild(yLabelEl);
+
+  // Legend
+  const legendItems=[[{fill:'#1c6084'},'stroke','Valor real'],...(refSeries?[[{fill:'#c6983f'},'dash','Referencia mensual']]:[]),(activeIdx>=0?[[{fill:'#173e63'},'dot','Período activo']]:[])[0]||[]].filter(Boolean);
+  let lx=PAD_L;
+  [[null,'━','#1c6084','Valor real'],[null,'┅','#c6983f','Referencia mensual'],...(activeIdx>=0?[[null,'●','#173e63','Período activo']]:[])]
+    .filter((_,i)=>i===0||(refSeries&&i===1)||(activeIdx>=0&&i===2))
+    .forEach(([_,sym,color,label])=>{
+      svg.appendChild(svgText(lx,H-6,sym,{fill:color,'font-size':'12','font-weight':'900'}));
+      svg.appendChild(svgText(lx+14,H-5,label,{fill:'#6d8294','font-size':'10.5','font-weight':'600'}));
+      lx+=label.length*7+28;
+    });
+
+  container.appendChild(svg);
+  container.style.minHeight='';
+  container.style.padding='14px 10px 8px';
+}
+
+/* ── Chart 3: WATERFALL / SANKEY-STYLE soap chain ── */
+function renderSoapChart(){
+  const row=selectedRow(), lbl=periodLabel(state.period);
+  const pH=toNum(row?.jabones_hotel_producidos_mes), pT=toNum(row?.jabones_tocador_producidos_mes);
+  const sH=toNum(row?.jabones_hotel_vendidos_mes), sT=toNum(row?.jabones_tocador_vendidos_mes);
+  const total_prod=pH+pT, total_vend=sH+sT;
+  const conv_H=pH?sH/pH:0, conv_T=pT?sT/pT:0;
+
+  const container=document.getElementById('soapChart')?.parentElement;
+  if(!container) return;
+  container.innerHTML='';
+
+  const W=860, H=340, PAD_L=50, PAD_R=44, PAD_T=36, PAD_B=52;
+  const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
+
+  const bars=[
+    {label:'Hotel\nproducido',  val:pH,  color:'#1e6fa4', light:'#5bbad5'},
+    {label:'Hotel\nvendido',    val:sH,  color:'#2e7d52', light:'#6eca8a'},
+    {label:'Tocador\nproducido',val:pT,  color:'#1e6fa4', light:'#5bbad5'},
+    {label:'Tocador\nvendido',  val:sT,  color:'#2e7d52', light:'#6eca8a'},
+  ];
+  const maxVal=Math.max(...bars.map(b=>b.val),1);
+  const scale=niceScale(0,maxVal*1.08,5);
+  const BW=56, GAP=30;
+  const totalBarsW=(bars.length*BW+(bars.length-1)*GAP);
+  const startX=PAD_L+(plotW-totalBarsW)/2;
+
+  const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
+  const defs=svgNS('defs');
+  bars.forEach((b,i)=>{
+    const g=svgNS('linearGradient',{id:`sb${i}`,x1:'0',y1:'0',x2:'0',y2:'1'});
+    g.appendChild(svgNS('stop',{offset:'0%','stop-color':b.light}));
+    g.appendChild(svgNS('stop',{offset:'100%','stop-color':b.color}));
+    defs.appendChild(g);
+  });
+  // Conversion line gradient
+  const convGrad=svgNS('linearGradient',{id:'convGrad',x1:'0',y1:'0',x2:'1',y2:'0'});
+  convGrad.appendChild(svgNS('stop',{offset:'0%','stop-color':'#c6983f'}));
+  convGrad.appendChild(svgNS('stop',{offset:'100%','stop-color':'#e8bf60'}));
+  defs.appendChild(convGrad); svg.appendChild(defs);
+
+  // Grid + Y axis (left: jabones)
+  const barY=v=>PAD_T+plotH-((v-scale.min)/(scale.max-scale.min))*plotH;
+  scale.ticks.forEach(v=>{
+    const y=barY(v);
+    if(y<PAD_T-4||y>PAD_T+plotH+4) return;
+    svg.appendChild(svgLine(PAD_L,y,W-PAD_R,y,{stroke:'rgba(23,49,79,.07)','stroke-width':'1'}));
+    svg.appendChild(svgText(PAD_L-8,y+4,fmtAxis(v,'jabones'),{'text-anchor':'end',fill:'#8aa0ad','font-size':'10.5'}));
+  });
+
+  // Section separator lines (Hotel | Tocador)
+  const sepX=startX+BW*2+GAP*1.5;
+  svg.appendChild(svgLine(sepX,PAD_T-8,sepX,PAD_T+plotH,{stroke:'rgba(23,49,79,.06)','stroke-width':'1.5','stroke-dasharray':'4 3'}));
+  svg.appendChild(svgText(startX+BW+GAP/2-10,PAD_T-14,'Jabón Hotel',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'11','font-weight':'700','letter-spacing':'.06em'}));
+  svg.appendChild(svgText(startX+BW*3+GAP*2.5-10,PAD_T-14,'Jabón Tocador',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'11','font-weight':'700','letter-spacing':'.06em'}));
+
+  const barX=i=>startX+i*(BW+GAP);
+  const barCenters=[];
+  bars.forEach((b,i)=>{
+    const x=barX(i), bh=((b.val-scale.min)/(scale.max-scale.min))*plotH;
+    const y=PAD_T+plotH-bh;
+    barCenters.push({x:x+BW/2,y:y,conv:i===1?conv_H:i===3?conv_T:null});
+
+    // Shadow
+    svg.appendChild(svgRect(x+4,y+4,BW,bh,{fill:'rgba(0,0,0,.06)',rx:'8'}));
+    // Bar
+    const barEl=svgRect(x,PAD_T+plotH,BW,0,{fill:`url(#sb${i})`,rx:'8',style:'transition:all .85s cubic-bezier(.22,1,.36,1)'});
+    svg.appendChild(barEl);
+    setTimeout(()=>{barEl.setAttribute('y',y);barEl.setAttribute('height',bh);},80+i*100);
+
+    // Value label above bar
+    const vLabel=svgText(x+BW/2,y-8,fmtI(b.val),{'text-anchor':'middle',fill:b.color,'font-size':'12','font-weight':'800'});
+    svg.appendChild(vLabel);
+
+    // Label below
+    b.label.split('\n').forEach((line,li)=>{
+      svg.appendChild(svgText(x+BW/2,PAD_T+plotH+16+li*13,line,{'text-anchor':'middle',fill:'#35546d','font-size':'11','font-weight':'600'}));
+    });
+
+    // Hover
+    const hit=svgRect(x,PAD_T,BW,plotH,{fill:'transparent',style:'cursor:pointer'});
+    const tipHtml=`<strong>${b.label.replace('\n',' ')}</strong><br>Valor: <strong>${fmtI(b.val)} jabones</strong>${i===1?`<br>Conversión H/P: <strong>${fmtN(conv_H*100,1)}%</strong>`:i===3?`<br>Conversión T/P: <strong>${fmtN(conv_T*100,1)}%</strong>`:''}`;
+    hit.addEventListener('mousemove',e=>showTip(e,tipHtml));
+    hit.addEventListener('mouseleave',hideTip);
+    svg.appendChild(hit);
+  });
+
+  // Conversion rate connectors (flow lines between produced→sold)
+  [[0,1,conv_H],[2,3,conv_T]].forEach(([pi,si,conv])=>{
+    const x1=barX(pi)+BW, y1c=barY(bars[pi].val/2+scale.min/2);
+    const x2=barX(si), y2c=barY(bars[si].val/2+scale.min/2);
+    const mid=(x1+x2)/2;
+    svg.appendChild(svgNS('path',{d:`M ${x1} ${barCenters[pi].y+14} C ${mid} ${barCenters[pi].y+14}, ${mid} ${barCenters[si].y+14}, ${x2} ${barCenters[si].y+14}`,
+      fill:'none',stroke:'rgba(198,152,63,.35)','stroke-width':'1.5','stroke-dasharray':'3 2'}));
+    // Conv label
+    const convX=(x1+x2)/2, convY=Math.min(barCenters[pi].y,barCenters[si].y)+14;
+    svg.appendChild(svgRect(convX-22,convY-9,44,16,{fill:'rgba(198,152,63,.12)',rx:'8',stroke:'rgba(198,152,63,.3)','stroke-width':'1'}));
+    svg.appendChild(svgText(convX,convY+4,fmtN(conv*100,1)+'%',{'text-anchor':'middle',fill:'#a17820','font-size':'10','font-weight':'800'}));
+  });
+
+  // Right: conversion rate Y axis label
+  svg.appendChild(svgText(W-10,PAD_T+plotH/2,'Conversión %',{'text-anchor':'middle',fill:'#a17820','font-size':'10','font-weight':'700','writing-mode':'vertical-rl','transform':`rotate(90,${W-10},${PAD_T+plotH/2})`}));
+
+  // Summary footer
+  const totY=H-6;
+  svg.appendChild(svgText(PAD_L,totY,`Total producido: ${fmtI(total_prod)} jabones`,{fill:'#6d8294','font-size':'10.5','font-weight':'600'}));
+  svg.appendChild(svgText(W/2,totY,`Total vendido: ${fmtI(total_vend)} jabones`,{'text-anchor':'middle',fill:'#6d8294','font-size':'10.5','font-weight':'600'}));
+  svg.appendChild(svgText(W-PAD_R,totY,`Conversión global: ${total_prod?fmtN(total_vend/total_prod*100,1)+'%':'—'}`,{'text-anchor':'end',fill:'#a17820','font-size':'10.5','font-weight':'700'}));
+
+  container.appendChild(svg);
+  container.style.minHeight='';
+  container.style.padding='14px 10px 8px';
+}
+
+/* ── Exec Progress Chart (same style as renderProgressChart) ── */
+function renderExecProgressChart(strategic, months){
+  const metrics=strategic.filter(m=>m.goalType!=='none');
+  const expected=metrics.map(m=>{
     if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
-    if(m.id==='pruebas') return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+    if(m.id==='pruebas')  return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
     return(months/12)*100;
   });
-  const commonTooltip={backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
-    callbacks:{
-      label:ctx=>`${ctx.dataset.label}: ${fmtN(ctx.parsed.x,1)}%`,
-      afterBody:items=>{if(!items?.length)return'';const i=items[0].dataIndex;const gap=metrics[i].progress-expectedPct[i];return`Brecha: ${gap>=0?'+':''}${fmtN(gap,1)} puntos`;}
-    }};
-  getChart('progressChart',{
-    type:'bar',
-    data:{
-      labels:metrics.map(m=>m.title),
-      datasets:[
-        {label:'Acumulado real',data:metrics.map(m=>Number(m.progress.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:16,
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(76,165,191,.82)',true)},
-        {label:'Esperado al período',data:expectedPct.map(v=>Number(v.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:9,
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(234,218,185,.9)','rgba(206,160,70,.5)',true),borderColor:'rgba(198,152,63,.9)',borderWidth:1.2}
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',interaction:{mode:'index',intersect:false},
-      animation:{duration:900,easing:'easeOutQuart'},
-      plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},tooltip:commonTooltip},
-      scales:{
-        x:{beginAtZero:true,max:100,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>v+'%'}},
-        y:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'600'}}}
-      }}
+
+  const container=document.getElementById('execProgressChart');
+  if(!container) return;
+  container.innerHTML='';
+  container.style.cssText='width:100%;overflow:visible';
+
+  const W=800, ROW_H=46, PAD_L=182, PAD_R=64, PAD_T=22, PAD_B=36;
+  const H=PAD_T+metrics.length*ROW_H+PAD_B, plotW=W-PAD_L-PAD_R;
+  const colors=metrics.map(m=>m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
+
+  const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
+  const defs=svgNS('defs');
+  metrics.forEach((m,i)=>{
+    const[c1,c2]=colors[i], g=svgNS('linearGradient',{id:`epg${i}`,x1:'0',y1:'0',x2:'1',y2:'0'});
+    g.appendChild(svgNS('stop',{offset:'0%','stop-color':c1}));
+    g.appendChild(svgNS('stop',{offset:'100%','stop-color':c2}));
+    defs.appendChild(g);
   });
+  svg.appendChild(defs);
+  [0,25,50,75,100].forEach(v=>{
+    const x=PAD_L+(v/100)*plotW;
+    svg.appendChild(svgLine(x,PAD_T-2,x,H-PAD_B+2,{stroke:v===0?'#c5d5dc':'rgba(23,49,79,.07)','stroke-width':v===0?'1.5':'1','stroke-dasharray':v===0?'':'4 3'}));
+    if(v>0) svg.appendChild(svgText(x,H-PAD_B+14,v+'%',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'9.5'}));
+  });
+  metrics.forEach((m,i)=>{
+    const y0=PAD_T+i*ROW_H;
+    const cx=PAD_L+(m.progress/100)*plotW, ex=PAD_L+(expected[i]/100)*plotW;
+    const gap=m.progress-expected[i];
+    if(i%2===0) svg.appendChild(svgRect(0,y0-2,W,ROW_H,{fill:'rgba(23,49,79,.02)',rx:'4'}));
+    svg.appendChild(svgText(PAD_L-10,y0+ROW_H/2+4,m.title.length>26?m.title.slice(0,25)+'…':m.title,{'text-anchor':'end',fill:'#17314f','font-size':'10.5','font-weight':'600'}));
+    svg.appendChild(svgRect(PAD_L,y0+ROW_H/2-8,plotW,16,{fill:'rgba(23,49,79,.05)',rx:'8'}));
+    const bar=svgRect(PAD_L,y0+ROW_H/2-8,0,16,{fill:`url(#epg${i})`,rx:'8',style:'transition:width .85s cubic-bezier(.22,1,.36,1)'});
+    svg.appendChild(bar);
+    setTimeout(()=>bar.setAttribute('width',Math.max(4,(m.progress/100)*plotW).toFixed(1)),80+i*70);
+    svg.appendChild(svgLine(ex,y0+ROW_H/2-11,ex,y0+ROW_H/2+11,{stroke:'#c6983f','stroke-width':'2','stroke-dasharray':'3 2'}));
+    svg.appendChild(svgNS('polygon',{points:`${ex-4},${y0+ROW_H/2-13} ${ex+4},${y0+ROW_H/2-13} ${ex},${y0+ROW_H/2-8}`,fill:'#c6983f',opacity:'.9'}));
+    if(m.progress>6) svg.appendChild(svgText(PAD_L+(m.progress/100)*plotW+(m.progress>30?-7:7),y0+ROW_H/2+4.5,fmtN(m.progress,1)+'%',{'text-anchor':m.progress>30?'end':'start',fill:m.progress>30?'rgba(255,255,255,.95)':'#17314f','font-size':'9.5','font-weight':'800'}));
+    const gapX=W-PAD_R+2, gc=gap>=0?'#2e8b5e':'#c05050';
+    svg.appendChild(svgRect(gapX,y0+ROW_H/2-8,PAD_R-4,16,{fill:gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)',rx:'8',stroke:gap>=0?'rgba(46,139,94,.25)':'rgba(192,80,80,.25)','stroke-width':'1'}));
+    svg.appendChild(svgText(gapX+PAD_R/2-2,y0+ROW_H/2+4.5,(gap>=0?'+':'')+fmtN(gap,1)+'pp',{'text-anchor':'middle',fill:gc,'font-size':'9','font-weight':'800'}));
+  });
+  // Append to canvas parent or replace canvas
+  const canvas=document.getElementById('execProgressChart');
+  if(canvas&&canvas.parentElement){
+    canvas.parentElement.innerHTML='';
+    canvas.parentElement.appendChild(svg);
+    canvas.parentElement.style.cssText='overflow:visible';
+  }
 }
-function goalSeriesForIndicator(id){
-  const map={litros_aceite_recolectados_mes:GOALS.aceiteAnual/12,litros_agua_protegidos_mes:GOALS.aguaAnual/12,
-    jabones_producidos_mes:GOALS.jabonesProducidosMensual,municipios_visitados_mes:GOALS.municipiosMetaMes};
-  if(id==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
-  if(id==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
-  if(map[id]) return state.total.map(()=>map[id]);
-  return null;
+
+/* ── Presentation SVG charts (inline, no canvas) ── */
+function buildPresProgressSvg(strategic, months){
+  const metrics=strategic.filter(m=>m.goalType!=='none');
+  const expected=metrics.map(m=>{
+    if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
+    if(m.id==='pruebas')  return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+    return(months/12)*100;
+  });
+  const W=580, ROW_H=44, PAD_L=160, PAD_R=56, PAD_T=18, PAD_B=28;
+  const H=PAD_T+metrics.length*ROW_H+PAD_B, plotW=W-PAD_L-PAD_R;
+  const colors=metrics.map(m=>m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" font-family="Sora,sans-serif">
+  <defs>${metrics.map((_,i)=>`<linearGradient id="ppg${i}" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="${colors[i][0]}"/><stop offset="100%" stop-color="${colors[i][1]}"/></linearGradient>`).join('')}</defs>`;
+  [0,25,50,75,100].forEach(v=>{const x=PAD_L+(v/100)*plotW;s+=`<line x1="${x}" y1="${PAD_T}" x2="${x}" y2="${H-PAD_B}" stroke="rgba(23,49,79,.07)" stroke-width="1" stroke-dasharray="${v?'4 3':''}"/><text x="${x}" y="${H-PAD_B+12}" text-anchor="middle" fill="#8aa0ad" font-size="9">${v}%</text>`;});
+  metrics.forEach((m,i)=>{
+    const y0=PAD_T+i*ROW_H, cx=PAD_L+(m.progress/100)*plotW, ex=PAD_L+(expected[i]/100)*plotW, gap=m.progress-expected[i];
+    s+=`<rect x="0" y="${y0}" width="${W}" height="${ROW_H}" fill="${i%2===0?'rgba(23,49,79,.018)':'none'}" rx="3"/>`;
+    s+=`<text x="${PAD_L-8}" y="${y0+ROW_H/2+4}" text-anchor="end" fill="#17314f" font-size="10" font-weight="600">${m.title.slice(0,22)+(m.title.length>22?'…':'')}</text>`;
+    s+=`<rect x="${PAD_L}" y="${y0+ROW_H/2-7}" width="${plotW}" height="14" fill="rgba(23,49,79,.05)" rx="7"/>`;
+    s+=`<rect x="${PAD_L}" y="${y0+ROW_H/2-7}" width="0" height="14" fill="url(#ppg${i})" rx="7"><animate attributeName="width" from="0" to="${Math.max(3,(m.progress/100)*plotW).toFixed(1)}" dur="0.9s" begin="${i*0.1}s" fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1"/></rect>`;
+    s+=`<line x1="${ex}" y1="${y0+ROW_H/2-10}" x2="${ex}" y2="${y0+ROW_H/2+10}" stroke="#c6983f" stroke-width="1.8" stroke-dasharray="3 2"/>`;
+    if(m.progress>8) s+=`<text x="${cx+(m.progress>30?-6:6)}" y="${y0+ROW_H/2+4}" text-anchor="${m.progress>30?'end':'start'}" fill="${m.progress>30?'rgba(255,255,255,.9)':'#17314f'}" font-size="9" font-weight="800">${fmtN(m.progress,1)}%</text>`;
+    const gc=gap>=0?'#2e8b5e':'#c05050';
+    s+=`<rect x="${W-PAD_R+2}" y="${y0+ROW_H/2-7}" width="${PAD_R-4}" height="14" fill="${gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)'}" rx="7"/><text x="${W-PAD_R/2}" y="${y0+ROW_H/2+4}" text-anchor="middle" fill="${gc}" font-size="8.5" font-weight="800">${gap>=0?'+':''}${fmtN(gap,1)}pp</text>`;
+  });
+  s+=`</svg>`;
+  return s;
 }
-function formatTrendValue(v,unit){
-  if(unit==='GTQ') return fmtQ(v);
-  if(unit==='litros') return fmtN(v,2)+' litros';
-  if(unit==='jabones') return fmtI(v)+' jabones';
-  if(unit==='municipios') return fmtI(v)+' municipios';
-  if(unit==='inmuebles') return fmtI(v)+' inmuebles';
-  return fmtN(v,2);
-}
-function renderTrendChart(){
-  const indicatorId=document.getElementById('trendIndicator').value;
+
+function buildPresTrendSvg(indicatorId){
   const option=TREND_OPTIONS.find(o=>o.id===indicatorId)||TREND_OPTIONS[0];
-  const data=state.total.map(r=>toNum(r[indicatorId]));
+  const rawData=state.total.map(r=>toNum(r[indicatorId]));
   const labels=state.total.map(r=>monthShortLabel(r.periodo_clave));
   const refSeries=goalSeriesForIndicator(indicatorId);
-  const activePeriodIdx=state.periods.indexOf(String(state.period));
-  getChart('trendChart',{
-    data:{labels,datasets:[
-      {type:'line',label:option.label,data,tension:.35,fill:true,
-        borderColor:'#1c6084',backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(112,194,215,.32)','rgba(112,194,215,.02)'),
-        borderWidth:3,pointBackgroundColor:data.map((_,i)=>i===activePeriodIdx?'#173e63':'#fff'),
-        pointBorderColor:data.map((_,i)=>i===activePeriodIdx?'#fff':'#1c6084'),
-        pointRadius:data.map((_,i)=>i===activePeriodIdx?7:4),
-        pointBorderWidth:data.map((_,i)=>i===activePeriodIdx?3:2),
-        pointHoverRadius:8,pointHoverBackgroundColor:'#fff',pointHoverBorderColor:'#1c6084'},
-      ...(refSeries?[{type:'line',label:'Referencia mensual',data:refSeries,tension:0,fill:false,
-        borderColor:'rgba(198,152,63,.9)',borderDash:[8,6],borderWidth:2,pointRadius:0,pointHoverRadius:0}]:[])
-    ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      animation:{duration:900,easing:'easeOutQuart'},
-      plugins:{
-        legend:{display:!!refSeries,position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
-        tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
-          callbacks:{label:ctx=>`${ctx.dataset.label}: ${formatTrendValue(ctx.parsed.y,option.unit)}`}}
-      },
-      scales:{
-        x:{grid:{display:false},border:{display:false},ticks:{color:'#6d8294'}},
-        y:{grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>Number(v).toLocaleString('en-US')}}
-      }}
-  });
+  const activeIdx=state.periods.indexOf(String(state.period));
+  if(!rawData.length) return '<p style="color:#8aa0ad;padding:16px;text-align:center">Sin datos</p>';
+  const W=540,H=230,PL=55,PR=16,PT=18,PB=38,plotW=W-PL-PR,plotH=H-PT-PB;
+  const allV=[...rawData,...(refSeries||[])].filter(Number.isFinite);
+  const mn=Math.min(...allV)*0.95,mx=Math.max(...allV)*1.06;
+  const scale=niceScale(mn,mx,4);
+  const n=rawData.length;
+  const X=i=>PL+i*(plotW/Math.max(n-1,1));
+  const Y=v=>PT+plotH-((v-scale.min)/(scale.max-scale.min))*plotH;
+  const areaPts=[`${X(0)},${PT+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PT+plotH}`].join(' ');
+  const linePts=rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" font-family="Sora,sans-serif">
+  <defs><linearGradient id="ptArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c6084" stop-opacity=".22"/><stop offset="100%" stop-color="#1c6084" stop-opacity=".01"/></linearGradient></defs>`;
+  scale.ticks.forEach(v=>{const y=Y(v);if(y<PT-4||y>PT+plotH+4)return;s+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(23,49,79,.07)" stroke-width="1"/><text x="${PL-6}" y="${y+3.5}" text-anchor="end" fill="#8aa0ad" font-size="9">${fmtAxis(v,option.unit)}</text>`;});
+  if(refSeries){const rp=refSeries.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');s+=`<polyline fill="none" stroke="#c6983f" stroke-width="1.6" stroke-dasharray="6 4" points="${rp}"/>`;}
+  if(activeIdx>=0) s+=`<rect x="${X(activeIdx)-14}" y="${PT}" width="28" height="${plotH}" fill="rgba(28,96,132,.07)" rx="6"/>`;
+  s+=`<polygon points="${areaPts}" fill="url(#ptArea)"/>`;
+  s+=`<polyline fill="none" stroke="#1c6084" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" points="${linePts}"/>`;
+  rawData.forEach((v,i)=>{const isA=i===activeIdx;s+=isA?`<circle cx="${X(i)}" cy="${Y(v)}" r="6" fill="#173e63" stroke="#fff" stroke-width="2.5"/>`:`<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="#fff" stroke="#1c6084" stroke-width="1.8"/>`;});
+  const step=Math.max(1,Math.ceil(n/6));
+  rawData.forEach((_,i)=>{if(i%step!==0&&i!==n-1)return;const isA=i===activeIdx;s+=`<text x="${X(i)}" y="${H-PB+13}" text-anchor="middle" fill="${isA?'#17314f':'#8aa0ad'}" font-size="9" font-weight="${isA?'800':'400'}">${labels[i]}</text>`;});
+  s+=`</svg>`;
+  return s;
 }
-function renderSoapChart(){
+
+function buildPresSoapSvg(){
   const row=selectedRow();
   const pH=toNum(row?.jabones_hotel_producidos_mes), pT=toNum(row?.jabones_tocador_producidos_mes);
   const sH=toNum(row?.jabones_hotel_vendidos_mes), sT=toNum(row?.jabones_tocador_vendidos_mes);
-  const rates=[pH?(sH/pH)*100:0, pT?(sT/pT)*100:0];
-  getChart('soapChart',{
-    data:{labels:['Jabón hotel','Jabón tocador'],
-      datasets:[
-        {type:'bar',label:'Producido',data:[pH,pT],
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(39,119,170,.92)','rgba(117,202,225,.88)'),
-          borderRadius:18,borderSkipped:false,maxBarThickness:44},
-        {type:'bar',label:'Vendido',data:[sH,sT],
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(46,106,87,.92)','rgba(84,185,126,.86)'),
-          borderRadius:18,borderSkipped:false,maxBarThickness:44},
-        {type:'line',label:'Conversión venta/producción',data:rates,yAxisID:'y1',tension:.32,
-          borderColor:'rgba(198,152,63,.95)',backgroundColor:'rgba(198,152,63,.14)',borderWidth:2.5,
-          pointRadius:6,pointHoverRadius:8,pointBackgroundColor:'#fff',pointBorderColor:'rgba(198,152,63,.95)',pointBorderWidth:2,fill:false}
-      ]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      animation:{duration:900,easing:'easeOutQuart'},
-      plugins:{
-        legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
-        tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,
-          callbacks:{label:ctx=>ctx.dataset.yAxisID==='y1'?`${ctx.dataset.label}: ${fmtN(ctx.parsed.y,1)}%`:`${ctx.dataset.label}: ${fmtI(ctx.parsed.y)} jabones`}}
-      },
-      scales:{
-        x:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'700'}}},
-        y:{beginAtZero:true,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>fmtI(v)}},
-        y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},border:{display:false},ticks:{color:'#a17820',callback:v=>fmtN(v,0)+'%'}}
-      }}
+  const bars=[{val:pH,color:'#1e6fa4',light:'#5bbad5',label:'Hotel Prod.'},{val:sH,color:'#2e7d52',light:'#6eca8a',label:'Hotel Vend.'},{val:pT,color:'#1e6fa4',light:'#5bbad5',label:'Toc. Prod.'},{val:sT,color:'#2e7d52',light:'#6eca8a',label:'Toc. Vend.'}];
+  const maxV=Math.max(...bars.map(b=>b.val),1);
+  const W=540,H=230,PL=48,PR=16,PT=20,PB=40,plotH=H-PT-PB;
+  const BW=58,GAP=24,startX=PL+(W-PL-PR-bars.length*BW-(bars.length-1)*GAP)/2;
+  let s=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" font-family="Sora,sans-serif"><defs>${bars.map((b,i)=>`<linearGradient id="psb${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${b.light}"/><stop offset="100%" stop-color="${b.color}"/></linearGradient>`).join('')}</defs>`;
+  [0,25,50,75,100].forEach(pct=>{const y=PT+plotH*(1-pct/100);s+=`<line x1="${PL}" y1="${y}" x2="${W-PR}" y2="${y}" stroke="rgba(23,49,79,.07)" stroke-width="1"/><text x="${PL-6}" y="${y+3.5}" text-anchor="end" fill="#8aa0ad" font-size="9">${fmtI(maxV*pct/100)}</text>`;});
+  bars.forEach((b,i)=>{
+    const x=startX+i*(BW+GAP), bh=(b.val/maxV)*plotH, y=PT+plotH-bh;
+    s+=`<rect x="${x}" y="${PT+plotH}" width="${BW}" height="0" fill="url(#psb${i})" rx="6"><animate attributeName="height" from="0" to="${bh.toFixed(1)}" dur="0.85s" begin="${i*0.12}s" fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1"/><animate attributeName="y" from="${PT+plotH}" to="${y.toFixed(1)}" dur="0.85s" begin="${i*0.12}s" fill="freeze" calcMode="spline" keySplines="0.22 1 0.36 1"/></rect>`;
+    s+=`<text x="${x+BW/2}" y="${y-5}" text-anchor="middle" fill="${b.color}" font-size="10" font-weight="800">${fmtI(b.val)}</text>`;
+    s+=`<text x="${x+BW/2}" y="${H-PB+12}" text-anchor="middle" fill="#35546d" font-size="10" font-weight="600">${b.label}</text>`;
   });
+  // Conv lines
+  [[0,1,pH?sH/pH:0],[2,3,pT?sT/pT:0]].forEach(([pi,si,conv])=>{
+    const x1=startX+pi*(BW+GAP)+BW, x2=startX+si*(BW+GAP), mx=(x1+x2)/2;
+    const y1=PT+plotH*(1-bars[pi].val/maxV/2), y2=PT+plotH*(1-bars[si].val/maxV/2);
+    s+=`<path d="M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}" fill="none" stroke="rgba(198,152,63,.5)" stroke-width="1.5" stroke-dasharray="3 2"/>`;
+    s+=`<rect x="${mx-18}" y="${(y1+y2)/2-8}" width="36" height="14" fill="rgba(198,152,63,.15)" rx="7"/><text x="${mx}" y="${(y1+y2)/2+4}" text-anchor="middle" fill="#a17820" font-size="9" font-weight="800">${fmtN(conv*100,1)}%</text>`;
+  });
+  s+=`</svg>`;
+  return s;
 }
 
-// ── DIAGNOSTIC ────────────────────────────────────────────────────────────────
-function renderDiagnostic(strategic,monthly){
-  const row=selectedRow(), lbl=periodLabel(state.period);
-  const sOk=strategic.filter(m=>m.goalType!=='none'&&(m.status==='green'||m.status==='yellow')).length;
-  const sRisk=strategic.filter(m=>m.status==='red').length;
-  const mRisk=monthly.filter(m=>m.goalType==='monthly'&&m.status==='red').length;
-  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes');
-  const aguaAccum=sumMonths('litros_agua_protegidos_mes');
-  const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
-  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
-  const oilMonthlyGoal=GOALS.aceiteAnual/12;
-  const aceiteRatio=toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal;
-  document.getElementById('diagnosticProse').innerHTML=`
-    <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es':''} estratégico${sOk!==1?'s':''} dentro del ritmo esperado${sRisk>0?`, mientras <strong>${sRisk}</strong> indicador${sRisk!==1?'es exigen':'exige'} atención prioritaria`:''}.</p>
-    <p>La cadena de aceite y agua muestra un acumulado de <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite recolectados, lo que representa la protección de <strong>${fmtI(aguaAccum)}</strong> litros de agua de la cuenca del lago. En <strong>${lbl}</strong>, la recolección alcanzó el <strong>${fmtPct(aceiteRatio)}</strong> de la meta mensual de ${fmtN(oilMonthlyGoal,2)} litros.</p>
-    <p>La producción acumulada suma <strong>${fmtI(jabProd)}</strong> jabones y la comercialización ha registrado <strong>${fmtI(jabVend)}</strong> unidades vendidas y <strong>${fmtQ(ventasAccum)}</strong> en ventas acumuladas. ${mRisk>0?'El período muestra indicadores operativos que requieren seguimiento, especialmente en comercialización.':'El período sostiene un comportamiento operativo equilibrado en toda la cadena de producción y venta.'}  </p>
-    <div class="diag-grid">
-      <div class="diag-block"><strong>🫙 Cadena aceite-agua</strong><p>Aceite: <strong>${fmtN(aceiteAccum,2)} litros</strong><br>Agua protegida: <strong>${fmtI(aguaAccum)} litros</strong></p></div>
-      <div class="diag-block"><strong>🧼 Cadena jabones</strong><p>Producidos: <strong>${fmtI(jabProd)}</strong><br>Vendidos: <strong>${fmtI(jabVend)}</strong></p></div>
-      <div class="diag-block"><strong>📅 Período activo</strong><p>${lbl}<br>Municipios: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong></p></div>
-      <div class="diag-block"><strong>💰 Ventas</strong><p>Del período: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong><br>Acumulado: <strong>${fmtQ(ventasAccum)}</strong></p></div>
-    </div>`;
-  document.getElementById('diagnosticList').innerHTML=[
-    {title:'Cadena de aceite y agua',body:`El acumulado de aceite llega a ${fmtN(aceiteAccum,2)} litros, protegiendo ${fmtI(aguaAccum)} litros de agua al período seleccionado. Cada litro de aceite recolectado equivale a aproximadamente 1,000 litros de agua protegida de contaminación.`},
-    {title:'Producción y comercialización',body:`La producción acumulada alcanza ${fmtI(jabProd)} jabones, mientras la venta suma ${fmtI(jabVend)} unidades y ${fmtQ(ventasAccum)} en ventas registradas. La tasa de conversión entre producción y venta es el indicador clave de la sostenibilidad comercial del programa.`},
-    {title:'Operación del período',body:`En ${lbl} se registran ${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)} litros de aceite, ${fmtI(toNum(row?.jabones_producidos_mes))} jabones producidos, ${fmtI(toNum(row?.jabones_vendidos_mes))} jabones vendidos y ${fmtQ(toNum(row?.ingresos_ventas_q_mes))} en ventas. Se visitaron ${fmtI(toNum(row?.municipios_visitados_mes))} municipios atendiendo ${fmtI(toNum(row?.inmuebles_atendidos_mes))} inmuebles.`}
-  ].map(item=>`<article class="diag-item"><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.body)}</p></article>`).join('');
-}
 
-// ── EXECUTIVE VIEW ─────────────────────────────────────────────────────────────
+/* ── EXECUTIVE VIEW (complete rewrite) ── */
 function renderExec(strategic,monthly){
   const row=selectedRow(), lbl=periodLabel(state.period);
   const months=monthsElapsed();
@@ -1202,12 +1643,16 @@ function renderExec(strategic,monthly){
   const sAvg=sRatios.length?sRatios.reduce((a,b)=>a+b,0)/sRatios.length:NaN;
   const sStatus=statusFromRatio(sAvg,!!sRatios.length);
   const badge=document.getElementById('execStatusBadge');
-  if(badge){badge.textContent=chipTextFromStatus(sStatus);badge.className='exec-status-badge';}
+  if(badge){badge.textContent=chipTextFromStatus(sStatus); badge.className='exec-status-badge';}
   const pi=document.getElementById('execPeriodInfo');
   if(pi) pi.textContent=lbl;
-  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes'), aguaAccum=sumMonths('litros_agua_protegidos_mes');
+
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes');
+  const aguaAccum=sumMonths('litros_agua_protegidos_mes');
   const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
   const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+
+  // Strip cards with animated bars
   const strip=document.getElementById('execStrip');
   if(strip){
     const stripItems=[
@@ -1220,37 +1665,77 @@ function renderExec(strategic,monthly){
       <div class="exec-strip-card">
         <small>${escapeHtml(s.label)}</small>
         <strong>${escapeHtml(s.value)}</strong>
-        ${s.pct!==null?`<div style="margin-top:8px"><span class="chip ${s.status}">${fmtPct(s.pct)} del año</span></div>
-        <div style="height:4px;border-radius:999px;background:var(--line-soft);overflow:hidden;margin-top:8px"><div style="height:100%;width:${Math.max(0,Math.min(s.pct*100,100)).toFixed(1)}%;border-radius:999px;background:linear-gradient(90deg,var(--lake-light),var(--lake));transition:width .8s ease"></div></div>`:'<div style="margin-top:8px"><span class="chip blue">Informativo</span></div>'}
+        ${s.pct!==null?`
+        <div style="margin-top:9px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:.72rem;color:var(--muted)">del objetivo anual</span>
+            <span class="chip ${s.status}">${fmtPct(s.pct)}</span>
+          </div>
+          <div style="height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden">
+            <div style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--lake-light),var(--lake));transition:width .9s cubic-bezier(.22,1,.36,1)" data-w="${Math.max(0,Math.min(s.pct*100,100)).toFixed(1)}"></div>
+          </div>
+        </div>`:
+        `<div style="margin-top:8px"><span class="chip blue">Lectura informativa</span></div>`}
       </div>`).join('');
-  }
-  // Exec progress chart
-  const emetrics=computeStrategicMetrics().filter(m=>m.goalType!=='none');
-  const eexpected=emetrics.map(m=>{
-    if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
-    if(m.id==='pruebas') return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
-    return(months/12)*100;
-  });
-  const echartEl=document.getElementById('execProgressChart');
-  if(echartEl&&state.view==='exec'){
-    const existing=state.charts['execProgressChart'];
-    if(existing) existing.destroy();
-    state.charts['execProgressChart']=new Chart(echartEl,{
-      type:'bar',
-      data:{labels:emetrics.map(m=>m.title),datasets:[
-        {label:'Acumulado real',data:emetrics.map(m=>Number(m.progress.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:14,
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(25,88,130,.95)','rgba(76,165,191,.82)',true)},
-        {label:'Esperado al período',data:eexpected.map(v=>Number(v.toFixed(1))),borderRadius:999,borderSkipped:false,barThickness:8,
-          backgroundColor:ctx=>makeGradient(ctx.chart,'rgba(234,218,185,.9)','rgba(206,160,70,.5)',true),borderColor:'rgba(198,152,63,.9)',borderWidth:1.2}
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',interaction:{mode:'index',intersect:false},
-        animation:{duration:800,easing:'easeOutQuart'},
-        plugins:{legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:10,color:'#35546d',font:{family:'Sora',weight:'700'}}},
-          tooltip:{backgroundColor:'rgba(15,32,52,.94)',titleColor:'#fff',bodyColor:'#eef7ff',padding:12,cornerRadius:14,callbacks:{label:ctx=>`${ctx.dataset.label}: ${fmtN(ctx.parsed.x,1)}%`}}},
-        scales:{x:{beginAtZero:true,max:100,grid:{color:'rgba(23,49,79,.06)'},border:{display:false},ticks:{color:'#6d8294',callback:v=>v+'%'}},
-          y:{grid:{display:false},border:{display:false},ticks:{color:'#17314f',font:{family:'Sora',weight:'600'}}}}}
+    requestAnimationFrame(()=>{
+      strip.querySelectorAll('[data-w]').forEach((el,i)=>{
+        const w=el.getAttribute('data-w')||'0';
+        setTimeout(()=>{el.style.width=w+'%';},100+i*80);
+      });
     });
   }
+
+  // SVG progress chart
+  if(state.view==='exec'){
+    // Replace canvas with SVG container
+    const canvasEl=document.getElementById('execProgressChart');
+    if(canvasEl&&canvasEl.parentElement){
+      const wrap=canvasEl.parentElement;
+      wrap.innerHTML='';
+      wrap.style.overflow='visible';
+      const W=760, ROW_H=44, PAD_L=175, PAD_R=58, PAD_T=20, PAD_B=28;
+      const H=PAD_T+strategic.filter(m=>m.goalType!=='none').length*ROW_H+PAD_B, plotW=W-PAD_L-PAD_R;
+      const metrics=strategic.filter(m=>m.goalType!=='none');
+      const expected=metrics.map(m=>{
+        if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
+        if(m.id==='pruebas')  return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+        return(months/12)*100;
+      });
+      const colors=metrics.map(m=>m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
+      const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
+      const defs=svgNS('defs');
+      metrics.forEach((_,i)=>{
+        const[c1,c2]=colors[i],g=svgNS('linearGradient',{id:`epg${i}`,x1:'0',y1:'0',x2:'1',y2:'0'});
+        g.appendChild(svgNS('stop',{offset:'0%','stop-color':c1}));
+        g.appendChild(svgNS('stop',{offset:'100%','stop-color':c2}));
+        defs.appendChild(g);
+      });
+      svg.appendChild(defs);
+      [0,25,50,75,100].forEach(v=>{
+        const x=PAD_L+(v/100)*plotW;
+        svg.appendChild(svgLine(x,PAD_T-2,x,H-PAD_B+2,{stroke:v===0?'#c5d5dc':'rgba(23,49,79,.07)','stroke-width':v===0?'1.5':'1','stroke-dasharray':v===0?'':'4 3'}));
+        if(v>0) svg.appendChild(svgText(x,H-PAD_B+14,v+'%',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'9.5'}));
+      });
+      metrics.forEach((m,i)=>{
+        const y0=PAD_T+i*ROW_H, ex=PAD_L+(expected[i]/100)*plotW, gap=m.progress-expected[i];
+        if(i%2===0) svg.appendChild(svgRect(0,y0-2,W,ROW_H,{fill:'rgba(23,49,79,.02)',rx:'4'}));
+        svg.appendChild(svgText(PAD_L-10,y0+ROW_H/2+4,m.title.length>25?m.title.slice(0,24)+'…':m.title,{'text-anchor':'end',fill:'#17314f','font-size':'10.5','font-weight':'600'}));
+        svg.appendChild(svgRect(PAD_L,y0+ROW_H/2-7,plotW,14,{fill:'rgba(23,49,79,.05)',rx:'7'}));
+        const bar=svgRect(PAD_L,y0+ROW_H/2-7,0,14,{fill:`url(#epg${i})`,rx:'7',style:'transition:width .85s cubic-bezier(.22,1,.36,1)'});
+        svg.appendChild(bar);
+        setTimeout(()=>bar.setAttribute('width',Math.max(4,(m.progress/100)*plotW).toFixed(1)),80+i*70);
+        svg.appendChild(svgLine(ex,y0+ROW_H/2-10,ex,y0+ROW_H/2+10,{stroke:'#c6983f','stroke-width':'2','stroke-dasharray':'3 2'}));
+        svg.appendChild(svgNS('polygon',{points:`${ex-4},${y0+ROW_H/2-12} ${ex+4},${y0+ROW_H/2-12} ${ex},${y0+ROW_H/2-7}`,fill:'#c6983f',opacity:'.9'}));
+        if(m.progress>6){const lx=PAD_L+(m.progress/100)*plotW+(m.progress>30?-6:6);svg.appendChild(svgText(lx,y0+ROW_H/2+3.5,fmtN(m.progress,1)+'%',{'text-anchor':m.progress>30?'end':'start',fill:m.progress>30?'rgba(255,255,255,.95)':'#17314f','font-size':'9','font-weight':'800'}));}
+        const gc=gap>=0?'#2e8b5e':'#c05050';
+        svg.appendChild(svgRect(W-PAD_R+2,y0+ROW_H/2-7,PAD_R-4,14,{fill:gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)',rx:'7',stroke:gap>=0?'rgba(46,139,94,.25)':'rgba(192,80,80,.25)','stroke-width':'1'}));
+        svg.appendChild(svgText(W-PAD_R/2,y0+ROW_H/2+3.5,(gap>=0?'+':'')+fmtN(gap,1)+'pp',{'text-anchor':'middle',fill:gc,'font-size':'8.5','font-weight':'800'}));
+      });
+      wrap.appendChild(svg);
+    }
+  }
+
+  // Alerts
   const eAlerts=document.getElementById('execAlertPanel');
   if(eAlerts){
     const allMetrics=[...strategic,...monthly];
@@ -1259,21 +1744,32 @@ function renderExec(strategic,monthly){
       if(m.goalType==='none') return;
       const pct=m.goalType==='annual'?m.ratioVsExpected:m.periodRatio;
       if(!Number.isFinite(pct)) return;
-      if(pct<0.8) alerts.push({type:'red',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} del esperado — brecha de atención`});
-      else if(pct<1) alerts.push({type:'yellow',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} — cerca de la meta`});
+      if(pct<0.8) alerts.push({type:'red',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} del esperado — brecha de <strong>${fmtN(100-pct*100,1)} pp</strong>`});
+      else if(pct<1) alerts.push({type:'yellow',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} — a ${fmtN((1-pct)*100,1)} pp de la meta`});
     });
     if(!alerts.length) alerts.push({type:'green',text:`✅ Todos los indicadores activos están dentro del rango esperado en <strong>${lbl}</strong>.`});
     eAlerts.innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${a.text}</div>`).join('')}</div>`;
   }
+
+  // Rich diagnostic
   const ediag=document.getElementById('execDiagPanel');
   if(ediag){
+    const sOk=strategic.filter(m=>m.goalType!=='none'&&(m.status==='green'||m.status==='yellow')).length;
+    const sRisk=strategic.filter(m=>m.status==='red');
     ediag.innerHTML=`<h3>Resumen ejecutivo · ${escapeHtml(lbl)}</h3>
-      <p>En <strong>${lbl}</strong>, el programa Conservando Atitlán recolectó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros de aceite usado (meta mensual: ${fmtN(GOALS.aceiteAnual/12,2)} litros) y protegió <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))}</strong> litros de agua. Se produjeron <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones y se vendieron <strong>${fmtI(toNum(row?.jabones_vendidos_mes))}</strong> unidades, generando <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong> en ventas del período.</p>
-      <p>El acumulado del año a la fecha suma <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite recolectados (<strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual) y <strong>${fmtI(jabProd)}</strong> jabones producidos. El programa visitó <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong> municipios y atendió <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles en el período.</p>`;
+      <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es estratégicos':' estratégico'} dentro del ritmo esperado${sRisk.length>0?`, mientras los indicadores <strong>${sRisk.map(m=>m.title).join(', ')}</strong> requieren atención prioritaria`:''}.</p>
+      <p>La cadena de aceite y agua acumula <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite (<strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual) y <strong>${fmtI(aguaAccum)}</strong> litros de agua protegida. El período reportó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros de aceite y produjo <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones.</p>
+      <p>La comercialización acumula <strong>${fmtI(jabVend)}</strong> jabones vendidos y <strong>${fmtQ(ventasAccum)}</strong> en ventas. Se visitaron <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong> municipios y <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles en el período.</p>
+      <div class="diag-grid">
+        <div class="diag-block"><strong>🫙 Aceite y agua</strong><p>Aceite: <strong>${fmtN(aceiteAccum,2)} L</strong><br>Agua: <strong>${fmtI(aguaAccum)} L</strong></p></div>
+        <div class="diag-block"><strong>🧼 Jabones</strong><p>Prod.: <strong>${fmtI(jabProd)}</strong><br>Vend.: <strong>${fmtI(jabVend)}</strong></p></div>
+        <div class="diag-block"><strong>💰 Ventas</strong><p>Período: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong><br>Acum.: <strong>${fmtQ(ventasAccum)}</strong></p></div>
+        <div class="diag-block"><strong>📍 Territorio</strong><p>Municipios: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong><br>Inmuebles: <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong></p></div>
+      </div>`;
   }
 }
 
-// ── VIEW SWITCH ────────────────────────────────────────────────────────────────
+/* ── VIEW SWITCH ── */
 function switchView(mode){
   state.view=mode;
   const execView=document.getElementById('execView'), fullView=document.getElementById('fullView');
@@ -1288,7 +1784,7 @@ function switchView(mode){
   }
 }
 
-// ── PRESENTATION ──────────────────────────────────────────────────────────────
+/* ── PRESENTATION ── */
 let presSlideIndex=0;
 function openPresentation(){
   const overlay=document.getElementById('presentationOverlay');
@@ -1323,6 +1819,7 @@ function buildPresDots(n){
     btn.onclick=()=>gotoSlide(i);host.appendChild(btn);
   }
 }
+function chipHtml(status,text){ return `<span class="pres-chip ${status}">${escapeHtml(text)}</span>`; }
 function presKpiCard(m){
   const cls=m.status||'gray';
   const bw=Math.max(0,Math.min((m.ratioVsExpected||0)*100,100)).toFixed(1);
@@ -1334,136 +1831,128 @@ function presKpiCard(m){
     <div style="margin-top:6px">${chipHtml(cls,labelFromStatus(cls))}</div>
   </div>`;
 }
+
 function buildPresentation(strategic,monthly){
   const track=document.getElementById('presentationTrack');
   const metaEl=document.getElementById('presentationMeta');
   if(!track||!metaEl) return;
   const lbl=periodLabel(state.period), row=selectedRow();
+  const months=monthsElapsed();
   const aceiteAccum=sumMonths('litros_aceite_recolectados_mes'), aguaAccum=sumMonths('litros_agua_protegidos_mes');
   const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
   const ventasAccum=sumMonths('ingresos_ventas_q_mes');
   const sRatios=strategic.filter(m=>m.goalType!=='none'&&Number.isFinite(m.ratioVsExpected)).map(m=>m.ratioVsExpected);
   const sAvg=sRatios.length?sRatios.reduce((a,b)=>a+b,0)/sRatios.length:NaN;
   const sStatus=statusFromRatio(sAvg,!!sRatios.length);
+  const sRisk=strategic.filter(m=>m.status==='red');
+  const sGood=strategic.filter(m=>m.status==='green');
+
   metaEl.innerHTML=`<span>📊 Presentación</span><span>📅 ${escapeHtml(lbl)}</span><span>${chipTextFromStatus(sStatus)}</span>`;
-  const getChartImg=id=>{const c=document.getElementById(id);return c?c.toDataURL('image/png'):null;};
-  const progImg=getChartImg('progressChart'), trendImg=getChartImg('trendChart'), soapImg=getChartImg('soapChart');
+
+  // Build SVG charts for presentation
+  const progSvg  = buildPresProgressSvg(strategic, months);
+  const trendSvg = buildPresTrendSvg('litros_aceite_recolectados_mes');
+  const soapSvg  = buildPresSoapSvg();
+
   const slides=[];
 
-  // SLIDE 1 – Portada
+  // SLIDE 1 – Portada ejecutiva
   slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Reporte de resultados · ${escapeHtml(lbl)}</div>
+    <div class="pres-kicker">Reporte · ${escapeHtml(lbl)}</div>
     <div class="pres-title-row">
-      <div><h2>Conservando Atitlán</h2><p>Programa de recolección de aceite, protección del agua y producción de jabón artesanal en la cuenca del Lago de Atitlán. ${escapeHtml(lbl)} · Asociación Amigos del Lago de Atitlán.</p></div>
-      <div class="pres-brand-badge"><img src="./Conservando%20Atitl%C3%A1n%20.png" alt="Conservando Atitlán" onerror="this.onerror=null;this.src='./logosatitlan.png'"><small>Economía circular · agua limpia · cuenca del Lago de Atitlán</small></div>
+      <div><h2>Conservando Atitlán</h2><p>Programa de recolección de aceite usado, producción de jabón artesanal y protección del agua de la cuenca del Lago de Atitlán. Asociación Amigos del Lago de Atitlán.</p></div>
+      <div class="pres-brand-badge"><img src="./Conservando%20Atitl%C3%A1n%20.png" alt="Conservando Atitlán" onerror="this.onerror=null;this.src='./logosatitlan.png'"></div>
     </div>
     <div class="pres-card-grid pres-card-grid-4">
-      <div class="pres-card"><small>Aceite recolectado (acum.)</small><strong>${escapeHtml(fmtN(aceiteAccum,2))}</strong><p>litros · ${escapeHtml(fmtPct(aceiteAccum/GOALS.aceiteAnual))} del año</p></div>
-      <div class="pres-card"><small>Agua protegida (acum.)</small><strong>${escapeHtml(fmtI(aguaAccum))}</strong><p>litros protegidos</p></div>
-      <div class="pres-card"><small>Jabones producidos (acum.)</small><strong>${escapeHtml(fmtI(jabProd))}</strong><p>jabones · ${escapeHtml(fmtPct(jabProd/GOALS.jabonesProducidosAnual))} del año</p></div>
-      <div class="pres-card"><small>Ventas acumuladas</small><strong>${escapeHtml(fmtQ(ventasAccum))}</strong><p>Período: ${escapeHtml(fmtQ(toNum(row?.ingresos_ventas_q_mes)))}</p></div>
+      <div class="pres-card"><small>Aceite acumulado</small><strong>${escapeHtml(fmtN(aceiteAccum,2))}</strong><p>litros · ${escapeHtml(fmtPct(aceiteAccum/GOALS.aceiteAnual))} del año</p>${chipHtml(statusFromRatio(aceiteAccum/(GOALS.aceiteAnual/12*months),true),fmtPct(aceiteAccum/(GOALS.aceiteAnual/12*months))+' del esperado')}</div>
+      <div class="pres-card"><small>Agua protegida</small><strong>${escapeHtml(fmtI(aguaAccum))}</strong><p>litros acumulados</p>${chipHtml(statusFromRatio(aguaAccum/(GOALS.aguaAnual/12*months),true),fmtPct(aguaAccum/(GOALS.aguaAnual/12*months))+' del esperado')}</div>
+      <div class="pres-card"><small>Jabones producidos</small><strong>${escapeHtml(fmtI(jabProd))}</strong><p>${escapeHtml(fmtPct(jabProd/GOALS.jabonesProducidosAnual))} del objetivo anual</p>${chipHtml(statusFromRatio(jabProd/(GOALS.jabonesProducidosMensual*months),true),labelFromStatus(statusFromRatio(jabProd/(GOALS.jabonesProducidosMensual*months),true)))}</div>
+      <div class="pres-card"><small>Ventas acumuladas</small><strong>${escapeHtml(fmtQ(ventasAccum))}</strong><p>Período: ${escapeHtml(fmtQ(toNum(row?.ingresos_ventas_q_mes)))}</p>${chipHtml('blue','Informativo')}</div>
     </div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
-      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🫙 ${escapeHtml(fmtN(toNum(row?.litros_aceite_recolectados_mes),2))} litros aceite en el período</span>
-      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🧼 ${escapeHtml(fmtI(toNum(row?.jabones_producidos_mes)))} jabones producidos</span>
-      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">🏘️ ${escapeHtml(fmtI(toNum(row?.municipios_visitados_mes)))} municipios visitados</span>
-      <span style="display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.82rem;font-weight:700">⚡ Estado: <strong>${escapeHtml(chipTextFromStatus(sStatus))}</strong></span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.81rem;font-weight:700;color:var(--text-2)">🫙 ${escapeHtml(fmtN(toNum(row?.litros_aceite_recolectados_mes),2))} L aceite en el período</span>
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.81rem;font-weight:700;color:var(--text-2)">🧼 ${escapeHtml(fmtI(toNum(row?.jabones_producidos_mes)))} jabones producidos</span>
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid var(--line-soft);font-size:.81rem;font-weight:700;color:var(--text-2)">🏘️ ${escapeHtml(fmtI(toNum(row?.municipios_visitados_mes)))} municipios</span>
+      <span style="display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:999px;background:${sStatus==='green'?'rgba(46,139,94,.12)':sStatus==='yellow'?'rgba(198,152,63,.12)':'rgba(192,80,80,.12)'};border:1px solid rgba(0,0,0,.08);font-size:.81rem;font-weight:800;color:${sStatus==='green'?'#2e7d52':sStatus==='yellow'?'#a17820':'#c05050'}">⚡ ${escapeHtml(chipTextFromStatus(sStatus))}</span>
     </div>
   </div></div>`);
 
-  // SLIDE 2 – KPIs estratégicos
+  // SLIDE 2 – Análisis de avance con gráfica SVG
+  slides.push(`<div class="pres-slide"><div class="pres-inner">
+    <div class="pres-kicker">Análisis de avance · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Avance real vs esperado</h2><p>Cada barra muestra el avance real acumulado (azul/verde) contra el ritmo esperado al período (marcador dorado ▲). La diferencia en puntos porcentuales (pp) aparece a la derecha.</p></div></div>
+    <div style="flex:1;overflow:auto;background:rgba(255,255,255,.7);border-radius:18px;border:1px solid var(--line-soft);padding:12px 10px">
+      ${progSvg}
+    </div>
+  </div></div>`);
+
+  // SLIDE 3 – KPIs estratégicos detalle
   slides.push(`<div class="pres-slide"><div class="pres-inner">
     <div class="pres-kicker">Indicadores estratégicos · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Metas estructurales del programa</h2><p>Avance acumulado real frente a metas anuales. Colectas, aceite, agua protegida, jabones y pruebas de jabón líquido.</p></div></div>
+    <div class="pres-title-row"><div><h2>Metas estructurales anuales</h2><p>Avance acumulado real frente a las metas anuales del programa. Semáforo de estado por indicador.</p></div></div>
     <div class="pres-card-grid pres-card-grid-4" style="flex:1;align-content:start">
       ${strategic.slice(0,4).map(m=>presKpiCard(m)).join('')}
     </div>
-  </div></div>`);
-
-  // SLIDE 3 – KPIs estratégicos resto
-  slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Indicadores estratégicos (cont.) · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Jabones, pruebas y ventas</h2><p>Continuación de los indicadores anuales con jabones vendidos, pruebas de jabón líquido y acumulado de ventas.</p></div></div>
-    <div class="pres-card-grid pres-card-grid-3" style="flex:1;align-content:start">
+    <div class="pres-card-grid pres-card-grid-3" style="margin-top:10px">
       ${strategic.slice(4).map(m=>presKpiCard(m)).join('')}
     </div>
   </div></div>`);
 
   // SLIDE 4 – KPIs mensuales
   slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Indicadores operativos · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Comportamiento del período</h2><p>Indicadores mensuales con meta explícita: municipios, aceite del período, agua del período, producción y ventas.</p></div></div>
+    <div class="pres-kicker">Indicadores del período · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Comportamiento operativo del período</h2><p>Indicadores con meta mensual explícita: cobertura, aceite, agua, producción y ventas en el período seleccionado.</p></div></div>
     <div class="pres-card-grid pres-card-grid-3" style="flex:1;align-content:start">
-      ${monthly.slice(0,6).map(m=>{
-        const cls=m.status||'gray';
-        const bw=Math.max(0,Math.min((m.periodRatio||0)*100,100)).toFixed(1);
-        return `<div class="pres-kpi-pair">
-          <div class="pres-kpi-label">${escapeHtml(m.title)}</div>
-          <div class="pres-kpi-value">${escapeHtml([m.value,m.unit].filter(Boolean).join(' '))}</div>
-          <div class="pres-kpi-meta">${escapeHtml(m.expectedText)}</div>
-          <div class="pres-bar-wrap"><div class="pres-bar ${cls}" style="width:${bw}%"></div></div>
-          <div style="margin-top:6px">${chipHtml(cls,labelFromStatus(cls))}</div>
-        </div>`;
-      }).join('')}
+      ${monthly.map(m=>{const cls=m.status||'gray';const bw=Math.max(0,Math.min((m.periodRatio||0)*100,100)).toFixed(1);return`<div class="pres-kpi-pair"><div class="pres-kpi-label">${escapeHtml(m.title)}</div><div class="pres-kpi-value">${escapeHtml([m.value,m.unit].filter(Boolean).join(' '))}</div><div class="pres-kpi-meta">${escapeHtml(m.expectedText)}</div><div class="pres-bar-wrap"><div class="pres-bar ${cls}" style="width:${bw}%"></div></div><div style="margin-top:6px">${chipHtml(cls,labelFromStatus(cls))}</div></div>`;}).join('')}
     </div>
   </div></div>`);
 
-  // SLIDE 5 – Avance acumulado (chart)
+  // SLIDE 5 – Tendencia mensual (SVG)
   slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Análisis comparativo · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Avance real vs esperado</h2><p>Gráfica comparativa del avance acumulado de cada indicador estratégico frente al ritmo esperado para este punto del año.</p></div></div>
-    <div class="pres-columns" style="flex:1">
-      <div class="pres-visual-card">
-        <h3>Avance acumulado vs esperado</h3><p>Barras: real (azul) vs esperado (dorado). Brecha visible en cada indicador.</p>
-        <div class="pres-chart-img">${progImg?`<img src="${progImg}" alt="Avance acumulado">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
-      </div>
-      <div class="pres-list-card">
-        <h3>Resumen operativo</h3><p>${escapeHtml(lbl)}</p>
-        ${[
-          {label:'Aceite del período',val:fmtN(toNum(row?.litros_aceite_recolectados_mes),2)+' litros'},
-          {label:'Agua protegida',val:fmtI(toNum(row?.litros_agua_protegidos_mes))+' litros'},
-          {label:'Jabones producidos',val:fmtI(toNum(row?.jabones_producidos_mes))},
-          {label:'Jabones vendidos',val:fmtI(toNum(row?.jabones_vendidos_mes))},
-          {label:'Ventas del período',val:fmtQ(toNum(row?.ingresos_ventas_q_mes))},
-          {label:'Municipios visitados',val:fmtI(toNum(row?.municipios_visitados_mes))}
-        ].map((item,i)=>`<div class="pres-list-item"><div class="pres-rank">${i+1}</div><div><strong style="font-size:.9rem">${escapeHtml(item.label)}</strong></div><div style="font-family:var(--font-mono);font-size:.85rem;font-weight:700;color:var(--lake)">${escapeHtml(item.val)}</div></div>`).join('')}
-      </div>
+    <div class="pres-kicker">Tendencia histórica · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Trayectoria del aceite recolectado</h2><p>Serie histórica mensual con referencia de meta. El punto destacado (azul oscuro) corresponde a ${escapeHtml(lbl)}. Se muestran máximos y mínimos de la serie.</p></div></div>
+    <div style="flex:1;background:rgba(255,255,255,.72);border-radius:18px;border:1px solid var(--line-soft);padding:14px 10px;overflow:hidden">
+      ${trendSvg}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;flex-shrink:0">
+      <div class="pres-card"><small>Aceite del período</small><strong>${escapeHtml(fmtN(toNum(row?.litros_aceite_recolectados_mes),2))}</strong><p>litros recolectados</p></div>
+      <div class="pres-card"><small>Meta mensual</small><strong>${escapeHtml(fmtN(GOALS.aceiteAnual/12,2))}</strong><p>litros de referencia</p></div>
+      <div class="pres-card"><small>Acumulado anual</small><strong>${escapeHtml(fmtN(aceiteAccum,2))}</strong><p>litros · ${escapeHtml(fmtPct(aceiteAccum/GOALS.aceiteAnual))} del año</p></div>
     </div>
   </div></div>`);
 
-  // SLIDE 6 – Tendencia y cadena de jabón
+  // SLIDE 6 – Cadena de valor del jabón (SVG)
   slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Tendencias y cadena de valor · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Trayectoria mensual y cadena del jabón</h2><p>Serie histórica del indicador seleccionado y análisis de la relación producción-venta por tipo de jabón en el período.</p></div></div>
-    <div class="pres-card-grid pres-card-grid-2" style="flex:1">
-      <div class="pres-visual-card">
-        <h3>Tendencia mensual</h3><p>Serie histórica con referencia mensual cuando existe.</p>
-        <div class="pres-chart-img">${trendImg?`<img src="${trendImg}" alt="Tendencia">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
-      </div>
-      <div class="pres-visual-card">
-        <h3>Cadena de valor del jabón</h3><p>Producción, venta y tasa de conversión en ${escapeHtml(lbl)}.</p>
-        <div class="pres-chart-img">${soapImg?`<img src="${soapImg}" alt="Jabones">`:'<p style="color:var(--muted);font-size:.85rem">Gráfica no disponible</p>'}</div>
-      </div>
+    <div class="pres-kicker">Cadena de valor · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Producción y venta de jabón</h2><p>Comparación entre jabones producidos y vendidos por tipo. Las líneas de flujo muestran la tasa de conversión venta/producción para hotel y tocador.</p></div></div>
+    <div style="flex:1;background:rgba(255,255,255,.72);border-radius:18px;border:1px solid var(--line-soft);padding:14px 10px;overflow:hidden">
+      ${soapSvg}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex-shrink:0">
+      ${[
+        {label:'Jabones producidos',val:fmtI(toNum(row?.jabones_hotel_producidos_mes)+toNum(row?.jabones_tocador_producidos_mes))},
+        {label:'Jabones vendidos',val:fmtI(toNum(row?.jabones_hotel_vendidos_mes)+toNum(row?.jabones_tocador_vendidos_mes))},
+        {label:'Ventas del período',val:fmtQ(toNum(row?.ingresos_ventas_q_mes))},
+        {label:'Conv. global',val:fmtN(((toNum(row?.jabones_hotel_vendidos_mes)+toNum(row?.jabones_tocador_vendidos_mes))/(toNum(row?.jabones_hotel_producidos_mes)+toNum(row?.jabones_tocador_producidos_mes)||1))*100,1)+'%'}
+      ].map(c=>`<div class="pres-card"><small>${c.label}</small><strong>${escapeHtml(c.val)}</strong></div>`).join('')}
     </div>
   </div></div>`);
 
   // SLIDE 7 – Diagnóstico y cierre
-  const sRisk=strategic.filter(m=>m.status==='red');
-  const sGood=strategic.filter(m=>m.status==='green');
   slides.push(`<div class="pres-slide"><div class="pres-inner">
-    <div class="pres-kicker">Diagnóstico y cierre · ${escapeHtml(lbl)}</div>
-    <div class="pres-title-row"><div><h2>Lectura interpretativa y mensaje de cierre</h2><p>Síntesis del comportamiento del programa para orientar la conversación institucional y las decisiones operativas.</p></div></div>
+    <div class="pres-kicker">Diagnóstico · ${escapeHtml(lbl)}</div>
+    <div class="pres-title-row"><div><h2>Lectura interpretativa y mensaje de cierre</h2><p>Síntesis del comportamiento del programa para orientar la conversación institucional y las decisiones operativas del equipo.</p></div></div>
     <div class="pres-columns" style="flex:1">
       <div class="pres-note">
         <h3>Diagnóstico de ${escapeHtml(lbl)}</h3>
         <p>El programa recolectó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)} litros</strong> de aceite y protegió <strong>${fmtI(toNum(row?.litros_agua_protegidos_mes))} litros</strong> de agua en el período. El acumulado del año alcanza <strong>${fmtN(aceiteAccum,2)} litros</strong> de aceite (${fmtPct(aceiteAccum/GOALS.aceiteAnual)} del objetivo anual) y <strong>${fmtI(aguaAccum)} litros</strong> de agua protegida.</p>
-        <p>La producción acumulada llega a <strong>${fmtI(jabProd)}</strong> jabones y la comercialización registra <strong>${fmtI(jabVend)}</strong> unidades vendidas con <strong>${fmtQ(ventasAccum)}</strong> en ventas totales. ${sRisk.length>0?`Los indicadores que requieren atención son: ${sRisk.map(m=>m.title).join(', ')}.`:`Todos los indicadores activos mantienen el ritmo esperado.`}</p>
-        <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.78rem;color:var(--muted)">Conservando Atitlán · cadena aceite-agua-jabón · ${escapeHtml(lbl)}</p>
+        <p>La producción acumulada llega a <strong>${fmtI(jabProd)}</strong> jabones y la comercialización registra <strong>${fmtI(jabVend)}</strong> unidades vendidas con <strong>${fmtQ(ventasAccum)}</strong> en ventas. ${sRisk.length>0?`Indicadores con atención prioritaria: ${sRisk.map(m=>m.title).join(', ')}.`:`Todos los indicadores activos se mantienen dentro del ritmo esperado.`}</p>
+        <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.76rem;color:var(--muted)">Conservando Atitlán · AALA · ${escapeHtml(lbl)}</p>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px;overflow:auto">
-        ${sGood.map(m=>`<div class="pres-alert-box green">✅ <strong>${escapeHtml(m.title)}</strong> — ${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado</div>`).join('')}
-        ${sRisk.map(m=>`<div class="pres-alert-box red">⚠️ <strong>${escapeHtml(m.title)}</strong> — ${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado — requiere atención</div>`).join('')}
-        ${!sRisk.length&&!sGood.length?`<div class="pres-alert-box blue">ℹ️ Sin datos suficientes para clasificar los indicadores.</div>`:''}
+      <div style="display:flex;flex-direction:column;gap:8px;overflow:auto">
+        ${sGood.slice(0,4).map(m=>`<div class="pres-alert-box green">✅ <strong>${escapeHtml(m.title)}</strong><br><span style="font-size:.8rem;opacity:.85">${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado · ${escapeHtml(labelFromStatus(m.status))}</span></div>`).join('')}
+        ${sRisk.map(m=>`<div class="pres-alert-box red">⚠️ <strong>${escapeHtml(m.title)}</strong><br><span style="font-size:.8rem;opacity:.85">${escapeHtml(fmtPct(m.ratioVsExpected))} del esperado · requiere atención</span></div>`).join('')}
+        ${!sRisk.length&&!sGood.length?`<div class="pres-alert-box blue">ℹ️ Sin datos suficientes para clasificar indicadores.</div>`:''}
       </div>
     </div>
   </div></div>`);
@@ -1473,6 +1962,8 @@ function buildPresentation(strategic,monthly){
   presSlideIndex=0;
   gotoSlide(0);
 }
+
+document.getElementById('presentationOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('presentationOverlay'))closePresentation();});
 
 document.getElementById('presentationOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('presentationOverlay'))closePresentation();});
 </script>
