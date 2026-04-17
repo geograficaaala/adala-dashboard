@@ -349,6 +349,14 @@
     .loading-state,.error-state{padding:28px;border-radius:22px;background:#fff;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);text-align:center;color:var(--text-2);font-size:.9rem}
     @keyframes fadeDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 
+    /* Exec KPI grid: 3 columns */
+    #execKpiGrid.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #execKpiGrid .kpi{min-height:190px}
+    #execKpiGrid .kpi-value{font-size:clamp(1.7rem,2.2vw,2.4rem)}
+    #execKpiGrid .kpi-label{min-height:2em;font-size:.95rem}
+    @media (max-width:1180px){#execKpiGrid.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:640px){#execKpiGrid.kpi-grid{grid-template-columns:1fr}}
+
     /* ── RESPONSIVE ── */
     @media (max-width:1500px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:1180px){
@@ -415,18 +423,23 @@
 
     <!-- EXECUTIVE VIEW -->
     <div id="execView" style="display:none">
-      <div class="exec-status-card">
+      <!-- Status banner -->
+      <div class="exec-status-card" style="margin-bottom:18px">
         <div class="es-label">Estado del programa</div>
         <div class="es-title">Conservando Atitlán</div>
         <div class="exec-status-badge" id="execStatusBadge">Cargando…</div>
-        <div style="font-size:.8rem;opacity:.7" id="execPeriodInfo">—</div>
+        <div style="font-size:.8rem;opacity:.7;margin-top:4px" id="execPeriodInfo">—</div>
       </div>
-      <div class="exec-strip" id="execStrip"></div>
-      <div class="exec-row-2">
+      <!-- KPI strip: 6 cards styled like Atitlán Recicla -->
+      <div class="kpi-grid" id="execKpiGrid" style="margin-bottom:18px"></div>
+      <!-- Accumulated strip -->
+      <div class="exec-strip" id="execStrip" style="margin-bottom:18px"></div>
+      <!-- Chart + Alerts row -->
+      <div class="exec-row-2" style="margin-bottom:18px">
         <article class="card panel">
-          <h3>Avance estratégico acumulado</h3>
-          <p class="sub" id="execChartSub">Progreso real vs esperado al período.</p>
-          <div class="viz-wrap" style="min-height:280px"><canvas id="execProgressChart"></canvas></div>
+          <h3>Avance acumulado vs esperado</h3>
+          <p class="sub" id="execChartSub">Progreso real vs esperado por indicador estratégico al período.</p>
+          <div id="execProgressChart" style="overflow:visible;padding:4px 0"></div>
         </article>
         <article class="card panel">
           <h3>Alertas operativas</h3>
@@ -1046,6 +1059,24 @@ function buildMonthPills(){
     host.appendChild(btn);
   });
 }
+
+function goalSeriesForIndicator(id){
+  const map={litros_aceite_recolectados_mes:GOALS.aceiteAnual/12,litros_agua_protegidos_mes:GOALS.aguaAnual/12,
+    jabones_producidos_mes:GOALS.jabonesProducidosMensual,municipios_visitados_mes:GOALS.municipiosMetaMes};
+  if(id==='jornadas_recoleccion_ciclo_mes') return state.total.map(()=>1);
+  if(id==='pruebas_jabon_liquido_mes') return state.total.map(r=>GOALS.pruebasMeses.includes(monthNumber(r.periodo_clave))?1:0);
+  if(map[id]) return state.total.map(()=>map[id]);
+  return null;
+}
+function formatTrendValue(v,unit){
+  if(unit==='GTQ') return fmtQ(v);
+  if(unit==='litros') return fmtN(v,2)+' litros';
+  if(unit==='jabones') return fmtI(v)+' jabones';
+  if(unit==='municipios') return fmtI(v)+' municipios';
+  if(unit==='inmuebles') return fmtI(v)+' inmuebles';
+  return fmtN(v,2);
+}
+
 function renderCharts(){
   renderProgressChart();
   renderTrendChart();
@@ -1124,6 +1155,7 @@ function renderProgressChart(){
   const container = document.getElementById('progressChart')?.parentElement;
   if(!container) return;
   container.innerHTML = '';
+  container.style.minHeight='auto';container.style.height='auto';
 
   const W=900, ROW_H=54, PAD_L=196, PAD_R=70, PAD_T=28, PAD_B=44;
   const H = PAD_T + metrics.length*ROW_H + PAD_B;
@@ -1244,6 +1276,7 @@ function renderTrendChart(){
   const container = document.getElementById('trendChart')?.parentElement;
   if(!container) return;
   container.innerHTML = '';
+  container.style.minHeight='auto';
 
   if(!rawData.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos disponibles</p>'; return; }
 
@@ -1387,6 +1420,7 @@ function renderSoapChart(){
   const container=document.getElementById('soapChart')?.parentElement;
   if(!container) return;
   container.innerHTML='';
+  container.style.minHeight='auto';container.style.height='auto';
 
   const W=860, H=340, PAD_L=50, PAD_R=44, PAD_T=36, PAD_B=52;
   const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
@@ -1636,6 +1670,37 @@ function buildPresSoapSvg(){
 
 
 /* ── EXECUTIVE VIEW (complete rewrite) ── */
+function renderExecSparkline(indicatorId){
+  const rawData=state.total.map(r=>toNum(r[indicatorId]));
+  const activeIdx=state.periods.indexOf(String(state.period));
+  if(!rawData.length) return '';
+  const W=320,H=78,PL=6,PR=6,PT=8,PB=20,plotW=W-PL-PR,plotH=H-PT-PB;
+  const allV=rawData.filter(Number.isFinite);
+  if(!allV.length) return '';
+  const mn=Math.min(...allV), mx=Math.max(...allV,mn+1);
+  const n=rawData.length;
+  const X=i=>PL+i*(plotW/Math.max(n-1,1));
+  const Y=v=>PT+plotH-((v-mn)/(mx-mn))*plotH;
+  const refSeries=goalSeriesForIndicator(indicatorId);
+  const areaPts=[`${X(0)},${PT+plotH}`,...rawData.map((v,i)=>`${X(i)},${Y(v)}`),`${X(n-1)},${PT+plotH}`].join(' ');
+  const linePts=rawData.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');
+  const refPts=refSeries?refSeries.map((v,i)=>`${X(i)},${Y(v)}`).join(' '):'';
+  const labels=state.total.map(r=>monthShortLabel(r.periodo_clave));
+  const step=Math.max(1,Math.ceil(n/4));
+  let xLabels='';
+  rawData.forEach((_,i)=>{if(i%step!==0&&i!==n-1) return;xLabels+=`<text x="${X(i)}" y="${H-4}" text-anchor="middle" fill="#8aa0ad" font-size="8">${labels[i]}</text>`;});
+  let activeDot='';
+  if(activeIdx>=0){const cx=X(activeIdx),cy=Y(rawData[activeIdx]);activeDot=`<circle cx="${cx}" cy="${cy}" r="4.5" fill="#173e63" stroke="#fff" stroke-width="2"/>`;}
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" font-family="Sora,sans-serif">
+    <defs><linearGradient id="spk_${indicatorId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1c6084" stop-opacity=".20"/><stop offset="100%" stop-color="#1c6084" stop-opacity="0"/></linearGradient></defs>
+    ${refPts?`<polyline fill="none" stroke="#c6983f" stroke-width="1.4" stroke-dasharray="4 3" points="${refPts}"/>`:''}
+    <polygon points="${areaPts}" fill="url(#spk_${indicatorId})"/>
+    <polyline fill="none" stroke="#1c6084" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${linePts}"/>
+    ${activeDot}
+    ${xLabels}
+  </svg>`;
+}
+
 function renderExec(strategic,monthly){
   const row=selectedRow(), lbl=periodLabel(state.period);
   const months=monthsElapsed();
@@ -1651,88 +1716,118 @@ function renderExec(strategic,monthly){
   const aguaAccum=sumMonths('litros_agua_protegidos_mes');
   const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
   const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const oilMonthlyGoal=GOALS.aceiteAnual/12, waterMonthlyGoal=GOALS.aguaAnual/12;
 
-  // Strip cards with animated bars
+  // KPI cards styled like Atitlán Recicla — 6 key metrics with sparklines
+  const EXEC_KPIS = [
+    {id:'aceite', label:'Aceite recolectado',    val:toNum(row?.litros_aceite_recolectados_mes), unit:'litros', meta:oilMonthlyGoal,        pct:toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal,        sparkId:'litros_aceite_recolectados_mes'},
+    {id:'agua',   label:'Agua protegida',         val:toNum(row?.litros_agua_protegidos_mes),     unit:'litros', meta:waterMonthlyGoal,       pct:toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal,           sparkId:'litros_agua_protegidos_mes'},
+    {id:'jprod',  label:'Jabones producidos',     val:toNum(row?.jabones_producidos_mes),         unit:'jabones',meta:GOALS.jabonesProducidosMensual, pct:toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual, sparkId:'jabones_producidos_mes'},
+    {id:'jvend',  label:'Jabones vendidos',        val:toNum(row?.jabones_vendidos_mes),           unit:'jabones',meta:null,                  pct:null,                                                               sparkId:'jabones_vendidos_mes'},
+    {id:'ventas', label:'Ventas del período',      val:toNum(row?.ingresos_ventas_q_mes),          unit:'GTQ',    meta:null,                  pct:null,                                                               sparkId:'ingresos_ventas_q_mes'},
+    {id:'muni',   label:'Municipios visitados',    val:toNum(row?.municipios_visitados_mes),       unit:'muni',   meta:GOALS.municipiosMetaMes,pct:toNum(row?.municipios_visitados_mes)/GOALS.municipiosMetaMes,      sparkId:'municipios_visitados_mes'},
+  ];
+  const kg=document.getElementById('execKpiGrid');
+  if(kg){
+    kg.innerHTML=EXEC_KPIS.map((k,idx)=>{
+      const tone=k.pct!=null?statusFromRatio(k.pct,true):'blue';
+      const bw=k.pct!=null?Math.max(0,Math.min(k.pct*100,100)).toFixed(1):'0';
+      const pillar=k.pct!=null?Math.max(8,Math.min(k.pct*100,100)).toFixed(1):'0';
+      const displayVal=k.unit==='GTQ'?fmtQ(k.val):k.unit==='litros'?fmtN(k.val,2)+' litros':fmtI(k.val)+(k.unit&&k.unit!=='GTQ'?' '+k.unit:'');
+      const metaText=k.meta!=null?(k.unit==='GTQ'?`Meta mensual: ${fmtQ(k.meta)}`:`Meta mensual: ${k.unit==='litros'?fmtN(k.meta,2):fmtI(k.meta)} ${k.unit}`):'Lectura informativa';
+      const spark=renderExecSparkline(k.sparkId);
+      return `<article class="card kpi tone-${tone}" style="animation-delay:${idx*80}ms;opacity:0;animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) ${idx*80}ms forwards">
+        <div class="kpi-top"><div class="kpi-label">${escapeHtml(k.label)}</div></div>
+        <div class="kpi-figure">
+          <div class="kpi-pillar" aria-hidden="true">
+            <span class="kpi-pillar-track"></span>
+            <span class="kpi-pillar-fill" style="height:${pillar}%" data-height="${pillar}%"></span>
+          </div>
+          <div class="kpi-reading">
+            <div class="kpi-value">${escapeHtml(displayVal)}</div>
+            <div class="kpi-achieved">${escapeHtml(labelFromStatus(tone))}</div>
+            <div class="kpi-reference">${escapeHtml(metaText)}</div>
+          </div>
+        </div>
+        <div style="margin:4px 0 2px">${spark}</div>
+        <div class="kpi-progress-line"><span style="width:${bw}%" data-width="${bw}"></span></div>
+      </article>`;
+    }).join('');
+    // Animate bars
+    requestAnimationFrame(()=>{
+      kg.querySelectorAll('.kpi-pillar-fill').forEach((el,i)=>{setTimeout(()=>el.style.height=el.dataset.height||'0%',120+i*90);});
+      kg.querySelectorAll('.kpi-progress-line > span').forEach((el,i)=>{setTimeout(()=>el.style.width=(el.dataset.width||'0')+'%',180+i*90);});
+    });
+  }
+
+  // Accumulated strip (annual progress)
   const strip=document.getElementById('execStrip');
   if(strip){
     const stripItems=[
-      {label:'Aceite acumulado',value:fmtN(aceiteAccum,2)+' litros',pct:aceiteAccum/GOALS.aceiteAnual,status:statusFromRatio(aceiteAccum/(GOALS.aceiteAnual/12*months),true)},
-      {label:'Agua protegida',value:fmtI(aguaAccum)+' litros',pct:aguaAccum/GOALS.aguaAnual,status:statusFromRatio(aguaAccum/(GOALS.aguaAnual/12*months),true)},
+      {label:'Aceite acumulado '+lbl.split(' de ')[1],value:fmtN(aceiteAccum,2)+' litros',pct:aceiteAccum/GOALS.aceiteAnual,status:statusFromRatio(aceiteAccum/(oilMonthlyGoal*months),true)},
+      {label:'Agua protegida '+lbl.split(' de ')[1],value:fmtI(aguaAccum)+' litros',pct:aguaAccum/GOALS.aguaAnual,status:statusFromRatio(aguaAccum/(waterMonthlyGoal*months),true)},
       {label:'Jabones producidos',value:fmtI(jabProd),pct:jabProd/GOALS.jabonesProducidosAnual,status:statusFromRatio(jabProd/(GOALS.jabonesProducidosMensual*months),true)},
-      {label:'Ventas acumuladas',value:fmtQ(ventasAccum),pct:null,status:'blue'}
+      {label:'Ventas acumuladas',value:fmtQ(ventasAccum),pct:null,status:'blue'},
     ];
     strip.innerHTML=stripItems.map(s=>`
       <div class="exec-strip-card">
         <small>${escapeHtml(s.label)}</small>
         <strong>${escapeHtml(s.value)}</strong>
-        ${s.pct!==null?`
-        <div style="margin-top:9px">
+        ${s.pct!=null?`<div style="margin-top:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-            <span style="font-size:.72rem;color:var(--muted)">del objetivo anual</span>
-            <span class="chip ${s.status}">${fmtPct(s.pct)}</span>
+            <span style="font-size:.7rem;color:var(--muted)">del objetivo anual</span>
+            <span class="exec-strip-card chip ${s.status}" style="padding:3px 8px;font-size:.7rem">${fmtPct(s.pct)}</span>
           </div>
-          <div style="height:5px;border-radius:999px;background:var(--line-soft);overflow:hidden">
-            <div style="height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--lake-light),var(--lake));transition:width .9s cubic-bezier(.22,1,.36,1)" data-w="${Math.max(0,Math.min(s.pct*100,100)).toFixed(1)}"></div>
+          <div style="height:4px;border-radius:999px;background:var(--line-soft);overflow:hidden">
+            <div style="height:100%;width:${Math.max(0,Math.min(s.pct*100,100)).toFixed(1)}%;border-radius:999px;background:linear-gradient(90deg,var(--lake-light),var(--lake))"></div>
           </div>
-        </div>`:
-        `<div style="margin-top:8px"><span class="chip blue">Lectura informativa</span></div>`}
+        </div>`:`<div style="margin-top:8px"><span class="chip blue" style="font-size:.7rem;padding:3px 8px">Informativo</span></div>`}
       </div>`).join('');
-    requestAnimationFrame(()=>{
-      strip.querySelectorAll('[data-w]').forEach((el,i)=>{
-        const w=el.getAttribute('data-w')||'0';
-        setTimeout(()=>{el.style.width=w+'%';},100+i*80);
-      });
-    });
   }
 
   // SVG progress chart
-  if(state.view==='exec'){
-    // Replace canvas with SVG container
-    const canvasEl=document.getElementById('execProgressChart');
-    if(canvasEl&&canvasEl.parentElement){
-      const wrap=canvasEl.parentElement;
-      wrap.innerHTML='';
-      wrap.style.overflow='visible';
-      const W=760, ROW_H=44, PAD_L=175, PAD_R=58, PAD_T=20, PAD_B=28;
-      const H=PAD_T+strategic.filter(m=>m.goalType!=='none').length*ROW_H+PAD_B, plotW=W-PAD_L-PAD_R;
-      const metrics=strategic.filter(m=>m.goalType!=='none');
-      const expected=metrics.map(m=>{
-        if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
-        if(m.id==='pruebas')  return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
-        return(months/12)*100;
-      });
-      const colors=metrics.map(m=>m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
-      const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
-      const defs=svgNS('defs');
-      metrics.forEach((_,i)=>{
-        const[c1,c2]=colors[i],g=svgNS('linearGradient',{id:`epg${i}`,x1:'0',y1:'0',x2:'1',y2:'0'});
-        g.appendChild(svgNS('stop',{offset:'0%','stop-color':c1}));
-        g.appendChild(svgNS('stop',{offset:'100%','stop-color':c2}));
-        defs.appendChild(g);
-      });
-      svg.appendChild(defs);
-      [0,25,50,75,100].forEach(v=>{
-        const x=PAD_L+(v/100)*plotW;
-        svg.appendChild(svgLine(x,PAD_T-2,x,H-PAD_B+2,{stroke:v===0?'#c5d5dc':'rgba(23,49,79,.07)','stroke-width':v===0?'1.5':'1','stroke-dasharray':v===0?'':'4 3'}));
-        if(v>0) svg.appendChild(svgText(x,H-PAD_B+14,v+'%',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'9.5'}));
-      });
-      metrics.forEach((m,i)=>{
-        const y0=PAD_T+i*ROW_H, ex=PAD_L+(expected[i]/100)*plotW, gap=m.progress-expected[i];
-        if(i%2===0) svg.appendChild(svgRect(0,y0-2,W,ROW_H,{fill:'rgba(23,49,79,.02)',rx:'4'}));
-        svg.appendChild(svgText(PAD_L-10,y0+ROW_H/2+4,m.title.length>25?m.title.slice(0,24)+'…':m.title,{'text-anchor':'end',fill:'#17314f','font-size':'10.5','font-weight':'600'}));
-        svg.appendChild(svgRect(PAD_L,y0+ROW_H/2-7,plotW,14,{fill:'rgba(23,49,79,.05)',rx:'7'}));
-        const bar=svgRect(PAD_L,y0+ROW_H/2-7,0,14,{fill:`url(#epg${i})`,rx:'7',style:'transition:width .85s cubic-bezier(.22,1,.36,1)'});
-        svg.appendChild(bar);
-        setTimeout(()=>bar.setAttribute('width',Math.max(4,(m.progress/100)*plotW).toFixed(1)),80+i*70);
-        svg.appendChild(svgLine(ex,y0+ROW_H/2-10,ex,y0+ROW_H/2+10,{stroke:'#c6983f','stroke-width':'2','stroke-dasharray':'3 2'}));
-        svg.appendChild(svgNS('polygon',{points:`${ex-4},${y0+ROW_H/2-12} ${ex+4},${y0+ROW_H/2-12} ${ex},${y0+ROW_H/2-7}`,fill:'#c6983f',opacity:'.9'}));
-        if(m.progress>6){const lx=PAD_L+(m.progress/100)*plotW+(m.progress>30?-6:6);svg.appendChild(svgText(lx,y0+ROW_H/2+3.5,fmtN(m.progress,1)+'%',{'text-anchor':m.progress>30?'end':'start',fill:m.progress>30?'rgba(255,255,255,.95)':'#17314f','font-size':'9','font-weight':'800'}));}
-        const gc=gap>=0?'#2e8b5e':'#c05050';
-        svg.appendChild(svgRect(W-PAD_R+2,y0+ROW_H/2-7,PAD_R-4,14,{fill:gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)',rx:'7',stroke:gap>=0?'rgba(46,139,94,.25)':'rgba(192,80,80,.25)','stroke-width':'1'}));
-        svg.appendChild(svgText(W-PAD_R/2,y0+ROW_H/2+3.5,(gap>=0?'+':'')+fmtN(gap,1)+'pp',{'text-anchor':'middle',fill:gc,'font-size':'8.5','font-weight':'800'}));
-      });
-      wrap.appendChild(svg);
-    }
+  const progressEl=document.getElementById('execProgressChart');
+  if(progressEl){
+    progressEl.innerHTML='';
+    const metrics=strategic.filter(m=>m.goalType!=='none');
+    const expected=metrics.map(m=>{
+      if(m.id==='colectas') return(months/GOALS.colectasAnual)*100;
+      if(m.id==='pruebas')  return(expectedPruebasAtCut(months)/GOALS.pruebasAnual)*100;
+      return(months/12)*100;
+    });
+    const colors=metrics.map(m=>m.status==='green'?['#2e8b5e','#54c988']:m.status==='yellow'?['#c6983f','#e8bf60']:m.status==='red'?['#c05050','#e88080']:['#1c6084','#4ca5bf']);
+    const W=780,ROW_H=44,PAD_L=178,PAD_R=58,PAD_T=20,PAD_B=28;
+    const H=PAD_T+metrics.length*ROW_H+PAD_B, plotW=W-PAD_L-PAD_R;
+    const svg=svgNS('svg',{viewBox:`0 0 ${W} ${H}`,style:'width:100%;height:auto;display:block;overflow:visible','font-family':'Sora,sans-serif'});
+    const defs=svgNS('defs');
+    metrics.forEach((_,i)=>{
+      const[c1,c2]=colors[i],g=svgNS('linearGradient',{id:`epg_ca${i}`,x1:'0',y1:'0',x2:'1',y2:'0'});
+      g.appendChild(svgNS('stop',{offset:'0%','stop-color':c1}));
+      g.appendChild(svgNS('stop',{offset:'100%','stop-color':c2}));
+      defs.appendChild(g);
+    });
+    svg.appendChild(defs);
+    [0,25,50,75,100].forEach(v=>{
+      const x=PAD_L+(v/100)*plotW;
+      svg.appendChild(svgLine(x,PAD_T-2,x,H-PAD_B+2,{stroke:v===0?'#c5d5dc':'rgba(23,49,79,.07)','stroke-width':v===0?'1.5':'1','stroke-dasharray':v===0?'':'4 3'}));
+      if(v>0) svg.appendChild(svgText(x,H-PAD_B+14,v+'%',{'text-anchor':'middle',fill:'#8aa0ad','font-size':'9.5'}));
+    });
+    metrics.forEach((m,i)=>{
+      const y0=PAD_T+i*ROW_H, ex=PAD_L+(expected[i]/100)*plotW, gap=m.progress-expected[i];
+      if(i%2===0) svg.appendChild(svgRect(0,y0-2,W,ROW_H,{fill:'rgba(23,49,79,.02)',rx:'4'}));
+      svg.appendChild(svgText(PAD_L-10,y0+ROW_H/2+4,m.title.length>25?m.title.slice(0,24)+'…':m.title,{'text-anchor':'end',fill:'#17314f','font-size':'10.5','font-weight':'600'}));
+      svg.appendChild(svgRect(PAD_L,y0+ROW_H/2-7,plotW,14,{fill:'rgba(23,49,79,.05)',rx:'7'}));
+      const bar=svgRect(PAD_L,y0+ROW_H/2-7,0,14,{fill:`url(#epg_ca${i})`,rx:'7',style:'transition:width .85s cubic-bezier(.22,1,.36,1)'});
+      svg.appendChild(bar);
+      setTimeout(()=>bar.setAttribute('width',Math.max(4,(m.progress/100)*plotW).toFixed(1)),80+i*70);
+      svg.appendChild(svgLine(ex,y0+ROW_H/2-11,ex,y0+ROW_H/2+11,{stroke:'#c6983f','stroke-width':'2','stroke-dasharray':'3 2'}));
+      svg.appendChild(svgNS('polygon',{points:`${ex-4},${y0+ROW_H/2-13} ${ex+4},${y0+ROW_H/2-13} ${ex},${y0+ROW_H/2-8}`,fill:'#c6983f',opacity:'.9'}));
+      if(m.progress>6){const lx=PAD_L+(m.progress/100)*plotW+(m.progress>30?-6:6);svg.appendChild(svgText(lx,y0+ROW_H/2+3.5,fmtN(m.progress,1)+'%',{'text-anchor':m.progress>30?'end':'start',fill:m.progress>30?'rgba(255,255,255,.95)':'#17314f','font-size':'9','font-weight':'800'}));}
+      const gc=gap>=0?'#2e8b5e':'#c05050';
+      svg.appendChild(svgRect(W-PAD_R+2,y0+ROW_H/2-7,PAD_R-4,14,{fill:gap>=0?'rgba(46,139,94,.12)':'rgba(192,80,80,.12)',rx:'7',stroke:gap>=0?'rgba(46,139,94,.25)':'rgba(192,80,80,.25)','stroke-width':'1'}));
+      svg.appendChild(svgText(W-PAD_R/2,y0+ROW_H/2+3.5,(gap>=0?'+':'')+fmtN(gap,1)+'pp',{'text-anchor':'middle',fill:gc,'font-size':'8.5','font-weight':'800'}));
+    });
+    progressEl.appendChild(svg);
   }
 
   // Alerts
@@ -1744,32 +1839,32 @@ function renderExec(strategic,monthly){
       if(m.goalType==='none') return;
       const pct=m.goalType==='annual'?m.ratioVsExpected:m.periodRatio;
       if(!Number.isFinite(pct)) return;
-      if(pct<0.8) alerts.push({type:'red',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} del esperado — brecha de <strong>${fmtN(100-pct*100,1)} pp</strong>`});
+      if(pct<0.8) alerts.push({type:'red',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} del esperado — brecha de ${fmtN((1-pct)*100,1)} pp`});
       else if(pct<1) alerts.push({type:'yellow',text:`<strong>${m.title}</strong>: ${fmtPct(pct)} — a ${fmtN((1-pct)*100,1)} pp de la meta`});
     });
     if(!alerts.length) alerts.push({type:'green',text:`✅ Todos los indicadores activos están dentro del rango esperado en <strong>${lbl}</strong>.`});
     eAlerts.innerHTML=`<div class="alert-list">${alerts.map(a=>`<div class="alert ${a.type}">${a.text}</div>`).join('')}</div>`;
   }
 
-  // Rich diagnostic
+  // Rich diagnostic panel
   const ediag=document.getElementById('execDiagPanel');
   if(ediag){
     const sOk=strategic.filter(m=>m.goalType!=='none'&&(m.status==='green'||m.status==='yellow')).length;
     const sRisk=strategic.filter(m=>m.status==='red');
+    const aceiteRatio=toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal;
     ediag.innerHTML=`<h3>Resumen ejecutivo · ${escapeHtml(lbl)}</h3>
-      <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es estratégicos':' estratégico'} dentro del ritmo esperado${sRisk.length>0?`, mientras los indicadores <strong>${sRisk.map(m=>m.title).join(', ')}</strong> requieren atención prioritaria`:''}.</p>
-      <p>La cadena de aceite y agua acumula <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite (<strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual) y <strong>${fmtI(aguaAccum)}</strong> litros de agua protegida. El período reportó <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros de aceite y produjo <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones.</p>
-      <p>La comercialización acumula <strong>${fmtI(jabVend)}</strong> jabones vendidos y <strong>${fmtQ(ventasAccum)}</strong> en ventas. Se visitaron <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong> municipios y <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong> inmuebles en el período.</p>
+      <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es estratégicos':' estratégico'} dentro del ritmo esperado${sRisk.length>0?`. Los indicadores <strong>${sRisk.map(m=>m.title).join(', ')}</strong> requieren atención prioritaria`:''}.</p>
+      <p>La cadena de aceite y agua acumula <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite (<strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del objetivo anual) y protege <strong>${fmtI(aguaAccum)}</strong> litros de agua. En <strong>${lbl}</strong> se recolectaron <strong>${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)}</strong> litros, alcanzando el <strong>${fmtPct(aceiteRatio)}</strong> de la meta mensual de ${fmtN(oilMonthlyGoal,2)} litros.</p>
+      <p>Se produjeron <strong>${fmtI(toNum(row?.jabones_producidos_mes))}</strong> jabones y se vendieron <strong>${fmtI(toNum(row?.jabones_vendidos_mes))}</strong> unidades, generando <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong> en ventas del período. El acumulado de jabones producidos llega a <strong>${fmtI(jabProd)}</strong> con ventas totales de <strong>${fmtQ(ventasAccum)}</strong>.</p>
       <div class="diag-grid">
-        <div class="diag-block"><strong>🫙 Aceite y agua</strong><p>Aceite: <strong>${fmtN(aceiteAccum,2)} L</strong><br>Agua: <strong>${fmtI(aguaAccum)} L</strong></p></div>
-        <div class="diag-block"><strong>🧼 Jabones</strong><p>Prod.: <strong>${fmtI(jabProd)}</strong><br>Vend.: <strong>${fmtI(jabVend)}</strong></p></div>
-        <div class="diag-block"><strong>💰 Ventas</strong><p>Período: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong><br>Acum.: <strong>${fmtQ(ventasAccum)}</strong></p></div>
-        <div class="diag-block"><strong>📍 Territorio</strong><p>Municipios: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong><br>Inmuebles: <strong>${fmtI(toNum(row?.inmuebles_atendidos_mes))}</strong></p></div>
+        <div class="diag-block"><strong>🫙 Aceite acumulado</strong><p>${fmtN(aceiteAccum,2)} litros · <strong>${fmtPct(aceiteAccum/GOALS.aceiteAnual)}</strong> del año</p></div>
+        <div class="diag-block"><strong>💧 Agua protegida</strong><p>${fmtI(aguaAccum)} litros · <strong>${fmtPct(aguaAccum/GOALS.aguaAnual)}</strong> del año</p></div>
+        <div class="diag-block"><strong>🧼 Cadena jabones</strong><p>Prod.: <strong>${fmtI(jabProd)}</strong> · Vend.: <strong>${fmtI(jabVend)}</strong></p></div>
+        <div class="diag-block"><strong>💰 Ventas acumuladas</strong><p><strong>${fmtQ(ventasAccum)}</strong> · Período: ${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</p></div>
       </div>`;
   }
 }
 
-/* ── VIEW SWITCH ── */
 function switchView(mode){
   state.view=mode;
   const execView=document.getElementById('execView'), fullView=document.getElementById('fullView');
@@ -1819,7 +1914,6 @@ function buildPresDots(n){
     btn.onclick=()=>gotoSlide(i);host.appendChild(btn);
   }
 }
-function chipHtml(status,text){ return `<span class="pres-chip ${status}">${escapeHtml(text)}</span>`; }
 function presKpiCard(m){
   const cls=m.status||'gray';
   const bw=Math.max(0,Math.min((m.ratioVsExpected||0)*100,100)).toFixed(1);
