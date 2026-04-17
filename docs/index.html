@@ -1600,7 +1600,7 @@
         <div class="ribbon-sub" id="kpiLatestSub"></div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Semáforo institucional vigente</div>
+        <div class="ribbon-label">Avance institucional</div>
         <div class="ribbon-value" id="kpiHealth">—</div>
         <div class="ribbon-sub" id="kpiHealthSub">Promedio institucional vs esperado.</div>
       </article>
@@ -1611,7 +1611,7 @@
         <div class="section-kicker"></div>
         <h2 class="section-title">¿Qué información ofrece este tablero dinámico?</h2>
         <p class="story-lead">
-          Este tablero permite medir el avance en la consecución de los indicadores de los programas y proyectos institucionales de la Asociación Amigos del Lago de Atitlán, comparando el estado de los programas y proyectos contra sus propias metas e identificando alertas.
+          Este tablero permite medir el avance en la consecución de los indicadores de los programas y proyectos institucionales de la Asociación Amigos del Lago de Atitlán, comparando el estado de los programas y proyectos contra sus propias metas.
         </p>
         <div class="story-columns">
           <p class="prose">
@@ -1628,7 +1628,7 @@
             </article>
             <article class="story-point">
               <span>Lectura rápida</span>
-              <p>El semáforo, el comparativo y la matriz ayudan a ver avances, alertas y prioridades.</p>
+              <p>El comparativo y la matriz ayudan a ver avances y prioridades.</p>
             </article>
           </div>
         </div>
@@ -1637,31 +1637,31 @@
       <article class="signal-panel stagger-5">
         <div class="signal-top">
           <div>
-            <div class="section-kicker">Panorama institucional</div>
-            <h2 class="section-title">Semáforo al presente mes</h2>
+            
+            <h2 class="section-title">Avance institucional</h2>
           </div>
           <div class="signal-score" id="kpiHealthHero">—</div>
         </div>
         <p class="signal-copy">
-          En esta vista le compartimos una lectura general del avance de nuestros programas y proyectos para que pueda identificar de forma rápida dónde mantenemos el rumbo y dónde estamos concentrando atención institucional.
+          En esta vista le compartimos una lectura general del avance de nuestros programas y proyectos para una lectura rápida y clara del desempeño institucional.
         </p>
         <div class="signal-meter" aria-hidden="true">
           <span id="healthMeterFill"></span>
         </div>
         <div class="signal-status">
-          <span id="kpiHealthStatus">Promedio institucional vs esperado</span>
+          <span id="kpiHealthStatus">Lectura institucional del avance</span>
           <span id="kpiHealthContext">Corte vigente</span>
         </div>
         <div class="signal-grid">
           <article class="signal-stat">
-            <div class="mini-label">Programas y proyectos con cumplimiento</div>
+            <div class="mini-label">Programas y proyectos medidos</div>
             <div class="mini-value" id="kpiOnTrack">—</div>
-            <div class="mini-sub">Con promedio al menos 80% del esperado al presente mes.</div>
+            <div class="mini-sub">Total de programas y proyectos incluidos en la lectura institucional.</div>
           </article>
           <article class="signal-stat">
-            <div class="mini-label">Programas y proyectos con alerta</div>
+            <div class="mini-label">Promedio institucional</div>
             <div class="mini-value" id="kpiAlert">—</div>
-            <div class="mini-sub">Con promedio por debajo del 80% del esperado.</div>
+            <div class="mini-sub">Porcentaje promedio de avance institucional al presente mes.</div>
           </article>
         </div>
         <div class="signal-latest">
@@ -1677,7 +1677,7 @@
         <div class="section-kicker">Cómo leer el tablero</div>
         <h2 class="section-title">Programas y proyectos comparados con su propia ruta</h2>
         <p class="prose">
-          Aquí no se mezclan resultados de naturaleza distinta. La intención es ofrecer una lectura clara del cumplimiento institucional, mostrando qué programas y proyectos avanzan conforme a lo esperado, para sus propias metas, cuáles requieren atención y cómo se ve el panorama general al presente mes.
+          Aquí no se mezclan resultados de naturaleza distinta. La intención es ofrecer una lectura clara del cumplimiento institucional, mostrando qué programas y proyectos avanzan conforme a lo esperado, para sus propias metas, cómo se ve el panorama general al presente mes.
         </p>
         <div class="capsule-stack" aria-label="Guía rápida de lectura">
           <div class="capsule">El resumen ejecutivo condensa el estado actual de los programas y proyectos.</div>
@@ -1835,9 +1835,9 @@ function cast(rows){
   });
 }
 function statusClass(score){
-  if (score >= 100) return ['good','Adelantado / al día'];
-  if (score >= 80)  return ['warn','En seguimiento'];
-  return ['bad','Requiere atención'];
+  if (score >= 100) return ['good','Avance alto'];
+  if (score >= 80)  return ['warn','Avance sostenido'];
+  return ['neutral','Avance en proceso'];
 }
 function avg(arr){
   const nums = arr.map(Number).filter(v => !Number.isNaN(v) && Number.isFinite(v));
@@ -1995,13 +1995,6 @@ async function initCoverageMap(){
 /* ────────────────────────────────
    PROGRAMAS CONFIG
 ──────────────────────────────── */
-const TUL_DASHBOARD_URL = (() => {
-  const path = (window.location.pathname || '').toLowerCase();
-  const isDocsDir = path.includes('/docs/') || path.endsWith('/docs') || path.endsWith('/docs/');
-  if (window.location.protocol === 'file:' && !isDocsDir) return './docs/index_tul.html';
-  return './index_tul.html';
-})();
-
 const PROGRAMS = [
   {
     id: 'atitlan_recicla',
@@ -2052,7 +2045,7 @@ const PROGRAMS = [
     id: 'manejo_tul',
     name: 'Manejo de Tul',
     source: 'ArcGIS Survey123',
-    dashboard: TUL_DASHBOARD_URL,
+    dashboard: './index_tul.html',
     loader: loadTul
   }
 ];
@@ -2779,8 +2772,8 @@ function renderSummary(programs){
   const kpiLatestHeroSub = document.getElementById('kpiLatestHeroSub');
   const healthMeterFill = document.getElementById('healthMeterFill');
   if (kpiHealthHero) kpiHealthHero.textContent = fmtPct(avgScore);
-  if (kpiHealthStatus) kpiHealthStatus.textContent = chipText;
-  if (kpiHealthContext) kpiHealthContext.textContent = 'Lectura institucional del mes de visita';
+  if (kpiHealthStatus) kpiHealthStatus.textContent = 'Lectura institucional del avance';
+  if (kpiHealthContext) kpiHealthContext.textContent = 'Promedio institucional al presente mes';
   if (kpiLatestHero) kpiLatestHero.textContent = visitLabel;
   if (kpiLatestHeroSub) kpiLatestHeroSub.textContent = '';
   if (healthMeterFill) healthMeterFill.style.width = `${Math.max(0, Math.min(avgScore, 100))}%`;
