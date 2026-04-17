@@ -141,6 +141,10 @@
     .kpi.tone-red::before{background:linear-gradient(180deg,#df8c8c 0%,var(--danger) 100%)}
     .kpi.tone-blue::before{background:linear-gradient(180deg,#83d0e0 0%,var(--lake) 100%)}
     .kpi.tone-gray::before{background:linear-gradient(180deg,#b5c3cf 0%,#7b8fa0 100%)}
+    .kpi.tone-purple::before{background:linear-gradient(180deg,#c4a0e8 0%,#7b4fc4 100%)}
+    .kpi.tone-purple .kpi-pillar-fill{background:linear-gradient(180deg,#c4a0e8 0%,#7b4fc4 100%)}
+    .kpi.tone-purple .kpi-progress-line span{background:linear-gradient(90deg,#c4a0e8,#7b4fc4)}
+    .kpi.tone-purple .kpi-achieved{color:#7b4fc4}
     .kpi-top{display:block;margin:0}
     .kpi-label{font-size:1rem;font-weight:600;letter-spacing:-.02em;color:#5f6d81;line-height:1.32;text-transform:none;max-width:22ch;min-height:2.8em}
     .kpi-figure{display:grid;grid-template-columns:22px 1fr;gap:16px;align-items:end;min-height:110px}
@@ -220,6 +224,7 @@
     .chip.yellow{background:var(--sand-soft);color:var(--sand)}
     .chip.red{background:var(--danger-soft);color:var(--danger)}
     .chip.blue{background:var(--lake-soft);color:var(--lake)}
+    .chip.purple{background:rgba(123,79,196,.12);color:#7b4fc4}
     .chip.gray{background:#eef3f6;color:#607285}
     .exec-status-card{padding:24px 22px;
       background:linear-gradient(150deg,var(--lake) 0%,var(--lake-light) 60%,#83d0e0 100%);
@@ -308,6 +313,7 @@
     .pres-chip.red{background:var(--danger-soft);color:var(--danger)}
     .pres-chip.blue{background:var(--lake-soft);color:var(--lake)}
     .pres-chip.gray{background:#eef3f6;color:#607285}
+    .pres-chip.purple{background:rgba(123,79,196,.12);color:#7b4fc4}
     .pres-kpi-pair{background:rgba(255,255,255,.84);border:1.5px solid rgba(200,220,240,.9);border-radius:20px;padding:18px 20px;box-shadow:0 6px 22px rgba(23,50,58,.09);display:flex;flex-direction:column;gap:8px;overflow:hidden}
     .pres-kpi-label{font-size:.7rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
     .pres-kpi-value{font-family:var(--font-mono);font-size:1.9rem;font-weight:500;color:var(--text);line-height:1;letter-spacing:-.03em}
@@ -758,8 +764,8 @@ function statusFromRatio(ratio,hasGoal=true){
   if(ratio>=.8) return 'yellow';
   return 'red';
 }
-function labelFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Programado'})[s]||'Programado'; }
-function chipTextFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Sin exigibilidad todavía'})[s]||'Sin exigibilidad'; }
+function labelFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Programado',purple:'Comercial'})[s]||'Programado'; }
+function chipTextFromStatus(s){ return({green:'Al día',yellow:'En seguimiento',red:'En alerta',blue:'Informativo',gray:'Sin exigibilidad todavía',purple:'Comercial'})[s]||'Sin exigibilidad'; }
 function expectedPruebasAtCut(m){ return GOALS.pruebasMeses.filter(x=>x<=m).length; }
 function escapeHtml(str){ return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 function chipHtml(status,text){ return `<span class="pres-chip ${status}">${escapeHtml(text)}</span>`; }
@@ -837,7 +843,7 @@ function computeStrategicMetrics(){
       ratioVsExpected:jabProdAccum/(GOALS.jabonesProducidosMensual*months),goalType:'annual'},
     {id:'jabones-vend',title:'Jabones vendidos',
       value:`${fmtI(jabVendAccum)} / ${fmtI(GOALS.jabonesVendidosAnual)}`,unit:'jabones',
-      status:statusFromRatio(jabVendAccum/((GOALS.jabonesVendidosAnual/12)*months),true),
+      status:'purple',
       expectedText:`Meta anual: ${fmtI(GOALS.jabonesVendidosAnual)} jabones`,
       line1:`Acumulado real: <strong>${fmtI(jabVendAccum)}</strong> / ${fmtI(GOALS.jabonesVendidosAnual)} jabones · <strong>${fmtPct(jabVendAccum/GOALS.jabonesVendidosAnual)}</strong> del objetivo anual`,
       line2:`${periodLabel(state.period)}: <strong>${fmtI(toNum(row?.jabones_vendidos_mes))}</strong> jabones vendidos en el período`,
@@ -853,7 +859,7 @@ function computeStrategicMetrics(){
       ratioVsExpected:pruebasExpected===0?NaN:pruebasAccum/pruebasExpected,goalType:'annual'},
     {id:'ventas',title:'Ventas acumuladas',
       value:fmtQ(ventasAccum),unit:'',
-      status:'blue',
+      status:'purple',
       expectedText:'Lectura informativa',
       line1:`Acumulado real: <strong>${fmtQ(ventasAccum)}</strong>`,
       line2:`${periodLabel(state.period)}: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong> en ventas registradas`,
@@ -911,7 +917,7 @@ function computeMonthlyMetrics(){
       periodRatio:toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual,goalType:'monthly'},
     {id:'ventas-mes',title:'Ventas registradas en el período',
       value:fmtQ(periodVentas),unit:'',
-      status:'blue',
+      status:'purple',
       expectedText:'Lectura informativa del período',
       line1:`${periodLabel(state.period)}: <strong>${fmtQ(periodVentas)}</strong> en ventas`,
       line2:`Acumulado: <strong>${fmtQ(sumMonths('ingresos_ventas_q_mes'))}</strong> · sin meta mensual fija`,
@@ -945,6 +951,38 @@ function updateSectionSubtitles(){
   if(el('progressChartSub')) el('progressChartSub').textContent=`Progreso real vs esperado por indicador estratégico — ${lbl}.`;
   if(el('trendChartSub')) el('trendChartSub').textContent=`Serie histórica con línea de meta mensual cuando existe. Período activo: ${lbl}.`;
   if(el('soapChartSub')) el('soapChartSub').textContent=`Producción y venta de jabón en ${lbl}, con tasa de conversión.`;
+}
+
+function renderDiagnostic(strategic,monthly){
+  const row=selectedRow(), lbl=periodLabel(state.period);
+  const sOk=strategic.filter(m=>m.goalType!=='none'&&(m.status==='green'||m.status==='yellow')).length;
+  const sRisk=strategic.filter(m=>m.status==='red').length;
+  const mRisk=monthly.filter(m=>m.goalType==='monthly'&&m.status==='red').length;
+  const aceiteAccum=sumMonths('litros_aceite_recolectados_mes');
+  const aguaAccum=sumMonths('litros_agua_protegidos_mes');
+  const jabProd=sumMonths('jabones_producidos_mes'), jabVend=sumMonths('jabones_vendidos_mes');
+  const ventasAccum=sumMonths('ingresos_ventas_q_mes');
+  const oilMonthlyGoal=GOALS.aceiteAnual/12;
+  const aceiteRatio=toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal;
+
+  const prose=document.getElementById('diagnosticProse');
+  if(prose) prose.innerHTML=`
+    <p>En <strong>${lbl}</strong>, Conservando Atitlán mantiene <strong>${sOk}</strong> indicador${sOk!==1?'es estratégicos':' estratégico'} dentro del ritmo esperado${sRisk>0?`, mientras <strong>${sRisk}</strong> indicador${sRisk!==1?'es exigen':'exige'} atención prioritaria`:''}.</p>
+    <p>La cadena de aceite y agua muestra un acumulado de <strong>${fmtN(aceiteAccum,2)}</strong> litros de aceite recolectados, lo que representa la protección de <strong>${fmtI(aguaAccum)}</strong> litros de agua de la cuenca del lago. En <strong>${lbl}</strong>, la recolección alcanzó el <strong>${fmtPct(aceiteRatio)}</strong> de la meta mensual de ${fmtN(oilMonthlyGoal,2)} litros.</p>
+    <p>La producción acumulada suma <strong>${fmtI(jabProd)}</strong> jabones y la comercialización ha registrado <strong>${fmtI(jabVend)}</strong> unidades vendidas y <strong>${fmtQ(ventasAccum)}</strong> en ventas acumuladas. ${mRisk>0?'El período muestra indicadores operativos que requieren seguimiento, especialmente en comercialización.':'El período sostiene un comportamiento operativo equilibrado en toda la cadena de producción y venta.'}</p>
+    <div class="diag-grid">
+      <div class="diag-block"><strong>🫙 Cadena aceite-agua</strong><p>Aceite: <strong>${fmtN(aceiteAccum,2)} litros</strong><br>Agua protegida: <strong>${fmtI(aguaAccum)} litros</strong></p></div>
+      <div class="diag-block"><strong>🧼 Cadena jabones</strong><p>Producidos: <strong>${fmtI(jabProd)}</strong><br>Vendidos: <strong>${fmtI(jabVend)}</strong></p></div>
+      <div class="diag-block"><strong>📅 Período activo</strong><p>${lbl}<br>Municipios: <strong>${fmtI(toNum(row?.municipios_visitados_mes))}</strong></p></div>
+      <div class="diag-block"><strong>💰 Ventas</strong><p>Del período: <strong>${fmtQ(toNum(row?.ingresos_ventas_q_mes))}</strong><br>Acumulado: <strong>${fmtQ(ventasAccum)}</strong></p></div>
+    </div>`;
+
+  const list=document.getElementById('diagnosticList');
+  if(list) list.innerHTML=[
+    {title:'Cadena de aceite y agua',body:`El acumulado de aceite llega a ${fmtN(aceiteAccum,2)} litros, protegiendo ${fmtI(aguaAccum)} litros de agua al período seleccionado. Cada litro de aceite recolectado equivale a aproximadamente 1,000 litros de agua protegida de contaminación.`},
+    {title:'Producción y comercialización',body:`La producción acumulada alcanza ${fmtI(jabProd)} jabones, mientras la venta suma ${fmtI(jabVend)} unidades y ${fmtQ(ventasAccum)} en ventas registradas. La tasa de conversión entre producción y venta es el indicador clave de la sostenibilidad comercial del programa.`},
+    {title:`Operación de ${lbl}`,body:`Se recolectaron ${fmtN(toNum(row?.litros_aceite_recolectados_mes),2)} litros de aceite, se produjeron ${fmtI(toNum(row?.jabones_producidos_mes))} jabones y se vendieron ${fmtI(toNum(row?.jabones_vendidos_mes))} unidades generando ${fmtQ(toNum(row?.ingresos_ventas_q_mes))} en ventas. Se visitaron ${fmtI(toNum(row?.municipios_visitados_mes))} municipios atendiendo ${fmtI(toNum(row?.inmuebles_atendidos_mes))} inmuebles.`}
+  ].map(item=>`<article class="diag-item"><h4>${escapeHtml(item.title)}</h4><p>${escapeHtml(item.body)}</p></article>`).join('');
 }
 
 function renderHero(strategic,monthly){
@@ -1278,13 +1316,18 @@ function renderTrendChart(){
   container.innerHTML = '';
   container.style.minHeight='auto';
 
-  if(!rawData.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos disponibles</p>'; return; }
+  const hasData = rawData.some(v=>v>0);
+  if(!rawData.length || !hasData){
+    container.innerHTML=`<div style="display:flex;align-items:center;justify-content:center;min-height:200px;flex-direction:column;gap:10px;color:var(--muted)"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3l18 18M9 9v6m6-9v3"/></svg><p style="font-size:.88rem">Sin datos registrados para este indicador en el período disponible.</p></div>`;
+    return;
+  }
 
   const W=880, H=320, PAD_L=68, PAD_R=24, PAD_T=28, PAD_B=52;
   const plotW=W-PAD_L-PAD_R, plotH=H-PAD_T-PAD_B;
-  const allVals=[...rawData,...(refSeries||[])].filter(Number.isFinite);
-  const minV=Math.min(...allVals)*0.97, maxV=Math.max(...allVals)*1.04;
-  const scale=niceScale(minV>0?minV*0.95:minV, maxV,5);
+  const allVals=[...rawData,...(refSeries||[])].filter(v=>Number.isFinite(v)&&v>0);
+  if(!allVals.length){ container.innerHTML='<p style="color:var(--muted);padding:20px;text-align:center">Sin datos numéricos disponibles para este indicador.</p>'; return; }
+  const minV=Math.min(...allVals)*0.92, maxV=Math.max(...allVals)*1.06;
+  const scale=niceScale(Math.max(0,minV), maxV,5);
   const n=rawData.length;
 
   const X=i=>PAD_L+i*(plotW/Math.max(n-1,1));
@@ -1723,14 +1766,14 @@ function renderExec(strategic,monthly){
     {id:'aceite', label:'Aceite recolectado',    val:toNum(row?.litros_aceite_recolectados_mes), unit:'litros', meta:oilMonthlyGoal,        pct:toNum(row?.litros_aceite_recolectados_mes)/oilMonthlyGoal,        sparkId:'litros_aceite_recolectados_mes'},
     {id:'agua',   label:'Agua protegida',         val:toNum(row?.litros_agua_protegidos_mes),     unit:'litros', meta:waterMonthlyGoal,       pct:toNum(row?.litros_agua_protegidos_mes)/waterMonthlyGoal,           sparkId:'litros_agua_protegidos_mes'},
     {id:'jprod',  label:'Jabones producidos',     val:toNum(row?.jabones_producidos_mes),         unit:'jabones',meta:GOALS.jabonesProducidosMensual, pct:toNum(row?.jabones_producidos_mes)/GOALS.jabonesProducidosMensual, sparkId:'jabones_producidos_mes'},
-    {id:'jvend',  label:'Jabones vendidos',        val:toNum(row?.jabones_vendidos_mes),           unit:'jabones',meta:null,                  pct:null,                                                               sparkId:'jabones_vendidos_mes'},
-    {id:'ventas', label:'Ventas del período',      val:toNum(row?.ingresos_ventas_q_mes),          unit:'GTQ',    meta:null,                  pct:null,                                                               sparkId:'ingresos_ventas_q_mes'},
+    {id:'jvend',  label:'Jabones vendidos',        val:toNum(row?.jabones_vendidos_mes),           unit:'jabones',meta:null,                  pct:null,  forceStatus:'purple',                                          sparkId:'jabones_vendidos_mes'},
+    {id:'ventas', label:'Ventas del período',      val:toNum(row?.ingresos_ventas_q_mes),          unit:'GTQ',    meta:null,                  pct:null,  forceStatus:'purple',                                          sparkId:'ingresos_ventas_q_mes'},
     {id:'muni',   label:'Municipios visitados',    val:toNum(row?.municipios_visitados_mes),       unit:'muni',   meta:GOALS.municipiosMetaMes,pct:toNum(row?.municipios_visitados_mes)/GOALS.municipiosMetaMes,      sparkId:'municipios_visitados_mes'},
   ];
   const kg=document.getElementById('execKpiGrid');
   if(kg){
     kg.innerHTML=EXEC_KPIS.map((k,idx)=>{
-      const tone=k.pct!=null?statusFromRatio(k.pct,true):'blue';
+      const tone=k.forceStatus||(k.pct!=null?statusFromRatio(k.pct,true):'blue');
       const bw=k.pct!=null?Math.max(0,Math.min(k.pct*100,100)).toFixed(1):'0';
       const pillar=k.pct!=null?Math.max(8,Math.min(k.pct*100,100)).toFixed(1):'0';
       const displayVal=k.unit==='GTQ'?fmtQ(k.val):k.unit==='litros'?fmtN(k.val,2)+' litros':fmtI(k.val)+(k.unit&&k.unit!=='GTQ'?' '+k.unit:'');
