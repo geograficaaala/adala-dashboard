@@ -1788,7 +1788,7 @@
     </section>
 
     <section class="footer-mark" aria-label="Sello institucional">
-      <img src="./chill_lago.png" alt="Símbolo institucional AALA" onerror="this.style.display='none'">
+      <img src="./docs/chill_lago.png" alt="Símbolo institucional AALA" onerror="if(!this.dataset.tryLocal){this.dataset.tryLocal='1';this.src='./chill_lago.png';}else if(!this.dataset.tryParent){this.dataset.tryParent='1';this.src='../docs/chill_lago.png';}else{this.style.display='none';}">
     </section>
   </div>
 </footer>
@@ -1851,10 +1851,26 @@ function barClass(pct){
   return '';  /* verde pálido por defecto */
 }
 
+function normalizeLocalPath(path){
+  return String(path)
+    .replace(/\\/g, '/')
+    .replace(/\/\.\//g, '/')
+    .replace(/\/+/g, '/');
+}
+const IS_DOCS_CONTEXT = /(^|\/)docs(\/|$)/.test(window.location.pathname || '');
+const DOCS_BASE = IS_DOCS_CONTEXT ? '.' : './docs';
+const ROOT_BASE = IS_DOCS_CONTEXT ? '..' : '.';
+function inDocs(rel=''){
+  return normalizeLocalPath(`${DOCS_BASE}/${String(rel).replace(/^\.?\//, '')}`);
+}
+function inRoot(rel=''){
+  return normalizeLocalPath(`${ROOT_BASE}/${String(rel).replace(/^\.?\//, '')}`);
+}
+
 /* ────────────────────────────────
    MAPA DE COBERTURA TERRITORIAL
 ──────────────────────────────── */
-const COVERAGE_GEOJSON_URL = './Cobertura_programas_y_proyectos_AALA_01.geojson';
+const COVERAGE_GEOJSON_URL = inDocs('Cobertura_programas_y_proyectos_AALA_01.geojson');
 const COVERAGE_DEFAULT_VIEW = { center: [14.77, -91.18], zoom: 10 };
 const COVERAGE_COLORS = ['#1c6084', '#2e6a57', '#d5a34b', '#7b5cc7', '#c45f2d', '#1c7c86', '#a24760'];
 
@@ -2000,45 +2016,45 @@ const PROGRAMS = [
     id: 'atitlan_recicla',
     name: 'Atitlán Recicla',
     source: 'Google Sheets',
-    dashboard: './index_atitlanrecicla.html',
-    totalUrl: './data/total_mes.csv',
-    indUrl: './data/institucional_indicadores.csv',
+    dashboard: inDocs('index_atitlanrecicla.html'),
+    totalUrl: inDocs('data/total_mes.csv'),
+    indUrl: inDocs('data/institucional_indicadores.csv'),
     loader: loadAtitlan
   },
   {
     id: 'conservando_atitlan',
     name: 'Conservando Atitlán',
     source: 'Kobo',
-    dashboard: './index_conservando_atitlan.html',
-    totalUrl: './data/conservando_atitlan/total_mes.csv',
-    indUrl: './data/conservando_atitlan/institucional_indicadores.csv',
+    dashboard: inDocs('index_conservando_atitlan.html'),
+    totalUrl: inDocs('data/conservando_atitlan/total_mes.csv'),
+    indUrl: inDocs('data/conservando_atitlan/institucional_indicadores.csv'),
     loader: loadConservando
   },
   {
     id: 'fortalecimiento_municipal',
     name: 'Fortalecimiento Municipal',
     source: 'Kobo',
-    dashboard: './index_fortalecimiento_municipal.html',
-    totalUrl: './data/fortalecimiento_municipal/total_mes.csv',
-    indUrl: './data/fortalecimiento_municipal/institucional_indicadores.csv',
+    dashboard: inDocs('index_fortalecimiento_municipal.html'),
+    totalUrl: inDocs('data/fortalecimiento_municipal/total_mes.csv'),
+    indUrl: inDocs('data/fortalecimiento_municipal/institucional_indicadores.csv'),
     loader: loadFM
   },
   {
     id: 'educando_para_conservar',
     name: 'Educando para Conservar',
     source: 'Kobo',
-    dashboard: './index_epc.html',
-    totalUrl: './data/educando_para_conservar/total_mes.csv',
-    indUrl: './data/educando_para_conservar/institucional_indicadores.csv',
+    dashboard: inDocs('index_epc.html'),
+    totalUrl: inDocs('data/educando_para_conservar/total_mes.csv'),
+    indUrl: inDocs('data/educando_para_conservar/institucional_indicadores.csv'),
     loader: loadEPC
   },
   {
     id: 'reforestacion',
     name: 'Reforestando Atitlán',
     source: 'Google Sheets',
-    dashboard: './index_reforestacion.html',
-    totalUrl: './data/reforestacion/total_mes.csv',
-    indUrl: './data/reforestacion/institucional_indicadores.csv',
+    dashboard: inDocs('index_reforestacion.html'),
+    totalUrl: inDocs('data/reforestacion/total_mes.csv'),
+    indUrl: inDocs('data/reforestacion/institucional_indicadores.csv'),
     loader: loadReforestacion
   },
   {
@@ -2837,8 +2853,12 @@ async function init(){
 init();
 </script>
 
-<script src="./chatbot-config.js"></script>
-<script src="./chatbot-data.js"></script>
-<script src="./chatbot.js"></script>
+<script>
+['chatbot-config.js','chatbot-data.js','chatbot.js'].forEach(file => {
+  const s = document.createElement('script');
+  s.src = inDocs(file);
+  document.body.appendChild(s);
+});
+</script>
 </body>
 </html>
