@@ -452,7 +452,7 @@
     .dashboard-ribbon {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0;
       margin: 4px 0 24px;
       border: 1px solid rgba(213,226,220,.92);
@@ -519,7 +519,7 @@
 
     .storyboard {
       display: grid;
-      grid-template-columns: minmax(0, 1.18fr) minmax(360px, .82fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 20px;
       margin-bottom: 24px;
     }
@@ -1595,14 +1595,9 @@
         <div class="ribbon-sub">Con datos publicados y seguimiento institucional continuo.</div>
       </article>
       <article class="ribbon-item">
-        <div class="ribbon-label">Al presente mes</div>
+        <div class="ribbon-label">Avance correspondiente al mes de:</div>
         <div class="ribbon-value" id="kpiLatest">—</div>
         <div class="ribbon-sub" id="kpiLatestSub"></div>
-      </article>
-      <article class="ribbon-item">
-        <div class="ribbon-label">Avance institucional</div>
-        <div class="ribbon-value" id="kpiHealth">—</div>
-        <div class="ribbon-sub" id="kpiHealthSub">Promedio institucional vs esperado.</div>
       </article>
     </section>
 
@@ -2724,8 +2719,10 @@ function renderSummary(programs){
   document.getElementById('kpiPrograms').textContent = String(programs.length);
   document.getElementById('kpiLatest').textContent = visitLabel;
   document.getElementById('kpiLatestSub').textContent = '';
-  document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
-  document.getElementById('kpiHealthSub').textContent = chipText;
+  const kpiHealth = document.getElementById('kpiHealth');
+  if (kpiHealth) kpiHealth.textContent = fmtPct(avgScore);
+  const kpiHealthSub = document.getElementById('kpiHealthSub');
+  if (kpiHealthSub) kpiHealthSub.textContent = chipText;
   const kpiOnTrack = document.getElementById('kpiOnTrack');
   const kpiAlert = document.getElementById('kpiAlert');
   if (kpiOnTrack) kpiOnTrack.textContent = String(onTrack);
