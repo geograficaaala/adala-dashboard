@@ -1634,42 +1634,6 @@
         </div>
       </article>
 
-      <article class="signal-panel stagger-5">
-        <div class="signal-top">
-          <div>
-            
-            <h2 class="section-title">Avance institucional</h2>
-          </div>
-          <div class="signal-score" id="kpiHealthHero">—</div>
-        </div>
-        <p class="signal-copy">
-          En esta vista le compartimos una lectura general del avance de nuestros programas y proyectos para una lectura rápida y clara del desempeño institucional.
-        </p>
-        <div class="signal-meter" aria-hidden="true">
-          <span id="healthMeterFill"></span>
-        </div>
-        <div class="signal-status">
-          <span id="kpiHealthStatus">Lectura institucional del avance</span>
-          <span id="kpiHealthContext">Corte vigente</span>
-        </div>
-        <div class="signal-grid">
-          <article class="signal-stat">
-            <div class="mini-label">Programas y proyectos medidos</div>
-            <div class="mini-value" id="kpiOnTrack">—</div>
-            <div class="mini-sub">Total de programas y proyectos incluidos en la lectura institucional.</div>
-          </article>
-          <article class="signal-stat">
-            <div class="mini-label">Promedio institucional</div>
-            <div class="mini-value" id="kpiAlert">—</div>
-            <div class="mini-sub">Porcentaje promedio de avance institucional al presente mes.</div>
-          </article>
-        </div>
-        <div class="signal-latest">
-          <div class="mini-label">Al presente mes</div>
-          <div class="mini-value" id="kpiLatestHero">—</div>
-          <div class="mini-sub" id="kpiLatestHeroSub"></div>
-        </div>
-      </article>
     </section>
 
     <section class="panorama-stage">
@@ -2762,8 +2726,10 @@ function renderSummary(programs){
   document.getElementById('kpiLatestSub').textContent = '';
   document.getElementById('kpiHealth').textContent = fmtPct(avgScore);
   document.getElementById('kpiHealthSub').textContent = chipText;
-  document.getElementById('kpiOnTrack').textContent = String(onTrack);
-  document.getElementById('kpiAlert').textContent = String(alert);
+  const kpiOnTrack = document.getElementById('kpiOnTrack');
+  const kpiAlert = document.getElementById('kpiAlert');
+  if (kpiOnTrack) kpiOnTrack.textContent = String(onTrack);
+  if (kpiAlert) kpiAlert.textContent = String(alert);
 
   const kpiHealthHero = document.getElementById('kpiHealthHero');
   const kpiHealthStatus = document.getElementById('kpiHealthStatus');
