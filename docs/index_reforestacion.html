@@ -1820,7 +1820,7 @@ iframe[src*="maps"] {
         <div class="section-kicker">Programa Reforestando Atitlán</div>
         <h3>Restauración forestal, monitoreo y cartografía temática</h3>
         <p><strong>Reforestando Atitlán</strong> articula acciones de restauración forestal, monitoreo técnico de reforestaciones, generación de cartografía temática, fortalecimiento institucional del monitoreo digital y producción de plantas nativas desde el vivero AALA.</p>
-        <p>El tablero se construyó para que el programa tenga una lectura ejecutiva y operativa con la misma arquitectura visual de <strong>Atitlán Recicla</strong>, respetando la lógica propia del componente y reforzando la lectura del avance real del programa al corte.</p>
+        <p>El tablero se construyó para que el programa tenga una lectura ejecutiva y operativa con la misma arquitectura visual de <strong>Atitlán Recicla</strong>, respetando la lógica propia del componente y reforzando la lectura del avance real del programa al presente mes.</p>
         <p>La narrativa combina cuatro frentes de seguimiento: <strong>áreas reforestadas monitoreadas</strong>, <strong>árboles establecidos en campo</strong> durante la temporada 2026, <strong>consolidación del sistema digital de monitoreo forestal</strong> y <strong>producción de plantas nativas</strong> desde el vivero AALA.</p>
         <div class="chip-row">
           <span class="stat-chip">Meta monitoreo: 35 ha</span>
@@ -1833,13 +1833,12 @@ iframe[src*="maps"] {
 
     <section class="section objectives-section">
       <article class="card panel intro-focus">
-        <div class="section-kicker">Objetivos priorizados del programa</div>
-        <h3>Los cuatro frentes que estructuran el tablero</h3>
+        <div class="section-kicker">Objetivos del programa</div>
         <div class="objective-list">
           <div class="objective-item"><div class="objective-n">01</div><div><strong>Monitorear reforestaciones 2025</strong><span>35 hectáreas monitoreadas en Sololá y la cuenca del Lago de Atitlán, con verificación y cartografía de soporte para la toma de decisiones.</span></div></div>
           <div class="objective-item"><div class="objective-n">02</div><div><strong>Establecer 85,000 árboles en campo</strong><span>Este indicador se mide de junio a noviembre de 2026, durante la temporada principal de siembra.</span></div></div>
           <div class="objective-item"><div class="objective-n">03</div><div><strong>Consolidar el sistema digital de monitoreo forestal</strong><span>Fortalecemos mapas, herramientas digitales, análisis territoriales y proyectos tecnológicos para dar seguimiento a las áreas de restauración.</span></div></div>
-          <div class="objective-item"><div class="objective-n">04</div><div><strong>Fortalecer la producción de plantas nativas</strong><span>Actualizamos el vivero con 2,200 plantas acumuladas al corte de marzo y damos seguimiento a especies nativas activas.</span></div></div>
+          <div class="objective-item"><div class="objective-n">04</div><div><strong>Fortalecer la producción de plantas nativas</strong><span>Actualizamos el vivero con 2,200 plantas acumuladas al presente mes de marzo y damos seguimiento a especies nativas activas.</span></div></div>
         </div>
       </article>
     </section>
@@ -1848,7 +1847,7 @@ iframe[src*="maps"] {
       <article class="card panel annual-panel annual-panel-wide">
         <div class="section-kicker">Metas 2026</div>
         <h3>Metas anuales del programa</h3>
-        <p class="sub">La lectura muestra el avance acumulado real por componente al corte del período seleccionado.</p>
+        <p class="sub">La lectura muestra el avance acumulado real por componente al presente mes del período seleccionado.</p>
         <div class="annual-goals-grid reforest-grid">
           <div class="goal-card"><small>Monitoreo 2025–2026</small><strong>35 hectáreas monitoreadas</strong><div class="goal-meta">Seguimiento técnico de la restauración forestal con soporte cartográfico.</div><div class="goal-progress">Incluye cartografía de soporte para las reforestaciones monitoreadas.</div></div>
           <div class="goal-card"><small>Siembra 2026</small><strong>85,000 árboles establecidos</strong><div class="goal-meta">Temporalidad: junio a noviembre de 2026.</div><div class="goal-progress">El indicador inicia cuando comienza la temporada principal de siembra.</div></div>
@@ -1893,7 +1892,7 @@ iframe[src*="maps"] {
       </article>
       <article class="card panel panel-accent">
         <h3>Trazabilidad del período</h3>
-        <p class="sub">Campos narrativos y notas del corte seleccionado.</p>
+        <p class="sub">Campos narrativos y notas del período seleccionado al presente mes.</p>
         <div class="alert-list" id="narrativePanel"></div>
       </article>
     </section>
@@ -2384,7 +2383,7 @@ function renderComplementaryKpis(){
         </div>
         <div class="kpi-readings">
           <div class="kpi-meta">${complementaryMetaLabel(item)}</div>
-          <div class="kpi-meta">Acumulado anual al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> de <strong>${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</strong></div>
+          <div class="kpi-meta">Acumulado anual al presente mes: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> de <strong>${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</strong></div>
           <div class="kpi-meta">Cumplimiento del mes: <strong>${escapeHtml(formatPercent(item.pct_cumpl_mes))}</strong> · acumulado: <strong>${escapeHtml(formatPercent(item.pct_cumpl_acum))}</strong></div>
           <div class="kpi-meta"><strong>Lo que incluye:</strong></div>
           ${detailList(item.detalle)}
@@ -2398,7 +2397,7 @@ function renderComplementaryKpis(){
 function renderExecutive(row){
   const status = overallStatus(row);
   document.getElementById('execStatusBadge').textContent = status.label;
-  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último corte Marzo 2026`;
+  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último período al presente mes Marzo 2026`;
   document.getElementById('execPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
   const execGrid = document.getElementById('execKpiGrid');
   execGrid.innerHTML = KPI_CONFIG.map(cfg => {
@@ -2445,7 +2444,7 @@ function renderDiagnostics(row){
     <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, el programa registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, <strong>${escapeHtml(formatByUnit(row.arboles_sembrados_acum,'árboles'))}</strong> árboles sembrados, un avance del sistema digital de monitoreo forestal de <strong>${escapeHtml(formatPercent(row.pct_meta_sig))}</strong> y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas en vivero.</p>
     <p>El componente con mayor avance relativo es <strong>${escapeHtml(lead.title)}</strong>, con <strong>${escapeHtml(formatPercent(lead.pct))}</strong> de cumplimiento de su meta anual y un acumulado de <strong>${escapeHtml(lead.id === 'sig' ? formatPercent(lead.pct) + ' de avance' : formatByUnit(lead.value, lead.unit))}</strong>.</p>
     <p>El componente con mayor rezago relativo es <strong>${escapeHtml(lag.title)}</strong>, con <strong>${escapeHtml(formatPercent(lag.pct))}</strong> de avance. ${escapeHtml(row.alertas_texto || 'Se recomienda revisar el calendario operativo y reforzar la captura de evidencia del período.')}</p>
-    <p>La narrativa del corte reporta: <strong>${escapeHtml(row.logros_texto || 'Sin logros narrativos cargados')}</strong>. La fuente consolidada del tablero corresponde a <strong>${escapeHtml(sourceLabel(row.fuente_texto))}</strong>.</p>`;
+    <p>La narrativa del al presente mes reporta: <strong>${escapeHtml(row.logros_texto || 'Sin logros narrativos cargados')}</strong>. La fuente consolidada del tablero corresponde a <strong>${escapeHtml(sourceLabel(row.fuente_texto))}</strong>.</p>`;
   document.getElementById('diagnosticPanel').innerHTML = html;
   document.getElementById('execDiagnosticPanel').innerHTML = html;
 }
@@ -2582,7 +2581,7 @@ function buildPresentation(){
       <div class="pkpi-value">${escapeHtml(formatByUnit(item.valor_mes, item.unidad))}</div>
       <div class="pkpi-meta">${item.meta_anual ? 'Meta anual: ' + escapeHtml(formatByUnit(item.meta_anual, item.unidad)) : 'Meta mensual: ' + escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</div>
       <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" data-width="${pct}%" style="width:${pct}%"></div></div>
-      <div class="pkpi-meta" style="margin-top:6px">Acumulado al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> / ${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</div>
+      <div class="pkpi-meta" style="margin-top:6px">Acumulado al presente mes: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> / ${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</div>
       <div class="pkpi-meta" style="margin-top:6px"><strong>Incluye:</strong> ${escapeHtml((item.detalle || []).slice(0,2).join(' · '))}</div>
     </article>`;
   }).join('');
@@ -2619,7 +2618,7 @@ function buildPresentation(){
         </div>
         <div class="presentation-highlight-strip">
           <span>📍 Área de acción: <strong>Sololá y cuenca del Lago de Atitlán</strong></span>
-          <span>🗓️ Corte disponible: <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong></span>
+          <span>🗓️ Período disponible al presente mes: <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong></span>
           <span>🧭 Estado del programa: <strong>${escapeHtml(status.label)}</strong></span>
           <span>🌱 Especies activas: <strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))} / ${escapeHtml(formatNumber(row.meta_especies,0))}</strong></span>
         </div>
@@ -2632,7 +2631,7 @@ function buildPresentation(){
         <div class="presentation-title-row">
           <div>
             <h2>Lectura acumulada del programa</h2>
-            <p>Cada indicador se observa como avance acumulado del año frente a su meta anual y al corte vigente del programa.</p>
+            <p>Cada indicador se observa como avance acumulado del año frente a su meta anual y al presente mes vigente del programa.</p>
           </div>
         </div>
         <div class="presentation-kpi-pairs">
@@ -2670,7 +2669,7 @@ function buildPresentation(){
         </div>
         <div class="presentation-note" style="margin-top:18px">
           <h3>Interpretación</h3>
-          <p>La siembra anual aún no se activa en el corte de marzo, por lo que el tablero concentra la lectura en monitoreo, cartografía, consolidación del sistema digital y acumulación del vivero.</p>
+          <p>La siembra anual aún no se activa en el al presente mes de marzo, por lo que el tablero concentra la lectura en monitoreo, cartografía, consolidación del sistema digital y acumulación del vivero.</p>
         </div>
       </div>
     </section>
