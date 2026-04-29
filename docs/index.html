@@ -1598,6 +1598,37 @@
   text-overflow:ellipsis !important;
 }
 
+
+/* Optimización de espacios en tarjetas de programas */
+.program-card{
+  align-content:start !important;
+}
+.prog-score-wrap{
+  min-height:108px !important;
+  height:auto !important;
+  overflow:visible !important;
+}
+.prog-score-header{
+  min-height:38px !important;
+  align-items:flex-start !important;
+}
+.prog-score-label{
+  line-height:1.2 !important;
+  max-width:none !important;
+}
+.prog-score-sub{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  line-height:1.35 !important;
+}
+.metric-row{
+  gap:16px !important;
+}
+.metric-primary{
+  overflow-wrap:anywhere !important;
+}
+
 </style>
 </head>
 <body>
@@ -2300,72 +2331,56 @@ async function loadConservando(cfg){
 }
 
 async function loadFM(cfg){
-  // ── Nueva lógica de indicadores acordada ──────────────────────────────────
-  // Indicador 1: Capacitaciones compuesto (4 ejes × 25 personas = 100%)
-  //   Ejes: SNIP · SIG · Recolección digital · Cumplimiento legal
-  //   Cada eje que alcanza ≥25 personas capacitadas = 25% del indicador
-  const META_PERSONAS_EJE = 25;
-  const ejesData = [
-    { label:'SNIP',               personas: 0  },
-    { label:'SIG',                personas: 23 },
-    { label:'Recolección digital',personas: 0  },
-    { label:'Cumplimiento legal', personas: 31 },
-  ];
-  const ejesOk = ejesData.filter(e => e.personas >= META_PERSONAS_EJE).length; // ejes que cumplen
-  const pctCap = ejesOk / 4; // 0, 0.25, 0.5, 0.75 o 1.0
+  // Fortalecimiento Municipal queda temporalmente en 0 mientras se reestructura
+  // la arquitectura de CSV y la fuente operativa del programa.
+  const municipiosVal = 0;
+  const municipiosMeta = 15;
+  const estudiosVal = 0;
+  const estudiosMeta = 6;
+  const planesVal = 0;
+  const planesMeta = 5;
+  const asistenciasVal = 0;
+  const asistenciasMeta = 5;
 
-  // Indicador 2: Estudios de caracterización finalizados
-  //   Solo cuentan los con estado_estudio === 'Finalizado'. Meta: 5. Cada uno = 20%.
-  const estFin = 1;           // estudios con estado = Finalizado al corte
-  const META_EST = 5;
-  const pctEst = Math.min(estFin / META_EST, 1);
+  const pctMunicipios = (municipiosVal / municipiosMeta) * 100;
+  const pctEstudios = (estudiosVal / estudiosMeta) * 100;
+  const pctPlanes = (planesVal / planesMeta) * 100;
+  const pctAsistencias = (asistenciasVal / asistenciasMeta) * 100;
 
-  // Indicador 3: PIRDES finalizados
-  //   Solo cuentan los con estado_pirdes === 'Finalizado'. Meta: 5. Cada uno = 20%.
-  const pirdFin = 0;          // PIRDES con estado = Finalizado al corte
-  const META_PIRD = 5;
-  const pctPird = Math.min(pirdFin / META_PIRD, 1);
-
-  // Indicador 4: Reuniones CODEMA / eje agua y saneamiento
-  const reunVal = 4;
-  const META_REUN = 10;
-  const pctReun = Math.min(reunVal / META_REUN, 1);
-
-  // Score global: promedio de los 4 indicadores (cap 90% para no inflar)
-  const score = Math.min(avg([pctCap, pctEst, pctPird, pctReun]) * 100, 90);
+  const vigenciaMunicipal = 'Vigencia: considerando los procesos burocráticos de las municipalidades.';
 
   const keyMetrics = [
     {
-      label:'Personal municipal capacitado en 4 ejes temáticos: SNIP, SIG, recolección digital de datos y cumplimiento legal ambiental. Cada eje requiere ≥25 personas capacitadas.',
-      acumDisplay:`${ejesOk}/4 ejes cumplidos · ${ejesData.map(e => e.label+': '+e.personas+'p').join(' · ')}`,
-      pct: pctCap * 100,
-      pctDisplay:`${fmtPct(pctCap * 100)} del indicador compuesto — ${ejesOk} de 4 ejes con ≥25 personas capacitadas al mes de marzo`,
-      barPct: pctCap * 100,
-      temporality:'Indicador compuesto: cada eje que alcanza 25 personas = 25% de cumplimiento'
+      label:'15 municipios de la Cuenca del Lago de Atitlán con capacidad instalada en los temas de Sistema Nacional de Inversión Pública, Sistemas de Información Geográfica, recolección digital de datos y cumplimiento legal ambiental.',
+      acumDisplay:`${municipiosVal}/${municipiosMeta} municipalidades`,
+      pct:pctMunicipios,
+      pctDisplay:`${fmtPct(pctMunicipios)} de avance`,
+      barPct:pctMunicipios,
+      temporality: vigenciaMunicipal
     },
     {
-      label:'Estudios de caracterización de residuos sólidos finalizados. Meta anual: 5 estudios. Solo los estudios en estado "Finalizado" cuentan. Cada estudio finalizado = 20%.',
-      acumDisplay:`${estFin} / ${META_EST} estudios finalizados`,
-      pct: pctEst * 100,
-      pctDisplay:`${fmtPct(pctEst * 100)} de avance — ${estFin} estudio${estFin !== 1 ? 's' : ''} finalizado${estFin !== 1 ? 's' : ''} de los ${META_EST} que constituyen la meta anual`,
-      barPct: pctEst * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+      label:'6 estudios de caracterización de desechos y residuos sólidos.',
+      acumDisplay:`${estudiosVal}/${estudiosMeta} estudios`,
+      pct:pctEstudios,
+      pctDisplay:`${fmtPct(pctEstudios)} de avance`,
+      barPct:pctEstudios,
+      temporality: vigenciaMunicipal
     },
     {
-      label:'PIRDES municipales finalizados. Meta anual: 5 PIRDES. Solo los PIRDES en estado "Finalizado" cuentan. Cada PIRDES finalizado = 20%.',
-      acumDisplay:`${pirdFin} / ${META_PIRD} PIRDES finalizados`,
-      pct: pctPird * 100,
-      pctDisplay:`${fmtPct(pctPird * 100)} de avance — ${pirdFin} PIRDES finalizado${pirdFin !== 1 ? 's' : ''} de los ${META_PIRD} que constituyen la meta anual`,
-      barPct: pctPird * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+      label:'Planes Integrales de Residuos y Desechos Sólidos.',
+      acumDisplay:`${planesVal}/${planesMeta} planes integrales`,
+      pct:pctPlanes,
+      pctDisplay:`${fmtPct(pctPlanes)} de avance`,
+      barPct:pctPlanes,
+      temporality: vigenciaMunicipal
     },
     {
-      label:'Reuniones del eje de agua y saneamiento / CODEMA y mesas técnicas departamentales.',
-      acumDisplay:`${fmt(reunVal)} / ${fmt(META_REUN)} reuniones CODEMA acumuladas`,
-      pct: pctReun * 100,
-      pctDisplay:`${fmtPct(pctReun * 100)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
-      barPct: pctReun * 100,
-      temporality:'Este indicador tiene por temporalidad desde enero a diciembre de 2026'
+      label:'5 asistencias técnicas municipales en aguas residuales.',
+      acumDisplay:`${asistenciasVal}/${asistenciasMeta} asistencias técnicas`,
+      pct:pctAsistencias,
+      pctDisplay:`${fmtPct(pctAsistencias)} de avance`,
+      barPct:pctAsistencias,
+      temporality: vigenciaMunicipal
     }
   ];
 
@@ -2373,10 +2388,10 @@ async function loadFM(cfg){
     ...cfg,
     latestLabel:'Marzo 2026',
     periodKey:'2026-03',
-    score: score || 0,
-    scoreLabel:'Promedio de los 4 indicadores estratégicos',
-    metrics: keyMetrics,
-    sourceSummary:'Valor fijo · marzo 2026'
+    score:0,
+    scoreLabel:'Cumplimiento promedio con respecto a metas mensuales',
+    metrics:keyMetrics,
+    sourceSummary:'Pendiente de reestructuración de CSV'
   };
 }
 
