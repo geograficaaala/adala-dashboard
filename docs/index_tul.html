@@ -6,55 +6,30 @@
   <title>Manejo de Tul · AALA</title>
   <meta name="description" content="Tablero institucional del programa Manejo de Tul — Asociación Amigos del Lago de Atitlán">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
   <style>
     :root{
-      --bg:#eef4fc;
-      --surface:#f4f8fe;
-      --card:#fff;
-      --text:#0c1d3a;
-      --text-2:#2a4570;
-      --muted:#6685aa;
-      --line:#c5d8f0;
-      --line-soft:#ddeaf8;
-      --blue:#1a56a8;
-      --blue-mid:#2575cc;
-      --blue-light:#4a90d9;
-      --blue-soft:#d0e6f8;
-      --blue-pale:#eaf3fd;
-      --sky:#38b6e8;
-      --green:#157a50;
-      --green-mid:#1d9e68;
-      --green-soft:#c5eed9;
-      --green-pale:#eafaf2;
-      --gold:#7a5500;
-      --gold-soft:#fef4cc;
-      --red:#8f1c1c;
-      --red-soft:#fce8e8;
+      --bg:#eef4fc;--surface:#f4f8fe;--card:#ffffff;--text:#0c1d3a;--text-2:#2a4570;--muted:#6685aa;
+      --line:#c5d8f0;--line-soft:#ddeaf8;--blue:#1a56a8;--blue-mid:#2575cc;--blue-light:#4a90d9;
+      --blue-soft:#d0e6f8;--blue-pale:#eaf3fd;--sky:#38b6e8;--sky-soft:#d0f0fb;--sky-pale:#eaf9fe;
+      --green:#157a50;--green-mid:#1d9e68;--green-soft:#c5eed9;--green-pale:#eafaf2;
+      --gold:#7a5500;--gold-soft:#fef4cc;--red:#8f1c1c;--red-soft:#fce8e8;
       --shadow-sm:0 1px 4px rgba(10,35,80,.06),0 4px 16px rgba(10,35,80,.06);
       --shadow:0 2px 12px rgba(10,35,80,.09),0 8px 32px rgba(10,35,80,.08);
-      --radius:18px;
-      --radius-sm:11px;
-      --radius-xs:7px;
-      --font-head:'Lora',Georgia,serif;
-      --font-body:'Sora',system-ui,sans-serif;
-      --font-mono:'JetBrains Mono',monospace;
+      --shadow-lg:0 8px 40px rgba(10,35,80,.15),0 2px 8px rgba(10,35,80,.06);
+      --radius:18px;--radius-sm:11px;--radius-xs:7px;
+      --font-head:'Lora',Georgia,serif;--font-body:'Sora',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace;
     }
 
-    *,*::before,*::after{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
-
-    html{
-      scroll-behavior:smooth;
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
 
     body{
       font-family:var(--font-body);
-      background:linear-gradient(160deg,#d8eaff 0%,#eef4fc 38%,#e4f3fb 68%,#f0f6ff 100%) fixed;
-      color:var(--text);
+      background:
+        radial-gradient(circle at 0% 0%,rgba(76,165,191,.12) 0%,transparent 28%),
+        radial-gradient(circle at 100% 100%,rgba(46,106,87,.08) 0%,transparent 24%),
+        linear-gradient(180deg,#f7faf7 0%,#f3f7f3 100%) fixed;
+      color:#17314f;
       min-height:100vh;
       line-height:1.6;
       -webkit-font-smoothing:antialiased;
@@ -67,76 +42,44 @@
       pointer-events:none;
       z-index:0;
       background:
-        radial-gradient(ellipse 90% 70% at 0% -5%,rgba(37,117,204,.20) 0%,transparent 50%),
-        radial-gradient(ellipse 70% 60% at 100% 110%,rgba(56,182,232,.16) 0%,transparent 50%),
-        radial-gradient(ellipse 40% 30% at 82% 8%,rgba(100,200,240,.10) 0%,transparent 50%);
+        radial-gradient(ellipse 60% 45% at 10% 20%,rgba(28,96,132,.08) 0%,transparent 60%),
+        radial-gradient(ellipse 55% 40% at 80% 10%,rgba(76,165,191,.08) 0%,transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 100%,rgba(46,106,87,.06) 0%,transparent 60%);
     }
 
-    body::after{
-      content:'';
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,204,.06) 1px,transparent 0);
-      background-size:38px 38px;
-    }
+    body.view-exec .exec-only{display:block!important}
+    body.view-exec .full-only{display:none!important}
+    body.view-full .exec-only{display:none!important}
+    body.view-full .full-only{display:block!important}
+    .exec-only{display:none}
+    .full-only{display:block}
 
-    body.view-exec .exec-only{
-      display:block!important;
-    }
-
-    body.view-exec .full-only{
-      display:none!important;
-    }
-
-    body.view-full .exec-only{
-      display:none!important;
-    }
-
-    body.view-full .full-only{
-      display:block!important;
-    }
-
-    .exec-only{
-      display:none;
-    }
-
-    .full-only{
-      display:block;
-    }
-
-    a{
-      color:inherit;
-    }
+    a{color:inherit}
 
     .wrap{
-      max-width:1320px;
+      width:min(1700px,calc(100vw - 24px));
+      max-width:none;
       margin:0 auto;
-      padding:26px 20px 64px;
+      padding:26px 0 44px;
       position:relative;
       z-index:1;
     }
 
-    /* Header copiado de la línea visual de Reforestando Atitlán */
     .header{
-      display:grid;
-      grid-template-columns:auto minmax(0,1fr);
-      align-items:center;
-      gap:24px;
-      min-height:88px;
       position:sticky;
       top:0;
-      z-index:200;
-      background:rgba(238,244,252,.90);
-      backdrop-filter:blur(18px) saturate(1.6);
-      -webkit-backdrop-filter:blur(18px) saturate(1.6);
-      border-bottom:1px solid var(--line-soft);
-      margin-left:-20px;
-      margin-right:-20px;
-      padding:12px 20px;
-      margin-top:-26px;
-      margin-bottom:20px;
+      z-index:400;
+      min-height:82px;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:12px 28px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(135deg,rgba(18,62,104,.96) 0%,rgba(23,84,129,.95) 48%,rgba(31,116,145,.93) 100%);
+      backdrop-filter:blur(16px) saturate(1.2);
+      -webkit-backdrop-filter:blur(16px) saturate(1.2);
+      box-shadow:0 16px 40px rgba(13,39,67,.18);
+      animation:fadeDown .45s ease both;
     }
 
     .header-brand{
@@ -161,13 +104,14 @@
     .brand-text{
       display:grid;
       gap:1px;
+      min-width:0;
     }
 
     .brand-kicker{
       font-size:.72rem;
       letter-spacing:.12em;
       text-transform:uppercase;
-      color:var(--muted);
+      color:rgba(255,255,255,.74);
       font-weight:800;
       line-height:1.1;
     }
@@ -175,8 +119,11 @@
     .brand-title{
       font-size:1rem;
       font-weight:700;
-      color:var(--text);
+      color:#fff;
       line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .header-stack{
@@ -188,41 +135,41 @@
     }
 
     .nav-tabs{
+      margin-left:auto;
       display:flex;
-      gap:8px;
-      align-items:center;
-      justify-content:flex-end;
-      flex-wrap:wrap;
+      gap:6px;
+      padding:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+      overflow-x:auto;
     }
 
     .nav-tab{
       display:inline-flex;
       align-items:center;
-      gap:7px;
-      padding:8px 14px;
-      border-radius:999px;
-      border:1px solid var(--line-soft);
-      background:rgba(255,255,255,.7);
+      justify-content:center;
       text-decoration:none;
-      color:var(--text-2);
-      font-size:.82rem;
-      font-weight:700;
+      border-radius:999px;
+      padding:10px 16px;
+      border:none;
+      font:700 .79rem/1 var(--font-body);
+      color:rgba(255,255,255,.78);
+      background:transparent;
       white-space:nowrap;
       transition:all .2s ease;
     }
 
     .nav-tab:hover{
-      background:var(--blue-pale);
-      border-color:var(--blue-soft);
-      color:var(--blue);
-      transform:translateY(-1px);
+      background:rgba(255,255,255,.10);
+      color:#fff;
     }
 
     .nav-tab.active{
-      background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));
-      color:#fff;
-      border-color:transparent;
-      box-shadow:0 2px 10px rgba(37,117,204,.35);
+      background:rgba(255,255,255,.92);
+      color:#163a5f;
+      box-shadow:0 8px 18px rgba(6,24,42,.20);
     }
 
     .header-utility{
@@ -320,19 +267,18 @@
       font-weight:800;
       letter-spacing:.1em;
       text-transform:uppercase;
-      color:var(--muted);
+      color:rgba(255,255,255,.72);
     }
 
     .month-pills{
       display:flex;
       gap:5px;
       align-items:center;
-      background:rgba(255,255,255,.68);
-      border:1px solid var(--line-soft);
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
       border-radius:999px;
       padding:4px 6px;
       box-shadow:0 1px 10px rgba(10,35,80,.05);
-      flex-wrap:wrap;
     }
 
     .month-pill{
@@ -343,20 +289,20 @@
       font-family:var(--font-body);
       font-size:.78rem;
       font-weight:700;
-      color:var(--muted);
+      color:rgba(255,255,255,.78);
       background:transparent;
       transition:all .2s ease;
       letter-spacing:.02em;
     }
 
     .month-pill:hover:not(:disabled){
-      color:var(--blue-mid);
-      background:var(--blue-pale);
+      color:#fff;
+      background:rgba(255,255,255,.12);
     }
 
     .month-pill.active{
-      background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));
-      color:#fff;
+      background:rgba(255,255,255,.92);
+      color:#163a5f;
       box-shadow:0 2px 10px rgba(26,86,168,.28);
     }
 
@@ -365,22 +311,27 @@
       cursor:default;
     }
 
+    @keyframes fadeDown{
+      from{opacity:0;transform:translateY(-10px)}
+      to{opacity:1;transform:none}
+    }
+
     .card{
-      background:var(--card);
-      border:1.5px solid var(--line-soft);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow-sm);
-      transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s ease,border-color .2s;
+      background:linear-gradient(180deg,rgba(255,255,255,.94) 0%,rgba(247,250,248,.96) 100%);
+      border:1px solid #dfe9e5;
+      border-radius:30px;
+      box-shadow:0 14px 34px rgba(18,42,66,.08),0 4px 14px rgba(18,42,66,.05);
+      transition:border-color .25s ease,box-shadow .25s ease,transform .25s ease;
     }
 
     .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 16px 48px rgba(10,35,80,.16),0 4px 12px rgba(10,35,80,.08);
-      border-color:var(--blue-soft);
+      transform:translateY(-2px);
+      box-shadow:0 18px 42px rgba(18,42,66,.10),0 6px 16px rgba(18,42,66,.05);
+      border-color:#cfe0d9;
     }
 
     .section{
-      margin-bottom:18px;
+      margin-bottom:24px;
     }
 
     .section-head{
@@ -390,78 +341,80 @@
       gap:12px;
       margin:0 0 13px;
       padding-bottom:10px;
-      border-bottom:1px solid var(--line-soft);
+      border-bottom:1px solid #dfe9e5;
     }
 
     .section-head h2{
-      font-family:var(--font-head);
-      font-size:1.22rem;
-      font-weight:600;
-      color:var(--text);
-      letter-spacing:-.01em;
+      font-family:var(--font-body);
+      font-size:1.4rem;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:#17314f;
     }
 
     .section-head p{
       margin:3px 0 0;
-      color:var(--muted);
+      color:#4c6478;
       font-size:.84rem;
     }
 
     .section-kicker{
       display:inline-flex;
       align-items:center;
-      gap:7px;
-      font-size:.68rem;
-      font-weight:700;
-      letter-spacing:.11em;
+      gap:8px;
+      padding:0;
+      margin-bottom:10px;
+      font-size:.76rem;
+      letter-spacing:.12em;
+      color:#2e6a57;
       text-transform:uppercase;
-      color:var(--blue-mid);
-      margin-bottom:8px;
+      font-weight:800;
     }
 
     .section-kicker::before{
       content:'';
-      display:inline-block;
-      width:14px;
+      display:block;
+      width:16px;
       height:2px;
-      background:linear-gradient(90deg,var(--sky),var(--blue-mid));
-      border-radius:2px;
+      background:linear-gradient(90deg,#2e6a57,#4ca5bf);
+      border-radius:999px;
     }
 
     .panel{
-      padding:20px 22px;
+      padding:24px 24px 22px;
     }
 
     .panel h3{
-      font-family:var(--font-head);
-      font-size:1.03rem;
-      font-weight:600;
-      color:var(--text);
-      margin-bottom:3px;
-      letter-spacing:-.01em;
+      font-family:var(--font-body);
+      font-size:1.35rem;
+      font-weight:800;
+      letter-spacing:-.03em;
+      color:#17314f;
+      margin-bottom:7px;
     }
 
     .panel p.sub{
       margin:0 0 14px;
-      color:var(--muted);
-      font-size:.82rem;
-      line-height:1.5;
+      color:#4c6478;
+      font-size:.84rem;
+      line-height:1.6;
     }
 
-    /* Hero en la misma arquitectura visual de Reforestando */
     .hero{
       display:grid;
       grid-template-columns:minmax(0,1.9fr) minmax(280px,.85fr);
       align-items:stretch;
       gap:18px;
-      margin-bottom:18px;
+      margin-bottom:24px;
     }
 
     .hero-main{
-      padding:28px 30px 24px;
+      padding:30px 34px 26px;
       background:linear-gradient(135deg,#ffffff 0%,#edf5ff 55%,#dceeff 100%);
       position:relative;
       overflow:hidden;
+      border:1.5px solid var(--line-soft);
+      color:var(--text);
     }
 
     .hero-main::before{
@@ -484,32 +437,32 @@
     .hero-copy-text h1{
       font-family:var(--font-head);
       font-size:clamp(2rem,4vw,2.9rem);
-      line-height:1.05;
-      margin-bottom:18px;
+      font-weight:600;
+      line-height:1.08;
       background:linear-gradient(135deg,var(--text) 40%,var(--blue-mid) 100%);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
       background-clip:text;
       letter-spacing:-.02em;
+      margin-bottom:16px;
     }
 
-    .hero-copy-text .hero-lead{
+    .hero-lead{
       max-width:none;
+      color:var(--text-2);
       font-size:.82rem;
       line-height:1.78;
       text-align:justify;
       margin:0 0 12px;
-      color:var(--text-2);
       hyphens:auto;
     }
 
     .hero-side{
+      padding:22px 20px;
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height:100%;
-      padding:22px 20px;
-      background:linear-gradient(160deg,#eaf6fe 0%,#d8ecfc 50%,#e4f4fd 100%);
+      background:linear-gradient(160deg,#ffffff 0%,#f4f8fe 50%,#edf5ff 100%);
     }
 
     .logo-frame{
@@ -533,7 +486,7 @@
       margin:0 auto;
       display:block;
       object-fit:contain;
-      filter:none!important;
+      filter:drop-shadow(0 12px 24px rgba(10,35,80,.12));
     }
 
     .chip-row{
@@ -563,7 +516,7 @@
     }
 
     .period-card{
-      margin-bottom:18px;
+      margin-bottom:24px;
       padding:18px 22px;
       display:flex;
       align-items:center;
@@ -597,32 +550,31 @@
       color:#fff;
     }
 
-    /* Objetivos sin cuadros blancos */
     .objectives-panel{
       padding:24px 26px;
       background:rgba(255,255,255,.48);
-      border:1px solid var(--line-soft);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow-sm);
+      border:1px solid #dfe9e5;
+      border-radius:30px;
+      box-shadow:0 14px 34px rgba(18,42,66,.08);
     }
 
     .objective-general{
       padding:0 0 18px;
       margin-bottom:18px;
-      border-bottom:1px solid var(--line-soft);
+      border-bottom:1px solid #dfe9e5;
     }
 
     .objective-general h3,
     .objective-list h3{
-      font-family:var(--font-head);
-      font-size:1.14rem;
-      font-weight:600;
-      color:var(--text);
+      font-family:var(--font-body);
+      font-size:1.18rem;
+      font-weight:800;
+      color:#17314f;
       margin-bottom:8px;
     }
 
     .objective-general p{
-      color:var(--text-2);
+      color:#36516a;
       font-size:.9rem;
       line-height:1.78;
       max-width:1100px;
@@ -645,7 +597,7 @@
       width:34px;
       height:34px;
       border-radius:999px;
-      background:linear-gradient(135deg,var(--blue-mid),var(--green));
+      background:linear-gradient(135deg,#18466e,#2b6b60);
       color:#fff;
       font-family:var(--font-mono);
       font-size:.82rem;
@@ -656,14 +608,14 @@
 
     .objective-row strong{
       display:block;
-      color:var(--text);
+      color:#17314f;
       font-size:.94rem;
       margin-bottom:3px;
     }
 
     .objective-row span{
       display:block;
-      color:var(--text-2);
+      color:#36516a;
       font-size:.84rem;
       line-height:1.68;
     }
@@ -675,24 +627,24 @@
     }
 
     .goal-card{
-      padding:12px 14px;
-      border-radius:var(--radius-sm);
-      background:var(--surface);
-      border:1.5px solid var(--line-soft);
+      padding:14px 15px;
+      border-radius:20px;
+      background:#f7faf8;
+      border:1px solid #dfe9e5;
       transition:background .2s,transform .2s;
     }
 
     .goal-card:hover{
-      background:var(--blue-pale);
+      background:#edf5f3;
       transform:translateY(-1px);
     }
 
     .goal-card small{
       display:block;
-      color:var(--muted);
+      color:#6b7f90;
       margin-bottom:3px;
       font-size:.67rem;
-      font-weight:700;
+      font-weight:800;
       text-transform:uppercase;
       letter-spacing:.07em;
     }
@@ -702,12 +654,12 @@
       font-size:.93rem;
       line-height:1.35;
       margin-bottom:3px;
-      color:var(--text);
+      color:#17314f;
     }
 
     .goal-card .goal-meta{
       font-size:.8rem;
-      color:var(--muted);
+      color:#6b7f90;
       margin-bottom:7px;
       font-family:var(--font-mono);
     }
@@ -715,99 +667,171 @@
     .goal-card .goal-progress{
       font-size:.81rem;
       font-weight:700;
-      color:var(--text-2);
+      color:#36516a;
       line-height:1.5;
     }
 
-    /* KPIs estilo Atitlán Recicla, avance acumulado siempre verde */
     .kpis{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:16px;
     }
 
     .kpi{
-      padding:18px 16px 16px;
       position:relative;
       overflow:hidden;
-      border-top:3px solid var(--line-soft);
-      transition:box-shadow .2s,transform .25s;
+      isolation:isolate;
+      min-height:220px;
+      padding:20px 20px 18px 22px;
+      border-top:none;
+      border-left:4px solid transparent;
+      background:linear-gradient(180deg,#ffffff 0%,#fbfdfc 100%);
+      display:grid;
+      grid-template-rows:auto auto 1fr auto;
+      gap:12px;
+      opacity:0;
+      transform:translateY(16px);
+      animation:kpiReveal .58s cubic-bezier(.2,.7,.2,1) forwards;
+      animation-delay:var(--delay,0ms);
+    }
+
+    .kpi::before{
+      content:'';
+      position:absolute;
+      inset:0 auto 0 0;
+      width:4px;
+      background:linear-gradient(180deg,#2b6b60 0%,#1c6084 100%);
+      opacity:.95;
+    }
+
+    .kpi::after{
+      content:'';
+      position:absolute;
+      right:-36px;
+      top:-40px;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(28,96,132,.11) 0%,transparent 72%);
+      opacity:0;
+      transform:scale(.92);
+      transition:opacity .22s ease,transform .22s ease;
+      z-index:0;
+    }
+
+    .kpi>*{
+      position:relative;
+      z-index:1;
+    }
+
+    .kpi:hover::after{
+      opacity:1;
+      transform:scale(1);
     }
 
     .kpi:hover{
-      transform:translateY(-4px);
-      box-shadow:0 16px 40px rgba(10,35,80,.16);
-      border-top-color:var(--green);
+      border-left-color:#1c6084;
     }
 
     .kpi-top{
-      display:flex;
-      justify-content:space-between;
-      gap:8px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
       align-items:start;
-      margin-bottom:10px;
+      margin:0;
     }
 
     .kpi-label{
-      font-weight:700;
-      font-size:.67rem;
+      font-weight:800;
+      font-size:.72rem;
       text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
+      letter-spacing:.12em;
+      color:#6b7f90;
       margin-bottom:5px;
-      line-height:1.3;
+      line-height:1.45;
     }
 
     .kpi-value{
       font-family:var(--font-mono);
-      font-size:1.5rem;
+      font-size:clamp(1.9rem,2.2vw,2.55rem);
       font-weight:500;
-      margin-bottom:2px;
-      color:var(--text);
-      line-height:1;
-      letter-spacing:-.02em;
+      color:#17314f;
+      line-height:.98;
+      letter-spacing:-.05em;
     }
 
     .kpi-meta{
-      color:var(--muted);
-      font-size:.79rem;
-      line-height:1.55;
+      font-size:.84rem;
+      line-height:1.62;
+      color:#4c6478;
     }
 
-    .kpi-meta+.kpi-meta{
-      margin-top:3px;
+    .kpi-readings{
+      display:grid;
+      gap:6px;
+      align-content:start;
     }
 
-    .chip{
-      padding:4px 9px;
-      border-radius:var(--radius-xs);
-      font-weight:700;
-      font-size:.67rem;
-      white-space:nowrap;
-      letter-spacing:.04em;
+    .kpi-state{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.66rem;
+      font-weight:800;
+      letter-spacing:.06em;
       text-transform:uppercase;
-      flex-shrink:0;
+      white-space:nowrap;
     }
 
-    .chip.green{
+    .kpi-state::before{
+      content:'';
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:currentColor;
+      opacity:.42;
+    }
+
+    .kpi-state.green{
       background:var(--green-soft);
       color:var(--green);
     }
 
     .progress{
-      height:5px;
+      height:8px;
+      background:#dde8e4;
+      position:relative;
+      margin-top:auto;
       border-radius:999px;
-      background:var(--line-soft);
       overflow:hidden;
-      margin-top:12px;
+    }
+
+    .progress::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.72) 50%,transparent 100%);
+      transform:translateX(-130%);
+      animation:trackSweep 1.3s ease .5s 1 forwards;
     }
 
     .progress>span{
+      width:0;
       display:block;
       height:100%;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--green-mid));
-      transition:width .7s cubic-bezier(.4,0,.2,1);
+      background:linear-gradient(90deg,#4ca5bf 0%,#1c6084 55%,#2e6a57 100%);
+      box-shadow:0 0 0 1px rgba(255,255,255,.16) inset;
+      transition:width .9s cubic-bezier(.22,1,.36,1);
+    }
+
+    @keyframes kpiReveal{
+      to{opacity:1;transform:none}
+    }
+
+    @keyframes trackSweep{
+      to{transform:translateX(120%)}
     }
 
     .calendar-grid{
@@ -816,8 +840,8 @@
     }
 
     .month-group{
-      border:1.5px solid var(--line-soft);
-      border-radius:20px;
+      border:1px solid #dfe9e5;
+      border-radius:24px;
       padding:16px;
       background:rgba(255,255,255,.78);
     }
@@ -839,7 +863,7 @@
       margin:0;
       font-family:var(--font-head);
       font-size:1.14rem;
-      color:var(--text);
+      color:#17314f;
     }
 
     .month-title span{
@@ -847,7 +871,7 @@
       text-transform:uppercase;
       letter-spacing:.09em;
       font-weight:900;
-      color:var(--muted);
+      color:#6b7f90;
     }
 
     .event-list{
@@ -862,7 +886,7 @@
       align-items:center;
       padding:12px 13px;
       border-radius:18px;
-      border:1px solid var(--line-soft);
+      border:1px solid #dfe9e5;
       background:#fff;
       transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
     }
@@ -884,20 +908,20 @@
     .event-date{
       font-family:var(--font-mono);
       font-size:.82rem;
-      color:var(--green);
+      color:#2b6b60;
       font-weight:600;
     }
 
     .event-main strong{
       display:block;
-      color:var(--text);
+      color:#17314f;
       font-size:.9rem;
       line-height:1.3;
     }
 
     .event-main span{
       display:block;
-      color:var(--muted);
+      color:#6b7f90;
       font-size:.78rem;
       line-height:1.45;
       margin-top:2px;
@@ -916,14 +940,14 @@
 
     .status.done{
       background:rgba(21,122,80,.12);
-      color:var(--green);
+      color:#157a50;
       border:1px solid rgba(21,122,80,.18);
     }
 
     .status.pending{
-      background:var(--blue-pale);
-      color:var(--blue);
-      border:1px solid rgba(26,86,168,.14);
+      background:#edf5f3;
+      color:#1c6084;
+      border:1px solid #dfe9e5;
     }
 
     .territory-list{
@@ -940,7 +964,7 @@
       padding:13px 14px;
       border-radius:16px;
       background:#fff;
-      border:1px solid var(--line-soft);
+      border:1px solid #dfe9e5;
     }
 
     .territory-item strong{
@@ -950,7 +974,7 @@
     .territory-item span{
       font-family:var(--font-mono);
       font-size:.78rem;
-      color:var(--green);
+      color:#2b6b60;
       font-weight:600;
     }
 
@@ -959,7 +983,7 @@
     }
 
     .iframe-box{
-      border:1px solid var(--line);
+      border:1px solid #dfe9e5;
       border-radius:24px;
       overflow:hidden;
       background:#fff;
@@ -1071,344 +1095,299 @@
     }
 
     @media(max-width:1180px){
-      .header{
-        grid-template-columns:1fr;
-      }
-
-      .header-stack{
-        justify-items:start;
-        margin-left:0;
-      }
-
-      .nav-tabs,
-      .header-utility{
-        justify-content:flex-start;
-      }
-
-      .hero{
-        grid-template-columns:1fr;
-      }
-
-      .kpis{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .annual-goals-grid,
-      .territory-list{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .footer-wrap{
-        grid-template-columns:1fr;
-      }
+      .header{flex-wrap:wrap}
+      .header-stack{width:100%;justify-items:start}
+      .nav-tabs,.header-utility{justify-content:flex-start}
+      .hero{grid-template-columns:1fr}
+      .kpis{grid-template-columns:repeat(2,1fr)}
+      .annual-goals-grid,.territory-list{grid-template-columns:repeat(2,1fr)}
+      .footer-wrap{grid-template-columns:1fr}
     }
 
     @media(max-width:760px){
       .wrap{
-        padding-left:8px;
-        padding-right:8px;
+        width:min(100vw - 16px,1700px);
+        padding-top:18px;
       }
 
-      .header{
-        margin-left:-8px;
-        margin-right:-8px;
-      }
-
-      .hero-main,
-      .panel,
-      .objectives-panel{
-        padding:20px 18px;
-      }
-
-      .kpis,
-      .annual-goals-grid,
-      .territory-list{
-        grid-template-columns:1fr;
-      }
-
-      .event-card{
-        grid-template-columns:1fr;
-        align-items:start;
-      }
-
-      .status{
-        width:max-content;
-      }
-
-      .iframe-box iframe{
-        height:520px;
-      }
+      .header{padding:12px 16px}
+      .hero-main,.panel,.objectives-panel{padding:20px 18px}
+      .kpis,.annual-goals-grid,.territory-list{grid-template-columns:1fr}
+      .event-card{grid-template-columns:1fr;align-items:start}
+      .status{width:max-content}
+      .iframe-box iframe{height:520px}
     }
   </style>
 </head>
 
 <body class="view-full">
+  <header class="header">
+    <a class="header-brand" href="./index.html">
+      <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán" class="header-logo-img">
+      <span class="brand-text">
+        <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
+        <span class="brand-title">Manejo de Tul · Tablero de programa</span>
+      </span>
+    </a>
+
+    <div class="header-stack">
+      <nav class="nav-tabs" aria-label="Navegación de la página">
+        <a class="nav-tab active" href="#resumen">Resumen</a>
+        <a class="nav-tab" href="#objetivos">Objetivos</a>
+        <a class="nav-tab" href="#indicadoresMensuales">Indicadores mensuales</a>
+        <a class="nav-tab" href="#indicadoresAnuales">Indicadores acumulados</a>
+        <a class="nav-tab" href="#programacion">Programación</a>
+        <a class="nav-tab" href="#geoportal">Geoportal</a>
+      </nav>
+
+      <div class="header-utility">
+        <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+
+        <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
+          <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
+          <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
+        </div>
+
+        <div class="period-rack">
+          <span class="period-rack-label">Período de lectura</span>
+          <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <div class="wrap">
-    <header class="header">
-      <a class="header-brand" href="./index.html">
-        <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán" class="header-logo-img">
-        <span class="brand-text">
-          <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
-          <span class="brand-title">Manejo de Tul · Tablero de programa</span>
-        </span>
-      </a>
-
-      <div class="header-stack">
-        <nav class="nav-tabs" aria-label="Navegación de la página">
-          <a class="nav-tab active" href="#resumen">Resumen</a>
-          <a class="nav-tab" href="#indicadoresMensuales">Indicadores mensuales</a>
-          <a class="nav-tab" href="#indicadoresAnuales">Indicadores acumulados</a>
-          <a class="nav-tab" href="#programacion">Programación</a>
-          <a class="nav-tab" href="#geoportal">Geoportal</a>
-        </nav>
-
-        <div class="header-utility">
-          <a class="back" href="./index.html">
-            <span class="back-arrow">&#8592;</span>
-            Volver al inicio
-          </a>
-
-          <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
-            <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
-            <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
-          </div>
-
-          <div class="period-rack">
-            <span class="period-rack-label">Período de lectura</span>
-            <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <section class="hero section" id="resumen">
-      <article class="card hero-main">
-        <div class="hero-copy-text">
-          <div class="section-kicker">Programa específico</div>
-          <h1>Manejo de Tul</h1>
-
-          <p class="hero-lead">
-            En el lago de Atitlán se han identificado dos tipos de tul:
-            <strong>Schoenoplectus californicus</strong>, comúnmente conocido como tul macho, utilizado para la
-            elaboración de artesanías como petates y sopladores; y <strong>Typha domingensis</strong>, conocido como
-            tul hembra, utilizado principalmente para amarrar cangrejos de agua dulce.
-          </p>
-
-          <p class="hero-lead">
-            El tul es una planta autóctona que se encuentra en las orillas del Lago y posee cualidades que disminuyen
-            la contaminación, pues sus raíces filtran el agua de manera natural. Además de oxigenar al Lago, el tul
-            ofrece ecosistemas a numerosas especies acuáticas y aves migratorias.
-          </p>
-
-          <p class="hero-lead">
-            Las siembras y podas estratégicas del programa están focalizadas en zonas degradadas o en sitios donde la
-            permanencia de las masas tulares naturalmente establecidas ha sido comprometida. Estas acciones buscan
-            recuperar cobertura vegetal, fortalecer la resiliencia ambiental de la orilla y conservar funciones
-            ecológicas clave para el Lago de Atitlán.
-          </p>
-
-          <div class="chip-row">
-            <span class="stat-chip">Período activo: febrero–abril 2026</span>
-            <span class="stat-chip">Meta anual: 2,300 metros lineales</span>
-            <span class="stat-chip">Meta anual: 1,350 macollas</span>
-            <span class="stat-chip">Programación anual: 21 jornadas</span>
-          </div>
-        </div>
-      </article>
-
-      <aside class="card hero-side">
-        <div class="logo-frame">
-          <img
-            class="hero-logo"
-            src="./Siembra%20de%20tul.png"
-            alt="Logo del programa Siembra de Tul"
-            onerror="if(!this.dataset.try1){this.dataset.try1='1';this.src='./Siembra de tul.png';}else if(!this.dataset.try2){this.dataset.try2='1';this.src='./siembra_de_tul.png';}"
-          >
-        </div>
-      </aside>
-    </section>
-
-    <section class="card period-card" aria-live="polite">
-      <div>
-        <strong id="periodTitle">Avance acumulado al presente mes</strong><br>
-        <span id="periodSubtitle">El programa inicia su lectura anual en febrero de 2026.</span>
-      </div>
-      <span class="tag" id="periodTag">Al presente mes</span>
-    </section>
-
-    <section class="section" id="objetivos">
-      <article class="objectives-panel">
-        <div class="section-kicker">Objetivos del programa</div>
-
-        <div class="objective-general">
-          <h3>Objetivo general</h3>
-          <p>
-            Conservar la biodiversidad de macrófitas por medio de la restauración ecológica y el fomento de la
-            resiliencia ambiental en el Lago de Atitlán, a través de la siembra y mantenimiento de tul macho.
-          </p>
-        </div>
-
-        <div class="objective-list">
-          <h3>Objetivos específicos</h3>
-
-          <div class="objective-row">
-            <div class="objective-n">01</div>
+    <div class="exec-only">
+      <section class="section">
+        <article class="card panel">
+          <div class="section-head">
             <div>
-              <strong>Ampliar la cobertura de tul</strong>
-              <span>Ampliar la cobertura de tul a las orillas del Lago de Atitlán.</span>
+              <h2>Resumen ejecutivo</h2>
+              <p id="execPeriodText">Lectura ejecutiva del programa.</p>
             </div>
           </div>
+          <div class="kpis" id="execKpiGrid"></div>
+        </article>
+      </section>
+    </div>
 
-          <div class="objective-row">
-            <div class="objective-n">02</div>
-            <div>
-              <strong>Realizar mantenimiento a masas tulares</strong>
-              <span>Realizar jornadas de mantenimiento a las masas tulares.</span>
-            </div>
-          </div>
+    <div class="full-only">
+      <section class="hero" id="resumen">
+        <div class="card hero-main">
+          <div class="hero-copy-text">
+            <h1>Manejo de Tul</h1>
 
-          <div class="objective-row">
-            <div class="objective-n">03</div>
-            <div>
-              <strong>Actualizar el mapeo de masas tulares</strong>
-              <span>Actualizar el mapeo de masas tulares a través de implementación de fotogrametría para la digitalización de jornadas de siembra.</span>
-            </div>
-          </div>
+            <p class="hero-lead">
+              En el lago de Atitlán se han identificado dos tipos de tul: <strong>Schoenoplectus californicus</strong>, comúnmente conocido como tul macho, utilizado para la elaboración de artesanías como petates y sopladores; y <strong>Typha domingensis</strong>, conocido como tul hembra, utilizado principalmente para amarrar cangrejos de agua dulce.
+            </p>
 
-          <div class="objective-row">
-            <div class="objective-n">04</div>
-            <div>
-              <strong>Generar capas vectoriales históricas</strong>
-              <span>Obtener las capas en formato vectorial de la cobertura histórica de tul mediante el método S2DR3.</span>
+            <p class="hero-lead">
+              El tul es una planta autóctona que se encuentra en las orillas del Lago y posee cualidades que disminuyen la contaminación, pues sus raíces filtran el agua de manera natural. Además de oxigenar al Lago, el tul ofrece ecosistemas a numerosas especies acuáticas y aves migratorias.
+            </p>
+
+            <p class="hero-lead">
+              Las siembras y podas estratégicas del programa están focalizadas en zonas degradadas o en sitios donde la permanencia de las masas tulares naturalmente establecidas ha sido comprometida. Estas acciones buscan recuperar cobertura vegetal, fortalecer la resiliencia ambiental de la orilla y conservar funciones ecológicas clave para el Lago de Atitlán.
+            </p>
+
+            <div class="chip-row">
+              <span class="stat-chip">Período activo: febrero–abril 2026</span>
+              <span class="stat-chip">Meta anual: 2,300 metros lineales</span>
+              <span class="stat-chip">Meta anual: 1,350 macollas</span>
+              <span class="stat-chip">Programación anual: 21 jornadas</span>
             </div>
           </div>
         </div>
-      </article>
-    </section>
 
-    <section class="section">
-      <article class="card panel">
+        <aside class="card hero-side" aria-label="Identidad visual del programa">
+          <div class="logo-frame">
+            <img
+              class="hero-logo"
+              src="./Siembra%20de%20tul.png"
+              alt="Logo del programa Siembra de Tul"
+              onerror="if(!this.dataset.try1){this.dataset.try1='1';this.src='./Siembra de tul.png';}else if(!this.dataset.try2){this.dataset.try2='1';this.src='./siembra_de_tul.png';}"
+            >
+          </div>
+        </aside>
+      </section>
+
+      <section class="card period-card" aria-live="polite">
+        <div>
+          <strong id="periodTitle">Avance acumulado al presente mes</strong><br>
+          <span id="periodSubtitle">El programa inicia su lectura anual en febrero de 2026.</span>
+        </div>
+        <span class="tag" id="periodTag">Al presente mes</span>
+      </section>
+
+      <section class="section" id="objetivos">
+        <article class="objectives-panel">
+          <div class="section-kicker">Objetivos del programa</div>
+
+          <div class="objective-general">
+            <h3>Objetivo general</h3>
+            <p>
+              Conservar la biodiversidad de macrófitas por medio de la restauración ecológica y el fomento de la resiliencia ambiental en el Lago de Atitlán, a través de la siembra y mantenimiento de tul macho.
+            </p>
+          </div>
+
+          <div class="objective-list">
+            <h3>Objetivos específicos</h3>
+
+            <div class="objective-row">
+              <div class="objective-n">01</div>
+              <div>
+                <strong>Ampliar la cobertura de tul</strong>
+                <span>Ampliar la cobertura de tul a las orillas del Lago de Atitlán.</span>
+              </div>
+            </div>
+
+            <div class="objective-row">
+              <div class="objective-n">02</div>
+              <div>
+                <strong>Realizar mantenimiento a masas tulares</strong>
+                <span>Realizar jornadas de mantenimiento a las masas tulares.</span>
+              </div>
+            </div>
+
+            <div class="objective-row">
+              <div class="objective-n">03</div>
+              <div>
+                <strong>Actualizar el mapeo de masas tulares</strong>
+                <span>Actualizar el mapeo de masas tulares a través de implementación de fotogrametría para la digitalización de jornadas de siembra.</span>
+              </div>
+            </div>
+
+            <div class="objective-row">
+              <div class="objective-n">04</div>
+              <div>
+                <strong>Generar capas vectoriales históricas</strong>
+                <span>Obtener las capas en formato vectorial de la cobertura histórica de tul mediante el método S2DR3.</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section">
+        <article class="card panel">
+          <div class="section-head">
+            <div>
+              <h2>Metas anuales 2026</h2>
+              <p>Metas institucionales de seguimiento anual del programa.</p>
+            </div>
+          </div>
+
+          <div class="annual-goals-grid">
+            <div class="goal-card">
+              <small>Siembra anual</small>
+              <strong>2,300 metros lineales sembrados</strong>
+              <div class="goal-meta">10 puntos de siembra</div>
+              <div class="goal-progress">Cobertura lineal a lo largo del litoral del Lago de Atitlán.</div>
+            </div>
+
+            <div class="goal-card">
+              <small>Material vegetal</small>
+              <strong>1,350 macollas establecidas</strong>
+              <div class="goal-meta">Meta anual</div>
+              <div class="goal-progress">Material vegetal programado para las jornadas de siembra.</div>
+            </div>
+
+            <div class="goal-card">
+              <small>Mantenimiento</small>
+              <strong>10 jornadas de mantenimiento</strong>
+              <div class="goal-meta">Áreas estratégicas</div>
+              <div class="goal-progress">Acciones orientadas al cuidado y permanencia de masas tulares.</div>
+            </div>
+
+            <div class="goal-card">
+              <small>Cartografía temática</small>
+              <strong>11 mapas actualizados</strong>
+              <div class="goal-meta">Por municipio</div>
+              <div class="goal-progress">Información territorial para seguimiento y toma de decisiones.</div>
+            </div>
+
+            <div class="goal-card">
+              <small>Capas históricas</small>
+              <strong>4 capas vectoriales</strong>
+              <div class="goal-meta">Meta anual</div>
+              <div class="goal-progress">Base geográfica para el análisis histórico de cobertura de tul.</div>
+            </div>
+
+            <div class="goal-card">
+              <small>Programación anual</small>
+              <strong>21 jornadas programadas</strong>
+              <div class="goal-meta">Febrero–diciembre</div>
+              <div class="goal-progress">Incluye siembra, resiembra, mantenimiento y monitoreo.</div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="indicadoresMensuales">
         <div class="section-head">
           <div>
-            <h2>Metas anuales 2026</h2>
-            <p>Metas institucionales de seguimiento anual del programa.</p>
+            <h2>Avance mensual frente a metas mensuales</h2>
+            <p id="monthlyPeriodText">Lectura correspondiente al mes seleccionado.</p>
           </div>
         </div>
+        <div class="kpis" id="monthlyKpiGrid"></div>
+      </section>
 
-        <div class="annual-goals-grid">
-          <div class="goal-card">
-            <small>Siembra anual</small>
-            <strong>2,300 metros lineales sembrados</strong>
-            <div class="goal-meta">10 puntos de siembra</div>
-            <div class="goal-progress">Cobertura lineal a lo largo del litoral del Lago de Atitlán.</div>
-          </div>
-
-          <div class="goal-card">
-            <small>Material vegetal</small>
-            <strong>1,350 macollas establecidas</strong>
-            <div class="goal-meta">Meta anual</div>
-            <div class="goal-progress">Material vegetal programado para las jornadas de siembra.</div>
-          </div>
-
-          <div class="goal-card">
-            <small>Mantenimiento</small>
-            <strong>10 jornadas de mantenimiento</strong>
-            <div class="goal-meta">Áreas estratégicas</div>
-            <div class="goal-progress">Acciones orientadas al cuidado y permanencia de masas tulares.</div>
-          </div>
-
-          <div class="goal-card">
-            <small>Cartografía temática</small>
-            <strong>11 mapas actualizados</strong>
-            <div class="goal-meta">Por municipio</div>
-            <div class="goal-progress">Información territorial para seguimiento y toma de decisiones.</div>
-          </div>
-
-          <div class="goal-card">
-            <small>Capas históricas</small>
-            <strong>4 capas vectoriales</strong>
-            <div class="goal-meta">Meta anual</div>
-            <div class="goal-progress">Base geográfica para el análisis histórico de cobertura de tul.</div>
-          </div>
-
-          <div class="goal-card">
-            <small>Programación anual</small>
-            <strong>21 jornadas programadas</strong>
-            <div class="goal-meta">Febrero–diciembre</div>
-            <div class="goal-progress">Incluye siembra, resiembra, mantenimiento y monitoreo.</div>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="section" id="indicadoresMensuales">
-      <div class="section-head">
-        <div>
-          <h2>Avance mensual frente a metas mensuales</h2>
-          <p id="monthlyPeriodText">Lectura correspondiente al mes seleccionado.</p>
-        </div>
-      </div>
-
-      <div class="kpis" id="monthlyKpiGrid"></div>
-    </section>
-
-    <section class="section" id="indicadoresAnuales">
-      <div class="section-head">
-        <div>
-          <h2>Avance acumulado frente a metas anuales</h2>
-          <p id="annualPeriodText">Avance acumulado del programa desde febrero de 2026.</p>
-        </div>
-      </div>
-
-      <div class="kpis" id="annualKpiGrid"></div>
-    </section>
-
-    <section class="section" id="programacion">
-      <div class="section-head">
-        <div>
-          <h2>Programación de jornadas 2026</h2>
-          <p>Las jornadas realizadas al mes seleccionado se muestran en verde. Las jornadas posteriores se mantienen como programadas.</p>
-        </div>
-      </div>
-
-      <article class="card panel">
-        <div class="calendar-grid" id="calendarGrid"></div>
-      </article>
-    </section>
-
-    <section class="section">
-      <article class="card panel">
+      <section class="section" id="indicadoresAnuales">
         <div class="section-head">
           <div>
-            <h2>Cobertura territorial acumulada</h2>
-            <p>Municipios donde el programa ha registrado actividades durante el período seleccionado.</p>
+            <h2>Avance acumulado frente a metas anuales</h2>
+            <p id="annualPeriodText">Avance acumulado del programa desde febrero de 2026.</p>
+          </div>
+        </div>
+        <div class="kpis" id="annualKpiGrid"></div>
+      </section>
+
+      <section class="section" id="programacion">
+        <div class="section-head">
+          <div>
+            <h2>Programación de jornadas 2026</h2>
+            <p>Las jornadas realizadas al mes seleccionado se muestran en verde. Las jornadas posteriores se mantienen como programadas.</p>
           </div>
         </div>
 
-        <div class="territory-list" id="territoryList"></div>
-      </article>
-    </section>
+        <article class="card panel">
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </article>
+      </section>
 
-    <section class="section" id="geoportal">
-      <div class="section-head">
-        <div>
-          <h2>Geoportal del programa</h2>
-          <p>Visor geográfico del programa Manejo de Tul.</p>
-        </div>
-      </div>
+      <section class="section">
+        <article class="card panel">
+          <div class="section-head">
+            <div>
+              <h2>Cobertura territorial acumulada</h2>
+              <p>Municipios donde el programa ha registrado actividades durante el período seleccionado.</p>
+            </div>
+          </div>
+          <div class="territory-list" id="territoryList"></div>
+        </article>
+      </section>
 
-      <article class="card iframe-shell">
-        <div class="iframe-box">
-          <iframe
-            src="https://experience.arcgis.com/experience/a1342628ff9e473f870f0f11ce49bf01/"
-            title="Geoportal Manejo de Tul"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            allowfullscreen>
-          </iframe>
+      <section class="section" id="geoportal">
+        <div class="section-head">
+          <div>
+            <h2>Geoportal del programa</h2>
+            <p>Visor geográfico del programa Manejo de Tul.</p>
+          </div>
         </div>
-      </article>
-    </section>
+
+        <article class="card iframe-shell">
+          <div class="iframe-box">
+            <iframe
+              src="https://experience.arcgis.com/experience/a1342628ff9e473f870f0f11ce49bf01/"
+              title="Geoportal Manejo de Tul"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </article>
+      </section>
+    </div>
   </div>
 
   <footer class="site-footer">
@@ -1416,10 +1395,7 @@
       <section class="footer-brand">
         <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
         <p class="footer-copy">
-          La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago,
-          para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos
-          educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en
-          agua y saneamiento.
+          La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago, para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos educación ambiental, reforestación, reciclaje, empoderamiento económico de mujeres, asesoría municipal en agua y saneamiento.
         </p>
       </section>
 
@@ -1589,195 +1565,37 @@
     };
 
     const EVENTS = [
-      {
-        month: 2,
-        date: '13-feb',
-        municipio: 'Santa Cruz La Laguna',
-        sitio: 'Patalik',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '423421, 1629737'
-      },
-      {
-        month: 2,
-        date: '27-feb',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Tzampetey 1',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '431825, 1620374'
-      },
-      {
-        month: 3,
-        date: '13-mar',
-        municipio: 'San Pablo La Laguna',
-        sitio: 'Las Cristalinas',
-        actividad: 'Resiembra',
-        semillero: 'Mismo lugar',
-        coords: '416103, 1626975'
-      },
-      {
-        month: 3,
-        date: '27-mar',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Tzampetey 2, 3, 4, 5',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '431955, 1620392'
-      },
-      {
-        month: 4,
-        date: '10-abr',
-        municipio: 'San Juan La Laguna',
-        sitio: 'Pachites 1',
-        actividad: 'Siembra',
-        semillero: 'San Pablo La Laguna',
-        coords: '415428, 1626315'
-      },
-      {
-        month: 4,
-        date: '24-abr',
-        municipio: 'San Juan La Laguna',
-        sitio: 'Las Cristalinas',
-        actividad: 'Siembra',
-        semillero: 'San Pablo La Laguna (2 puntos)',
-        coords: '415592, 1626421'
-      },
-      {
-        month: 5,
-        date: '08-may',
-        municipio: 'San Pedro La Laguna',
-        sitio: 'Playa Dorada 1',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '419710, 1623057'
-      },
-      {
-        month: 5,
-        date: '22-may',
-        municipio: 'San Pedro La Laguna',
-        sitio: 'Playa Dorada 2, 3, 4',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '419942, 1622765'
-      },
-      {
-        month: 6,
-        date: '12-jun',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Chicaman',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '432879, 1621322'
-      },
-      {
-        month: 6,
-        date: '26-jun',
-        municipio: 'San Juan La Laguna',
-        sitio: 'Pachites 2',
-        actividad: 'Siembra',
-        semillero: 'San Pablo La Laguna',
-        coords: '415350, 1626251'
-      },
-      {
-        month: 7,
-        date: '10-jul',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Chicaman, Agua Escondida 1',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '433656, 1621863'
-      },
-      {
-        month: 7,
-        date: '24-jul',
-        municipio: 'Panajachel',
-        sitio: 'Mariposario 2',
-        actividad: 'Siembra',
-        semillero: 'Por validar',
-        coords: '427622, 1630608'
-      },
-      {
-        month: 8,
-        date: '07-ago',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Chicaman, Agua Escondida 2',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '433646, 1621925'
-      },
-      {
-        month: 8,
-        date: '21-ago',
-        municipio: 'San Juan La Laguna',
-        sitio: 'Pachites 3',
-        actividad: 'Siembra',
-        semillero: 'San Pablo La Laguna',
-        coords: '415374, 1625879'
-      },
-      {
-        month: 9,
-        date: '11-sep',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Tzampetey, Piedra del Mono',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '432772, 1621333'
-      },
-      {
-        month: 9,
-        date: '25-sep',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Panka',
-        actividad: 'Siembra',
-        semillero: 'Santa Catarina Palopó',
-        coords: '432250, 1620460'
-      },
-      {
-        month: 10,
-        date: '09-oct',
-        municipio: 'San Antonio Palopó',
-        sitio: 'Tzampetey, Villa de los Dioses',
-        actividad: 'Siembra',
-        semillero: 'Por validar',
-        coords: '432701, 1621339'
-      },
-      {
-        month: 10,
-        date: '23-oct',
-        municipio: 'Panajachel',
-        sitio: 'San Buenaventura',
-        actividad: 'Siembra',
-        semillero: 'Tzanjuyú',
-        coords: '428565, 1630563'
-      },
-      {
-        month: 11,
-        date: '13-nov',
-        municipio: 'Panajachel',
-        sitio: 'San Buenaventura',
-        actividad: 'Siembra',
-        semillero: 'Por validar',
-        coords: '428084, 1630878'
-      },
-      {
-        month: 11,
-        date: '27-nov',
-        municipio: 'Panajachel',
-        sitio: 'Mariposario 3',
-        actividad: 'Siembra',
-        semillero: 'Por validar',
-        coords: '427507, 1630445'
-      },
-      {
-        month: 12,
-        date: '04-dic',
-        municipio: 'Por confirmar',
-        sitio: 'Monitoreo anual de masas tulares',
-        actividad: 'Monitoreo',
-        semillero: 'No aplica',
-        coords: 'Por validar'
-      }
+      { month: 2, date: '13-feb', municipio: 'Santa Cruz La Laguna', sitio: 'Patalik', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '423421, 1629737' },
+      { month: 2, date: '27-feb', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '431825, 1620374' },
+
+      { month: 3, date: '13-mar', municipio: 'San Pablo La Laguna', sitio: 'Las Cristalinas', actividad: 'Resiembra', semillero: 'Mismo lugar', coords: '416103, 1626975' },
+      { month: 3, date: '27-mar', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 2, 3, 4, 5', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '431955, 1620392' },
+
+      { month: 4, date: '10-abr', municipio: 'San Juan La Laguna', sitio: 'Pachites 1', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415428, 1626315' },
+      { month: 4, date: '24-abr', municipio: 'San Juan La Laguna', sitio: 'Las Cristalinas', actividad: 'Siembra', semillero: 'San Pablo La Laguna (2 puntos)', coords: '415592, 1626421' },
+
+      { month: 5, date: '08-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '419710, 1623057' },
+      { month: 5, date: '22-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 2, 3, 4', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '419942, 1622765' },
+
+      { month: 6, date: '12-jun', municipio: 'San Antonio Palopó', sitio: 'Chicaman', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432879, 1621322' },
+      { month: 6, date: '26-jun', municipio: 'San Juan La Laguna', sitio: 'Pachites 2', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415350, 1626251' },
+
+      { month: 7, date: '10-jul', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '433656, 1621863' },
+      { month: 7, date: '24-jul', municipio: 'Panajachel', sitio: 'Mariposario 2', actividad: 'Siembra', semillero: 'Por validar', coords: '427622, 1630608' },
+
+      { month: 8, date: '07-ago', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 2', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '433646, 1621925' },
+      { month: 8, date: '21-ago', municipio: 'San Juan La Laguna', sitio: 'Pachites 3', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415374, 1625879' },
+
+      { month: 9, date: '11-sep', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Piedra del Mono', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432772, 1621333' },
+      { month: 9, date: '25-sep', municipio: 'San Antonio Palopó', sitio: 'Panka', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432250, 1620460' },
+
+      { month: 10, date: '09-oct', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Villa de los Dioses', actividad: 'Siembra', semillero: 'Por validar', coords: '432701, 1621339' },
+      { month: 10, date: '23-oct', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', semillero: 'Tzanjuyú', coords: '428565, 1630563' },
+
+      { month: 11, date: '13-nov', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', semillero: 'Por validar', coords: '428084, 1630878' },
+      { month: 11, date: '27-nov', municipio: 'Panajachel', sitio: 'Mariposario 3', actividad: 'Siembra', semillero: 'Por validar', coords: '427507, 1630445' },
+
+      { month: 12, date: '04-dic', municipio: 'Por confirmar', sitio: 'Monitoreo anual de masas tulares', actividad: 'Monitoreo', semillero: 'No aplica', coords: 'Por validar' }
     ];
 
     let selectedMonth = DEFAULT_MONTH;
@@ -1786,13 +1604,12 @@
       return new Intl.NumberFormat('es-GT').format(n);
     }
 
-    function pct(value, goal){
-      return goal ? Math.max(0, Math.min(100, Math.round((value / goal) * 100))) : 0;
+    function pct(v,g){
+      return g ? Math.max(0, Math.min(100, Math.round((v / g) * 100))) : 0;
     }
 
-    function monthName(num){
-      const month = MONTHS.find(x => x.num === num);
-      return month ? month.name : '';
+    function monthName(n){
+      return (MONTHS.find(m => m.num === n) || {}).name || '';
     }
 
     function buildMonthPills(){
@@ -1816,16 +1633,20 @@
 
     function buildKpi(label, value, meta1, meta2, percent, suffix = ''){
       return `
-        <article class="card kpi">
+        <article class="card kpi" style="--delay:${Math.random() * 120 | 0}ms">
           <div class="kpi-top">
             <div>
               <div class="kpi-label">${label}</div>
               <div class="kpi-value">${value}${suffix}</div>
             </div>
-            <span class="chip green">${percent}%</span>
+            <span class="kpi-state green">${percent}%</span>
           </div>
-          <div class="kpi-meta">${meta1}</div>
-          <div class="kpi-meta">${meta2}</div>
+
+          <div class="kpi-readings">
+            <div class="kpi-meta">${meta1}</div>
+            <div class="kpi-meta">${meta2}</div>
+          </div>
+
           <div class="progress">
             <span style="width:${percent}%"></span>
           </div>
@@ -1899,7 +1720,7 @@
       document.getElementById('annualPeriodText').textContent =
         `Avance acumulado desde febrero hasta ${monthName(month).toLowerCase()} de 2026.`;
 
-      document.getElementById('annualKpiGrid').innerHTML = [
+      const html = [
         buildKpi(
           'Jornadas acumuladas',
           d.jornadas,
@@ -1957,6 +1778,11 @@
           pct(d.sitios, 10)
         )
       ].join('');
+
+      document.getElementById('annualKpiGrid').innerHTML = html;
+      document.getElementById('execKpiGrid').innerHTML = html;
+      document.getElementById('execPeriodText').textContent =
+        `Resumen ejecutivo a ${monthName(month)} de 2026.`;
     }
 
     function renderCalendar(month){
@@ -2000,19 +1826,20 @@
         !e.municipio.includes('Por confirmar')
       );
 
-      const counts = done.reduce((acc, e) => {
+      const counts = done.reduce((acc,e) => {
         acc[e.municipio] = (acc[e.municipio] || 0) + 1;
         return acc;
       }, {});
 
-      const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-
-      document.getElementById('territoryList').innerHTML = entries.map(([name, count]) => `
-        <div class="territory-item">
-          <strong>${name}</strong>
-          <span>${count} jornada${count === 1 ? '' : 's'}</span>
-        </div>
-      `).join('');
+      document.getElementById('territoryList').innerHTML =
+        Object.entries(counts)
+          .sort((a,b) => b[1] - a[1])
+          .map(([name,count]) => `
+            <div class="territory-item">
+              <strong>${name}</strong>
+              <span>${count} jornada${count === 1 ? '' : 's'}</span>
+            </div>
+          `).join('');
     }
 
     function setMonth(month){
@@ -2044,7 +1871,6 @@
     function switchView(mode){
       document.body.classList.toggle('view-exec', mode === 'exec');
       document.body.classList.toggle('view-full', mode !== 'exec');
-
       document.getElementById('btnExec').classList.toggle('active', mode === 'exec');
       document.getElementById('btnFull').classList.toggle('active', mode !== 'exec');
     }
