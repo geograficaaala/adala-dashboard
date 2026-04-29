@@ -537,25 +537,25 @@
         id: 'docentes_capacitados',
         label: 'Docentes',
         valueKey: 'docentes_mes',
-        narrative: (visits, total, value) => `${visits}/${total} visitas a ${fmt(value)} docentes para el fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los estudiantes en los módulos 1 al 7.`
+        narrative: (visits, total, value) => `${visits} de ${total} módulos desarrollados con ${fmt(value)} docentes para el fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los estudiantes en los módulos 1 al 7.`
       },
       {
         id: 'estudiantes_epc',
         label: 'Estudiantes',
         valueKey: 'estudiantes_epc_mes',
-        narrative: (visits, total, value) => `${visits}/${total} visitas a ${fmt(value)} estudiantes para el fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los módulos 1 al 7.`
+        narrative: (visits, total, value) => `${visits} de ${total} módulos desarrollados con ${fmt(value)} estudiantes para el fortalecimiento del conocimiento ambiental y desarrollo de las capacidades de aprendizaje de los módulos 1 al 7.`
       },
       {
         id: 'centros_cobertura',
         label: 'Centros educativos',
         valueKey: 'centros_mes',
-        narrative: (visits, total, value) => `${visits}/${total} visitas a ${fmt(value)} centros educativos beneficiados con el programa Educando para Conservar, 2026.`
+        narrative: (visits, total, value) => `${fmt(value)} centros educativos beneficiados con el programa Educando para Conservar, 2026.`
       },
       {
         id: 'municipios_actividad_pedagogica',
         label: 'Municipios',
         valueKey: 'municipios_mes',
-        narrative: (visits, total, value) => `${visits}/${total} visitas a ${fmt(value)} municipios priorizados por el programa Educando para Conservar, 2026.`
+        narrative: (visits, total, value) => `${fmt(value)} municipios priorizados por el programa Educando para Conservar, 2026.`
       }
     ];
 
@@ -572,7 +572,7 @@
 
     const PREP_CONFIG = [
       { key:'docentes_induccion_mes', label:'Docentes en inducción', window:'Preparación', unit:'docentes', narrative:value => `${fmt(value)} docentes alcanzados en jornadas de inducción y acercamiento previas al ciclo pedagógico.` },
-      { key:'centros_induccion_mes', label:'Centros con inducción', window:'Preparación', unit:'centros', narrative:value => `${fmt(value)} centros con socialización del programa y alineación metodológica previa al inicio de visitas.` },
+      { key:'centros_induccion_mes', label:'Centros con inducción', window:'Preparación', unit:'centros', narrative:value => `${fmt(value)} centros con socialización del programa y alineación metodológica previa al desarrollo de módulos.` },
       { key:'estudiantes_diagnostico_mes', label:'Diagnóstico inicial', window:'Preparación', unit:'estudiantes', narrative:value => `${fmt(value)} estudiantes con diagnóstico inicial levantado para orientar la implementación pedagógica del programa.` },
       { key:'coordinaciones_clave_mes', label:'Reuniones clave', window:'Gestión', unit:'coordinaciones', narrative:value => `${fmt(value)} coordinaciones o reuniones clave registradas para articulación institucional y seguimiento mensual.` },
 ];
@@ -738,15 +738,23 @@
         ? cfg.narrative(visits, ACTIVE_VISITS_TOTAL, currentValue)
         : (status==='active'
             ? `Sin registro válido en ${monthName(monthNum)} para este indicador de cobertura.`
-            : `Este indicador se mantiene armado aunque el período pedagógico aún no esté activo en el corte seleccionado.`);
+            : `Este indicador se mantiene armado aunque el período pedagógico aún no esté activo en el período seleccionado al presente mes.`);
 
       return {
         label: cfg.label,
         window: monthSpan(ACTIVE_START_MONTH, ACTIVE_END_MONTH),
         tone,
-        chip: status==='active' ? `${visits} de ${ACTIVE_VISITS_TOTAL} visitas` : badgeText(status, 0),
+        chip: status==='active'
+          ? (cfg.id === 'docentes_capacitados' || cfg.id === 'estudiantes_epc'
+              ? `${visits} de ${ACTIVE_VISITS_TOTAL} módulos desarrollados`
+              : cfg.id === 'centros_cobertura'
+                ? `${fmt(currentValue)} centros educativos`
+                : cfg.id === 'municipios_actividad_pedagogica'
+                  ? `${fmt(currentValue)} municipios`
+                  : badgeText(status, pct))
+          : badgeText(status, 0),
         valueText: fmtPct(pct),
-        reference: currentValue>0 ? `Cobertura del corte <strong>${fmt(currentValue)}</strong>` : 'Cobertura del corte <strong>sin registro</strong>',
+        reference: currentValue>0 ? `Cobertura al presente mes <strong>${fmt(currentValue)}</strong>` : 'Cobertura al presente mes <strong>sin registro</strong>',
         line1: detail,
         line2: note,
         progressWidth: pct*100,
@@ -772,11 +780,11 @@
         reference = `Ventana válida <strong>${esc(cfg.window)}</strong>`;
       }else if(status==='closed'){
         line1 = `Ventana cerrada. Este indicador solo registra entradas válidas de ${periodText}.`;
-        line2 = `Último resultado del corte seleccionado: ${fmt(actual)} actividades frente a una meta mensual de ${fmt(cfg.target)}.`;
+        line2 = `Último resultado del período seleccionado al presente mes: ${fmt(actual)} actividades frente a una meta mensual de ${fmt(cfg.target)}.`;
         reference = `Meta mensual <strong>${fmt(cfg.target)}</strong>`;
       }else{
         line1 = `${fmt(actual)} actividades registradas en ${monthName(monthNum)} frente a una meta mensual de ${fmt(cfg.target)}.`;
-        line2 = `${fmtPct(progress)} de cumplimiento mensual en el período operativo priorizado al corte.`;
+        line2 = `${fmtPct(progress)} de cumplimiento mensual en el período operativo priorizado al presente mes.`;
         reference = `Meta mensual <strong>${fmt(cfg.target)}</strong>`;
       }
 
@@ -997,7 +1005,7 @@
       const anyYellow = activeOps.some(k => k.tone==='tone-yellow');
       if(anyRed) return { cls:'red', text:`${monthName(monthNum)} · atención operativa` };
       if(anyYellow) return { cls:'yellow', text:`${monthName(monthNum)} · seguimiento operativo` };
-      return { cls:'green', text:`${monthName(monthNum)} · corte activo` };
+      return { cls:'green', text:`${monthName(monthNum)} · al presente mes activo` };
     }
 
     function cfgStartByLabel(label){
@@ -1198,7 +1206,7 @@
       const items = [
         { id:'docentes_capacitados', title:'Docentes capacitados', value:Number(row.docentes_mes||0), unit:'personas', copy:'Docentes alcanzados en el mes con desarrollo de módulos del material EPC.' },
         { id:'estudiantes_epc', title:'Estudiantes beneficiados', value:Number(row.estudiantes_epc_mes||0), unit:'estudiantes', copy:'Participación estudiantil registrada en la cobertura pedagógica del período.' },
-        { id:'centros_cobertura', title:'Centros alcanzados', value:Number(row.centros_mes||0), unit:'centros', copy:'Centros educativos cubiertos por el programa durante el corte activo.' },
+        { id:'centros_cobertura', title:'Centros alcanzados', value:Number(row.centros_mes||0), unit:'centros', copy:'Centros educativos cubiertos por el programa durante el al presente mes activo.' },
         { id:'municipios_actividad_pedagogica', title:'Municipios con actividad', value:Number(row.municipios_mes||0), unit:'municipios', copy:'Municipios con actividad pedagógica y despliegue territorial efectivo.' }
       ];
       return items.map(item=>{
@@ -1250,9 +1258,9 @@
       const alerts = [];
       const low = annualOperationalRows(row).filter(item => item.status === 'active' && Number(item.pct||0) < 0.85);
       if(String(row.alertas_texto||'').trim()) alerts.push({ cls:'yellow', text:String(row.alertas_texto).trim() });
-      low.slice(0,3).forEach(item=>alerts.push({ cls:'red', text:`${item.label} se ubica en ${fmtPct(item.pct)} del objetivo anual al corte.` }));
+      low.slice(0,3).forEach(item=>alerts.push({ cls:'red', text:`${item.label} se ubica en ${fmtPct(item.pct)} del objetivo anual al presente mes.` }));
       if(!alerts.length){
-        alerts.push({ cls:'green', text:'No se detectan alertas críticas en el corte seleccionado. La lectura mensual se mantiene alineada con el ritmo esperado del programa.' });
+        alerts.push({ cls:'green', text:'No se detectan alertas críticas en el período seleccionado al presente mes. La lectura mensual se mantiene alineada con el ritmo esperado del programa.' });
       }
       return alerts;
     }
@@ -1269,8 +1277,8 @@
       const yellowCount = annual.filter(item => Number(item.pct||0) > 0 && Number(item.pct||0) < 1).length;
       return `
         <h3>Resumen ejecutivo · ${esc(latestText)}</h3>
-        <p><strong>Lectura general.</strong> El programa Educando para Conservar presenta su corte operativo en <strong>${esc(latestText)}</strong>. La cobertura pedagógica del mes alcanza <strong>${fmt(row.docentes_mes||0)}</strong> docentes, <strong>${fmt(row.estudiantes_epc_mes||0)}</strong> estudiantes, <strong>${fmt(row.centros_mes||0)}</strong> centros educativos y <strong>${fmt(row.municipios_mes||0)}</strong> municipios con actividad pedagógica.</p>
-        <p><strong>Avance y gestión.</strong> En el componente táctico, se observan <strong>${greenCount}</strong> indicadores con cumplimiento acumulado favorable y <strong>${yellowCount}</strong> indicadores en seguimiento. Además, el corte registra <strong>${fmt(row.actividades_campo_mes||0)}</strong> actividades de campo y <strong>${fmt(row.coordinaciones_clave_mes||0)}</strong> coordinaciones clave para sostener la implementación territorial.</p>
+        <p><strong>Lectura general.</strong> El programa Educando para Conservar presenta su al presente mes operativo en <strong>${esc(latestText)}</strong>. La cobertura pedagógica del mes alcanza <strong>${fmt(row.docentes_mes||0)}</strong> docentes, <strong>${fmt(row.estudiantes_epc_mes||0)}</strong> estudiantes, <strong>${fmt(row.centros_mes||0)}</strong> centros educativos y <strong>${fmt(row.municipios_mes||0)}</strong> municipios con actividad pedagógica.</p>
+        <p><strong>Avance y gestión.</strong> En el componente táctico, se observan <strong>${greenCount}</strong> indicadores con cumplimiento acumulado favorable y <strong>${yellowCount}</strong> indicadores en seguimiento. Además, el al presente mes registra <strong>${fmt(row.actividades_campo_mes||0)}</strong> actividades de campo y <strong>${fmt(row.coordinaciones_clave_mes||0)}</strong> coordinaciones clave para sostener la implementación territorial.</p>
         <p><strong>Contexto programático.</strong> ${esc(String(row.logros_texto || '').trim() || 'Sin observaciones narrativas registradas para este período.')}</p>
         ${prep > 0 ? `<p><strong>Preparación y diplomado.</strong> El programa también acumuló <strong>${fmt(prep)}</strong> acciones o registros asociados a preparación metodológica, diagnóstico e inducción, junto con el despliegue del componente de diplomado juvenil.</p>` : ''}
       `;
@@ -1347,7 +1355,7 @@
 
         <section class="pres-slide"><div class="pres-inner">
           <div class="pres-kicker">Cobertura pedagógica</div>
-          <div class="pres-title-row"><div><h2>Indicadores de cobertura del período</h2><p>Lectura ejecutiva de la presencia territorial y pedagógica del programa en el corte activo.</p></div></div>
+          <div class="pres-title-row"><div><h2>Indicadores de cobertura del período</h2><p>Lectura ejecutiva de la presencia territorial y pedagógica del programa en el al presente mes activo.</p></div></div>
           <div class="pres-card-grid pres-card-grid-2">
             ${COVERAGE_CONFIG.map(cfg=>{ const d = coverageKpiData(cfg,row); return `<div class="pres-kpi-pair"><div class="pres-kpi-label">${esc(d.label)}</div><div class="pres-kpi-value">${esc(d.valueText)}</div><div class="pres-kpi-meta">${esc(d.line1)}</div><span class="pres-chip ${d.tone==='tone-green'?'green':d.tone==='tone-yellow'?'yellow':d.tone==='tone-red'?'red':'gray'}">${esc(d.chip)}</span><div class="pres-bar-wrap"><div class="pres-bar ${d.tone==='tone-green'?'green':d.tone==='tone-yellow'?'yellow':d.tone==='tone-red'?'red':'gray'}" style="width:${Math.max(0,Math.min(100,d.progressWidth))}%"></div></div></div>`; }).join('')}
           </div>
@@ -1376,9 +1384,8 @@
         <section class="pres-slide"><div class="pres-inner">
           <div class="pres-kicker">Alertas y cierre</div>
           <div class="pres-title-row"><div><h2>Señales para la toma de decisiones</h2><p>Resumen de alertas, logros narrativos y mensajes de cierre listos para exposición o revisión gerencial.</p></div></div>
-          <div class="pres-card-grid pres-card-grid-2">
-            <div class="pres-note"><h3>Logros del corte</h3><p>${esc(String(row.logros_texto || '').trim() || 'Sin observaciones registradas para este período.')}</p></div>
-            <div class="pres-note"><h3>Alertas operativas</h3>${alerts.map(item=>`<div class="pres-alert-box ${item.cls}">${esc(item.text)}</div>`).join('')}</div>
+          <div class="pres-card-grid pres-card-grid-1">
+            <div class="pres-note"><h3>Logros al presente mes</h3><p>${esc(String(row.logros_texto || '').trim() || 'Sin observaciones registradas para este período.')}</p></div>
           </div>
         </div></section>`;
       slideIndex = 0;
@@ -1443,13 +1450,7 @@
               <h3>Avance acumulado vs meta anual</h3>
               <p class="sub">Progreso real acumulado de las actividades tácticas del programa frente a sus metas anuales al período seleccionado.</p>
               ${executiveProgressMarkup(row)}
-            </article>
-            <article class="card panel">
-              <h3>Alertas operativas</h3>
-              <p class="sub">Indicadores, ventanas o notas que conviene vigilar en el corte activo.</p>
-              ${executiveAlertsMarkup(row)}
-            </article>
-          </div>
+            </article></div>
           <article class="card exec-diag">${executiveDiagnosticMarkup(row)}</article>
         </div>
 
@@ -1491,7 +1492,7 @@
                 <div class="section-title">Cobertura pedagógica del período (Desarrollo de módulos de material EPC)</div>
               </div>
             </div>
-            <div class="kpis" id="coverageGrid">${coverageCards || '<div class="empty">No hay indicadores de cobertura para este corte.</div>'}</div>
+            <div class="kpis" id="coverageGrid">${coverageCards || '<div class="empty">No hay indicadores de cobertura para este al presente mes.</div>'}</div>
           </section>
 
           ${prepCards}
@@ -1503,7 +1504,7 @@
               </div>
               <div class="section-chip">Metas mensuales por actividad</div>
             </div>
-            <div class="kpis" id="opsGrid">${opCards || '<div class="empty">No hay indicadores operativos para este corte.</div>'}</div>
+            <div class="kpis" id="opsGrid">${opCards || '<div class="empty">No hay indicadores operativos para este al presente mes.</div>'}</div>
           </section>
 
           ${annualChart}
