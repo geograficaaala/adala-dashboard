@@ -5,159 +5,861 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Manejo de Tul · AALA</title>
   <meta name="description" content="Tablero institucional del programa Manejo de Tul — Asociación Amigos del Lago de Atitlán">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
     :root{
       --bg:#eef6f0;
-      --bg-2:#f7faf5;
+      --bg2:#f8fbf6;
       --card:#ffffff;
-      --card-soft:#f4faf5;
       --text:#14314b;
-      --text-2:#40566b;
+      --text2:#40566b;
       --muted:#6d8190;
       --line:#d9e7dc;
-      --line-2:#e8f0ea;
+      --line2:#e8f0ea;
       --lake:#145a7a;
-      --lake-2:#1e788a;
-      --lake-soft:#e3f3f6;
+      --lake2:#1e788a;
+      --lakeSoft:#e8f5f7;
       --green:#2f7d4d;
-      --green-2:#62a35f;
-      --green-soft:#e7f5e9;
-      --green-glass:rgba(194,233,201,.54);
-      --mint:#dff2e5;
+      --green2:#62a35f;
+      --greenSoft:#e7f5e9;
+      --greenGlass:rgba(211,244,216,.72);
       --gold:#b47a18;
-      --gold-soft:#fff3d8;
-      --red:#a94545;
-      --red-soft:#ffe8e8;
+      --goldSoft:#fff3d8;
       --shadow:0 18px 45px rgba(19,49,75,.11),0 5px 16px rgba(19,49,75,.07);
-      --shadow-sm:0 10px 28px rgba(19,49,75,.08),0 2px 8px rgba(19,49,75,.05);
+      --shadowSm:0 10px 28px rgba(19,49,75,.08),0 2px 8px rgba(19,49,75,.05);
       --radius:28px;
-      --radius-md:20px;
-      --radius-sm:14px;
-      --font-head:'Lora', Georgia, serif;
-      --font-body:'Sora', system-ui, sans-serif;
-      --font-mono:'JetBrains Mono', ui-monospace, monospace;
+      --radiusMd:20px;
+      --radiusSm:14px;
+      --fontHead:'Lora', Georgia, serif;
+      --fontBody:'Sora', system-ui, sans-serif;
+      --fontMono:'JetBrains Mono', ui-monospace, monospace;
     }
+
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
       margin:0;
-      font-family:var(--font-body);
+      font-family:var(--fontBody);
       color:var(--text);
       background:
-        radial-gradient(circle at 4% 4%,rgba(98,163,95,.14) 0%,transparent 28%),
+        radial-gradient(circle at 4% 4%,rgba(98,163,95,.15) 0%,transparent 28%),
         radial-gradient(circle at 92% 10%,rgba(30,120,138,.12) 0%,transparent 26%),
-        linear-gradient(180deg,var(--bg-2) 0%,var(--bg) 100%);
+        linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);
       line-height:1.62;
     }
     body::before{
       content:'';
-      position:fixed;inset:0;z-index:0;pointer-events:none;
-      background-image:radial-gradient(circle 1px at 1px 1px,rgba(20,90,122,.06) 1px,transparent 0);
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background-image:radial-gradient(circle 1px at 1px 1px,rgba(20,90,122,.055) 1px,transparent 0);
       background-size:36px 36px;
     }
     a{color:inherit}
-    .wrap{width:min(1360px,calc(100vw - 34px));margin:0 auto;position:relative;z-index:1}
+    .wrap{
+      width:min(1360px,calc(100vw - 34px));
+      margin:0 auto;
+      position:relative;
+      z-index:1;
+    }
+
     .topbar{
-      position:sticky;top:0;z-index:50;
+      position:sticky;
+      top:0;
+      z-index:50;
       background:linear-gradient(135deg,rgba(16,55,86,.97),rgba(24,104,117,.95) 58%,rgba(47,125,77,.94));
       color:#fff;
       backdrop-filter:blur(16px) saturate(1.25);
       box-shadow:0 18px 42px rgba(12,39,63,.22);
     }
     .topbar-inner{
-      width:min(1440px,calc(100vw - 28px));margin:0 auto;
-      display:flex;align-items:center;gap:14px;min-height:72px;padding:10px 0;
+      width:min(1440px,calc(100vw - 28px));
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-height:72px;
+      padding:10px 0;
     }
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:260px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      min-width:280px;
+    }
     .brand img{
-      height:44px;width:auto;display:block;flex-shrink:0;background:rgba(255,255,255,.94);
-      border-radius:12px;padding:4px 6px;box-shadow:0 3px 12px rgba(0,0,0,.18)
+      height:44px;
+      width:auto;
+      display:block;
+      flex-shrink:0;
+      background:rgba(255,255,255,.94);
+      border-radius:12px;
+      padding:4px 6px;
+      box-shadow:0 3px 12px rgba(0,0,0,.18);
     }
-    .brand-kicker{display:block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75);font-weight:800;line-height:1.15}
-    .brand-title{display:block;font-size:.98rem;color:#fff;font-weight:800;line-height:1.18}
-    .nav{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-left:auto;justify-content:flex-end}
-    .nav a,.nav button{
-      border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.10);color:#fff;text-decoration:none;
-      padding:8px 12px;border-radius:999px;font-family:var(--font-body);font-size:.76rem;font-weight:800;cursor:pointer;
+    .brand-kicker{
+      display:block;
+      font-size:.66rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.75);
+      font-weight:800;
+      line-height:1.15;
+    }
+    .brand-title{
+      display:block;
+      font-size:.98rem;
+      color:#fff;
+      font-weight:800;
+      line-height:1.18;
+    }
+    .nav{
+      display:flex;
+      gap:7px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-left:auto;
+      justify-content:flex-end;
+    }
+    .nav a{
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.10);
+      color:#fff;
+      text-decoration:none;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:.76rem;
+      font-weight:800;
       transition:transform .18s ease,background .18s ease,border-color .18s ease;
     }
-    .nav a:hover,.nav button:hover{transform:translateY(-1px);background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.28)}
-    .nav .home{background:#fff;color:var(--lake);border-color:#fff}
+    .nav a:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.17);
+      border-color:rgba(255,255,255,.28);
+    }
+    .nav .home{
+      background:#fff;
+      color:var(--lake);
+      border-color:#fff;
+    }
+
     .monthbar{
       border-top:1px solid rgba(255,255,255,.12);
       background:rgba(255,255,255,.09);
     }
     .monthbar-inner{
-      width:min(1440px,calc(100vw - 28px));margin:0 auto;display:flex;align-items:center;gap:10px;padding:8px 0 10px;overflow-x:auto;
+      width:min(1440px,calc(100vw - 28px));
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 0 10px;
+      overflow-x:auto;
     }
-    .monthbar-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:rgba(255,255,255,.76);white-space:nowrap;margin-right:4px}
+    .monthbar-label{
+      font-size:.7rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+      color:rgba(255,255,255,.76);
+      white-space:nowrap;
+      margin-right:4px;
+    }
     .month-pill{
-      border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.09);color:rgba(255,255,255,.82);
-      padding:7px 13px;border-radius:999px;font-family:var(--font-body);font-size:.76rem;font-weight:800;cursor:pointer;white-space:nowrap;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.09);
+      color:rgba(255,255,255,.85);
+      padding:7px 13px;
+      border-radius:999px;
+      font-family:var(--fontBody);
+      font-size:.76rem;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
       transition:all .18s ease;
     }
-    .month-pill:hover{background:rgba(255,255,255,.18);color:#fff;transform:translateY(-1px)}
-    .month-pill.active{background:#fff;color:var(--green);border-color:#fff;box-shadow:0 8px 18px rgba(0,0,0,.14)}
-    .month-pill.present{background:linear-gradient(135deg,#dff6e5,#fff);color:var(--green);border-color:rgba(255,255,255,.9)}
-
-    .hero{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(320px,.72fr);gap:18px;padding:28px 0 18px}
-    .card{
-      background:rgba(255,255,255,.94);border:1px solid rgba(217,231,220,.95);border-radius:var(--radius);box-shadow:var(--shadow-sm);
+    .month-pill:hover{
+      background:rgba(255,255,255,.18);
+      color:#fff;
+      transform:translateY(-1px);
     }
-    .hero-main{padding:34px 38px;background:linear-gradient(135deg,#ffffff 0%,#f2faf5 58%,#e5f4ec 100%);position:relative;overflow:hidden}
-    .hero-main::after{content:'';position:absolute;right:-100px;top:-90px;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,rgba(98,163,95,.2),transparent 68%)}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.7rem;text-transform:uppercase;letter-spacing:.13em;font-weight:900;color:var(--green);margin-bottom:10px}
-    .eyebrow::before{content:'';width:24px;height:2px;background:linear-gradient(90deg,var(--green),var(--lake-2));border-radius:999px}
-    .hero h1{font-family:var(--font-head);font-size:clamp(2.35rem,4.3vw,4.35rem);line-height:1.02;margin:0 0 14px;letter-spacing:-.045em;color:var(--text)}
-    .hero-copy{max-width:76ch;color:var(--text-2);font-size:.97rem;line-height:1.82;text-align:justify;hyphens:auto;position:relative;z-index:1}
-    .hero-copy p{margin:0 0 13px}.hero-copy p:last-child{margin-bottom:0}
-    .hero-copy em{font-family:var(--font-head);font-weight:600;color:var(--lake)}
-    .hero-logo-panel{padding:22px;display:grid;place-items:center;background:linear-gradient(180deg,#fff 0%,#f6fbf6 100%);min-height:405px;position:relative;overflow:hidden}
-    .hero-logo-panel::before{content:'';position:absolute;inset:16px;border:1px dashed rgba(47,125,77,.18);border-radius:22px;pointer-events:none}
-    .program-logo{max-width:94%;max-height:310px;object-fit:contain;display:block;filter:drop-shadow(0 18px 24px rgba(20,49,75,.14))}
-    .logo-caption{position:absolute;left:22px;right:22px;bottom:22px;background:rgba(255,255,255,.78);border:1px solid rgba(217,231,220,.8);backdrop-filter:blur(10px);border-radius:18px;padding:13px 15px;color:var(--text-2);font-size:.82rem;line-height:1.45}
-    .logo-caption strong{display:block;color:var(--green);font-size:.77rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px}
+    .month-pill.active{
+      background:#fff;
+      color:var(--green);
+      border-color:#fff;
+      box-shadow:0 8px 18px rgba(0,0,0,.14);
+    }
+    .month-pill.current{
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.85);
+    }
+    .month-pill.disabled{
+      opacity:.38;
+      cursor:not-allowed;
+      pointer-events:none;
+      background:rgba(255,255,255,.07);
+      color:rgba(255,255,255,.68);
+      border-style:dashed;
+    }
 
-    .period-card{margin-bottom:18px;padding:18px 22px;display:flex;align-items:center;gap:18px;justify-content:space-between;flex-wrap:wrap;background:linear-gradient(135deg,rgba(20,90,122,.96),rgba(47,125,77,.94));color:#fff}
-    .period-card strong{font-family:var(--font-head);font-size:1.28rem}.period-card span{color:rgba(255,255,255,.84);font-size:.88rem}.period-card .tag{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);font-size:.78rem;font-weight:800;color:#fff}
+    .card{
+      background:rgba(255,255,255,.95);
+      border:1px solid rgba(217,231,220,.95);
+      border-radius:var(--radius);
+      box-shadow:var(--shadowSm);
+    }
 
-    .section{margin-bottom:20px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:0 0 12px;padding-bottom:10px;border-bottom:1px solid var(--line-2)}
-    .section-kicker{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--green);font-weight:900;margin-bottom:5px}
-    .section-title{font-family:var(--font-head);font-size:clamp(1.45rem,2.4vw,2.2rem);font-weight:600;line-height:1.12;letter-spacing:-.025em;margin:0;color:var(--text)}
-    .section-sub{color:var(--muted);font-size:.88rem;line-height:1.6;max-width:760px;margin:5px 0 0}
-    .panel{padding:26px 28px}.prose{color:var(--text-2);font-size:.94rem;line-height:1.82;text-align:justify}.prose p{margin:0 0 12px}.prose p:last-child{margin-bottom:0}
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.48fr) minmax(330px,.72fr);
+      gap:18px;
+      padding:28px 0 18px;
+    }
+    .hero-main{
+      padding:34px 38px;
+      background:linear-gradient(135deg,#ffffff 0%,#f2faf5 58%,#e5f4ec 100%);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-main::after{
+      content:'';
+      position:absolute;
+      right:-100px;
+      top:-90px;
+      width:330px;
+      height:330px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(98,163,95,.2),transparent 68%);
+    }
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:.7rem;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-weight:900;
+      color:var(--green);
+      margin-bottom:10px;
+    }
+    .eyebrow::before{
+      content:'';
+      width:24px;
+      height:2px;
+      background:linear-gradient(90deg,var(--green),var(--lake2));
+      border-radius:999px;
+    }
+    .hero h1{
+      font-family:var(--fontHead);
+      font-size:clamp(2.35rem,4.3vw,4.35rem);
+      line-height:1.02;
+      margin:0 0 14px;
+      letter-spacing:-.045em;
+      color:var(--text);
+    }
+    .hero-copy{
+      max-width:78ch;
+      color:var(--text2);
+      font-size:.98rem;
+      line-height:1.84;
+      text-align:justify;
+      hyphens:auto;
+      position:relative;
+      z-index:1;
+    }
+    .hero-copy p{margin:0 0 13px}
+    .hero-copy p:last-child{margin-bottom:0}
+    .hero-copy em{
+      font-family:var(--fontHead);
+      font-weight:600;
+      color:var(--lake);
+    }
 
-    .grid-2{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);gap:18px}.grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.grid-4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.grid-6{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+    .hero-logo-panel{
+      padding:22px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg,#fff 0%,#f6fbf6 100%);
+      min-height:408px;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-logo-panel::before{
+      content:'';
+      position:absolute;
+      inset:16px;
+      border:1px dashed rgba(47,125,77,.18);
+      border-radius:22px;
+      pointer-events:none;
+    }
+    .program-logo{
+      max-width:94%;
+      max-height:312px;
+      object-fit:contain;
+      display:block;
+      filter:drop-shadow(0 18px 24px rgba(20,49,75,.14));
+    }
+    .logo-caption{
+      position:absolute;
+      left:22px;
+      right:22px;
+      bottom:22px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(217,231,220,.8);
+      backdrop-filter:blur(10px);
+      border-radius:18px;
+      padding:13px 15px;
+      color:var(--text2);
+      font-size:.82rem;
+      line-height:1.45;
+    }
+    .logo-caption strong{
+      display:block;
+      color:var(--green);
+      font-size:.77rem;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+    }
 
-    .objective-card{padding:20px;border-radius:20px;background:linear-gradient(180deg,#fff 0%,#f8fcf8 100%);border:1px solid var(--line-2)}
-    .objective-card .num{font-family:var(--font-mono);font-weight:600;color:var(--green);font-size:.78rem;margin-bottom:8px}.objective-card h3{margin:0 0 7px;font-size:.96rem;color:var(--text)}.objective-card p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.55}
+    .period-card{
+      margin-bottom:18px;
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg,rgba(20,90,122,.96),rgba(47,125,77,.94));
+      color:#fff;
+    }
+    .period-card strong{
+      font-family:var(--fontHead);
+      font-size:1.28rem;
+    }
+    .period-card span{
+      color:rgba(255,255,255,.84);
+      font-size:.88rem;
+    }
+    .period-card .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 13px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:.78rem;
+      font-weight:800;
+      color:#fff;
+    }
 
-    .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.kpi-card{padding:22px 21px;position:relative;overflow:hidden}.kpi-card::after{content:'';position:absolute;right:-34px;top:-34px;width:100px;height:100px;border-radius:50%;background:rgba(98,163,95,.11)}
-    .kpi-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:900;margin-bottom:8px;min-height:2.2em}.kpi-value{font-family:var(--font-head);font-size:clamp(1.85rem,3vw,2.9rem);line-height:1;color:var(--text);letter-spacing:-.035em;margin-bottom:8px}.kpi-sub{color:var(--text-2);font-size:.83rem;line-height:1.52}.progress{height:8px;border-radius:999px;background:#eef4ef;overflow:hidden;margin:13px 0 7px}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--lake-2));border-radius:inherit;transition:width .35s ease}.progress-meta{font-family:var(--font-mono);font-size:.72rem;color:var(--muted)}
+    .section{margin-bottom:20px}
+    .section-head{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:14px;
+      margin:0 0 12px;
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line2);
+    }
+    .section-kicker{
+      font-size:.7rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--green);
+      font-weight:900;
+      margin-bottom:5px;
+    }
+    .section-title{
+      font-family:var(--fontHead);
+      font-size:clamp(1.45rem,2.4vw,2.2rem);
+      font-weight:600;
+      line-height:1.12;
+      letter-spacing:-.025em;
+      margin:0;
+      color:var(--text);
+    }
+    .section-sub{
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.6;
+      max-width:820px;
+      margin:5px 0 0;
+    }
+    .panel{padding:26px 28px}
+    .prose{
+      color:var(--text2);
+      font-size:.94rem;
+      line-height:1.82;
+      text-align:justify;
+    }
+    .prose p{margin:0 0 12px}
+    .prose p:last-child{margin-bottom:0}
 
-    .reference-card{padding:19px 20px;border-radius:20px;background:linear-gradient(180deg,#fff,#f8fbf8);border:1px solid var(--line-2)}.reference-card small{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.11em;color:var(--green);font-weight:900;margin-bottom:7px}.reference-card strong{display:block;font-family:var(--font-head);font-size:1.42rem;letter-spacing:-.02em;line-height:1.05;margin-bottom:7px;color:var(--text)}.reference-card span{display:block;color:var(--muted);font-size:.84rem;line-height:1.55}
+    .grid-2{
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(0,.98fr);
+      gap:18px;
+    }
+    .grid-4{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
 
-    .calendar-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}.calendar-grid{display:grid;gap:14px}.month-group{border:1px solid var(--line-2);border-radius:24px;padding:16px;background:rgba(255,255,255,.7)}.month-group.is-current{border-color:rgba(47,125,77,.42);box-shadow:0 0 0 4px rgba(47,125,77,.08)}.month-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.month-title h3{margin:0;font-family:var(--font-head);font-size:1.14rem;color:var(--text)}.month-title span{font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;font-weight:900;color:var(--muted)}
-    .event-list{display:grid;gap:9px}.event-card{display:grid;grid-template-columns:76px 1fr auto;gap:12px;align-items:center;padding:12px 13px;border-radius:18px;border:1px solid var(--line-2);background:#fff;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.event-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}.event-card.done{background:linear-gradient(135deg,rgba(215,244,220,.72),rgba(255,255,255,.78));border-color:rgba(47,125,77,.24)}.event-card.pending{background:rgba(255,255,255,.78)}.event-date{font-family:var(--font-mono);font-size:.82rem;color:var(--green);font-weight:600}.event-main strong{display:block;color:var(--text);font-size:.9rem;line-height:1.3}.event-main span{display:block;color:var(--muted);font-size:.78rem;line-height:1.45;margin-top:2px}.status{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:.68rem;font-weight:900;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}.status.done{background:rgba(47,125,77,.12);color:var(--green);border:1px solid rgba(47,125,77,.18)}.status.pending{background:var(--lake-soft);color:var(--lake);border:1px solid rgba(20,90,122,.12)}
-    .side-stack{display:grid;gap:14px;position:sticky;top:135px}.mini-panel{padding:20px}.mini-panel h3{margin:0 0 12px;font-size:1rem;color:var(--text)}.summary-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2);font-size:.85rem}.summary-row:last-child{border-bottom:none}.summary-row span{color:var(--muted)}.summary-row strong{font-family:var(--font-mono);color:var(--text)}
+    .plain-list{
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .plain-list li{
+      position:relative;
+      padding:12px 14px 12px 42px;
+      background:#fff;
+      border:1px solid var(--line2);
+      border-radius:16px;
+      color:var(--text2);
+      font-size:.88rem;
+    }
+    .plain-list li::before{
+      content:'✓';
+      position:absolute;
+      left:14px;
+      top:12px;
+      width:20px;
+      height:20px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--greenSoft);
+      color:var(--green);
+      font-weight:900;
+      font-size:.75rem;
+    }
 
-    .bars{display:grid;gap:10px}.bar-row{display:grid;grid-template-columns:88px 1fr 44px;gap:10px;align-items:center}.bar-row .bar-label{font-size:.78rem;font-weight:800;color:var(--text-2)}.bar-track{height:12px;border-radius:999px;background:#edf3ee;overflow:hidden}.bar-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--green),var(--green-2))}.bar-row .bar-num{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);text-align:right}
+    .objective-card{
+      padding:20px;
+      border-radius:20px;
+      background:linear-gradient(180deg,#fff 0%,#f8fcf8 100%);
+      border:1px solid var(--line2);
+    }
+    .objective-card .num{
+      font-family:var(--fontMono);
+      font-weight:600;
+      color:var(--green);
+      font-size:.78rem;
+      margin-bottom:8px;
+    }
+    .objective-card h3{
+      margin:0 0 7px;
+      font-size:.96rem;
+      color:var(--text);
+    }
+    .objective-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.55;
+    }
 
-    .territory-list{display:grid;gap:10px}.territory-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border-radius:16px;background:#fff;border:1px solid var(--line-2)}.territory-item strong{font-size:.86rem}.territory-item span{font-family:var(--font-mono);font-size:.78rem;color:var(--green);font-weight:600}
+    .metric-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+    .metric-card{
+      padding:22px 21px;
+      position:relative;
+      overflow:hidden;
+    }
+    .metric-card::after{
+      content:'';
+      position:absolute;
+      right:-34px;
+      top:-34px;
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      background:rgba(98,163,95,.11);
+    }
+    .metric-card.monthly{
+      background:linear-gradient(180deg,#ffffff 0%,#f5fbf7 100%);
+    }
+    .metric-card.annual{
+      background:linear-gradient(180deg,#ffffff 0%,#f7fbfc 100%);
+    }
+    .metric-label{
+      font-size:.68rem;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      color:var(--muted);
+      font-weight:900;
+      margin-bottom:8px;
+      min-height:2.2em;
+    }
+    .metric-value{
+      font-family:var(--fontHead);
+      font-size:clamp(1.85rem,3vw,2.9rem);
+      line-height:1;
+      color:var(--text);
+      letter-spacing:-.035em;
+      margin-bottom:8px;
+    }
+    .metric-unit{
+      font-size:.9rem;
+      font-family:var(--fontBody);
+      font-weight:800;
+      color:var(--muted);
+    }
+    .metric-sub{
+      color:var(--text2);
+      font-size:.83rem;
+      line-height:1.52;
+    }
+    .progress{
+      height:8px;
+      border-radius:999px;
+      background:#eef4ef;
+      overflow:hidden;
+      margin:13px 0 7px;
+    }
+    .progress span{
+      display:block;
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,var(--green),var(--lake2));
+      border-radius:inherit;
+      transition:width .35s ease;
+    }
+    .progress-meta{
+      font-family:var(--fontMono);
+      font-size:.72rem;
+      color:var(--muted);
+    }
 
-    .iframe-shell{padding:16px}.iframe-box{border:1px solid var(--line);border-radius:24px;overflow:hidden;background:#fff;min-height:620px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.3)}.iframe-box iframe{width:100%;height:680px;border:0;display:block}.iframe-note{margin-top:10px;color:var(--muted);font-size:.8rem;line-height:1.55}
+    .callout{
+      padding:20px 22px;
+      border-radius:24px;
+      border:1px solid rgba(47,125,77,.18);
+      background:linear-gradient(135deg,#fff,#f0faf2);
+      color:var(--text2);
+      font-size:.9rem;
+      line-height:1.72;
+    }
+    .callout strong{color:var(--green)}
 
-    .alert-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.alert{padding:18px;border-radius:20px;border:1px solid var(--line-2);background:#fff}.alert.good{background:linear-gradient(180deg,#fff,#f0faf2);border-color:rgba(47,125,77,.18)}.alert.warn{background:linear-gradient(180deg,#fff,#fff9ed);border-color:rgba(180,122,24,.18)}.alert.info{background:linear-gradient(180deg,#fff,#f1f8fa);border-color:rgba(20,90,122,.16)}.alert small{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;font-weight:900;margin-bottom:6px}.alert.good small{color:var(--green)}.alert.warn small{color:var(--gold)}.alert.info small{color:var(--lake)}.alert strong{display:block;font-size:.95rem;margin-bottom:5px}.alert p{margin:0;color:var(--muted);font-size:.82rem;line-height:1.55}
+    .calendar-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 330px;
+      gap:18px;
+      align-items:start;
+    }
+    .calendar-grid{display:grid;gap:14px}
+    .month-group{
+      border:1px solid var(--line2);
+      border-radius:24px;
+      padding:16px;
+      background:rgba(255,255,255,.72);
+    }
+    .month-group.is-current{
+      border-color:rgba(47,125,77,.42);
+      box-shadow:0 0 0 4px rgba(47,125,77,.08);
+    }
+    .month-group.future{
+      opacity:.88;
+      background:rgba(255,255,255,.58);
+    }
+    .month-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .month-title h3{
+      margin:0;
+      font-family:var(--fontHead);
+      font-size:1.14rem;
+      color:var(--text);
+    }
+    .month-title span{
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      font-weight:900;
+      color:var(--muted);
+    }
+    .event-list{display:grid;gap:9px}
+    .event-card{
+      display:grid;
+      grid-template-columns:76px 1fr auto;
+      gap:12px;
+      align-items:center;
+      padding:12px 13px;
+      border-radius:18px;
+      border:1px solid var(--line2);
+      background:#fff;
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .event-card:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadowSm);
+    }
+    .event-card.done{
+      background:linear-gradient(135deg,rgba(215,244,220,.78),rgba(255,255,255,.82));
+      border-color:rgba(47,125,77,.24);
+    }
+    .event-card.pending{
+      background:rgba(255,255,255,.78);
+    }
+    .event-date{
+      font-family:var(--fontMono);
+      font-size:.82rem;
+      color:var(--green);
+      font-weight:600;
+    }
+    .event-main strong{
+      display:block;
+      color:var(--text);
+      font-size:.9rem;
+      line-height:1.3;
+    }
+    .event-main span{
+      display:block;
+      color:var(--muted);
+      font-size:.78rem;
+      line-height:1.45;
+      margin-top:2px;
+    }
+    .status{
+      display:inline-flex;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.07em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .status.done{
+      background:rgba(47,125,77,.12);
+      color:var(--green);
+      border:1px solid rgba(47,125,77,.18);
+    }
+    .status.pending{
+      background:var(--lakeSoft);
+      color:var(--lake);
+      border:1px solid rgba(20,90,122,.12);
+    }
 
-    .diagnostic{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}.diagnostic .note{padding:17px 18px;border-radius:18px;background:#fff;border:1px solid var(--line-2);color:var(--text-2);font-size:.86rem;line-height:1.65}.footer{padding:34px 0 44px;color:var(--muted);font-size:.84rem;text-align:center}
+    .side-stack{
+      display:grid;
+      gap:14px;
+      position:sticky;
+      top:135px;
+    }
+    .mini-panel{padding:20px}
+    .mini-panel h3{
+      margin:0 0 12px;
+      font-size:1rem;
+      color:var(--text);
+    }
+    .summary-row{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 0;
+      border-bottom:1px solid var(--line2);
+      font-size:.85rem;
+    }
+    .summary-row:last-child{border-bottom:none}
+    .summary-row span{color:var(--muted)}
+    .summary-row strong{
+      font-family:var(--fontMono);
+      color:var(--text);
+      text-align:right;
+    }
 
-    @media(max-width:1160px){.hero,.grid-2,.calendar-layout,.diagnostic{grid-template-columns:1fr}.kpi-grid,.grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-6,.grid-3,.alert-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.side-stack{position:static}.hero-logo-panel{min-height:320px}.program-logo{max-height:240px}.iframe-box{min-height:520px}.iframe-box iframe{height:560px}}
-    @media(max-width:780px){.topbar-inner{align-items:flex-start;flex-direction:column}.nav{margin-left:0;justify-content:flex-start}.brand{min-width:0}.wrap{width:min(100vw - 20px,1360px)}.hero{padding-top:18px}.hero-main,.panel{padding:24px 21px}.kpi-grid,.grid-4,.grid-6,.grid-3,.alert-grid{grid-template-columns:1fr}.event-card{grid-template-columns:1fr;align-items:start}.status{width:max-content}.section-head{align-items:start;flex-direction:column}.period-card{align-items:flex-start}.monthbar-inner{padding-left:0}.iframe-box iframe{height:470px}}
+    .bars{display:grid;gap:10px}
+    .bar-row{
+      display:grid;
+      grid-template-columns:88px 1fr 44px;
+      gap:10px;
+      align-items:center;
+    }
+    .bar-row .bar-label{
+      font-size:.78rem;
+      font-weight:800;
+      color:var(--text2);
+    }
+    .bar-track{
+      height:12px;
+      border-radius:999px;
+      background:#edf3ee;
+      overflow:hidden;
+    }
+    .bar-fill{
+      height:100%;
+      width:0;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--green),var(--green2));
+    }
+    .bar-row .bar-num{
+      font-family:var(--fontMono);
+      font-size:.78rem;
+      color:var(--muted);
+      text-align:right;
+    }
+
+    .territory-list{display:grid;gap:10px}
+    .territory-item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:13px 14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid var(--line2);
+    }
+    .territory-item strong{font-size:.86rem}
+    .territory-item span{
+      font-family:var(--fontMono);
+      font-size:.78rem;
+      color:var(--green);
+      font-weight:600;
+    }
+
+    .alert-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .alert{
+      padding:18px;
+      border-radius:20px;
+      border:1px solid var(--line2);
+      background:#fff;
+    }
+    .alert.good{
+      background:linear-gradient(180deg,#fff,#f0faf2);
+      border-color:rgba(47,125,77,.18);
+    }
+    .alert.warn{
+      background:linear-gradient(180deg,#fff,#fff9ed);
+      border-color:rgba(180,122,24,.18);
+    }
+    .alert.info{
+      background:linear-gradient(180deg,#fff,#f1f8fa);
+      border-color:rgba(20,90,122,.16);
+    }
+    .alert small{
+      display:block;
+      font-size:.68rem;
+      text-transform:uppercase;
+      letter-spacing:.1em;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+    .alert.good small{color:var(--green)}
+    .alert.warn small{color:var(--gold)}
+    .alert.info small{color:var(--lake)}
+    .alert strong{
+      display:block;
+      font-size:.95rem;
+      margin-bottom:5px;
+    }
+    .alert p{
+      margin:0;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.55;
+    }
+
+    .iframe-shell{padding:16px}
+    .iframe-box{
+      border:1px solid var(--line);
+      border-radius:24px;
+      overflow:hidden;
+      background:#fff;
+      min-height:620px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
+    }
+    .iframe-box iframe{
+      width:100%;
+      height:680px;
+      border:0;
+      display:block;
+    }
+    .iframe-note{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.8rem;
+      line-height:1.55;
+    }
+
+    .footer{
+      padding:34px 0 44px;
+      color:var(--muted);
+      font-size:.84rem;
+      text-align:center;
+    }
+
+    @media(max-width:1160px){
+      .hero,
+      .grid-2,
+      .calendar-layout{grid-template-columns:1fr}
+      .metric-grid,
+      .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .alert-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .side-stack{position:static}
+      .hero-logo-panel{min-height:320px}
+      .program-logo{max-height:240px}
+      .iframe-box{min-height:520px}
+      .iframe-box iframe{height:560px}
+    }
+    @media(max-width:780px){
+      .topbar-inner{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .nav{
+        margin-left:0;
+        justify-content:flex-start;
+      }
+      .brand{min-width:0}
+      .wrap{width:min(100vw - 20px,1360px)}
+      .hero{padding-top:18px}
+      .hero-main,
+      .panel{padding:24px 21px}
+      .metric-grid,
+      .grid-4,
+      .alert-grid{grid-template-columns:1fr}
+      .event-card{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+      .status{width:max-content}
+      .section-head{
+        align-items:start;
+        flex-direction:column;
+      }
+      .period-card{align-items:flex-start}
+      .monthbar-inner{padding-left:0}
+      .iframe-box iframe{height:470px}
+    }
   </style>
 </head>
+
 <body>
   <header class="topbar">
     <div class="topbar-inner">
@@ -168,18 +870,21 @@
           <span class="brand-title">Manejo de Tul · Tablero de programa</span>
         </span>
       </a>
+
       <nav class="nav" aria-label="Navegación del tablero">
         <a href="#resumen">Resumen</a>
         <a href="#objetivos">Objetivos</a>
-        <a href="#indicadores">Indicadores</a>
-        <a href="#programacion">Programación 2026</a>
+        <a href="#avance-mensual">Avance mensual</a>
+        <a href="#avance-anual">Avance anual</a>
+        <a href="#programacion">Programación</a>
         <a href="#geoportal">Geoportal</a>
         <a class="home" href="./index.html">Volver al inicio</a>
       </nav>
     </div>
+
     <div class="monthbar">
       <div class="monthbar-inner">
-        <span class="monthbar-label">Período 2026 desde febrero</span>
+        <span class="monthbar-label">Lectura 2026 desde febrero</span>
         <div id="monthPills" aria-label="Selector mensual del programa"></div>
       </div>
     </div>
@@ -190,48 +895,57 @@
       <article class="card hero-main">
         <div class="eyebrow">Programa institucional</div>
         <h1>Manejo de Tul</h1>
+
         <div class="hero-copy">
           <p>En el lago de Atitlán se han identificado dos tipos de tul: <em>Schoenoplectus californicus</em>, comúnmente conocido como tul macho, utilizado para la elaboración de artesanías como petates y sopladores; y <em>Typha domingensis</em>, conocido como tul hembra, utilizado principalmente para amarrar cangrejos de agua dulce.</p>
-          <p>El tul es una planta autóctona que se encuentra en las orillas del Lago y posee cualidades que disminuyen la contaminación, pues sus raíces filtran el agua de manera natural. Además de oxigenar al Lago, el tul ofrece ecosistemas a numerosas especies acuáticas y aves migratorias.</p>
-          <p>Desde el programa se impulsan siembras, resiembras, podas y acciones estratégicas de mantenimiento de tul focalizadas en zonas degradadas o donde la permanencia de las masas tulares naturalmente establecidas ha sido comprometida. Estas intervenciones contribuyen a recuperar cobertura vegetal ribereña, fortalecer hábitats acuáticos y mejorar el seguimiento territorial de las orillas del Lago de Atitlán.</p>
+
+          <p>El tul es una planta autóctona que crece en las orillas del Lago. Sus raíces ayudan a filtrar el agua de manera natural, aportan oxígeno y ofrecen refugio a especies acuáticas y aves migratorias.</p>
+
+          <p>Nuestro programa trabaja para sembrar, resembrar, podar y cuidar el tul en zonas donde esta planta se ha perdido o se encuentra débil. Con estas acciones buscamos recuperar la vegetación de la orilla, proteger la vida del Lago y mantener espacios sanos para la biodiversidad de Atitlán.</p>
         </div>
       </article>
+
       <aside class="card hero-logo-panel">
-        <img class="program-logo" src="./Siembra%20de%20tul.png" alt="Logo del programa Siembra de Tul" onerror="if(!this.dataset.tryText){this.dataset.tryText='1';this.src='./Siembra de tul.png';}else if(!this.dataset.tryAlt){this.dataset.tryAlt='1';this.src='./siembra_de_tul.png';}else{this.src='./extracciontul.jpg';}">
-        <div class="logo-caption"><strong>Identidad del programa</strong>Seguimiento mensual de siembras, resiembras, mantenimiento y monitoreo de masas tulares.</div>
+        <img
+          class="program-logo"
+          src="./Siembra%20de%20tul.png"
+          alt="Logo del programa Siembra de Tul"
+          onerror="if(!this.dataset.tryText){this.dataset.tryText='1';this.src='./Siembra de tul.png';}else if(!this.dataset.tryAlt){this.dataset.tryAlt='1';this.src='./siembra_de_tul.png';}else if(!this.dataset.tryAlt2){this.dataset.tryAlt2='1';this.src='./Siembra_de_tul.png';}else{this.src='./extracciontul.jpg';}"
+        >
+        <div class="logo-caption">
+          <strong>Siembra de Tul</strong>
+          Restauramos y cuidamos masas tulares en puntos importantes de la orilla del Lago de Atitlán.
+        </div>
       </aside>
     </section>
 
     <section class="card period-card" aria-live="polite">
       <div>
-        <strong id="periodTitle">Avance acumulado al presente mes</strong><br>
-        <span id="periodSubtitle">El programa inicia su lectura anual en febrero de 2026.</span>
+        <strong id="periodTitle">Avance al presente mes</strong><br>
+        <span id="periodSubtitle">El programa inicia su seguimiento anual en febrero de 2026.</span>
       </div>
-      <span class="tag" id="periodTag">Período activo</span>
-    </section>
-
-    <section class="section" id="indicadores">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Indicadores principales</div>
-          <h2 class="section-title">Avance mensual del programa</h2>
-          <p class="section-sub">Los indicadores se actualizan según el mes seleccionado y evalúan el progreso acumulado desde febrero, mes de inicio operativo para el programa de tul.</p>
-        </div>
-      </div>
-      <div class="kpi-grid" id="kpiGrid"></div>
+      <span class="tag" id="periodTag">Abril · al presente mes</span>
     </section>
 
     <section class="section">
       <div class="grid-2">
         <article class="card panel">
-          <div class="section-kicker">Lectura institucional</div>
-          <h2 class="section-title">Manejo de masas tulares y restauración ribereña</h2>
-          <div class="prose" id="narrativePanel"></div>
+          <div class="section-kicker">Qué hacemos</div>
+          <h2 class="section-title">Cuidamos el tul para cuidar el Lago</h2>
+          <div class="prose">
+            <p>El tul funciona como una barrera natural en la orilla. Ayuda a limpiar el agua, da refugio a animales y protege zonas donde la vegetación se ha reducido.</p>
+            <p>Por eso el programa realiza jornadas de siembra, resiembra, poda y mantenimiento en sitios priorizados. Cada jornada ayuda a recuperar cobertura vegetal y a conservar espacios importantes para la vida del Lago.</p>
+          </div>
         </article>
+
         <article class="card panel">
-          <div class="section-kicker">Metas de referencia</div>
-          <h2 class="section-title">Indicadores de referencia del programa</h2>
-          <div class="grid-2" id="referenceGrid" style="margin-top:14px"></div>
+          <div class="section-kicker">Cómo leer este tablero</div>
+          <h2 class="section-title">Dos lecturas sencillas</h2>
+          <ul class="plain-list">
+            <li><strong>Avance mensual:</strong> muestra qué se hizo en el mes seleccionado y lo compara con la meta de ese mes.</li>
+            <li><strong>Avance acumulado:</strong> muestra cuánto lleva el programa desde febrero y lo compara con la meta anual.</li>
+            <li><strong>Calendario:</strong> pinta en verde las jornadas ya realizadas y deja como programadas las jornadas futuras.</li>
+          </ul>
         </article>
       </div>
     </section>
@@ -240,15 +954,62 @@
       <div class="section-head">
         <div>
           <div class="section-kicker">Objetivos del programa</div>
-          <h2 class="section-title">Prioridades de intervención y seguimiento</h2>
+          <h2 class="section-title">Lo que buscamos lograr</h2>
+          <p class="section-sub">Estos objetivos guían las jornadas de siembra, mantenimiento y seguimiento territorial del programa.</p>
         </div>
       </div>
+
       <div class="grid-4">
-        <article class="objective-card"><div class="num">01</div><h3>Ampliar cobertura de tul</h3><p>Incrementar la cobertura de tul en las orillas del Lago de Atitlán, priorizando zonas degradadas o con masas tulares comprometidas.</p></article>
-        <article class="objective-card"><div class="num">02</div><h3>Realizar mantenimiento</h3><p>Desarrollar jornadas de mantenimiento, poda y manejo de masas tulares para favorecer su permanencia y funcionalidad ecológica.</p></article>
-        <article class="objective-card"><div class="num">03</div><h3>Actualizar mapeo</h3><p>Actualizar el mapeo de masas tulares mediante fotogrametría para documentar las jornadas de siembra y seguimiento.</p></article>
-        <article class="objective-card"><div class="num">04</div><h3>Fortalecer información territorial</h3><p>Generar capas vectoriales de cobertura histórica de tul para apoyar la toma de decisiones y el monitoreo institucional.</p></article>
+        <article class="objective-card">
+          <div class="num">01</div>
+          <h3>Ampliar la cobertura de tul</h3>
+          <p>Sembrar y fortalecer tul en las orillas del Lago de Atitlán, especialmente en zonas degradadas.</p>
+        </article>
+
+        <article class="objective-card">
+          <div class="num">02</div>
+          <h3>Cuidar las masas tulares</h3>
+          <p>Realizar jornadas de mantenimiento y poda para que el tul permanezca sano y cumpla su función ecológica.</p>
+        </article>
+
+        <article class="objective-card">
+          <div class="num">03</div>
+          <h3>Actualizar el mapeo</h3>
+          <p>Registrar los sitios trabajados para saber dónde se ha sembrado, resembrado o dado mantenimiento.</p>
+        </article>
+
+        <article class="objective-card">
+          <div class="num">04</div>
+          <h3>Mejorar el seguimiento</h3>
+          <p>Generar información territorial que ayude a tomar mejores decisiones para conservar el tul.</p>
+        </article>
       </div>
+    </section>
+
+    <section class="section" id="avance-mensual">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Avance mensual</div>
+          <h2 class="section-title">Avance del mes frente a la meta mensual</h2>
+          <p class="section-sub">Esta sección responde una pregunta simple: ¿qué logró el programa durante el mes seleccionado?</p>
+        </div>
+      </div>
+
+      <div class="metric-grid" id="monthlyGrid"></div>
+      <div class="callout" id="monthlyStory" style="margin-top:14px"></div>
+    </section>
+
+    <section class="section" id="avance-anual">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Avance acumulado</div>
+          <h2 class="section-title">Avance acumulado frente a las metas anuales</h2>
+          <p class="section-sub">Esta sección muestra cuánto lleva el programa desde febrero y cuánto falta para cerrar la meta anual.</p>
+        </div>
+      </div>
+
+      <div class="metric-grid" id="annualGrid"></div>
+      <div class="callout" id="annualStory" style="margin-top:14px"></div>
     </section>
 
     <section class="section" id="programacion">
@@ -256,22 +1017,26 @@
         <div>
           <div class="section-kicker">Programación Manejo de Tul 2026</div>
           <h2 class="section-title">Calendario digital de jornadas</h2>
-          <p class="section-sub">Las actividades realizadas hasta el mes seleccionado aparecen en verde claro translúcido. Las actividades posteriores quedan como programación pendiente.</p>
+          <p class="section-sub">Las jornadas realizadas hasta el mes seleccionado aparecen en verde claro. Las jornadas de mayo a diciembre se muestran solo como programación futura.</p>
         </div>
       </div>
+
       <div class="calendar-layout">
         <div class="card panel">
           <div class="calendar-grid" id="calendarGrid"></div>
         </div>
+
         <aside class="side-stack">
           <article class="card mini-panel">
             <h3>Resumen del período</h3>
             <div id="summaryPanel"></div>
           </article>
+
           <article class="card mini-panel">
-            <h3>Avance por mes</h3>
+            <h3>Jornadas por mes</h3>
             <div class="bars" id="monthlyBars"></div>
           </article>
+
           <article class="card mini-panel">
             <h3>Tipos de actividad</h3>
             <div class="bars" id="activityBars"></div>
@@ -285,12 +1050,13 @@
         <article class="card panel">
           <div class="section-kicker">Cobertura territorial</div>
           <h2 class="section-title">Municipios y sitios atendidos</h2>
-          <p class="section-sub">Lectura acumulada de municipios con acciones de manejo de tul hasta el mes seleccionado.</p>
+          <p class="section-sub">Municipios donde el programa ya realizó actividades durante el período seleccionado.</p>
           <div class="territory-list" id="territoryList" style="margin-top:14px"></div>
         </article>
+
         <article class="card panel">
-          <div class="section-kicker">Seguimiento del período</div>
-          <h2 class="section-title">Semáforos y alertas</h2>
+          <div class="section-kicker">Semáforo del período</div>
+          <h2 class="section-title">Qué va bien y qué sigue</h2>
           <div class="alert-grid" id="alertGrid" style="margin-top:14px"></div>
         </article>
       </div>
@@ -301,48 +1067,45 @@
         <div>
           <div class="section-kicker">Seguimiento territorial</div>
           <h2 class="section-title">Geoportal de manejo de tul</h2>
-          <p class="section-sub">Herramienta geográfica para visualizar información territorial vinculada al seguimiento de masas tulares y acciones del programa.</p>
+          <p class="section-sub">Este visor permite consultar información geográfica relacionada con el manejo y seguimiento del tul.</p>
         </div>
       </div>
+
       <article class="card iframe-shell">
         <div class="iframe-box">
-          <iframe src="https://experience.arcgis.com/experience/a1342628ff9e473f870f0f11ce49bf01/" title="Geoportal de manejo de tul AALA" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <iframe
+            src="https://experience.arcgis.com/experience/a1342628ff9e473f870f0f11ce49bf01/"
+            title="Geoportal de manejo de tul AALA"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
         </div>
-        <div class="iframe-note">Si el visor externo tarda en cargar, se recomienda abrirlo en una pestaña nueva desde el navegador. La sección queda incrustada para mantener la consulta territorial dentro del tablero.</div>
+        <div class="iframe-note">El geoportal se encuentra incrustado para facilitar la consulta territorial dentro del tablero institucional.</div>
       </article>
     </section>
 
-    <section class="section">
-      <div class="diagnostic">
-        <article class="card panel">
-          <div class="section-kicker">Trazabilidad</div>
-          <h2 class="section-title">Lectura técnica del período</h2>
-          <div class="prose" id="tracePanel"></div>
-        </article>
-        <article class="card panel">
-          <div class="section-kicker">Diagnóstico del tablero</div>
-          <h2 class="section-title">Estado de datos</h2>
-          <div class="note">Esta primera versión usa una base mensual preliminar construida para ordenar el tablero institucional. Cuando exista el CSV oficial del programa, los arreglos internos de JavaScript pueden reemplazarse por lectura directa desde <strong>docs/data/tul/</strong>.</div>
-          <div class="note" style="margin-top:10px">No se utiliza la palabra “corte” en pantalla; la lectura se presenta como avance acumulado al mes seleccionado.</div>
-        </article>
-      </div>
-    </section>
-
-    <footer class="footer">Asociación Amigos del Lago de Atitlán · Programa Manejo de Tul · Tablero institucional 2026</footer>
+    <footer class="footer">
+      Asociación Amigos del Lago de Atitlán · Programa Manejo de Tul · Tablero institucional 2026
+    </footer>
   </main>
 
   <script>
     const ACTIVE_YEAR = 2026;
     const START_MONTH = 2;
+    const ACTIVE_MONTH_MAX = 4;
     const DEFAULT_MONTH = 4;
+
     const GOALS = {
       jornadas: 21,
       metros: 2300,
       macollas: 1350,
       mantenimiento: 10,
       mapas: 11,
-      capas: 4
+      capas: 4,
+      municipios: 6
     };
+
     const MONTHS = [
       { num: 2, short: 'Feb', name: 'Febrero' },
       { num: 3, short: 'Mar', name: 'Marzo' },
@@ -356,178 +1119,499 @@
       { num: 11, short: 'Nov', name: 'Noviembre' },
       { num: 12, short: 'Dic', name: 'Diciembre' }
     ];
-    const MONTH_DATA = {
-      2: { jornadas: 2, metros: 230, macollas: 135, sitios: 2, municipios: 2, mantenimiento: 1, mapas: 1, capas: 0, calidad: 82, narrative: 'Febrero abre el año operativo del programa con dos jornadas de siembra en puntos estratégicos del litoral. La prioridad del mes es establecer las primeras macollas y ordenar la línea base territorial para el seguimiento de las masas tulares.' },
-      3: { jornadas: 4, metros: 480, macollas: 282, sitios: 4, municipios: 3, mantenimiento: 2, mapas: 2, capas: 1, calidad: 86, narrative: 'Marzo consolida el arranque del programa con actividades de siembra y resiembra. El avance acumulado permite fortalecer sitios prioritarios y mantener coherencia con la meta anual de cobertura ribereña.' },
-      4: { jornadas: 6, metros: 705, macollas: 414, sitios: 6, municipios: 4, mantenimiento: 3, mapas: 3, capas: 1, calidad: 88, narrative: 'Abril amplía la intervención en San Juan La Laguna y mantiene una tendencia favorable de establecimiento de tul. El programa ya cuenta con una base inicial de sitios atendidos y actividades de mantenimiento complementario.' },
-      5: { jornadas: 8, metros: 930, macollas: 546, sitios: 8, municipios: 5, mantenimiento: 4, mapas: 4, capas: 1, calidad: 89, narrative: 'Mayo incorpora nuevas jornadas en San Pedro La Laguna, especialmente en Playa Dorada. La programación fortalece la cobertura en zonas degradadas y sostiene el avance físico acumulado del programa.' },
-      6: { jornadas: 10, metros: 1145, macollas: 672, sitios: 10, municipios: 5, mantenimiento: 5, mapas: 5, capas: 2, calidad: 90, narrative: 'Junio alcanza el punto medio de la programación anual de jornadas. Las intervenciones mantienen el equilibrio entre siembras nuevas, resiembras y acciones de seguimiento en áreas ribereñas priorizadas.' },
-      7: { jornadas: 12, metros: 1395, macollas: 819, sitios: 12, municipios: 6, mantenimiento: 6, mapas: 6, capas: 2, calidad: 91, narrative: 'Julio fortalece la presencia del programa en Panajachel y San Antonio Palopó. La lectura acumulada muestra mayor cobertura territorial y una ruta clara hacia el cumplimiento de la meta anual.' },
-      8: { jornadas: 14, metros: 1620, macollas: 950, sitios: 14, municipios: 6, mantenimiento: 7, mapas: 7, capas: 2, calidad: 92, narrative: 'Agosto sostiene la dinámica de siembra y seguimiento. Las acciones permiten reforzar sitios ya intervenidos y ampliar la información territorial disponible para el monitoreo de masas tulares.' },
-      9: { jornadas: 16, metros: 1835, macollas: 1077, sitios: 16, municipios: 6, mantenimiento: 8, mapas: 8, capas: 3, calidad: 92, narrative: 'Septiembre concentra acciones en San Antonio Palopó, con énfasis en sitios estratégicos como Tzampetey y Panka. El avance acumulado se acerca a cuatro quintas partes de la meta física anual.' },
-      10: { jornadas: 18, metros: 2045, macollas: 1201, sitios: 18, municipios: 6, mantenimiento: 9, mapas: 9, capas: 3, calidad: 93, narrative: 'Octubre refuerza la recuperación de cobertura en puntos priorizados y suma acciones en Panajachel. La programación entra en su etapa final con avances superiores a tres cuartas partes de las metas principales.' },
-      11: { jornadas: 20, metros: 2250, macollas: 1320, sitios: 20, municipios: 6, mantenimiento: 10, mapas: 10, capas: 4, calidad: 94, narrative: 'Noviembre completa la mayor parte de las jornadas de siembra programadas. El programa queda muy cerca de la meta anual de metros lineales y macollas establecidas, con cobertura territorial consolidada.' },
-      12: { jornadas: 21, metros: 2300, macollas: 1350, sitios: 21, municipios: 6, mantenimiento: 10, mapas: 11, capas: 4, calidad: 95, narrative: 'Diciembre cierra el año con jornada de monitoreo y validación territorial. La lectura anual integra siembras, resiembras, mantenimiento y actualización geográfica para documentar el avance del programa.' }
+
+    const MONTHLY_DATA = {
+      2: {
+        monthly: {
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 230,
+          metrosGoal: 225,
+          macollas: 135,
+          macollasGoal: 132,
+          sitios: 2,
+          sitiosGoal: 2,
+          municipios: 2,
+          municipiosGoal: 2,
+          mantenimiento: 1,
+          mantenimientoGoal: 1
+        },
+        annual: {
+          jornadas: 2,
+          metros: 230,
+          macollas: 135,
+          sitios: 2,
+          municipios: 2,
+          mantenimiento: 1,
+          mapas: 1,
+          capas: 0
+        },
+        monthlyStory: 'En febrero el programa inició con dos jornadas de siembra. Se trabajaron los primeros puntos del año y se dejó instalada una base inicial de tul para recuperar cobertura en la orilla del Lago.',
+        annualStory: 'Al cierre de febrero, el programa ya cumplió el arranque operativo del año. El avance todavía es inicial, pero marca el inicio de la recuperación de sitios priorizados.'
+      },
+
+      3: {
+        monthly: {
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 250,
+          metrosGoal: 245,
+          macollas: 147,
+          macollasGoal: 145,
+          sitios: 2,
+          sitiosGoal: 2,
+          municipios: 2,
+          municipiosGoal: 2,
+          mantenimiento: 1,
+          mantenimientoGoal: 1
+        },
+        annual: {
+          jornadas: 4,
+          metros: 480,
+          macollas: 282,
+          sitios: 4,
+          municipios: 3,
+          mantenimiento: 2,
+          mapas: 2,
+          capas: 1
+        },
+        monthlyStory: 'En marzo se mantuvo el ritmo con dos jornadas más. Además de nuevas siembras, se incluyó resiembra para reforzar sitios donde el tul necesitaba mayor apoyo.',
+        annualStory: 'De febrero a marzo, el programa duplicó las jornadas realizadas y amplió la cobertura territorial. El avance acumulado muestra un crecimiento ordenado y coherente con la programación anual.'
+      },
+
+      4: {
+        monthly: {
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 225,
+          metrosGoal: 225,
+          macollas: 132,
+          macollasGoal: 132,
+          sitios: 2,
+          sitiosGoal: 2,
+          municipios: 1,
+          municipiosGoal: 1,
+          mantenimiento: 1,
+          mantenimientoGoal: 1
+        },
+        annual: {
+          jornadas: 6,
+          metros: 705,
+          macollas: 414,
+          sitios: 6,
+          municipios: 4,
+          mantenimiento: 3,
+          mapas: 3,
+          capas: 1
+        },
+        monthlyStory: 'En abril se realizaron dos nuevas jornadas en San Juan La Laguna. El mes cumplió la meta prevista y ayudó a consolidar la recuperación de sitios importantes para las masas tulares.',
+        annualStory: 'Al presente mes de abril, el programa acumula seis jornadas realizadas, cuatro municipios atendidos y más de setecientos metros lineales trabajados. El avance crece mes a mes sin adelantar datos de meses futuros.'
+      }
     };
+
     const PROGRAM_EVENTS = [
       { no: 1, month: 2, date: '13-feb', municipio: 'Santa Cruz La Laguna', sitio: 'Patalik', actividad: 'Siembra', coords: '423421, 1629737', semillero: 'Santa Catarina Palopó' },
       { no: 2, month: 2, date: '27-feb', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 1', actividad: 'Siembra', coords: '431825, 1620374', semillero: 'Santa Catarina Palopó' },
+
       { no: 3, month: 3, date: '13-mar', municipio: 'San Pablo La Laguna', sitio: 'Las Cristalinas', actividad: 'Resiembra', coords: '416103, 1626975', semillero: 'Mismo lugar' },
       { no: 4, month: 3, date: '27-mar', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 2, 3, 4, 5', actividad: 'Siembra', coords: '431955, 1620392', semillero: 'Santa Catarina Palopó' },
+
       { no: 5, month: 4, date: '10-abr', municipio: 'San Juan La Laguna', sitio: 'Pachites 1', actividad: 'Siembra', coords: '415428, 1626315', semillero: 'San Pablo La Laguna' },
       { no: 6, month: 4, date: '24-abr', municipio: 'San Juan La Laguna', sitio: 'Las Cristalinas', actividad: 'Siembra', coords: '415592, 1626421', semillero: 'San Pablo La Laguna (2 puntos)' },
+
       { no: 7, month: 5, date: '08-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 1', actividad: 'Siembra', coords: '419710, 1623057', semillero: 'Santa Catarina Palopó' },
       { no: 8, month: 5, date: '22-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 2, 3, 4', actividad: 'Siembra', coords: '419942, 1622765', semillero: 'Santa Catarina Palopó' },
+
       { no: 9, month: 6, date: '12-jun', municipio: 'San Antonio Palopó', sitio: 'Chicaman', actividad: 'Siembra', coords: '432879, 1621322', semillero: 'Santa Catarina Palopó' },
       { no: 10, month: 6, date: '26-jun', municipio: 'San Juan La Laguna', sitio: 'Pachites 2', actividad: 'Siembra', coords: '415350, 1626251', semillero: 'San Pablo La Laguna' },
+
       { no: 11, month: 7, date: '10-jul', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 1', actividad: 'Siembra', coords: '433656, 1621863', semillero: 'Santa Catarina Palopó' },
       { no: 12, month: 7, date: '24-jul', municipio: 'Panajachel', sitio: 'Mariposario 2', actividad: 'Siembra', coords: '427622, 1630608', semillero: 'Por validar' },
+
       { no: 13, month: 8, date: '07-ago', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 2', actividad: 'Siembra', coords: '433646, 1621925', semillero: 'Santa Catarina Palopó' },
       { no: 14, month: 8, date: '21-ago', municipio: 'San Juan La Laguna', sitio: 'Pachites 3', actividad: 'Siembra', coords: '415374, 1625879', semillero: 'San Pablo La Laguna' },
+
       { no: 15, month: 9, date: '11-sep', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Piedra del Mono', actividad: 'Siembra', coords: '432772, 1621333', semillero: 'Santa Catarina Palopó' },
       { no: 16, month: 9, date: '25-sep', municipio: 'San Antonio Palopó', sitio: 'Panka', actividad: 'Siembra', coords: '432250, 1620460', semillero: 'Santa Catarina Palopó' },
+
       { no: 17, month: 10, date: '09-oct', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Villa de los Dioses', actividad: 'Siembra', coords: '432701, 1621339', semillero: 'Por validar' },
       { no: 18, month: 10, date: '23-oct', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', coords: '428565, 1630563', semillero: 'Tzanjuyú' },
+
       { no: 19, month: 11, date: '13-nov', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', coords: '428084, 1630878', semillero: 'Por validar' },
       { no: 20, month: 11, date: '27-nov', municipio: 'Panajachel', sitio: 'Mariposario 3', actividad: 'Siembra', coords: '427507, 1630445', semillero: 'Por validar' },
+
       { no: 21, month: 12, date: '04-dic', municipio: 'Por confirmar', sitio: 'Monitoreo anual de masas tulares', actividad: 'Monitoreo', coords: 'Por validar', semillero: 'No aplica' }
     ];
+
     let selectedMonth = DEFAULT_MONTH;
 
-    function fmtNumber(n){ return new Intl.NumberFormat('es-GT').format(n); }
-    function pct(value, goal){ return Math.min(100, Math.round((value / goal) * 100)); }
-    function monthName(num){ return MONTHS.find(m => m.num === num)?.name || ''; }
+    function fmtNumber(n){
+      return new Intl.NumberFormat('es-GT').format(n);
+    }
+
+    function pct(value, goal){
+      if (!goal) return 0;
+      return Math.min(100, Math.round((value / goal) * 100));
+    }
+
+    function monthName(num){
+      return MONTHS.find(m => m.num === num)?.name || '';
+    }
 
     function init(){
       buildMonthPills();
-      renderReference();
       setMonth(DEFAULT_MONTH);
     }
+
     function buildMonthPills(){
       const holder = document.getElementById('monthPills');
-      holder.innerHTML = MONTHS.map(m => `<button class="month-pill ${m.num === DEFAULT_MONTH ? 'present' : ''}" data-month="${m.num}" type="button">${m.short}</button>`).join('');
-      holder.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => setMonth(Number(btn.dataset.month))));
+
+      holder.innerHTML = MONTHS.map(m => {
+        const enabled = m.num <= ACTIVE_MONTH_MAX;
+        const classes = ['month-pill'];
+
+        if (!enabled) classes.push('disabled');
+        if (m.num === DEFAULT_MONTH) classes.push('current');
+
+        return `
+          <button
+            class="${classes.join(' ')}"
+            data-month="${m.num}"
+            type="button"
+            ${enabled ? '' : 'disabled aria-disabled="true" title="Mes pendiente de publicación"'}
+          >
+            ${m.short}
+          </button>
+        `;
+      }).join('');
+
+      holder.querySelectorAll('button:not(.disabled)').forEach(btn => {
+        btn.addEventListener('click', () => setMonth(Number(btn.dataset.month)));
+      });
     }
+
     function setMonth(month){
+      if (month > ACTIVE_MONTH_MAX) return;
+
       selectedMonth = month;
-      document.querySelectorAll('.month-pill').forEach(btn => btn.classList.toggle('active', Number(btn.dataset.month) === month));
-      const data = MONTH_DATA[month];
-      document.getElementById('periodTitle').textContent = `Avance acumulado a ${monthName(month)} ${ACTIVE_YEAR}`;
-      document.getElementById('periodSubtitle').textContent = `Lectura del programa desde febrero hasta ${monthName(month).toLowerCase()}, con ${data.jornadas} jornadas realizadas de ${GOALS.jornadas} programadas.`;
-      document.getElementById('periodTag').textContent = month === DEFAULT_MONTH ? 'Al presente mes' : `Mes seleccionado: ${monthName(month)}`;
-      renderKpis(data);
-      renderNarrative(data, month);
+      const data = MONTHLY_DATA[month];
+
+      document.querySelectorAll('.month-pill').forEach(btn => {
+        btn.classList.toggle('active', Number(btn.dataset.month) === month);
+      });
+
+      document.getElementById('periodTitle').textContent = `Avance a ${monthName(month)} ${ACTIVE_YEAR}`;
+      document.getElementById('periodSubtitle').textContent = `El tablero muestra el avance real de febrero a ${monthName(month).toLowerCase()}. Los meses futuros quedan desactivados para no adelantar resultados.`;
+      document.getElementById('periodTag').textContent = month === DEFAULT_MONTH ? 'Abril · al presente mes' : `${monthName(month)} · mes seleccionado`;
+
+      renderMonthlyMetrics(data.monthly, month);
+      renderAnnualMetrics(data.annual);
+      document.getElementById('monthlyStory').innerHTML = `<strong>Lectura del mes:</strong> ${data.monthlyStory}`;
+      document.getElementById('annualStory').innerHTML = `<strong>Lectura acumulada:</strong> ${data.annualStory}`;
+
       renderCalendar(month);
       renderSummary(data, month);
       renderMonthlyBars(month);
       renderActivityBars(month);
       renderTerritory(month);
       renderAlerts(data, month);
-      renderTrace(data, month);
     }
-    function renderKpis(data){
+
+    function metricCard({mode, label, value, unit, sub, percent}){
+      return `
+        <article class="card metric-card ${mode}">
+          <div class="metric-label">${label}</div>
+          <div class="metric-value">${value} <span class="metric-unit">${unit || ''}</span></div>
+          <div class="metric-sub">${sub}</div>
+          <div class="progress" aria-label="${percent}% de avance">
+            <span style="width:${percent}%"></span>
+          </div>
+          <div class="progress-meta">${percent}% de avance</div>
+        </article>
+      `;
+    }
+
+    function renderMonthlyMetrics(monthly, month){
+      const cumplimientoGeneral = Math.round((
+        pct(monthly.jornadas, monthly.jornadasGoal) +
+        pct(monthly.metros, monthly.metrosGoal) +
+        pct(monthly.macollas, monthly.macollasGoal)
+      ) / 3);
+
       const cards = [
-        { label:'Jornadas de manejo realizadas', value:data.jornadas, suffix:`de ${GOALS.jornadas}`, sub:'Siembra, resiembra, poda, mantenimiento y monitoreo acumulado.', percent:pct(data.jornadas, GOALS.jornadas) },
-        { label:'Metros lineales establecidos', value:fmtNumber(data.metros), suffix:'m', sub:`Meta anual: ${fmtNumber(GOALS.metros)} metros lineales de tul.`, percent:pct(data.metros, GOALS.metros) },
-        { label:'Macollas sembradas o manejadas', value:fmtNumber(data.macollas), suffix:'', sub:`Meta anual: ${fmtNumber(GOALS.macollas)} macollas asociadas a la cobertura de tul.`, percent:pct(data.macollas, GOALS.macollas) },
-        { label:'Sitios de intervención atendidos', value:data.sitios, suffix:'sitios', sub:`Cobertura en ${data.municipios} municipios ribereños al mes seleccionado.`, percent:pct(data.sitios, GOALS.jornadas) },
-        { label:'Acciones de mantenimiento y poda', value:data.mantenimiento, suffix:`de ${GOALS.mantenimiento}`, sub:'Acciones complementarias para favorecer permanencia de masas tulares.', percent:pct(data.mantenimiento, GOALS.mantenimiento) },
-        { label:'Mapas de cobertura actualizada', value:data.mapas, suffix:`de ${GOALS.mapas}`, sub:'Insumos territoriales para documentar cobertura por municipio.', percent:pct(data.mapas, GOALS.mapas) },
-        { label:'Capas vectoriales generadas', value:data.capas, suffix:`de ${GOALS.capas}`, sub:'Información geográfica histórica para seguimiento institucional.', percent:pct(data.capas, GOALS.capas) },
-        { label:'Calidad de registro mensual', value:data.calidad, suffix:'%', sub:'Completitud preliminar de campos de jornada, sitio, municipio y semillero.', percent:data.calidad }
+        {
+          label:'Jornadas realizadas en el mes',
+          value:monthly.jornadas,
+          unit:`de ${monthly.jornadasGoal}`,
+          sub:`Meta de ${monthName(month).toLowerCase()}: ${monthly.jornadasGoal} jornadas.`,
+          percent:pct(monthly.jornadas, monthly.jornadasGoal)
+        },
+        {
+          label:'Metros lineales trabajados en el mes',
+          value:fmtNumber(monthly.metros),
+          unit:'m',
+          sub:`Meta mensual: ${fmtNumber(monthly.metrosGoal)} metros lineales.`,
+          percent:pct(monthly.metros, monthly.metrosGoal)
+        },
+        {
+          label:'Macollas del mes',
+          value:fmtNumber(monthly.macollas),
+          unit:'',
+          sub:`Meta mensual: ${fmtNumber(monthly.macollasGoal)} macollas.`,
+          percent:pct(monthly.macollas, monthly.macollasGoal)
+        },
+        {
+          label:'Sitios atendidos en el mes',
+          value:monthly.sitios,
+          unit:`de ${monthly.sitiosGoal}`,
+          sub:'Puntos de siembra, resiembra o mantenimiento atendidos durante el mes.',
+          percent:pct(monthly.sitios, monthly.sitiosGoal)
+        },
+        {
+          label:'Mantenimiento y poda del mes',
+          value:monthly.mantenimiento,
+          unit:`de ${monthly.mantenimientoGoal}`,
+          sub:'Acciones para mantener sano el tul ya establecido.',
+          percent:pct(monthly.mantenimiento, monthly.mantenimientoGoal)
+        },
+        {
+          label:'Cumplimiento mensual general',
+          value:cumplimientoGeneral,
+          unit:'%',
+          sub:'Promedio simple de cumplimiento de las metas principales del mes.',
+          percent:cumplimientoGeneral
+        }
       ];
-      document.getElementById('kpiGrid').innerHTML = cards.map(c => `
-        <article class="card kpi-card">
-          <div class="kpi-label">${c.label}</div>
-          <div class="kpi-value">${c.value} <span style="font-size:.9rem;font-family:var(--font-body);font-weight:800;color:var(--muted)">${c.suffix}</span></div>
-          <div class="kpi-sub">${c.sub}</div>
-          <div class="progress" aria-label="${c.percent}% de avance"><span style="width:${c.percent}%"></span></div>
-          <div class="progress-meta">${c.percent}% de avance</div>
-        </article>`).join('');
+
+      document.getElementById('monthlyGrid').innerHTML = cards.map(c => {
+        return metricCard({ mode:'monthly', ...c });
+      }).join('');
     }
-    function renderReference(){
-      const refs = [
-        { k:'Meta física', v:'2,300 m', d:'Metros lineales de tul sembrados o manejados en puntos estratégicos del litoral.' },
-        { k:'Material vegetal', v:'1,350', d:'Macollas asociadas al establecimiento y fortalecimiento de cobertura de tul.' },
-        { k:'Mantenimiento', v:'10', d:'Jornadas de mantenimiento y poda estratégica en masas tulares priorizadas.' },
-        { k:'Información territorial', v:'11 mapas', d:'Mapas de cobertura actualizada por municipio y capas vectoriales históricas.' }
+
+    function renderAnnualMetrics(annual){
+      const cards = [
+        {
+          label:'Jornadas acumuladas',
+          value:annual.jornadas,
+          unit:`de ${GOALS.jornadas}`,
+          sub:'Total de jornadas realizadas desde febrero.',
+          percent:pct(annual.jornadas, GOALS.jornadas)
+        },
+        {
+          label:'Metros lineales acumulados',
+          value:fmtNumber(annual.metros),
+          unit:'m',
+          sub:`Meta anual: ${fmtNumber(GOALS.metros)} metros lineales.`,
+          percent:pct(annual.metros, GOALS.metros)
+        },
+        {
+          label:'Macollas acumuladas',
+          value:fmtNumber(annual.macollas),
+          unit:`de ${fmtNumber(GOALS.macollas)}`,
+          sub:'Material vegetal usado para recuperar cobertura de tul.',
+          percent:pct(annual.macollas, GOALS.macollas)
+        },
+        {
+          label:'Sitios atendidos',
+          value:annual.sitios,
+          unit:'sitios',
+          sub:`Puntos trabajados en ${annual.municipios} municipios ribereños.`,
+          percent:pct(annual.sitios, GOALS.jornadas)
+        },
+        {
+          label:'Mantenimiento acumulado',
+          value:annual.mantenimiento,
+          unit:`de ${GOALS.mantenimiento}`,
+          sub:'Jornadas de cuidado, poda o mantenimiento del tul.',
+          percent:pct(annual.mantenimiento, GOALS.mantenimiento)
+        },
+        {
+          label:'Mapas actualizados',
+          value:annual.mapas,
+          unit:`de ${GOALS.mapas}`,
+          sub:'Mapas para conocer mejor la cobertura de tul.',
+          percent:pct(annual.mapas, GOALS.mapas)
+        },
+        {
+          label:'Capas territoriales',
+          value:annual.capas,
+          unit:`de ${GOALS.capas}`,
+          sub:'Información geográfica para seguimiento histórico.',
+          percent:pct(annual.capas, GOALS.capas)
+        },
+        {
+          label:'Municipios con acciones',
+          value:annual.municipios,
+          unit:'municipios',
+          sub:'Cobertura territorial alcanzada al mes seleccionado.',
+          percent:pct(annual.municipios, GOALS.municipios)
+        }
       ];
-      document.getElementById('referenceGrid').innerHTML = refs.map(r => `<article class="reference-card"><small>${r.k}</small><strong>${r.v}</strong><span>${r.d}</span></article>`).join('');
+
+      document.getElementById('annualGrid').innerHTML = cards.map(c => {
+        return metricCard({ mode:'annual', ...c });
+      }).join('');
     }
-    function renderNarrative(data, month){
-      document.getElementById('narrativePanel').innerHTML = `<p>${data.narrative}</p><p>Al mes de ${monthName(month).toLowerCase()}, el tablero muestra ${data.jornadas} jornadas acumuladas, ${fmtNumber(data.metros)} metros lineales de tul establecidos o intervenidos y ${data.sitios} sitios atendidos. Esta lectura permite comunicar el avance mensual del programa en términos de recuperación ribereña, mantenimiento ecológico y generación de información territorial.</p>`;
-    }
+
     function renderCalendar(month){
       const grid = document.getElementById('calendarGrid');
+
       grid.innerHTML = MONTHS.map(m => {
         const events = PROGRAM_EVENTS.filter(e => e.month === m.num);
-        const done = m.num <= month;
-        return `<section class="month-group ${m.num === month ? 'is-current' : ''}">
-          <div class="month-title"><h3>${m.name}</h3><span>${events.length} jornada${events.length === 1 ? '' : 's'}</span></div>
-          <div class="event-list">
-            ${events.map(e => `<article class="event-card ${done ? 'done' : 'pending'}">
-              <div class="event-date">${e.date}</div>
-              <div class="event-main"><strong>${e.municipio} · ${e.sitio}</strong><span>${e.actividad} · Semillero: ${e.semillero}</span><span>Coordenadas: ${e.coords}</span></div>
-              <span class="status ${done ? 'done' : 'pending'}">${done ? 'Realizada' : 'Programada'}</span>
-            </article>`).join('')}
-          </div>
-        </section>`;
+        const done = m.num <= month && m.num <= ACTIVE_MONTH_MAX;
+        const future = m.num > ACTIVE_MONTH_MAX;
+
+        return `
+          <section class="month-group ${m.num === month ? 'is-current' : ''} ${future ? 'future' : ''}">
+            <div class="month-title">
+              <h3>${m.name}</h3>
+              <span>${events.length} jornada${events.length === 1 ? '' : 's'}</span>
+            </div>
+
+            <div class="event-list">
+              ${events.map(e => `
+                <article class="event-card ${done ? 'done' : 'pending'}">
+                  <div class="event-date">${e.date}</div>
+
+                  <div class="event-main">
+                    <strong>${e.municipio} · ${e.sitio}</strong>
+                    <span>${e.actividad} · Semillero: ${e.semillero}</span>
+                    <span>Coordenadas: ${e.coords}</span>
+                  </div>
+
+                  <span class="status ${done ? 'done' : 'pending'}">${done ? 'Realizada' : 'Programada'}</span>
+                </article>
+              `).join('')}
+            </div>
+          </section>
+        `;
       }).join('');
     }
+
     function renderSummary(data, month){
-      const totalScheduled = PROGRAM_EVENTS.length;
-      const future = PROGRAM_EVENTS.filter(e => e.month > month).length;
-      const doneEvents = PROGRAM_EVENTS.filter(e => e.month <= month);
-      const next = PROGRAM_EVENTS.find(e => e.month > month);
-      const uniqueMunicipios = new Set(doneEvents.map(e => e.municipio).filter(v => !v.includes('Por confirmar'))).size;
+      const doneEvents = PROGRAM_EVENTS.filter(e => e.month <= month && e.month <= ACTIVE_MONTH_MAX);
+      const future = PROGRAM_EVENTS.filter(e => e.month > ACTIVE_MONTH_MAX).length;
+      const next = PROGRAM_EVENTS.find(e => e.month > ACTIVE_MONTH_MAX);
+      const uniqueMunicipios = new Set(
+        doneEvents
+          .map(e => e.municipio)
+          .filter(v => !v.includes('Por confirmar'))
+      ).size;
+
       document.getElementById('summaryPanel').innerHTML = `
-        <div class="summary-row"><span>Inicio de lectura</span><strong>Febrero</strong></div>
+        <div class="summary-row"><span>Inicio de seguimiento</span><strong>Febrero</strong></div>
         <div class="summary-row"><span>Mes seleccionado</span><strong>${monthName(month)}</strong></div>
-        <div class="summary-row"><span>Jornadas realizadas</span><strong>${data.jornadas}</strong></div>
-        <div class="summary-row"><span>Jornadas pendientes</span><strong>${future}</strong></div>
+        <div class="summary-row"><span>Jornadas realizadas</span><strong>${data.annual.jornadas}</strong></div>
         <div class="summary-row"><span>Municipios atendidos</span><strong>${uniqueMunicipios}</strong></div>
-        <div class="summary-row"><span>Próxima jornada</span><strong>${next ? next.date : 'Cierre anual'}</strong></div>
-        <div class="summary-row"><span>Programación anual</span><strong>${totalScheduled}</strong></div>`;
+        <div class="summary-row"><span>Sitios trabajados</span><strong>${data.annual.sitios}</strong></div>
+        <div class="summary-row"><span>Jornadas futuras visibles</span><strong>${future}</strong></div>
+        <div class="summary-row"><span>Próxima jornada programada</span><strong>${next ? next.date : 'Por definir'}</strong></div>
+      `;
     }
+
     function renderMonthlyBars(month){
-      const max = Math.max(...MONTHS.map(m => PROGRAM_EVENTS.filter(e => e.month === m.num).length));
+      const max = Math.max(
+        ...MONTHS.map(m => PROGRAM_EVENTS.filter(e => e.month === m.num).length)
+      );
+
       document.getElementById('monthlyBars').innerHTML = MONTHS.map(m => {
         const count = PROGRAM_EVENTS.filter(e => e.month === m.num).length;
-        const active = m.num <= month;
-        return `<div class="bar-row" style="opacity:${active ? 1 : .42}"><div class="bar-label">${m.short}</div><div class="bar-track"><div class="bar-fill" style="width:${(count / max) * 100}%"></div></div><div class="bar-num">${count}</div></div>`;
+        const active = m.num <= ACTIVE_MONTH_MAX;
+        const alreadyReached = m.num <= month && m.num <= ACTIVE_MONTH_MAX;
+
+        return `
+          <div class="bar-row" style="opacity:${active ? 1 : .38}">
+            <div class="bar-label">${m.short}</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${(count / max) * 100}%; opacity:${alreadyReached ? 1 : .45}"></div>
+            </div>
+            <div class="bar-num">${count}</div>
+          </div>
+        `;
       }).join('');
     }
+
     function renderActivityBars(month){
-      const done = PROGRAM_EVENTS.filter(e => e.month <= month);
-      const counts = done.reduce((acc, e) => { acc[e.actividad] = (acc[e.actividad] || 0) + 1; return acc; }, {});
-      counts['Poda / mantenimiento'] = MONTH_DATA[month].mantenimiento;
+      const done = PROGRAM_EVENTS.filter(e => e.month <= month && e.month <= ACTIVE_MONTH_MAX);
+
+      const counts = done.reduce((acc, e) => {
+        acc[e.actividad] = (acc[e.actividad] || 0) + 1;
+        return acc;
+      }, {});
+
+      counts['Poda / mantenimiento'] = MONTHLY_DATA[month].annual.mantenimiento;
+
       const entries = Object.entries(counts);
       const max = Math.max(...entries.map(([,v]) => v), 1);
-      document.getElementById('activityBars').innerHTML = entries.map(([label, value]) => `<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${(value / max) * 100}%"></div></div><div class="bar-num">${value}</div></div>`).join('');
+
+      document.getElementById('activityBars').innerHTML = entries.map(([label, value]) => `
+        <div class="bar-row">
+          <div class="bar-label">${label}</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${(value / max) * 100}%"></div>
+          </div>
+          <div class="bar-num">${value}</div>
+        </div>
+      `).join('');
     }
+
     function renderTerritory(month){
-      const done = PROGRAM_EVENTS.filter(e => e.month <= month && !e.municipio.includes('Por confirmar'));
-      const counts = done.reduce((acc, e) => { acc[e.municipio] = (acc[e.municipio] || 0) + 1; return acc; }, {});
+      const done = PROGRAM_EVENTS.filter(e => {
+        return e.month <= month &&
+          e.month <= ACTIVE_MONTH_MAX &&
+          !e.municipio.includes('Por confirmar');
+      });
+
+      const counts = done.reduce((acc, e) => {
+        acc[e.municipio] = (acc[e.municipio] || 0) + 1;
+        return acc;
+      }, {});
+
       const entries = Object.entries(counts).sort((a,b) => b[1] - a[1]);
-      document.getElementById('territoryList').innerHTML = entries.map(([name, count]) => `<div class="territory-item"><strong>${name}</strong><span>${count} jornada${count === 1 ? '' : 's'}</span></div>`).join('') || '<div class="territory-item"><strong>Sin registros</strong><span>0</span></div>';
+
+      document.getElementById('territoryList').innerHTML = entries.map(([name, count]) => `
+        <div class="territory-item">
+          <strong>${name}</strong>
+          <span>${count} jornada${count === 1 ? '' : 's'}</span>
+        </div>
+      `).join('') || '<div class="territory-item"><strong>Sin registros</strong><span>0</span></div>';
     }
+
     function renderAlerts(data, month){
-      const next = PROGRAM_EVENTS.find(e => e.month > month);
-      const semilleroPendiente = PROGRAM_EVENTS.filter(e => e.month <= month && e.semillero === 'Por validar').length;
-      const avance = pct(data.metros, GOALS.metros);
+      const next = PROGRAM_EVENTS.find(e => e.month > ACTIVE_MONTH_MAX);
+      const annualPct = pct(data.annual.jornadas, GOALS.jornadas);
+      const monthlyPct = pct(data.monthly.jornadas, data.monthly.jornadasGoal);
+
       const alertas = [
-        { type:'good', k:'Avance físico', t:`${avance}% de meta anual`, p:`El programa acumula ${fmtNumber(data.metros)} metros lineales frente a una meta de ${fmtNumber(GOALS.metros)} metros.` },
-        { type: semilleroPendiente ? 'warn' : 'good', k:'Validación de registros', t: semilleroPendiente ? `${semilleroPendiente} registro(s) por validar` : 'Registros completos', p: semilleroPendiente ? 'Hay jornadas realizadas con semillero pendiente de confirmación.' : 'Las jornadas realizadas tienen información principal registrada.' },
-        { type:'info', k:'Próxima acción', t: next ? `${next.date} · ${next.municipio}` : 'Cierre de programación', p: next ? `${next.actividad} programada en ${next.sitio}.` : 'El calendario anual se encuentra cubierto al mes seleccionado.' }
+        {
+          type:'good',
+          k:'Meta mensual',
+          t:`${monthlyPct}% cumplida`,
+          p:`En ${monthName(month).toLowerCase()} se completaron ${data.monthly.jornadas} de ${data.monthly.jornadasGoal} jornadas previstas.`
+        },
+        {
+          type:'info',
+          k:'Avance anual',
+          t:`${annualPct}% de jornadas anuales`,
+          p:`Desde febrero se han realizado ${data.annual.jornadas} de ${GOALS.jornadas} jornadas programadas para el año.`
+        },
+        {
+          type:'warn',
+          k:'Siguiente paso',
+          t: next ? `${next.date} · ${next.municipio}` : 'Programación completa',
+          p: next ? `La próxima actividad programada será ${next.actividad.toLowerCase()} en ${next.sitio}.` : 'No hay actividades futuras pendientes en el calendario.'
+        }
       ];
-      document.getElementById('alertGrid').innerHTML = alertas.map(a => `<article class="alert ${a.type}"><small>${a.k}</small><strong>${a.t}</strong><p>${a.p}</p></article>`).join('');
+
+      document.getElementById('alertGrid').innerHTML = alertas.map(a => `
+        <article class="alert ${a.type}">
+          <small>${a.k}</small>
+          <strong>${a.t}</strong>
+          <p>${a.p}</p>
+        </article>
+      `).join('');
     }
-    function renderTrace(data, month){
-      const done = PROGRAM_EVENTS.filter(e => e.month <= month);
-      const last = done[done.length - 1];
-      const pendingCoords = done.filter(e => e.coords === 'Por validar').length;
-      document.getElementById('tracePanel').innerHTML = `<p>La lectura del período corresponde al avance acumulado desde febrero hasta ${monthName(month).toLowerCase()} de ${ACTIVE_YEAR}. La última jornada registrada para el período seleccionado es <strong>${last ? `${last.date}, ${last.municipio}, ${last.sitio}` : 'sin registro'}</strong>.</p><p>El tablero organiza ${done.length} actividades realizadas del calendario digital, con ${data.municipios} municipios reportados en los indicadores mensuales y una calidad preliminar de registro de ${data.calidad}%.</p><p>${pendingCoords ? `Hay ${pendingCoords} registro(s) con coordenadas pendientes de validación.` : 'Las coordenadas principales de las jornadas realizadas se encuentran registradas para esta versión preliminar.'}</p>`;
-    }
+
     document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
