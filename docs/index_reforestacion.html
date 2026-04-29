@@ -1722,7 +1722,6 @@
         <div class="hero-copy">
           <div class="hero-eyebrow">Programa · restauración forestal</div>
           <h1>Reforestando Atitlán</h1>
-          <div class="hero-period-pill" id="heroPeriodPill">—</div>
           <p class="hero-lead">Un tablero para seguir el <strong>monitoreo de reforestaciones</strong>, la <strong>siembra anual</strong>, la <strong>consolidación del monitoreo digital</strong> y la <strong>producción del vivero AALA</strong>. La lectura usa el mismo lenguaje visual de Atitlán Recicla y presenta cada meta como acumulado real frente a su meta anual.</p>
           <div class="hero-tag-row">
             <span class="hero-tag">Sololá y cuenca del Lago de Atitlán</span>
@@ -1731,7 +1730,6 @@
           </div>
           <div class="hero-grid" id="heroStats"></div>
           <div class="hero-quick-row">
-            <div id="programStatus"></div>
             <div id="programQuick"></div>
           </div>
         </div>
@@ -1784,27 +1782,6 @@
           <div class="goal-card"><small>Vivero AALA</small><strong>10,000 plantas de 10 especies</strong><div class="goal-meta">Temporalidad: enero a noviembre de 2026.</div><div class="goal-progress">Mostramos la producción acumulada de plantas nativas disponibles para restauración.</div></div>
         </div>
       </article>
-    </section>
-
-    <section class="section">
-      <div class="toolbar">
-        <article class="card filter">
-          <label for="periodSelect">Período</label>
-          <select id="periodSelect"></select>
-        </article>
-        <article class="card filter">
-          <label>Corte de lectura</label>
-          <div class="pill" id="cutoffPill">—</div>
-        </article>
-        <article class="card filter">
-          <label>Último período publicado</label>
-          <div class="pill" id="latestPill">—</div>
-        </article>
-        <article class="card filter">
-          <label>Fuentes</label>
-          <div class="pill" id="sourcePill">Registros mensuales del programa</div>
-        </article>
-      </div>
     </section>
 
     <section class="section">
@@ -2227,8 +2204,9 @@ function buildMonthControls(){
   const pills = document.getElementById('monthPills');
   const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   const rowMap = new Map(state.totalRows.map(r => [safeNumber(r.mes_num), r]));
-  select.innerHTML = '';
-  pills.innerHTML = '';
+
+  if (select) select.innerHTML = '';
+  if (pills) pills.innerHTML = '';
 
   monthNames.forEach((label, idx) => {
     const monthNum = idx + 1;
@@ -2236,7 +2214,7 @@ function buildMonthControls(){
     const period = row?.periodo_clave || `${ACTIVE_YEAR}-${String(monthNum).padStart(2,'0')}`;
     const disabled = monthNum > ACTIVE_MONTH_MAX || !row;
 
-    if (row) {
+    if (row && select) {
       const opt = document.createElement('option');
       opt.value = period;
       opt.textContent = `${label} ${ACTIVE_YEAR}`;
@@ -2245,15 +2223,19 @@ function buildMonthControls(){
       select.appendChild(opt);
     }
 
-    const btn = document.createElement('button');
-    btn.className = 'month-pill' + (period === state.selectedPeriod ? ' active' : '');
-    btn.textContent = monthShort(label);
-    btn.disabled = disabled;
-    if (!disabled) btn.addEventListener('click', () => setPeriod(period));
-    pills.appendChild(btn);
+    if (pills) {
+      const btn = document.createElement('button');
+      btn.className = 'month-pill' + (period === state.selectedPeriod ? ' active' : '');
+      btn.textContent = monthShort(label);
+      btn.disabled = disabled;
+      if (!disabled) btn.addEventListener('click', () => setPeriod(period));
+      pills.appendChild(btn);
+    }
   });
 
-  select.onchange = e => setPeriod(e.target.value);
+  if (select) {
+    select.onchange = e => setPeriod(e.target.value);
+  }
 }
 
 function setPeriod(period){
@@ -2264,21 +2246,17 @@ function setPeriod(period){
 }
 
 function renderHero(row){
-  document.getElementById('heroPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
-  document.getElementById('cutoffPill').textContent = `${row.mes_label} ${row.anio}`;
-  document.getElementById('latestPill').textContent = `Marzo 2026`;
-  document.getElementById('sourcePill').textContent = sourceLabel(row.fuente_texto);
-
   const stats = [
     ['Áreas monitoreadas', formatByUnit(row.ha_monitoreadas_kpi_acum, 'ha')],
     ['Árboles establecidos', formatByUnit(row.arboles_sembrados_acum, 'árboles')],
     ['Sistema digital', `${formatPercent(row.pct_meta_sig)} de avance`],
     ['Plantas en vivero', formatByUnit(row.plantas_netas_acum, 'plantas')]
   ];
-  document.getElementById('heroStats').innerHTML = stats.map(([label,val]) => `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(val)}</strong></div>`).join('');
 
-  const status = overallStatus(row);
-  document.getElementById('programStatus').innerHTML = statusBadge(status.label, status.status);
+  document.getElementById('heroStats').innerHTML = stats
+    .map(([label,val]) => `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(val)}</strong></div>`)
+    .join('');
+
   document.getElementById('programQuick').innerHTML = `
     <div class="mini-item"><span class="muted">Cartografía acumulada</span><strong>${escapeHtml(formatPercent(row.pct_cartografia_acum))}</strong></div>
     <div class="mini-item"><span class="muted">Especies activas</span><strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))} / ${escapeHtml(formatNumber(row.meta_especies,0))}</strong></div>
