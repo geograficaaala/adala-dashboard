@@ -1039,15 +1039,24 @@
       color: var(--muted);
       font-weight: 600;
     }
-    .metric-note {
-      grid-column: 2 / 4;
-      text-align: center;
+    .metric-temporality {
+      display: block;
+      margin-top: 7px;
       font-size: .75rem;
-      color: var(--lake);
+      color: var(--lake-light);
       font-style: italic;
-      padding: 6px 4px 10px;
       line-height: 1.5;
-      font-weight: 600;
+      font-weight: 700;
+    }
+    .metric-note {
+      grid-column: 1 / 2;
+      text-align: left;
+      font-size: .75rem;
+      color: var(--lake-light);
+      font-style: italic;
+      padding: 4px 0 0;
+      line-height: 1.5;
+      font-weight: 700;
     }
 
     .btn {
@@ -1831,6 +1840,22 @@ function coverageColor(field){
   const index = Math.max(0, coverageFields.indexOf(field));
   return COVERAGE_COLORS[index % COVERAGE_COLORS.length];
 }
+function coverageFieldLabel(field){
+  const labels = {
+    'Fortalecimiento': 'Fortalecimiento Municipal'
+  };
+  return labels[field] || field;
+}
+function normalizeCoverageMunicipio(value){
+  return String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
+function isExcludedCoverageMunicipio(value){
+  return normalizeCoverageMunicipio(value) === 'santa catarina ixtahuacan';
+}
 function updateCoverageButtons(){
   document.querySelectorAll('.coverage-filter').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.field === activeCoverageField);
@@ -1858,7 +1883,7 @@ function renderCoverageFilters(fields){
     wrap.innerHTML = '<button class="coverage-filter" type="button" disabled>No hay filtros disponibles</button>';
     return;
   }
-  wrap.innerHTML = fields.map(field => `<button class="coverage-filter" type="button" data-field="${field}">${field}</button>`).join('');
+  wrap.innerHTML = fields.map(field => `<button class="coverage-filter" type="button" data-field="${field}">${coverageFieldLabel(field)}</button>`).join('');
   wrap.querySelectorAll('.coverage-filter').forEach(btn => {
     btn.addEventListener('click', () => {
       const field = btn.dataset.field || '';
@@ -1878,9 +1903,12 @@ function applyCoverageField(field){
   activeCoverageField = field;
   clearCoverageLayer(false);
 
+  const fieldLabel = coverageFieldLabel(field);
   const matches = coverageGeojson.features.filter(feature => {
+    const municipio = feature?.properties?.municipio || '';
+    if (isExcludedCoverageMunicipio(municipio)) return false;
     if (field === 'Siembra y poda de Tul' &&
-        (feature?.properties?.municipio||'').toLowerCase().includes('nahua')) return false;
+        normalizeCoverageMunicipio(municipio).includes('nahua')) return false;
     return normalizeCoverageValue(feature?.properties?.[field]);
   });
   const color = coverageColor(field);
@@ -1901,7 +1929,7 @@ function applyCoverageField(field){
     onEachFeature(feature, layer){
       const municipio = safe(feature?.properties?.municipio);
       layer.bindTooltip(municipio, { sticky: true, direction: 'top', className: 'coverage-tooltip' });
-      layer.bindPopup(`<strong>${municipio}</strong><br>${field}: 1`);
+      layer.bindPopup(`<strong>${municipio}</strong><br>${fieldLabel}: 1`);
     }
   }).addTo(coverageMap);
 
@@ -2599,12 +2627,17 @@ async function loadTul(cfg){
 /* ────────────────────────────────
    RENDER MÉTRICAS
 ──────────────────────────────── */
-function metricRow(m){
+function metricRow(m, index = 0){
+  const objectiveNumber = `${index + 1}.`;
+  const temporalityMarkup = m.temporality
+    ? `<span class="metric-temporality">(${m.temporality})</span>`
+    : '';
+
   /* Indicador inactivo al presente mes (ej. siembra fuera de temporada) */
   if (m.inactive) {
     return `
     <div class="metric-row">
-      <div class="mname">${m.label}</div>
+      <div class="mname">${objectiveNumber} ${m.label}${temporalityMarkup}</div>
       <div class="mcol-acum" style="grid-column:2/-1">
         <div class="metric-primary" style="color:var(--muted);font-style:italic">
           Indicador no activo al presente mes · se activa a partir de julio
@@ -2636,7 +2669,7 @@ function metricRow(m){
 
   return `
     <div class="metric-row">
-      <div class="mname">${m.label}</div>
+      <div class="mname">${objectiveNumber} ${m.label}${temporalityMarkup}</div>
       <div class="mcol-acum">
         <div class="metric-primary">${acumLabel}</div>
         <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
@@ -2646,7 +2679,6 @@ function metricRow(m){
         <div class="metric-primary">${pctLabel}</div>
         <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
       </div>
-      ${m.temporality ? `<div class="metric-note">${m.temporality}</div>` : ''}
     </div>
   `;
 }
@@ -2682,7 +2714,7 @@ function programCard(p){
           <span>Avance acumulado hasta el mes de marzo / Meta anual</span>
           <span>% de avance acumulado hasta el mes de marzo con respecto a meta anual</span>
         </div>
-        ${p.metrics.map(metricRow).join('')}
+        ${p.metrics.map((metric, index) => metricRow(metric, index)).join('')}
       </div>
       <div class="program-footer">
         <a class="btn" href="${p.dashboard}">
