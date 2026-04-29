@@ -1503,7 +1503,7 @@
     }
     @media (max-width: 900px){
       .annual-goals-grid.reforest-grid{grid-template-columns:1fr!important}
-      .map-frame,.map-frame iframe{min-height:420px;height:420px}
+      .map-frame,.map-frame iframe{min-height: 720px;height: 720px}
     }
 
 
@@ -1637,7 +1637,29 @@
       .footer-mark{justify-content:flex-start}
     }
 
-  </style>
+  
+/* Ajuste solicitado: mapas más altos para evitar navegación con scroll interno */
+.portal-frame,
+.map-frame,
+.arcgis-frame,
+.iframe-map,
+.map-embed iframe,
+.portal-card iframe,
+iframe[src*="arcgis"],
+iframe[src*="experience"],
+iframe[src*="survey123"],
+iframe[src*="maps"] {
+  min-height: 820px !important;
+}
+
+.map-embed,
+.portal-card,
+.map-panel,
+.portal-panel {
+  min-height: 860px !important;
+}
+
+</style>
 
 </head>
 <body class="view-full">
@@ -1690,7 +1712,7 @@
       <div class="exec-status-card">
         <div>
           <div class="es-label">Estado del programa</div>
-          <div class="es-title">Reforestando Atitlán</div>
+          <div class="es-title">Reforestando Atitlán para un Futuro Verde</div>
           <div class="exec-status-badge" id="execStatusBadge">Cargando…</div>
         </div>
         <div class="exec-period-info" id="execPeriodInfo">— período —</div>
@@ -1720,18 +1742,10 @@
     <section class="hero" id="resumen">
       <div class="card hero-main">
         <div class="hero-copy">
-          <div class="hero-eyebrow">Programa · restauración forestal</div>
-          <h1>Reforestando Atitlán</h1>
-          <p class="hero-lead">Un tablero para seguir el <strong>monitoreo de reforestaciones</strong>, la <strong>siembra anual</strong>, la <strong>consolidación del monitoreo digital</strong> y la <strong>producción del vivero AALA</strong>. La lectura usa el mismo lenguaje visual de Atitlán Recicla y presenta cada meta como acumulado real frente a su meta anual.</p>
-          <div class="hero-tag-row">
-            <span class="hero-tag">Sololá y cuenca del Lago de Atitlán</span>
-            <span class="hero-tag">Seguimiento 2026</span>
-            <span class="hero-tag">Monitoreo · siembra · vivero · tecnología</span>
-          </div>
-          <div class="hero-grid" id="heroStats"></div>
-          <div class="hero-quick-row">
-            <div id="programQuick"></div>
-          </div>
+          <h1>Reforestando Atitlán para un Futuro Verde</h1>
+          <p class="hero-lead">El proyecto <strong>"Reforestando Atitlán para un Futuro Verde"</strong> es una iniciativa de reforestación y restauración ecológica enfocada en la recuperación de áreas degradadas en la Cuenca del Lago de Atitlán. La cuenca, hogar de más de 256,000 habitantes, enfrenta problemas de deforestación, erosión de suelos y pérdida de biodiversidad debido a la presión agrícola, incendios forestales y el crecimiento urbano. Esta iniciativa tiene como objetivo reforestar la cuenca con especies nativas adaptadas al entorno local, restaurando las funciones ecológicas del bosque, promoviendo la conservación de la biodiversidad y asegurando la sostenibilidad de los recursos naturales de los cuales dependen las comunidades locales.</p>
+          <p class="hero-lead">Desde su inicio en 2016, el proyecto ha logrado la plantación de más de 1.6 millones de árboles y se proyecta que al 2027 el número de árboles plantados alcance los 2.13 millones, abarcando alrededor de 1,000 hectáreas. Para maximizar el impacto ambiental, el programa utiliza especies nativas como el pino, ciprés y aliso, lo cual no solo facilita la adaptación al entorno, sino que también contribuye a la preservación de la flora y fauna locales, apoyando la creación de corredores biológicos en la región. Con una tasa de supervivencia promedio del 71.7%, el proyecto ha demostrado ser efectivo en la restauración de áreas degradadas, estabilización de suelos y protección de fuentes hídricas.</p>
+        </div>
         </div>
       </div>
       <aside class="card hero-side" aria-label="Identidad visual del programa">
@@ -1854,17 +1868,7 @@
         <div class="map-note">Si algún navegador bloquea el embebido de uno de los mapas, usa el botón de apertura directa para verlo en pestaña nueva.</div>
       </article>
     </section>
-
-
-    <section class="section">
-      <article class="card panel panel-accent">
-        <h3>Tabla operativa por período</h3>
-        <p class="sub">Resumen mensual con acumulados, semáforos y actividad del programa.</p>
-        <div class="tbl-wrap" id="tablePanel"></div>
-      </article>
-    </section>
-
-    <section class="section">
+<section class="section">
       <article class="card diagnostic" id="diagnosticPanel"></article>
     </section>
   </div>
@@ -2246,22 +2250,8 @@ function setPeriod(period){
 }
 
 function renderHero(row){
-  const stats = [
-    ['Áreas monitoreadas', formatByUnit(row.ha_monitoreadas_kpi_acum, 'ha')],
-    ['Árboles establecidos', formatByUnit(row.arboles_sembrados_acum, 'árboles')],
-    ['Sistema digital', `${formatPercent(row.pct_meta_sig)} de avance`],
-    ['Plantas en vivero', formatByUnit(row.plantas_netas_acum, 'plantas')]
-  ];
-
-  document.getElementById('heroStats').innerHTML = stats
-    .map(([label,val]) => `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(val)}</strong></div>`)
-    .join('');
-
-  document.getElementById('programQuick').innerHTML = `
-    <div class="mini-item"><span class="muted">Cartografía acumulada</span><strong>${escapeHtml(formatPercent(row.pct_cartografia_acum))}</strong></div>
-    <div class="mini-item"><span class="muted">Especies activas</span><strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))} / ${escapeHtml(formatNumber(row.meta_especies,0))}</strong></div>
-    <div class="mini-item"><span class="muted">Mes con datos</span><strong>${row.tiene_datos_mes === 'True' || row.tiene_datos_mes === 'true' ? 'Sí' : 'No'}</strong></div>
-  `;
+  // El encabezado del programa usa texto institucional fijo.
+  // No se muestran tarjetas, chips ni botones de indicadores en esta sección.
 }
 
 function overallStatus(row){
@@ -2383,20 +2373,7 @@ function renderAlerts(row){
 }
 
 function renderTable(){
-  const rows = state.totalRows.map(r => `
-    <tr>
-      <td>${escapeHtml(r.mes_label)} ${escapeHtml(r.anio)}</td>
-      <td>${escapeHtml(formatByUnit(r.ha_monitoreadas_kpi_acum,'ha',2))}</td>
-      <td>${escapeHtml(formatByUnit(r.arboles_sembrados_acum,'árboles'))}</td>
-      <td>${escapeHtml(formatNumber(r.aporte_sig_acum,2))}</td>
-      <td>${escapeHtml(formatByUnit(r.plantas_netas_acum,'plantas'))}</td>
-      <td>${escapeHtml(formatNumber(r.especies_acumuladas_proxy,0))}</td>
-      <td>${escapeHtml(r.semaforo_ha || '—')}</td>
-      <td>${escapeHtml(r.semaforo_arboles || '—')}</td>
-      <td>${escapeHtml(r.semaforo_sig || '—')}</td>
-      <td>${escapeHtml(r.semaforo_plantas || '—')}</td>
-    </tr>`).join('');
-  document.getElementById('tablePanel').innerHTML = `<table><thead><tr><th>Período</th><th>Ha monitoreadas</th><th>Árboles acumulados</th><th>Sistema digital</th><th>Plantas acumuladas</th><th>Especies</th><th>Semáforo ha</th><th>Semáforo siembra</th><th>Semáforo sistema digital</th><th>Semáforo vivero</th></tr></thead><tbody>${rows}</tbody></table>`;
+  // Se eliminó la tabla operativa por período del tablero.
 }
 
 function renderDiagnostics(row){
