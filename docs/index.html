@@ -1361,7 +1361,6 @@
       .section-card,
       .chart-card,
       .chart-full,
-      .matrix-card,
       .program-card {
         padding: 24px 22px;
       }
@@ -1562,7 +1561,6 @@
     <button class="nav-tab active" data-page="resumen" role="tab">Resumen</button>
     <button class="nav-tab" data-page="programas" role="tab">Programas y proyectos</button>
     <button class="nav-tab" data-page="grafica" role="tab">Comparativo</button>
-    <button class="nav-tab" data-page="matriz" role="tab">Matriz</button>
   </nav>
 </header>
 
@@ -1632,7 +1630,7 @@
             </article>
             <article class="story-point">
               <span>Lectura rápida</span>
-              <p>El comparativo y la matriz ayudan a ver avances y prioridades.</p>
+              <p>El comparativo ayuda a ver avances y prioridades.</p>
             </article>
           </div>
         </div>
@@ -1650,7 +1648,6 @@
         <div class="capsule-stack" aria-label="Guía rápida de lectura">
           <div class="capsule">El resumen ejecutivo condensa el estado actual de los programas y proyectos.</div>
           <div class="capsule">El comparativo permite ver diferencias de avance de forma inmediata.</div>
-          <div class="capsule">La matriz concentra el estado resumido de programas y proyectos para una lectura detallada.</div>
         </div>
       </article>
 
@@ -1697,16 +1694,6 @@
       <div class="chart-wrap">
         <canvas id="programChart"></canvas>
       </div>
-    </article>
-  </div>
-</div>
-
-<div class="page" id="page-matriz">
-  <div class="wrap">
-    <article class="card matrix-card">
-      <div class="section-kicker">Matriz institucional al presente mes</div>
-      <h2 class="section-title">Estado resumido por programas y proyectos</h2>
-      <div id="matrixWrap" class="empty">Cargando matriz...</div>
     </article>
   </div>
 </div>
@@ -2687,7 +2674,6 @@ function metricRow(m, index = 0){
    RENDER TARJETA DE PROGRAMA
 ──────────────────────────────── */
 function programCard(p){
-  const [chipClass, chipText] = statusClass(p.score);
   const scoreFill = Math.min(Math.max(Number(p.score || 0), 0), 100);
   return `
     <article class="card program-card">
@@ -2696,7 +2682,6 @@ function programCard(p){
           <div class="program-kicker">Indicadores priorizados</div>
           <div class="program-title">${p.name}</div>
         </div>
-        <span class="chip ${chipClass}">${chipText}</span>
       </div>
       <div class="prog-score-wrap">
         <div class="prog-score-header">
@@ -2773,40 +2758,7 @@ function renderSummary(programs){
   if (healthMeterFill) healthMeterFill.style.width = `${Math.max(0, Math.min(avgScore, 100))}%`;
 
   document.getElementById('programGrid').innerHTML = programs.map(programCard).join('');
-  renderMatrix(programs);
   renderCharts(programs);
-}
-
-/* ────────────────────────────────
-   RENDER MATRIZ
-──────────────────────────────── */
-function renderMatrix(programs){
-  const rows = programs.map(p => {
-    const [chipClass, chipText] = statusClass(p.score);
-    return `
-      <tr>
-        <td><strong>${p.name}</strong></td>
-        <td>${p.sourceSummary}</td>
-        <td>${safe(p.latestLabel)}</td>
-        <td><span style="font-family:var(--font-mono);font-size:.86rem">${fmtPct(p.score)}</span></td>
-        <td><span class="chip ${chipClass}">${chipText}</span></td>
-        <td><a class="btn secondary" href="${p.dashboard}">Abrir</a></td>
-      </tr>
-    `;
-  }).join('');
-  document.getElementById('matrixWrap').innerHTML = `
-    <table class="table">
-      <thead><tr>
-        <th>Programa / Proyecto</th>
-        <th>Fuente</th>
-        <th>Al presente mes</th>
-        <th>Promedio vs esperado</th>
-        <th>Estado</th>
-        <th>Tablero dinámico</th>
-      </tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-  `;
 }
 
 /* ────────────────────────────────
