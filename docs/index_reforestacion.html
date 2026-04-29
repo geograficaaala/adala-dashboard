@@ -164,7 +164,7 @@
     .section-divider::before,.section-divider::after{content:'';flex:1;height:1.5px;
       background:linear-gradient(90deg,transparent,var(--line),transparent)}
 
-    /* ── KPIs ── */
+    /* ── Indicadores ── */
     .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
     .kpi{padding:18px 16px 16px;position:relative;overflow:hidden;
       transition:box-shadow .2s,transform .25s;border-top:3px solid var(--line-soft)}
@@ -587,7 +587,7 @@
     .presentation-brand-badge img{width:150px;max-width:100%;filter:drop-shadow(0 8px 18px rgba(10,35,80,.12))}
     .presentation-brand-badge small{font-size:.78rem;color:var(--muted);max-width:200px;line-height:1.6}
 
-    /* KPI cards in slides */
+    /* Indicator cards in slides */
     .presentation-summary-grid,.presentation-metric-grid,.presentation-goal-grid{display:grid;gap:14px}
     .presentation-summary-grid{grid-template-columns:repeat(4,1fr)}
     .presentation-metric-grid{grid-template-columns:repeat(4,1fr)}
@@ -826,6 +826,9 @@
     .kpi-meta{font-size:.84rem;line-height:1.62;color:#4c6478}
     .kpi-meta strong{color:#17314f}
     .kpi-readings{display:grid;gap:6px;align-content:start}
+    .kpi-detail-list{margin:2px 0 0 18px;padding:0;color:#4c6478;font-size:.78rem;line-height:1.5}
+    .kpi-detail-list li{margin:2px 0;padding-left:2px}
+    .kpi-temporality{display:inline-flex;width:fit-content;margin-top:2px;padding:5px 9px;border-radius:999px;background:#e3f3ff;color:#1a6ea8;font-size:.75rem;font-weight:800;line-height:1.25}
     .kpi-state{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
     .kpi-state::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.42}
     .kpi-state.green{background:var(--green-soft);color:var(--green)}
@@ -1511,7 +1514,7 @@
     .map-card h3{font-size:1.9rem;line-height:1.2}
     .map-card p.sub{font-size:1rem;line-height:1.6;color:var(--muted)}
 
-    /* --- Reforestación · tarjetas KPI con estilo Atitlán Recicla --- */
+    /* --- Reforestación · tarjetas de indicadores con estilo Atitlán Recicla --- */
     .kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
     .kpis-complementary{grid-template-columns:repeat(3,minmax(0,1fr))}
     .kpi{
@@ -1534,6 +1537,9 @@
     .kpi-meta{font-size:.84rem;line-height:1.62;color:#4c6478}
     .kpi-meta strong{color:#17314f}
     .kpi-readings{display:grid;gap:6px;align-content:start}
+    .kpi-detail-list{margin:2px 0 0 18px;padding:0;color:#4c6478;font-size:.78rem;line-height:1.5}
+    .kpi-detail-list li{margin:2px 0;padding-left:2px}
+    .kpi-temporality{display:inline-flex;width:fit-content;margin-top:2px;padding:5px 9px;border-radius:999px;background:#e3f3ff;color:#1a6ea8;font-size:.75rem;font-weight:800;line-height:1.25}
     .kpi-state{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.66rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
     .kpi-state::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.42}
     .kpi-state.green{background:var(--green-soft);color:var(--green)}
@@ -1615,7 +1621,7 @@
     .footer-mark{align-self:end;display:flex;align-items:flex-end;justify-content:flex-end}
     .footer-mark img{width:148px;max-width:100%;height:auto;opacity:.96}
 
-    /* --- Tonalidades verdes para barras y KPIs complementarios --- */
+    /* --- Tonalidades verdes para barras e indicadores complementarios --- */
     .kpi::before{background:linear-gradient(180deg,#1f7b62 0%,#4f8f66 60%,#8bbc6f 100%) !important}
     .kpi::after{background:radial-gradient(circle,rgba(31,123,98,.12) 0%,transparent 72%) !important}
     .kpi:hover{border-left-color:#1f7b62 !important}
@@ -1645,21 +1651,21 @@
     </span>
   </a>
   <div class="header-stack">
-    <nav class="nav-tabs" aria-label="Navegación">
+    <nav class="nav-tabs" aria-label="Navegación de la página">
       <a class="nav-tab active" href="#resumen">Resumen</a>
       <a class="nav-tab" href="#kpiGrid">Indicadores</a>
-      <a class="nav-tab" href="#kpiComplementGrid">Complementarios</a>
+      <a class="nav-tab" href="#avancePanel">Comparativo</a>
       <a class="nav-tab" href="#diagnosticPanel">Diagnóstico</a>
     </nav>
     <div class="header-utility">
       <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
-      <div class="view-switcher" role="group">
-        <button class="view-btn active" id="btnFull" type="button" onclick="switchView('full')">Tablero completo</button>
-        <button class="view-btn" id="btnExec" type="button" onclick="switchView('exec')">Resumen ejecutivo</button>
+      <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
+        <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
+        <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
       </div>
-      <button class="present-btn" type="button" id="btnPresentation" onclick="openPresentation()">&#9654; Presentación</button>
+      <button class="view-btn present-btn" id="btnPresentation" onclick="openPresentation()">Modo presentación</button>
       <div class="period-rack">
-        <span class="period-rack-label">Período</span>
+        <span class="period-rack-label">Período de lectura</span>
         <div class="month-pills" id="monthPills" role="group" aria-label="Seleccionar período"></div>
       </div>
     </div>
@@ -1676,7 +1682,7 @@
       </div>
       <div class="card filter">
         <label>Meta anual principal</label>
-        <div class="pill">35 ha · 85,000 árboles · 1 SIG · 10,000 plantas</div>
+        <div class="pill">35 ha · 85,000 árboles · sistema digital · 10,000 plantas</div>
       </div>
       <button class="view-btn present-btn" onclick="switchView('full')">Ver tablero completo</button>
     </div>
@@ -1695,7 +1701,7 @@
     <div class="exec-row-2">
       <div class="card panel panel-accent" id="execBarPanel">
         <h3>Flujo operativo acumulado</h3>
-        <p class="sub">Lectura ejecutiva de monitoreo, siembra, SIG y vivero.</p>
+        <p class="sub">Lectura ejecutiva de monitoreo, siembra, sistema digital y vivero.</p>
         <div class="viz-wrap" id="execBarChart"></div>
         <div class="interp" id="execBarInterp"></div>
       </div>
@@ -1717,11 +1723,11 @@
           <div class="hero-eyebrow">Programa · restauración forestal</div>
           <h1>Reforestando Atitlán</h1>
           <div class="hero-period-pill" id="heroPeriodPill">—</div>
-          <p class="hero-lead">Un tablero para seguir el <strong>monitoreo de reforestaciones</strong>, la <strong>siembra anual</strong>, la <strong>consolidación del laboratorio SIG</strong> y la <strong>producción del vivero AALA</strong>. La lectura usa el mismo lenguaje visual de Atitlán Recicla y presenta cada meta como acumulado real frente a su meta anual.</p>
+          <p class="hero-lead">Un tablero para seguir el <strong>monitoreo de reforestaciones</strong>, la <strong>siembra anual</strong>, la <strong>consolidación del monitoreo digital</strong> y la <strong>producción del vivero AALA</strong>. La lectura usa el mismo lenguaje visual de Atitlán Recicla y presenta cada meta como acumulado real frente a su meta anual.</p>
           <div class="hero-tag-row">
             <span class="hero-tag">Sololá y cuenca del Lago de Atitlán</span>
             <span class="hero-tag">Seguimiento 2026</span>
-            <span class="hero-tag">Monitoreo · siembra · vivero · SIG</span>
+            <span class="hero-tag">Monitoreo · siembra · vivero · tecnología</span>
           </div>
           <div class="hero-grid" id="heroStats"></div>
           <div class="hero-quick-row">
@@ -1741,14 +1747,14 @@
       <article class="card panel intro-story">
         <div class="section-kicker">Programa Reforestando Atitlán</div>
         <h3>Restauración forestal, monitoreo y cartografía temática</h3>
-        <p><strong>Reforestando Atitlán</strong> articula acciones de restauración forestal, monitoreo técnico de reforestaciones, generación de cartografía temática, fortalecimiento institucional del laboratorio SIG y producción de plantas nativas desde el vivero AALA.</p>
+        <p><strong>Reforestando Atitlán</strong> articula acciones de restauración forestal, monitoreo técnico de reforestaciones, generación de cartografía temática, fortalecimiento institucional del monitoreo digital y producción de plantas nativas desde el vivero AALA.</p>
         <p>El tablero se construyó para que el programa tenga una lectura ejecutiva y operativa con la misma arquitectura visual de <strong>Atitlán Recicla</strong>, respetando la lógica propia del componente y reforzando la lectura del avance real del programa al corte.</p>
-        <p>La narrativa combina cuatro frentes de seguimiento: <strong>hectáreas monitoreadas</strong> de reforestaciones realizadas en 2025, <strong>árboles sembrados</strong> en la temporada 2026, <strong>consolidación de la unidad SIG</strong> especializada en cartografía forestal y <strong>producción/siembra de plantas forestales nativas</strong> del vivero AALA.</p>
+        <p>La narrativa combina cuatro frentes de seguimiento: <strong>áreas reforestadas monitoreadas</strong>, <strong>árboles establecidos en campo</strong> durante la temporada 2026, <strong>consolidación del sistema digital de monitoreo forestal</strong> y <strong>producción de plantas nativas</strong> desde el vivero AALA.</p>
         <div class="chip-row">
           <span class="stat-chip">Meta monitoreo: 35 ha</span>
           <span class="stat-chip">Meta siembra: 85,000 árboles</span>
           <span class="stat-chip">Meta vivero: 10,000 plantas</span>
-          <span class="stat-chip">Unidad SIG: 1 consolidada</span>
+          <span class="stat-chip">Sistema digital: 1 consolidada</span>
         </div>
       </article>
     </section>
@@ -1759,9 +1765,9 @@
         <h3>Los cuatro frentes que estructuran el tablero</h3>
         <div class="objective-list">
           <div class="objective-item"><div class="objective-n">01</div><div><strong>Monitorear reforestaciones 2025</strong><span>35 hectáreas monitoreadas en Sololá y la cuenca del Lago de Atitlán, con verificación y cartografía de soporte para la toma de decisiones.</span></div></div>
-          <div class="objective-item"><div class="objective-n">02</div><div><strong>Sembrar 85,000 árboles en 2026</strong><span>Seguimiento acumulado del proceso de siembra con enfoque territorial y restauración forestal.</span></div></div>
-          <div class="objective-item"><div class="objective-n">03</div><div><strong>Consolidar la unidad SIG</strong><span>Desarrollo de una unidad especializada en cartografía forestal temática a través del eje de la CODEMA-Sololá.</span></div></div>
-          <div class="objective-item"><div class="objective-n">04</div><div><strong>Fortalecer el vivero AALA</strong><span>Producción y siembra acumulada de 10,000 plantas forestales de 10 especies nativas durante 2026.</span></div></div>
+          <div class="objective-item"><div class="objective-n">02</div><div><strong>Establecer 85,000 árboles en campo</strong><span>Este indicador se mide de junio a noviembre de 2026, durante la temporada principal de siembra.</span></div></div>
+          <div class="objective-item"><div class="objective-n">03</div><div><strong>Consolidar el sistema digital de monitoreo forestal</strong><span>Fortalecemos mapas, herramientas digitales, análisis territoriales y proyectos tecnológicos para dar seguimiento a las áreas de restauración.</span></div></div>
+          <div class="objective-item"><div class="objective-n">04</div><div><strong>Fortalecer la producción de plantas nativas</strong><span>Actualizamos el vivero con 2,200 plantas acumuladas al corte de marzo y damos seguimiento a especies nativas activas.</span></div></div>
         </div>
       </article>
     </section>
@@ -1773,9 +1779,9 @@
         <p class="sub">La lectura muestra el avance acumulado real por componente al corte del período seleccionado.</p>
         <div class="annual-goals-grid reforest-grid">
           <div class="goal-card"><small>Monitoreo 2025–2026</small><strong>35 hectáreas monitoreadas</strong><div class="goal-meta">Seguimiento técnico de la restauración forestal con soporte cartográfico.</div><div class="goal-progress">Incluye cartografía de soporte para las reforestaciones monitoreadas.</div></div>
-          <div class="goal-card"><small>Siembra 2026</small><strong>85,000 árboles sembrados</strong><div class="goal-meta">Seguimiento acumulado de la temporada principal de siembra.</div><div class="goal-progress">Seguimiento acumulado de la temporada principal de siembra.</div></div>
-          <div class="goal-card"><small>Laboratorio SIG</small><strong>1 unidad especializada consolidada</strong><div class="goal-meta">Hito anual</div><div class="goal-progress">Se mide como consolidación acumulada de la unidad de análisis cartográfico.</div></div>
-          <div class="goal-card"><small>Vivero AALA</small><strong>10,000 plantas de 10 especies</strong><div class="goal-meta">Seguimiento acumulado anual</div><div class="goal-progress">Producción y siembra de plantas forestales nativas con lectura acumulada.</div></div>
+          <div class="goal-card"><small>Siembra 2026</small><strong>85,000 árboles establecidos</strong><div class="goal-meta">Temporalidad: junio a noviembre de 2026.</div><div class="goal-progress">El indicador inicia cuando comienza la temporada principal de siembra.</div></div>
+          <div class="goal-card"><small>Monitoreo digital</small><strong>1 sistema de monitoreo forestal consolidado</strong><div class="goal-meta">Lectura anual por hitos</div><div class="goal-progress">Un avance de 0.60 se muestra como 60% de consolidación del sistema digital.</div></div>
+          <div class="goal-card"><small>Vivero AALA</small><strong>10,000 plantas de 10 especies</strong><div class="goal-meta">Temporalidad: enero a noviembre de 2026.</div><div class="goal-progress">Mostramos la producción acumulada de plantas nativas disponibles para restauración.</div></div>
         </div>
       </article>
     </section>
@@ -1796,33 +1802,33 @@
         </article>
         <article class="card filter">
           <label>Fuentes</label>
-          <div class="pill" id="sourcePill">08A + 10_KPI_Graficos</div>
+          <div class="pill" id="sourcePill">Registros mensuales del programa</div>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <div class="section-head"><div><h2>Indicadores clave de desempeño</h2><p>Tarjetas KPI con el mismo formato visual de Atitlán Recicla.</p></div></div>
+      <div class="section-head"><div><h2>Indicadores principales del programa</h2><p>Desde Reforestando Atitlán te mostramos los avances que ayudan a entender cómo va la restauración, el vivero y el monitoreo digital.</p></div></div>
       <div class="kpis" id="kpiGrid"></div>
     </section>
 
     <section class="section">
-      <div class="section-head"><div><h2>KPIs mensuales complementarios</h2><p>Lectura operativa de SIG, vivero y otras actividades. Estos indicadores complementan el seguimiento del programa sin alterar la lógica de los KPIs anuales.</p></div></div>
+      <div class="section-head"><div><h2>Indicadores mensuales complementarios</h2><p>También compartimos avances operativos que explican mejor el trabajo mensual del programa: mapas, herramientas digitales, vivero y acciones de apoyo.</p></div></div>
       <div class="kpis kpis-complementary" id="kpiComplementGrid"></div>
     </section>
 
     <div class="section-divider">Tendencia histórica y cumplimiento</div>
-    <section class="section grid-2" aria-hidden="true" style="display:none">
+    <section class="section grid-2 comparativo-section">
       <article class="card panel panel-accent" id="avancePanel">
         <h3>Avance acumulado del año</h3>
         <p class="sub">Porcentaje de avance respecto a la meta anual por indicador estratégico.</p>
         <div class="chart-wrap chart-wrap-elevated" id="lineChart"></div>
-        <div class="legend"><span><i style="background:#267a46"></i>Monitoreo ha</span><span><i style="background:#1a56a8"></i>Siembras</span><span><i style="background:#1c6084"></i>Unidad SIG</span><span><i style="background:#58a65c"></i>Vivero</span></div>
+        <div class="legend"><span><i style="background:#267a46"></i>Monitoreo ha</span><span><i style="background:#1a56a8"></i>Siembras</span><span><i style="background:#1c6084"></i>Sistema digital</span><span><i style="background:#58a65c"></i>Vivero</span></div>
         <div class="interp" id="lineInterp"></div>
       </article>
       <article class="card panel panel-accent">
         <h3>Flujo mensual operativo</h3>
-        <p class="sub">Aportes del mes para monitoreo, siembra, vivero e hitos SIG.</p>
+        <p class="sub">Aportes del mes para monitoreo, siembra, vivero y avances del sistema digital.</p>
         <div class="chart-wrap chart-wrap-elevated" id="barChart"></div>
         <div class="interp" id="barInterp"></div>
       </article>
@@ -1846,7 +1852,7 @@
       <article class="card panel panel-accent">
         <div class="section-head">
           <div>
-            <h2>Productos cartograficos producidos por el componente de laboratorio SIG</h2>
+            <h2>Productos cartograficos producidos por el componente de monitoreo digital</h2>
             <p>Visualización embebida de los dos geoportales de referencia del programa.</p>
           </div>
         </div>
@@ -1962,35 +1968,35 @@ const DATA_URLS = {
 
 
 const COMPLEMENTARY_KPI_SEED = [
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:9 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:3800 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:150 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:72 },
-  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Monitoreo digital', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas digitales para planificación forestal', unidad:'mapas', meta_mensual:12, valor_mes:9, detalle:['Mapa de áreas reforestadas monitoreadas','Mapa base de sitios priorizados','Mapa de apoyo para planificación de campo'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Monitoreo digital', kpi_id:'iot_monitoreo_ambiental', kpi_nombre:'Proyecto IoT para monitoreo ambiental', unidad:'proyectos', meta_mensual:0, meta_anual:1, valor_mes:0, detalle:['Prototipo con Raspberry Pi 4B','Sensores ambientales para registro en campo','Base de datos para seguimiento del monitoreo'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Monitoreo digital', kpi_id:'sig_servicios_digitales', kpi_nombre:'Plataformas y servicios digitales disponibles', unidad:'servicios', meta_mensual:3, valor_mes:2, detalle:['Geoportal de monitoreo forestal','Visor de productos cartográficos'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Monitoreo digital', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Información geográfica forestal actualizada', unidad:'capas', meta_mensual:8, valor_mes:6, detalle:['Sitios de reforestación','Cobertura municipal','Áreas monitoreadas','Puntos de seguimiento en campo'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Monitoreo digital', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis territoriales para toma de decisiones', unidad:'análisis', meta_mensual:6, valor_mes:5, detalle:['Priorización de áreas','Cruce con cobertura forestal','Lectura territorial para planificación'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero forestal', kpi_id:'vivero_mantenimiento', kpi_nombre:'Mantenimiento del vivero forestal', unidad:'actividades', meta_mensual:12, valor_mes:9, detalle:['Riego y control de humedad','Limpieza de áreas de producción','Revisión del estado de plantas'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero forestal', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Insumos preparados para producción de plantas', unidad:'bolsas', meta_mensual:200, valor_mes:150, detalle:['Bolsas preparadas con sustrato','Insumos listos para trasplante','Ordenamiento de material para vivero'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Vivero forestal', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Germinación de especies nativas', unidad:'semillas', meta_mensual:100, valor_mes:72, detalle:['Semillas con germinación activa','Seguimiento a especies nativas','Registro inicial de producción'] },
+  { periodo_clave:'2026-01', mes_num:1, mes_label:'Enero', componente:'Gestión del programa', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Acciones estratégicas de apoyo al programa', unidad:'actividades', meta_mensual:4, valor_mes:3, detalle:['Coordinación con actores locales','Preparación de jornadas de campo','Seguimiento técnico y administrativo'] },
 
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4100 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:6 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:4 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:10 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:160 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:78 },
-  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Monitoreo digital', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas digitales para planificación forestal', unidad:'mapas', meta_mensual:12, valor_mes:10, detalle:['Mapa de avance de monitoreos','Mapa de ubicación de sitios','Mapa de apoyo a decisiones técnicas'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Monitoreo digital', kpi_id:'iot_monitoreo_ambiental', kpi_nombre:'Proyecto IoT para monitoreo ambiental', unidad:'proyectos', meta_mensual:0, meta_anual:1, valor_mes:0, detalle:['Prototipo con Raspberry Pi 4B','Sensores ambientales para registro en campo','Base de datos para seguimiento del monitoreo'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Monitoreo digital', kpi_id:'sig_servicios_digitales', kpi_nombre:'Plataformas y servicios digitales disponibles', unidad:'servicios', meta_mensual:3, valor_mes:2, detalle:['Geoportal de monitoreo forestal','Visor de productos cartográficos'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Monitoreo digital', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Información geográfica forestal actualizada', unidad:'capas', meta_mensual:8, valor_mes:6, detalle:['Sitios de reforestación','Cobertura municipal','Áreas monitoreadas','Puntos de seguimiento en campo'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Monitoreo digital', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis territoriales para toma de decisiones', unidad:'análisis', meta_mensual:6, valor_mes:4, detalle:['Priorización de áreas','Cruce con cobertura forestal','Lectura territorial para planificación'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero forestal', kpi_id:'vivero_mantenimiento', kpi_nombre:'Mantenimiento del vivero forestal', unidad:'actividades', meta_mensual:12, valor_mes:10, detalle:['Riego y control de humedad','Limpieza de áreas de producción','Revisión del estado de plantas'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero forestal', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Insumos preparados para producción de plantas', unidad:'bolsas', meta_mensual:200, valor_mes:160, detalle:['Bolsas preparadas con sustrato','Insumos listos para trasplante','Ordenamiento de material para vivero'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Vivero forestal', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Germinación de especies nativas', unidad:'semillas', meta_mensual:100, valor_mes:78, detalle:['Semillas con germinación activa','Seguimiento a especies nativas','Registro inicial de producción'] },
+  { periodo_clave:'2026-02', mes_num:2, mes_label:'Febrero', componente:'Gestión del programa', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Acciones estratégicas de apoyo al programa', unidad:'actividades', meta_mensual:4, valor_mes:3, detalle:['Coordinación con actores locales','Preparación de jornadas de campo','Seguimiento técnico y administrativo'] },
 
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas generados', unidad:'mapas', meta_mensual:12, valor_mes:10 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_lineas_codigo', kpi_nombre:'Líneas de código SIG generadas', unidad:'líneas', meta_mensual:5000, valor_mes:4200 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_servicios_digitales', kpi_nombre:'Servicios digitales creados', unidad:'servicios', meta_mensual:3, valor_mes:2 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Capas geoespaciales actualizadas', unidad:'capas', meta_mensual:8, valor_mes:7 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'SIG', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis espaciales entregados', unidad:'análisis', meta_mensual:6, valor_mes:5 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_mantenimiento', kpi_nombre:'Actividades de mantenimiento de vivero', unidad:'actividades', meta_mensual:12, valor_mes:9 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Bolsas llenadas', unidad:'bolsas', meta_mensual:200, valor_mes:155 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Semillas germinadas', unidad:'semillas', meta_mensual:100, valor_mes:80 },
-  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Otras actividades', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Actividades estratégicas realizadas', unidad:'actividades', meta_mensual:4, valor_mes:3 }
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Monitoreo digital', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas digitales para planificación forestal', unidad:'mapas', meta_mensual:12, valor_mes:10, detalle:['Mapa de monitoreos completados','Mapa de cobertura de restauración','Mapa de apoyo para rutas de campo'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Monitoreo digital', kpi_id:'iot_monitoreo_ambiental', kpi_nombre:'Proyecto IoT para monitoreo ambiental', unidad:'proyectos', meta_mensual:0, meta_anual:1, valor_mes:1, detalle:['Prototipo con Raspberry Pi 4B','Sensores ambientales para registro en campo','Base de datos para seguimiento del monitoreo'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Monitoreo digital', kpi_id:'sig_servicios_digitales', kpi_nombre:'Plataformas y servicios digitales disponibles', unidad:'servicios', meta_mensual:3, valor_mes:2, detalle:['Geoportal de monitoreo forestal','Visor de productos cartográficos'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Monitoreo digital', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Información geográfica forestal actualizada', unidad:'capas', meta_mensual:8, valor_mes:7, detalle:['Sitios de reforestación','Cobertura municipal','Áreas monitoreadas','Puntos de seguimiento en campo'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Monitoreo digital', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis territoriales para toma de decisiones', unidad:'análisis', meta_mensual:6, valor_mes:5, detalle:['Priorización de áreas','Cruce con cobertura forestal','Lectura territorial para planificación'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero forestal', kpi_id:'vivero_mantenimiento', kpi_nombre:'Mantenimiento del vivero forestal', unidad:'actividades', meta_mensual:12, valor_mes:9, detalle:['Riego y control de humedad','Limpieza de áreas de producción','Revisión del estado de plantas'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero forestal', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Insumos preparados para producción de plantas', unidad:'bolsas', meta_mensual:200, valor_mes:155, detalle:['Bolsas preparadas con sustrato','Insumos listos para trasplante','Ordenamiento de material para vivero'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero forestal', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Germinación de especies nativas', unidad:'semillas', meta_mensual:100, valor_mes:80, detalle:['Semillas con germinación activa','Seguimiento a especies nativas','Registro inicial de producción'] },
+  { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Gestión del programa', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Acciones estratégicas de apoyo al programa', unidad:'actividades', meta_mensual:4, valor_mes:3, detalle:['Coordinación con actores locales','Preparación de jornadas de campo','Seguimiento técnico y administrativo'] }
 ];
 
 function buildComplementaryRows(seed){
@@ -1999,8 +2005,8 @@ function buildComplementaryRows(seed){
     const prev = acc[item.kpi_id] || 0;
     const valorAcumulado = prev + safeNumber(item.valor_mes);
     acc[item.kpi_id] = valorAcumulado;
-    const metaAcumulada = safeNumber(item.meta_mensual) * safeNumber(item.mes_num);
-    const pctMes = safeNumber(item.meta_mensual) > 0 ? safeNumber(item.valor_mes) / safeNumber(item.meta_mensual) : 0;
+    const metaAcumulada = item.meta_anual ? safeNumber(item.meta_anual) : safeNumber(item.meta_mensual) * safeNumber(item.mes_num);
+    const pctMes = safeNumber(item.meta_mensual) > 0 ? safeNumber(item.valor_mes) / safeNumber(item.meta_mensual) : (item.meta_anual ? safeNumber(item.valor_mes) / safeNumber(item.meta_anual) : 0);
     const pctAcum = metaAcumulada > 0 ? valorAcumulado / metaAcumulada : 0;
     return {
       ...item,
@@ -2032,47 +2038,51 @@ function getComplementaryRowsForPeriod(period){
 const KPI_CONFIG = [
   {
     id: 'ha',
-    title: 'Monitoreo de reforestaciones 2025',
+    title: 'Áreas reforestadas monitoreadas',
     valueField: 'ha_monitoreadas_kpi_acum',
     metaField: 'meta_ha',
     pctField: 'pct_meta_ha',
     semaforoField: 'semaforo_ha',
     monthlyField: 'ha_monitoreadas_kpi_mes',
     unit: 'ha',
-    note: row => `Cartografía acumulada: ${formatPercent(row.pct_cartografia_acum)} del respaldo previsto para el componente`
+    temporality: 'Temporalidad: enero a noviembre de 2026',
+    note: row => `Desde el programa verificamos áreas reforestadas y las respaldamos con cartografía. Respaldo cartográfico acumulado: ${formatPercent(row.pct_cartografia_acum)}.`
   },
   {
     id: 'arboles',
-    title: 'Árboles sembrados 2026',
+    title: 'Árboles establecidos en campo',
     valueField: 'arboles_sembrados_acum',
     metaField: 'meta_arboles',
     pctField: 'pct_meta_arboles',
     semaforoField: 'semaforo_arboles',
     monthlyField: 'arboles_sembrados_kpi_mes',
     unit: 'árboles',
-    note: row => `Área intervenida del mes: ${formatNumber(row.area_intervenida_ha_mes,2)} ha`
+    temporality: 'Temporalidad: junio a noviembre de 2026',
+    note: row => `Este indicador inicia con la temporada principal de siembra. Área intervenida del mes: ${formatNumber(row.area_intervenida_ha_mes,2)} ha.`
   },
   {
     id: 'sig',
-    title: 'Unidad SIG y cartografía forestal',
+    title: 'Sistema digital de monitoreo forestal',
     valueField: 'aporte_sig_acum',
     metaField: 'meta_unidad_sig',
     pctField: 'pct_meta_sig',
     semaforoField: 'semaforo_sig',
     monthlyField: 'aporte_sig_mes',
     unit: 'unidad',
-    note: row => `Hitos del mes: ${formatNumber(row.hitos_sig_logrados_mes,0)} · aporte acumulado ${formatNumber(row.aporte_sig_acum,2)} de 1.00`
+    temporality: 'Temporalidad: enero a diciembre de 2026',
+    note: row => `Medimos la consolidación por hitos: mapas, servicios digitales, información geográfica, análisis territoriales y proyectos tecnológicos. Hitos del mes: ${formatNumber(row.hitos_sig_logrados_mes,0)}.`
   },
   {
     id: 'plantas',
-    title: 'Vivero AALA · plantas nativas',
+    title: 'Producción de plantas nativas en vivero',
     valueField: 'plantas_netas_acum',
     metaField: 'meta_plantas',
     pctField: 'pct_meta_plantas',
     semaforoField: 'semaforo_plantas',
     monthlyField: 'plantas_netas_mes',
     unit: 'plantas',
-    note: row => `Especies activas acumuladas: ${formatNumber(row.especies_acumuladas_proxy,0)} de ${formatNumber(row.meta_especies,0)}`
+    temporality: 'Temporalidad: enero a noviembre de 2026',
+    note: row => `Damos seguimiento a plantas disponibles para restauración. Especies nativas activas: ${formatNumber(row.especies_acumuladas_proxy,0)} de ${formatNumber(row.meta_especies,0)}.`
   }
 ];
 
@@ -2097,13 +2107,60 @@ function formatNumber(v, d=0){
   const n = safeNumber(v);
   return n.toLocaleString('es-GT',{minimumFractionDigits:d, maximumFractionDigits:d});
 }
+function unitLabel(unit, value){
+  const n = Math.abs(safeNumber(value));
+  const singular = {árboles:'árbol', plantas:'planta', mapas:'mapa', servicios:'servicio', capas:'capa', actividades:'actividad', bolsas:'bolsa', semillas:'semilla', proyectos:'proyecto'};
+  return n === 1 && singular[unit] ? singular[unit] : unit;
+}
 function formatByUnit(v, unit, decimals){
-  const d = decimals ?? ((Math.abs(safeNumber(v)) < 10 && unit !== 'árboles' && unit !== 'plantas') ? 2 : 0);
-  return `${formatNumber(v,d)}${unit ? ' ' + unit : ''}`;
+  let d = decimals;
+  if (d === undefined) {
+    if (unit === 'ha' || unit === 'unidad') d = 2;
+    else d = 0;
+  }
+  return `${formatNumber(v,d)}${unit ? ' ' + unitLabel(unit, v) : ''}`;
 }
 function formatPercent(value){
   const n = safeNumber(value) * 100;
   return `${n.toLocaleString('es-GT',{minimumFractionDigits:n < 10 ? 1 : 0, maximumFractionDigits:n < 10 ? 1 : 0})}%`;
+}
+function sourceLabel(value){
+  const raw = String(value || '').trim();
+  if (!raw) return 'Registros mensuales del programa';
+  return raw.replace(/_/g, ' ').replace(/\bKPI\b/gi, 'indicadores');
+}
+function indicatorValue(cfg, row){
+  if (cfg.id === 'sig') return `${formatPercent(row[cfg.pctField])} de avance`;
+  return formatByUnit(row[cfg.valueField], cfg.unit);
+}
+function indicatorMeta(cfg, row){
+  if (cfg.id === 'sig') return 'Sistema funcional consolidado';
+  return formatByUnit(row[cfg.metaField], cfg.unit);
+}
+function indicatorMonthly(cfg, row){
+  if (cfg.id === 'sig') return `${formatPercent(row[cfg.monthlyField])} registrado en el mes`;
+  return formatByUnit(row[cfg.monthlyField], cfg.unit);
+}
+function detailList(items){
+  if (!Array.isArray(items) || !items.length) return '';
+  return `<ol class="kpi-detail-list">${items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ol>`;
+}
+function complementaryMetaLabel(item){
+  if (item.meta_anual) return `Meta anual: <strong>${escapeHtml(formatByUnit(item.meta_anual, item.unidad))}</strong>`;
+  return `Meta mensual: <strong>${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</strong>`;
+}
+function applyProgramAdjustments(rows){
+  return rows.map(row => {
+    const r = {...row};
+    if (r.periodo_clave === '2026-03') {
+      const previous = rows.find(x => x.periodo_clave === '2026-02');
+      const prevPlants = previous ? safeNumber(previous.plantas_netas_acum) : 0;
+      r.plantas_netas_acum = '2200';
+      r.plantas_netas_mes = String(Math.max(0, 2200 - prevPlants));
+      r.pct_meta_plantas = r.meta_plantas ? String(2200 / safeNumber(r.meta_plantas)) : '0.22';
+    }
+    return r;
+  });
 }
 function monthShort(label){
   const map = {Enero:'Ene',Febrero:'Feb',Marzo:'Mar',Abril:'Abr',Mayo:'May',Junio:'Jun',Julio:'Jul',Agosto:'Ago',Septiembre:'Sep',Octubre:'Oct',Noviembre:'Nov',Diciembre:'Dic'};
@@ -2210,13 +2267,13 @@ function renderHero(row){
   document.getElementById('heroPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
   document.getElementById('cutoffPill').textContent = `${row.mes_label} ${row.anio}`;
   document.getElementById('latestPill').textContent = `Marzo 2026`;
-  document.getElementById('sourcePill').textContent = row.fuente_texto || '08A + 10_KPI_Graficos';
+  document.getElementById('sourcePill').textContent = sourceLabel(row.fuente_texto);
 
   const stats = [
-    ['Monitoreo acumulado', formatByUnit(row.ha_monitoreadas_kpi_acum, 'ha', 2)],
-    ['Siembra acumulada', formatByUnit(row.arboles_sembrados_acum, 'árboles')],
-    ['Unidad SIG', `${formatNumber(row.aporte_sig_acum,2)} / 1.00`],
-    ['Vivero acumulado', formatByUnit(row.plantas_netas_acum, 'plantas')]
+    ['Áreas monitoreadas', formatByUnit(row.ha_monitoreadas_kpi_acum, 'ha')],
+    ['Árboles establecidos', formatByUnit(row.arboles_sembrados_acum, 'árboles')],
+    ['Sistema digital', `${formatPercent(row.pct_meta_sig)} de avance`],
+    ['Plantas en vivero', formatByUnit(row.plantas_netas_acum, 'plantas')]
   ];
   document.getElementById('heroStats').innerHTML = stats.map(([label,val]) => `<div class="hero-stat"><small>${escapeHtml(label)}</small><strong>${escapeHtml(val)}</strong></div>`).join('');
 
@@ -2259,13 +2316,14 @@ function renderKpis(row){
         <div class="kpi-top">
           <div>
             <div class="kpi-label">${escapeHtml(cfg.title)}</div>
-            <div class="kpi-value">${escapeHtml(formatByUnit(val, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</div>
+            <div class="kpi-value">${escapeHtml(indicatorValue(cfg, row))}</div>
           </div>
           <span class="kpi-state ${semaforoClass(row[cfg.semaforoField])}">${escapeHtml(row[cfg.semaforoField] || '—')}</span>
         </div>
         <div class="kpi-readings">
-          <div class="kpi-meta">Meta anual: <strong>${escapeHtml(formatByUnit(meta, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
-          <div class="kpi-meta">Aporte del mes: <strong>${escapeHtml(formatByUnit(monthly, cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+          <div class="kpi-meta">Meta anual: <strong>${escapeHtml(indicatorMeta(cfg, row))}</strong></div>
+          <div class="kpi-meta">Aporte del mes: <strong>${escapeHtml(indicatorMonthly(cfg, row))}</strong></div>
+          <div class="kpi-temporality">${escapeHtml(cfg.temporality)}</div>
           <div class="kpi-meta">${escapeHtml(cfg.note(row))}</div>
         </div>
         <div class="progress"><span data-width="${pct}%" style="width:${pct}%"></span></div>
@@ -2280,7 +2338,7 @@ function renderComplementaryKpis(){
   const grid = document.getElementById('kpiComplementGrid');
   if (!grid) return;
   if (!rows.length){
-    grid.innerHTML = `<article class="card panel"><p class="kpi-grid-note">No hay KPIs complementarios cargados para el período seleccionado.</p></article>`;
+    grid.innerHTML = `<article class="card panel"><p class="kpi-grid-note">No hay indicadores complementarios cargados para el período seleccionado.</p></article>`;
     return;
   }
   grid.innerHTML = rows.map((item, idx) => {
@@ -2297,9 +2355,11 @@ function renderComplementaryKpis(){
           <span class="kpi-state ${semaforoClass(item.semaforo_mes)}">${escapeHtml(item.semaforo_mes)}</span>
         </div>
         <div class="kpi-readings">
-          <div class="kpi-meta">Meta mensual: <strong>${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</strong></div>
+          <div class="kpi-meta">${complementaryMetaLabel(item)}</div>
           <div class="kpi-meta">Acumulado anual al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> de <strong>${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</strong></div>
           <div class="kpi-meta">Cumplimiento del mes: <strong>${escapeHtml(formatPercent(item.pct_cumpl_mes))}</strong> · acumulado: <strong>${escapeHtml(formatPercent(item.pct_cumpl_acum))}</strong></div>
+          <div class="kpi-meta"><strong>Lo que incluye:</strong></div>
+          ${detailList(item.detalle)}
         </div>
         <div class="progress"><span data-width="${monthlyPct}%" style="width:${monthlyPct}%"></span></div>
       </article>`;
@@ -2315,7 +2375,7 @@ function renderExecutive(row){
   const execGrid = document.getElementById('execKpiGrid');
   execGrid.innerHTML = KPI_CONFIG.map(cfg => {
     const pct = clampPct(row[cfg.pctField]);
-    return `<div class="exec-kpi"><div class="exec-kpi-label">${escapeHtml(cfg.title)}</div><div class="exec-kpi-value">${escapeHtml(formatPercent(row[cfg.pctField]))}</div><div>${escapeHtml(formatByUnit(row[cfg.valueField], cfg.unit, cfg.unit==='unidad'?2:undefined))}</div><div class="exec-kpi-bar"><span data-width="${pct}%" style="width:${pct}%"></span></div></div>`;
+    return `<div class="exec-kpi"><div class="exec-kpi-label">${escapeHtml(cfg.title)}</div><div class="exec-kpi-value">${escapeHtml(formatPercent(row[cfg.pctField]))}</div><div>${escapeHtml(indicatorValue(cfg, row))}</div><div class="exec-kpi-bar"><span data-width="${pct}%" style="width:${pct}%"></span></div></div>`;
   }).join('');
   animateProgressBars(execGrid);
 
@@ -2331,7 +2391,7 @@ function renderAlerts(row){
   const alerts = [];
   if (String(row.semaforo_arboles).toLowerCase() === 'gris') alerts.push({tone:'yellow', text:'La temporada principal de siembra aún no está activa o no reporta avance exigible.'});
   if (String(row.semaforo_plantas).toLowerCase() === 'rojo') alerts.push({tone:'red', text:'El vivero acumula menos avance del esperado para la meta anual de 10,000 plantas.'});
-  if (String(row.semaforo_sig).toLowerCase() === 'azul' || safeNumber(row.aporte_sig_acum) >= 1) alerts.push({tone:'blue', text:'La unidad SIG presenta consolidación favorable y soporte cartográfico acumulado.'});
+  if (String(row.semaforo_sig).toLowerCase() === 'azul' || safeNumber(row.aporte_sig_acum) >= 1) alerts.push({tone:'blue', text:'El sistema digital de monitoreo forestal presenta una consolidación favorable y ya aporta mapas, análisis y herramientas para el programa.'});
   if (String(row.alertas_texto || '').trim()) alerts.push({tone:'yellow', text: row.alertas_texto});
   if (!alerts.length) alerts.push({tone:'green', text:'No se detectan alertas críticas en el período seleccionado.'});
   const html = alerts.map(a => `<div class="alert ${a.tone}">${escapeHtml(a.text)}</div>`).join('');
@@ -2339,7 +2399,7 @@ function renderAlerts(row){
   document.getElementById('execAlertPanel').innerHTML = html;
   document.getElementById('narrativePanel').innerHTML = `
     <div class="alert blue"><strong>Logros:</strong> ${escapeHtml(row.logros_texto || 'Sin narrativa registrada.')}</div>
-    <div class="alert green"><strong>Fuentes:</strong> ${escapeHtml(row.fuente_texto || '08A_Cierre_Mensual_Indicadores')}</div>
+    <div class="alert green"><strong>Fuentes:</strong> ${escapeHtml(sourceLabel(row.fuente_texto))}</div>
     <div class="alert yellow"><strong>Estatus:</strong> ${escapeHtml(row.estatus_reporte || '—')}</div>
   `;
 }
@@ -2358,19 +2418,19 @@ function renderTable(){
       <td>${escapeHtml(r.semaforo_sig || '—')}</td>
       <td>${escapeHtml(r.semaforo_plantas || '—')}</td>
     </tr>`).join('');
-  document.getElementById('tablePanel').innerHTML = `<table><thead><tr><th>Período</th><th>Ha monitoreadas</th><th>Árboles acumulados</th><th>Unidad SIG</th><th>Plantas acumuladas</th><th>Especies</th><th>Semáforo ha</th><th>Semáforo siembra</th><th>Semáforo SIG</th><th>Semáforo vivero</th></tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('tablePanel').innerHTML = `<table><thead><tr><th>Período</th><th>Ha monitoreadas</th><th>Árboles acumulados</th><th>Sistema digital</th><th>Plantas acumuladas</th><th>Especies</th><th>Semáforo ha</th><th>Semáforo siembra</th><th>Semáforo sistema digital</th><th>Semáforo vivero</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function renderDiagnostics(row){
-  const strongest = KPI_CONFIG.map(cfg => ({title: cfg.title, pct: safeNumber(row[cfg.pctField]), unit: cfg.unit, value: row[cfg.valueField]})).sort((a,b) => b.pct - a.pct);
+  const strongest = KPI_CONFIG.map(cfg => ({id: cfg.id, title: cfg.title, pct: safeNumber(row[cfg.pctField]), unit: cfg.unit, value: row[cfg.valueField]})).sort((a,b) => b.pct - a.pct);
   const lead = strongest[0];
   const lag = strongest[strongest.length-1];
   const html = `
     <h3>Lectura ejecutiva del período</h3>
-    <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, el programa registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, <strong>${escapeHtml(formatByUnit(row.arboles_sembrados_acum,'árboles'))}</strong> árboles sembrados, una consolidación SIG de <strong>${escapeHtml(formatNumber(row.aporte_sig_acum,2))}</strong> unidades y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas en vivero.</p>
-    <p>El componente con mayor avance relativo es <strong>${escapeHtml(lead.title)}</strong>, con <strong>${escapeHtml(formatPercent(lead.pct))}</strong> de cumplimiento de su meta anual y un acumulado de <strong>${escapeHtml(formatByUnit(lead.value, lead.unit, lead.unit==='unidad'?2:undefined))}</strong>.</p>
+    <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, el programa registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, <strong>${escapeHtml(formatByUnit(row.arboles_sembrados_acum,'árboles'))}</strong> árboles sembrados, un avance del sistema digital de monitoreo forestal de <strong>${escapeHtml(formatPercent(row.pct_meta_sig))}</strong> y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas en vivero.</p>
+    <p>El componente con mayor avance relativo es <strong>${escapeHtml(lead.title)}</strong>, con <strong>${escapeHtml(formatPercent(lead.pct))}</strong> de cumplimiento de su meta anual y un acumulado de <strong>${escapeHtml(lead.id === 'sig' ? formatPercent(lead.pct) + ' de avance' : formatByUnit(lead.value, lead.unit))}</strong>.</p>
     <p>El componente con mayor rezago relativo es <strong>${escapeHtml(lag.title)}</strong>, con <strong>${escapeHtml(formatPercent(lag.pct))}</strong> de avance. ${escapeHtml(row.alertas_texto || 'Se recomienda revisar el calendario operativo y reforzar la captura de evidencia del período.')}</p>
-    <p>La narrativa del corte reporta: <strong>${escapeHtml(row.logros_texto || 'Sin logros narrativos cargados')}</strong>. La fuente consolidada del tablero corresponde a <strong>${escapeHtml(row.fuente_texto || '08A_Cierre_Mensual_Indicadores')}</strong>.</p>`;
+    <p>La narrativa del corte reporta: <strong>${escapeHtml(row.logros_texto || 'Sin logros narrativos cargados')}</strong>. La fuente consolidada del tablero corresponde a <strong>${escapeHtml(sourceLabel(row.fuente_texto))}</strong>.</p>`;
   document.getElementById('diagnosticPanel').innerHTML = html;
   document.getElementById('execDiagnosticPanel').innerHTML = html;
 }
@@ -2382,7 +2442,7 @@ function renderLineChart(){
   const series = [
     {label:'Monitoreo', color:'#2e6a57', values: rows.map(r => clampPct(r.pct_meta_ha))},
     {label:'Siembras', color:'#4f8f66', values: rows.map(r => clampPct(r.pct_meta_arboles))},
-    {label:'Unidad SIG', color:'#1f7b62', values: rows.map(r => clampPct(r.pct_meta_sig))},
+    {label:'Sistema digital', color:'#1f7b62', values: rows.map(r => clampPct(r.pct_meta_sig))},
     {label:'Vivero', color:'#8bbc6f', values: rows.map(r => clampPct(r.pct_meta_plantas))}
   ];
   const x = i => pad.l + (rows.length === 1 ? plotW/2 : i * (plotW/(rows.length-1)));
@@ -2410,7 +2470,7 @@ function renderLineChart(){
   document.getElementById('lineChart').innerHTML = svg;
 
   const row = getSelectedRow();
-  document.getElementById('lineInterp').innerHTML = `<strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong> muestra un avance de ${escapeHtml(formatPercent(row.pct_meta_ha))} en monitoreo, ${escapeHtml(formatPercent(row.pct_meta_arboles))} en siembras, ${escapeHtml(formatPercent(row.pct_meta_sig))} en SIG y ${escapeHtml(formatPercent(row.pct_meta_plantas))} en vivero.`;
+  document.getElementById('lineInterp').innerHTML = `<strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong> muestra un avance de ${escapeHtml(formatPercent(row.pct_meta_ha))} en monitoreo, ${escapeHtml(formatPercent(row.pct_meta_arboles))} en siembras, ${escapeHtml(formatPercent(row.pct_meta_sig))} en sistema digital y ${escapeHtml(formatPercent(row.pct_meta_plantas))} en vivero.`;
 }
 
 function renderBarChart(){
@@ -2448,7 +2508,7 @@ function renderBarChart(){
   document.getElementById('barChart').innerHTML = svg;
   document.getElementById('execBarChart').innerHTML = svg;
   const row = getSelectedRow();
-  const interp = `En ${row.mes_label.toLowerCase()} se registraron ${formatByUnit(row.ha_monitoreadas_kpi_mes,'ha',2)} de monitoreo válido para KPI, ${formatByUnit(row.arboles_sembrados_kpi_mes,'árboles')} en siembra, ${formatNumber(row.aporte_sig_mes,2)} de aporte SIG y ${formatByUnit(row.plantas_netas_mes,'plantas')} en vivero.`;
+  const interp = `En ${row.mes_label.toLowerCase()} registramos ${formatByUnit(row.ha_monitoreadas_kpi_mes,'ha')} de monitoreo válido para el indicador, ${formatByUnit(row.arboles_sembrados_kpi_mes,'árboles')} establecidos en campo, ${formatPercent(row.aporte_sig_mes)} de avance del sistema digital y ${formatByUnit(row.plantas_netas_mes,'plantas')} en vivero.`;
   document.getElementById('barInterp').textContent = interp;
   document.getElementById('execBarInterp').textContent = interp;
 }
@@ -2457,7 +2517,7 @@ function renderBarChart(){
 function buildPresentationAlerts(row){
   const alerts = [];
   if (String(row.alertas_texto || '').trim()) alerts.push({type:'yellow', text: row.alertas_texto});
-  if (String(row.semaforo_sig).toLowerCase() === 'azul' || safeNumber(row.aporte_sig_acum) >= 0.6) alerts.push({type:'green', text:'El componente SIG ya presenta consolidación útil para cartografía temática y soporte al programa.'});
+  if (String(row.semaforo_sig).toLowerCase() === 'azul' || safeNumber(row.aporte_sig_acum) >= 0.6) alerts.push({type:'green', text:'El sistema digital de monitoreo forestal ya presenta consolidación útil para cartografía temática, análisis territorial y soporte al programa.'});
   if (safeNumber(row.arboles_sembrados_acum) === 0) alerts.push({type:'blue', text:'La siembra anual todavía no inicia; el tablero muestra una línea base de primer trimestre.'});
   if (safeNumber(row.plantas_netas_acum) < 2500) alerts.push({type:'yellow', text:'El vivero sigue en fase de acumulación temprana; conviene reforzar producción y trazabilidad del componente.'});
   return alerts.length ? alerts : [{type:'green', text:'No se detectan alertas críticas en el período seleccionado.'}];
@@ -2474,15 +2534,15 @@ function buildPresentation(){
   const heroCards = [
     {label:'Monitoreo acumulado', value:formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2), sub:`Meta anual: ${formatByUnit(row.meta_ha,'ha',2)}`},
     {label:'Siembra acumulada', value:formatByUnit(row.arboles_sembrados_acum,'árboles'), sub:`Meta anual: ${formatByUnit(row.meta_arboles,'árboles')}`},
-    {label:'Unidad SIG', value:`${formatNumber(row.aporte_sig_acum,2)} / 1.00`, sub:'Meta institucional de consolidación'},
+    {label:'Sistema digital', value:`${formatPercent(row.pct_meta_sig)} de avance`, sub:'Meta anual: sistema funcional consolidado'},
     {label:'Vivero acumulado', value:formatByUnit(row.plantas_netas_acum,'plantas'), sub:`Meta anual: ${formatByUnit(row.meta_plantas,'plantas')}`}
   ];
   const alerts = buildPresentationAlerts(row);
   const metricCards = KPI_CONFIG.map(cfg => {
     const pct = clampPct(row[cfg.pctField]);
     const cls = semaforoClass(row[cfg.semaforoField]);
-    const value = formatByUnit(row[cfg.valueField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined);
-    const metaValue = formatByUnit(row[cfg.metaField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined);
+    const value = indicatorValue(cfg, row);
+    const metaValue = indicatorMeta(cfg, row);
     return `<article class="presentation-kpi-pair-card">
       <div class="pkpi-header">
         <div class="pkpi-label">${escapeHtml(cfg.title)}</div>
@@ -2491,7 +2551,7 @@ function buildPresentation(){
       <div class="pkpi-value">${escapeHtml(value)}</div>
       <div class="pkpi-meta">Meta anual: ${escapeHtml(metaValue)}</div>
       <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" data-width="${pct}%" style="width:${pct}%"></div></div>
-      <div class="pkpi-meta" style="margin-top:6px">Aporte del mes: <strong>${escapeHtml(formatByUnit(row[cfg.monthlyField], cfg.unit, cfg.unit === 'unidad' ? 2 : undefined))}</strong></div>
+      <div class="pkpi-meta" style="margin-top:6px">Aporte del mes: <strong>${escapeHtml(indicatorMonthly(cfg, row))}</strong></div>
     </article>`;
   }).join('');
 
@@ -2505,9 +2565,10 @@ function buildPresentation(){
         <span class="presentation-chip ${cls}">${escapeHtml(item.componente)}</span>
       </div>
       <div class="pkpi-value">${escapeHtml(formatByUnit(item.valor_mes, item.unidad))}</div>
-      <div class="pkpi-meta">Meta mensual: ${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</div>
+      <div class="pkpi-meta">${item.meta_anual ? 'Meta anual: ' + escapeHtml(formatByUnit(item.meta_anual, item.unidad)) : 'Meta mensual: ' + escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</div>
       <div class="pkpi-bar-wrap"><div class="pkpi-bar ${cls}" data-width="${pct}%" style="width:${pct}%"></div></div>
       <div class="pkpi-meta" style="margin-top:6px">Acumulado al corte: <strong>${escapeHtml(formatByUnit(item.valor_acumulado, item.unidad))}</strong> / ${escapeHtml(formatByUnit(item.meta_acumulada, item.unidad))}</div>
+      <div class="pkpi-meta" style="margin-top:6px"><strong>Incluye:</strong> ${escapeHtml((item.detalle || []).slice(0,2).join(' · '))}</div>
     </article>`;
   }).join('');
 
@@ -2515,7 +2576,7 @@ function buildPresentation(){
     <small>${escapeHtml(r.mes_label)} ${escapeHtml(r.anio)}</small>
     <strong>${escapeHtml(formatByUnit(r.ha_monitoreadas_kpi_acum,'ha',2))}</strong>
     <p>Vivero acumulado: ${escapeHtml(formatByUnit(r.plantas_netas_acum,'plantas'))}</p>
-    <span class="presentation-chip ${semaforoClass(r.semaforo_sig)}">SIG ${escapeHtml(formatPercent(r.pct_meta_sig))}</span>
+    <span class="presentation-chip ${semaforoClass(r.semaforo_sig)}">Sistema digital ${escapeHtml(formatPercent(r.pct_meta_sig))}</span>
   </article>`).join('');
 
   meta.innerHTML = `
@@ -2535,7 +2596,7 @@ function buildPresentation(){
           </div>
           <div class="presentation-brand-badge">
             <img src="./reforestando_logo.png" alt="Logo de Reforestando Atitlán">
-            <small>Restauración forestal · monitoreo · vivero · laboratorio SIG · cuenca del Lago de Atitlán</small>
+            <small>Restauración forestal · monitoreo · vivero · monitoreo digital · cuenca del Lago de Atitlán</small>
           </div>
         </div>
         <div class="presentation-summary-grid">
@@ -2567,11 +2628,11 @@ function buildPresentation(){
 
     <section class="presentation-slide">
       <div class="presentation-slide-inner">
-        <div class="presentation-kicker">KPIs mensuales complementarios</div>
+        <div class="presentation-kicker">Indicadores mensuales complementarios</div>
         <div class="presentation-title-row">
           <div>
-            <h2>SIG, vivero y soporte operativo</h2>
-            <p>Esta capa mensual complementa la lectura anual del programa y ayuda a explicar mejor el avance operativo del primer trimestre sin tocar la lógica de los KPIs principales.</p>
+            <h2>Monitoreo digital, vivero y soporte operativo</h2>
+            <p>Esta capa mensual complementa la lectura anual del programa y ayuda a explicar mejor el avance operativo del primer trimestre sin cambiar la lectura de los indicadores principales.</p>
           </div>
         </div>
         <div class="presentation-kpi-pairs">
@@ -2586,7 +2647,7 @@ function buildPresentation(){
         <div class="presentation-title-row">
           <div>
             <h2>Ruta temprana del programa</h2>
-            <p>El primer trimestre sirve como línea base operativa: monitoreo activo desde febrero, consolidación SIG en avance y vivero en fase de acumulación inicial.</p>
+            <p>El primer trimestre sirve como línea base operativa: monitoreo activo desde febrero, consolidación del sistema digital en avance y vivero en fase de acumulación inicial.</p>
           </div>
         </div>
         <div class="presentation-metric-grid" style="grid-template-columns:repeat(3,1fr)">
@@ -2594,7 +2655,7 @@ function buildPresentation(){
         </div>
         <div class="presentation-note" style="margin-top:18px">
           <h3>Interpretación</h3>
-          <p>La siembra anual aún no se activa en el corte de marzo, por lo que el tablero concentra la lectura en monitoreo, cartografía, consolidación institucional SIG y acumulación del vivero.</p>
+          <p>La siembra anual aún no se activa en el corte de marzo, por lo que el tablero concentra la lectura en monitoreo, cartografía, consolidación del sistema digital y acumulación del vivero.</p>
         </div>
       </div>
     </section>
@@ -2614,7 +2675,7 @@ function buildPresentation(){
           </div>
           <div class="presentation-note">
             <h3>Mensaje de cierre</h3>
-            <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, Reforestando Atitlán registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, una consolidación SIG de <strong>${escapeHtml(formatNumber(row.aporte_sig_acum,2))}</strong> y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas.</p>
+            <p>En <strong>${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</strong>, Reforestando Atitlán registra <strong>${escapeHtml(formatByUnit(row.ha_monitoreadas_kpi_acum,'ha',2))}</strong> monitoreadas, un avance del sistema digital de <strong>${escapeHtml(formatPercent(row.pct_meta_sig))}</strong> y <strong>${escapeHtml(formatByUnit(row.plantas_netas_acum,'plantas'))}</strong> plantas acumuladas.</p>
             <p>La cartografía acumulada reporta <strong>${escapeHtml(formatPercent(row.pct_cartografia_acum))}</strong> y el vivero muestra <strong>${escapeHtml(formatNumber(row.especies_acumuladas_proxy,0))}</strong> especies activas como base para la temporada alta.</p>
             <p style="margin-top:auto;padding-top:12px;border-top:1px dashed var(--line-soft);font-size:.83rem;color:var(--muted)">Reforestando Atitlán · tablero ejecutivo de restauración forestal · ${escapeHtml(row.mes_label)} ${escapeHtml(row.anio)}</p>
           </div>
@@ -2710,7 +2771,7 @@ function render(){
       .filter(r => safeNumber(r.anio) === ACTIVE_YEAR && safeNumber(r.mes_num) <= ACTIVE_MONTH_MAX)
       .sort((a,b) => String(a.periodo_clave).localeCompare(String(b.periodo_clave)));
 
-    state.totalRows = q1Rows;
+    state.totalRows = applyProgramAdjustments(q1Rows);
     state.indicatorRows = indicatorRows.filter(r => safeNumber(r.anio || ACTIVE_YEAR) === ACTIVE_YEAR && safeNumber(r.mes_num || 0) <= ACTIVE_MONTH_MAX);
     state.metadata = metadataRows[0] || null;
     state.periods = state.totalRows.map(r => r.periodo_clave);
