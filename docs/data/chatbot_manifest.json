@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-04-28T07:01:16.655061-06:00",
+  "generated_at": "2026-04-29T06:55:41.224789-06:00",
   "cutoff": {
     "institutional_cutoff_period": "2026-03",
     "timezone": "America/Guatemala",
@@ -2026,12 +2026,14 @@
       "available_periods_total": [
         "2026-01",
         "2026-02",
-        "2026-03"
+        "2026-03",
+        "2026-04"
       ],
       "available_periods_indicators": [
         "2026-01",
         "2026-02",
-        "2026-03"
+        "2026-03",
+        "2026-04"
       ],
       "valid_periods": [
         "2026-01",
@@ -2043,9 +2045,9 @@
       "metadata": {
         "programa_id": "fortalecimiento_municipal",
         "programa_nombre": "Fortalecimiento municipal",
-        "periodos_detectados": "2026-01 | 2026-02 | 2026-03",
+        "periodos_detectados": "2026-01 | 2026-02 | 2026-03 | 2026-04",
         "fecha_min_global": "2026-01",
-        "fecha_max_global": "2026-03",
+        "fecha_max_global": "2026-04",
         "usa_encabezado_como_fuente_periodo": false,
         "nota_asistencias_codede": "Indicador publicado como proxy operativo mientras no exista columna explícita CODEDE en el sheet.",
         "nota_capacitaciones": "Estado fila e INCOMPLETA solo alertan calidad; no excluyen KPIs si la fila sí trae evidencia operativa mínima.",
@@ -2070,7 +2072,7 @@
         {
           "field": "asistencias_priorizadas_proxy_mes",
           "label": "Asistencias priorizadas",
-          "value": 3.0
+          "value": 5.0
         },
         {
           "field": "reuniones_totales_mes",
@@ -2089,24 +2091,24 @@
         "fecha_min_periodo": "2026-03-01",
         "fecha_max_periodo": "2026-03-31",
         "eventos_capacitacion_mes": 0.0,
-        "eventos_capacitacion_acum": 2.0,
+        "eventos_capacitacion_acum": 1.0,
         "municipios_capacitacion_nucleo_mes": 0.0,
         "municipios_capacitacion_nucleo_acum": 0.0,
         "personas_capacitadas_nucleo_mes": 0.0,
-        "personas_capacitadas_nucleo_acum": 18.0,
+        "personas_capacitadas_nucleo_acum": 5.0,
         "personas_capacitadas_total_mes": 0.0,
-        "personas_capacitadas_total_acum": 18.0,
+        "personas_capacitadas_total_acum": 5.0,
         "tecnicos_capacitados_mes": 0.0,
-        "tecnicos_capacitados_acum": 18.0,
+        "tecnicos_capacitados_acum": 5.0,
         "operarios_capacitados_mes": 0.0,
         "operarios_capacitados_acum": 0.0,
         "otro_personal_capacitado_mes": 0.0,
         "otro_personal_capacitado_acum": 0.0,
         "temas_nucleo_cubiertos_mes": 0.0,
-        "asistencias_priorizadas_proxy_mes": 3.0,
-        "asistencias_priorizadas_proxy_acum": 8.0,
-        "asistencias_nuevas_total_mes": 4.0,
-        "asistencias_nuevas_total_acum": 10.0,
+        "asistencias_priorizadas_proxy_mes": 5.0,
+        "asistencias_priorizadas_proxy_acum": 10.0,
+        "asistencias_nuevas_total_mes": 6.0,
+        "asistencias_nuevas_total_acum": 12.0,
         "estudios_rs_comercial_mercados_mes": 1.0,
         "estudios_rs_comercial_mercados_acum": 1.0,
         "estudios_finalizados_total_mes": 2.0,
@@ -2151,18 +2153,18 @@
             "indicator_name": "Personas capacitadas en temas núcleo",
             "unit": "personas",
             "category": "primario",
-            "status": "amarillo",
+            "status": "rojo",
             "bucket": "alerta",
             "is_required": true,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": 18.75,
             "target_year": 75.0,
             "expected_to_date": 18.75,
-            "pct_vs_expected": 0.96,
-            "pct_meta_year": 0.24,
+            "pct_vs_expected": 0.266667,
+            "pct_meta_year": 0.066667,
             "note": "",
-            "human_summary": "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 96% del avance esperado al corte."
+            "human_summary": "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 27% del avance esperado al corte."
           },
           {
             "indicator_id": "asistencias_priorizadas_proxy",
@@ -2172,15 +2174,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 3.0,
-            "value_accumulated": 8.0,
+            "value_month": 5.0,
+            "value_accumulated": 10.0,
             "target_month": 0.75,
             "target_year": 3.0,
             "expected_to_date": 0.75,
-            "pct_vs_expected": 10.666667,
-            "pct_meta_year": 2.666667,
+            "pct_vs_expected": 13.333333,
+            "pct_meta_year": 3.333333,
             "note": "",
-            "human_summary": "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1067% del esperado al corte."
+            "human_summary": "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1333% del esperado al corte."
           },
           {
             "indicator_id": "estudios_rs_comercial_mercados",
@@ -2262,8 +2264,8 @@
             "status": "gris",
             "bucket": "neutral",
             "is_required": false,
-            "value_month": 4.0,
-            "value_accumulated": 10.0,
+            "value_month": 6.0,
+            "value_accumulated": 12.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2299,7 +2301,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 2.0,
+            "value_accumulated": 1.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2371,7 +2373,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2407,7 +2409,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2423,18 +2425,18 @@
             "indicator_name": "Personas capacitadas en temas núcleo",
             "unit": "personas",
             "category": "primario",
-            "status": "amarillo",
+            "status": "rojo",
             "bucket": "alerta",
             "is_required": true,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": 18.75,
             "target_year": 75.0,
             "expected_to_date": 18.75,
-            "pct_vs_expected": 0.96,
-            "pct_meta_year": 0.24,
+            "pct_vs_expected": 0.266667,
+            "pct_meta_year": 0.066667,
             "note": "",
-            "human_summary": "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 96% del avance esperado al corte."
+            "human_summary": "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 27% del avance esperado al corte."
           }
         ],
         "positives": [
@@ -2446,15 +2448,15 @@
             "status": "verde",
             "bucket": "positivo",
             "is_required": true,
-            "value_month": 3.0,
-            "value_accumulated": 8.0,
+            "value_month": 5.0,
+            "value_accumulated": 10.0,
             "target_month": 0.75,
             "target_year": 3.0,
             "expected_to_date": 0.75,
-            "pct_vs_expected": 10.666667,
-            "pct_meta_year": 2.666667,
+            "pct_vs_expected": 13.333333,
+            "pct_meta_year": 3.333333,
             "note": "",
-            "human_summary": "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1067% del esperado al corte."
+            "human_summary": "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1333% del esperado al corte."
           },
           {
             "indicator_id": "estudios_rs_comercial_mercados",
@@ -2556,8 +2558,8 @@
             "status": "gris",
             "bucket": "neutral",
             "is_required": false,
-            "value_month": 4.0,
-            "value_accumulated": 10.0,
+            "value_month": 6.0,
+            "value_accumulated": 12.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2593,7 +2595,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 2.0,
+            "value_accumulated": 1.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2665,7 +2667,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2701,7 +2703,7 @@
             "bucket": "neutral",
             "is_required": false,
             "value_month": 0.0,
-            "value_accumulated": 18.0,
+            "value_accumulated": 5.0,
             "target_month": null,
             "target_year": null,
             "expected_to_date": null,
@@ -2715,12 +2717,12 @@
       "narratives": {
         "executive_summary": "Para Marzo de 2026, Fortalecimiento Municipal muestra 1 indicador(es) que requieren atención prioritaria. El chatbot debería explicar esos rezagos usando solo este corte válido.",
         "what_is_going_well": [
-          "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1067% del esperado al corte.",
+          "Asistencias técnicas priorizadas de agua y saneamiento (proxy operativo) va bien: alcanza 1333% del esperado al corte.",
           "Estudios de residuos sólidos sector comercial / mercados finalizados va bien: alcanza 200% del esperado al corte.",
           "PIRDES implementados va bien: alcanza 160% del esperado al corte."
         ],
         "what_needs_attention": [
-          "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 96% del avance esperado al corte."
+          "Personas capacitadas en temas núcleo está por debajo del ritmo esperado: alcanza 27% del avance esperado al corte."
         ],
         "context_notes": []
       }
