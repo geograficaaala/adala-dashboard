@@ -1659,6 +1659,65 @@ iframe[src*="maps"] {
   min-height: 860px !important;
 }
 
+
+/* Ajuste visual del bloque introductorio solicitado */
+.hero{
+  grid-template-columns:minmax(0,1.9fr) minmax(280px,.85fr) !important;
+  align-items:stretch !important;
+  gap:18px !important;
+}
+.hero-main{
+  min-height:100% !important;
+}
+.hero-copy-text{
+  display:block !important;
+}
+.hero-copy-text h1{
+  font-size:clamp(2rem,4vw,2.9rem) !important;
+  line-height:1.05 !important;
+  margin-bottom:18px !important;
+}
+.hero-copy-text .hero-lead{
+  max-width:none !important;
+  font-size:.82rem !important;
+  line-height:1.78 !important;
+  text-align:justify !important;
+  margin:0 0 12px 0 !important;
+}
+.hero-side{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:100% !important;
+}
+.logo-frame{
+  width:100% !important;
+  min-height:100% !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.hero-logo{
+  max-width:250px !important;
+  width:78% !important;
+  height:auto !important;
+  margin:0 auto !important;
+}
+@media (max-width: 1100px){
+  .hero{
+    grid-template-columns:1fr !important;
+  }
+  .hero-copy-text h1{
+    font-size:clamp(1.8rem,7vw,2.5rem) !important;
+  }
+  .hero-copy-text .hero-lead{
+    font-size:.88rem !important;
+  }
+  .hero-side{
+    min-height:280px !important;
+  }
+}
+
 </style>
 
 </head>
@@ -1741,16 +1800,17 @@ iframe[src*="maps"] {
   <div class="full-only">
     <section class="hero" id="resumen">
       <div class="card hero-main">
-        <div class="hero-copy">
+        <div class="hero-copy hero-copy-text">
           <h1>Reforestando Atitlán para un Futuro Verde</h1>
-          <p class="hero-lead">El proyecto <strong>"Reforestando Atitlán para un Futuro Verde"</strong> es una iniciativa de reforestación y restauración ecológica enfocada en la recuperación de áreas degradadas en la Cuenca del Lago de Atitlán. La cuenca, hogar de más de 256,000 habitantes, enfrenta problemas de deforestación, erosión de suelos y pérdida de biodiversidad debido a la presión agrícola, incendios forestales y el crecimiento urbano. Esta iniciativa tiene como objetivo reforestar la cuenca con especies nativas adaptadas al entorno local, restaurando las funciones ecológicas del bosque, promoviendo la conservación de la biodiversidad y asegurando la sostenibilidad de los recursos naturales de los cuales dependen las comunidades locales.</p>
-          <p class="hero-lead">Desde su inicio en 2016, el proyecto ha logrado la plantación de más de 1.6 millones de árboles y se proyecta que al 2027 el número de árboles plantados alcance los 2.13 millones, abarcando alrededor de 1,000 hectáreas. Para maximizar el impacto ambiental, el programa utiliza especies nativas como el pino, ciprés y aliso, lo cual no solo facilita la adaptación al entorno, sino que también contribuye a la preservación de la flora y fauna locales, apoyando la creación de corredores biológicos en la región. Con una tasa de supervivencia promedio del 71.7%, el proyecto ha demostrado ser efectivo en la restauración de áreas degradadas, estabilización de suelos y protección de fuentes hídricas.</p>
-        </div>
+          <p class="hero-lead">El proyecto <strong>"Reforestando Atitlán para un Futuro Verde"</strong> es una iniciativa de reforestación y restauración ecológica enfocada en la recuperación de áreas degradadas en la Cuenca del Lago de Atitlán. La cuenca, hogar de más de 256,000 habitantes, enfrenta problemas de deforestación, erosión de suelos y pérdida de biodiversidad debido a la presión agrícola, incendios forestales y el crecimiento urbano.</p>
+          <p class="hero-lead">Esta iniciativa tiene como objetivo reforestar la cuenca con especies nativas adaptadas al entorno local, restaurando las funciones ecológicas del bosque, promoviendo la conservación de la biodiversidad y asegurando la sostenibilidad de los recursos naturales de los cuales dependen las comunidades locales.</p>
+          <p class="hero-lead">Desde su inicio en 2016, el proyecto ha logrado la plantación de más de 1.6 millones de árboles y se proyecta que al 2027 el número de árboles plantados alcance los 2.13 millones, abarcando alrededor de 1,000 hectáreas.</p>
+          <p class="hero-lead">Para maximizar el impacto ambiental, el programa utiliza especies nativas como el pino, ciprés y aliso, lo cual no solo facilita la adaptación al entorno, sino que también contribuye a la preservación de la flora y fauna locales, apoyando la creación de corredores biológicos en la región. Con una tasa de supervivencia promedio del 71.7%, el proyecto ha demostrado ser efectivo en la restauración de áreas degradadas, estabilización de suelos y protección de fuentes hídricas.</p>
         </div>
       </div>
       <aside class="card hero-side" aria-label="Identidad visual del programa">
         <div class="logo-frame">
-          <img class="hero-logo" src="./reforestando_logo.png" alt="Logo de Reforestando Atitlán">
+          <img class="hero-logo" src="./reforestando_logo.png" alt="Logo de Reforestando Atitlán para un Futuro Verde">
         </div>
       </aside>
     </section>
