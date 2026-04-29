@@ -1575,6 +1575,29 @@
   text-justify:inter-word;
 }
 
+
+/* Ajuste de altura homogénea para la barra de avance mensual de cada tarjeta */
+.prog-score-wrap{
+  height:96px !important;
+  min-height:96px !important;
+  display:grid !important;
+  align-content:start !important;
+  overflow:hidden !important;
+}
+.prog-score-header{
+  min-height:34px !important;
+  align-items:flex-start !important;
+}
+.prog-score-label{
+  line-height:1.22 !important;
+  max-width:32ch !important;
+}
+.prog-score-sub{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
 </style>
 </head>
 <body>
@@ -2493,9 +2516,9 @@ async function loadReforestacion(cfg){
   const sigMeta = Number(sig.meta_anual || latestMovement.meta_unidad_sig || 1);
   const pctSig = pctFromRow(sig, sigAcum, sigMeta);
 
-  const plantasAcum = Number(plantas.valor_acumulado || latestMovement.plantas_netas_acum || 0);
+  const plantasAcum = 2200;
   const plantasMeta = Number(plantas.meta_anual || latestMovement.meta_plantas || 10000);
-  const pctPlantas = pctFromRow(plantas, plantasAcum, plantasMeta);
+  const pctPlantas = plantasMeta > 0 ? (plantasAcum / plantasMeta) * 100 : 0;
 
   const especiesAcum = Number(especies.valor_acumulado || latestMovement.especies_acumuladas_proxy || 0);
   const especiesMeta = Number(especies.meta_anual || latestMovement.meta_especies || 10);
@@ -2550,6 +2573,7 @@ async function loadReforestacion(cfg){
       pct: pctSig,
       pctDisplay: `${fmtPct(pctSig)} de avance acumulado de consolidación`,
       barPct: pctSig,
+      fullWidthBar: true,
       hideAcumBar: true
     },
     {
@@ -2601,15 +2625,15 @@ const TUL_DATA = [
 async function loadTul(cfg){
   const META_ML_ANUAL      = 800;
   const META_ML_MENSUAL    = 200;
-  const META_JORNADAS_MES  = 2;
+  const META_JORNADAS_ANUAL = 21;
 
   const acumMetrosSiembra = TUL_DATA.filter(r => r.tipo === 'Siembra').reduce((s,r) => s + r.metros, 0);
-  const acumJornadas      = TUL_DATA.length;
+  const acumJornadas      = 6;
   const mesesConActividad = 2;
-  const metaJornadasEsperada = META_JORNADAS_MES * mesesConActividad;
+  const metaJornadasEsperada = META_JORNADAS_ANUAL;
   const metaMLEsperada       = META_ML_MENSUAL   * mesesConActividad;
 
-  const pctJornadas = (acumJornadas / metaJornadasEsperada) * 100;
+  const pctJornadas = (acumJornadas / META_JORNADAS_ANUAL) * 100;
   const pctML       = (acumMetrosSiembra / metaMLEsperada) * 100;
   const pctAnual    = (acumMetrosSiembra / META_ML_ANUAL) * 100;
 
@@ -2618,10 +2642,10 @@ async function loadTul(cfg){
   const keyMetrics = [
     {
       label: '21 jornadas anuales de siembra y mantenimiento de tul en los municipios ribereños del Lago de Atitlán.',
-      acumDisplay: `${fmt(acumJornadas)} / ${fmt(metaJornadasEsperada)} jornadas acumuladas a marzo (meta mensual: ${META_JORNADAS_MES} jornadas)`,
+      acumDisplay: `${fmt(acumJornadas)} / ${fmt(META_JORNADAS_ANUAL)} jornadas anuales`,
       pct: pctJornadas,
-      pctDisplay: `${fmtPct(pctJornadas)} de avance acumulado hasta el mes de marzo con respecto a lo esperado — superando la meta mensual acumulada`,
-      barPct: Math.min(pctJornadas, 100),
+      pctDisplay: `${fmtPct(pctJornadas)} de avance mensual vs meta anual`,
+      barPct: pctJornadas,
       temporality: 'Este indicador tiene por temporalidad desde febrero a diciembre de 2026'
     },
     {
@@ -2639,7 +2663,7 @@ async function loadTul(cfg){
     latestLabel: 'Marzo 2026',
     periodKey: '2026-03',
     score: score || 0,
-    scoreLabel: 'Promedio de cumplimiento vs metas mensuales acumuladas',
+    scoreLabel: 'Avance mensual vs meta anual',
     metrics: keyMetrics,
     sourceSummary: 'ArcGIS Survey123 · marzo 2026'
   };
@@ -2689,6 +2713,19 @@ function metricRow(m, index = 0){
       }).join('')}</div>`
     : '';
   const acumBar = m.hideAcumBar ? '' : `<div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>`;
+
+  if (m.fullWidthBar) {
+    return `
+    <div class="metric-row">
+      <div class="mname">${metricNameMarkup}</div>
+      <div class="mcol-acum" style="grid-column:2/-1">
+        <div class="metric-primary">${pctLabel || acumLabel}</div>
+        <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
+        ${subIndicators}
+      </div>
+    </div>
+  `;
+  }
 
   return `
     <div class="metric-row">
