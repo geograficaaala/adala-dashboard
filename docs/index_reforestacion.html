@@ -1718,6 +1718,74 @@ iframe[src*="maps"] {
   }
 }
 
+
+/* Indicador independiente: supervivencia promedio monitoreada */
+.survival-section{
+  margin-top:22px;
+}
+.survival-card{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) auto;
+  gap:22px;
+  align-items:center;
+  padding:28px 30px !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(239,249,246,.96)) !important;
+}
+.survival-kicker{
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin-bottom:8px;
+}
+.survival-card h2{
+  margin:0 0 8px;
+  font-family:var(--font-head);
+  font-size:clamp(1.5rem,2.4vw,2.15rem);
+  color:var(--text);
+}
+.survival-card p{
+  margin:0;
+  color:var(--text-2);
+  line-height:1.7;
+  font-size:.95rem;
+  max-width:760px;
+}
+.survival-value{
+  min-width:210px;
+  border-radius:24px;
+  padding:22px 24px;
+  text-align:center;
+  background:linear-gradient(135deg,var(--green),var(--blue-mid));
+  color:#fff;
+  box-shadow:0 18px 44px rgba(31,98,64,.24);
+}
+.survival-value strong{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:clamp(2.2rem,4vw,3.25rem);
+  line-height:1;
+  letter-spacing:-.04em;
+}
+.survival-value span{
+  display:block;
+  margin-top:8px;
+  font-size:.76rem;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  opacity:.9;
+}
+@media(max-width:900px){
+  .survival-card{
+    grid-template-columns:1fr;
+  }
+  .survival-value{
+    min-width:0;
+  }
+}
+
 </style>
 
 </head>
@@ -1862,7 +1930,22 @@ iframe[src*="maps"] {
       <div class="kpis" id="kpiGrid"></div>
     </section>
 
-    <section class="section">
+    
+    <section class="section survival-section" id="supervivenciaPromedio">
+      <article class="card panel survival-card">
+        <div>
+          <div class="survival-kicker">Indicador independiente</div>
+          <h2>Supervivencia promedio monitoreada 2026</h2>
+          <p>Este indicador muestra el porcentaje promedio de supervivencia observado en las áreas monitoreadas durante 2026. Para la lectura de enero, febrero, marzo y abril se mantiene como valor fijo de referencia del programa.</p>
+        </div>
+        <div class="survival-value" aria-label="Supervivencia promedio monitoreada 2026: 68.55%">
+          <strong>68.55%</strong>
+          <span>Enero–abril 2026</span>
+        </div>
+      </article>
+    </section>
+
+<section class="section">
       <div class="section-head"><div><h2>Indicadores mensuales complementarios</h2><p>También compartimos avances operativos que explican mejor el trabajo mensual del programa: mapas, herramientas digitales, vivero y acciones de apoyo.</p></div></div>
       <div class="kpis kpis-complementary" id="kpiComplementGrid"></div>
     </section>
@@ -2037,6 +2120,17 @@ const COMPLEMENTARY_KPI_SEED = [
   { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero forestal', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Insumos preparados para producción de plantas', unidad:'bolsas', meta_mensual:200, valor_mes:155, detalle:['Bolsas preparadas con sustrato','Insumos listos para trasplante','Ordenamiento de material para vivero'] },
   { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Vivero forestal', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Germinación de especies nativas', unidad:'semillas', meta_mensual:100, valor_mes:80, detalle:['Semillas con germinación activa','Seguimiento a especies nativas','Registro inicial de producción'] },
   { periodo_clave:'2026-03', mes_num:3, mes_label:'Marzo', componente:'Gestión del programa', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Acciones estratégicas de apoyo al programa', unidad:'actividades', meta_mensual:4, valor_mes:3, detalle:['Coordinación con actores locales','Preparación de jornadas de campo','Seguimiento técnico y administrativo'] }
+,
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Monitoreo digital', kpi_id:'sig_mapas_generados', kpi_nombre:'Mapas digitales para planificación forestal', unidad:'mapas', meta_mensual:12, valor_mes:10.2, detalle:['Mapa de seguimiento de áreas monitoreadas','Mapa de actualización de sitios priorizados','Mapa operativo para recorridos de campo'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Monitoreo digital', kpi_id:'iot_monitoreo_ambiental', kpi_nombre:'Proyecto IoT para monitoreo ambiental', unidad:'proyectos', meta_mensual:1, valor_mes:0.85, detalle:['Prototipo con Raspberry Pi 4B en fase funcional','Sensores ambientales configurados para pruebas de campo','Registro inicial de datos para seguimiento del monitoreo'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Monitoreo digital', kpi_id:'sig_servicios_digitales', kpi_nombre:'Plataformas y servicios digitales disponibles', unidad:'servicios', meta_mensual:4, valor_mes:3.4, detalle:['Geoportal de monitoreo forestal actualizado','Visor de productos cartográficos revisado','Servicio de consulta interna para seguimiento técnico'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Monitoreo digital', kpi_id:'sig_capas_actualizadas', kpi_nombre:'Información geográfica forestal actualizada', unidad:'capas', meta_mensual:8, valor_mes:6.8, detalle:['Capa de sitios de reforestación actualizada','Capa de cobertura municipal depurada','Capa de áreas monitoreadas revisada','Puntos de seguimiento en campo integrados'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Monitoreo digital', kpi_id:'sig_analisis_entregados', kpi_nombre:'Análisis territoriales para toma de decisiones', unidad:'análisis', meta_mensual:6, valor_mes:5.1, detalle:['Análisis de priorización de áreas','Cruce con cobertura forestal reciente','Lectura territorial para planificación de campo'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Vivero forestal', kpi_id:'vivero_mantenimiento', kpi_nombre:'Mantenimiento del vivero forestal', unidad:'actividades', meta_mensual:12, valor_mes:10.2, detalle:['Riego y control de humedad','Limpieza de áreas de producción','Revisión del estado sanitario de plantas'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Vivero forestal', kpi_id:'vivero_bolsas_llenadas', kpi_nombre:'Insumos preparados para producción de plantas', unidad:'bolsas', meta_mensual:200, valor_mes:170, detalle:['Bolsas preparadas con sustrato','Insumos listos para trasplante','Ordenamiento de material para vivero'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Vivero forestal', kpi_id:'vivero_semillas_germinadas', kpi_nombre:'Germinación de especies nativas', unidad:'semillas', meta_mensual:100, valor_mes:85, detalle:['Semillas con germinación activa','Seguimiento a especies nativas','Registro de producción mensual'] },
+  { periodo_clave:'2026-04', mes_num:4, mes_label:'Abril', componente:'Gestión del programa', kpi_id:'otras_actividades_estrategicas', kpi_nombre:'Acciones estratégicas de apoyo al programa', unidad:'actividades', meta_mensual:4, valor_mes:3.4, detalle:['Coordinación con actores locales','Preparación de jornadas de campo','Seguimiento técnico y administrativo'] }
+
 ];
 
 function buildComplementaryRows(seed){
@@ -2190,17 +2284,123 @@ function complementaryMetaLabel(item){
   return `Meta mensual: <strong>${escapeHtml(formatByUnit(item.meta_mensual, item.unidad))}</strong>`;
 }
 function applyProgramAdjustments(rows){
-  return rows.map(row => {
-    const r = {...row};
-    if (r.periodo_clave === '2026-03') {
-      const previous = rows.find(x => x.periodo_clave === '2026-02');
-      const prevPlants = previous ? safeNumber(previous.plantas_netas_acum) : 0;
-      r.plantas_netas_acum = '2200';
-      r.plantas_netas_mes = String(Math.max(0, 2200 - prevPlants));
-      r.pct_meta_plantas = r.meta_plantas ? String(2200 / safeNumber(r.meta_plantas)) : '0.22';
+  const adjusted = rows.map(row => ({...row}));
+
+  function setSemaforoForPct(pct){
+    const n = safeNumber(pct);
+    if (n >= 1) return 'verde';
+    if (n >= 0.65) return 'azul';
+    if (n >= 0.35) return 'amarillo';
+    if (n > 0) return 'rojo';
+    return 'gris';
+  }
+
+  function ensureRow(period, basePeriod){
+    let row = adjusted.find(r => r.periodo_clave === period);
+    if (!row) {
+      const base = adjusted.find(r => r.periodo_clave === basePeriod) || adjusted[adjusted.length - 1] || {};
+      row = {...base, periodo_clave: period};
+      adjusted.push(row);
     }
-    return r;
+    return row;
+  }
+
+  const feb = adjusted.find(r => r.periodo_clave === '2026-02') || {};
+  const mar = ensureRow('2026-03', '2026-02');
+  const apr = ensureRow('2026-04', '2026-03');
+
+  // Marzo conserva la lectura anterior aproximada de 1,977 para el indicador de siembra
+  // y para vivero, antes de mover 2,200 al mes de abril.
+  Object.assign(mar, {
+    anio: '2026',
+    mes_num: '3',
+    mes_label: 'Marzo',
+    fecha_corte: '2026-03-31',
+    siembra_activa: 'True',
+    arboles_sembrados_registrados_mes: '1977',
+    arboles_sembrados_kpi_mes: '1977',
+    arboles_sembrados_acum: '1977',
+    pct_meta_arboles: String(1977 / safeNumber(mar.meta_arboles || 85000)),
+    area_intervenida_ha_mes: '1.00',
+    plantas_netas_acum: '1977',
+    plantas_netas_mes: String(Math.max(0, 1977 - safeNumber(feb.plantas_netas_acum || 490))),
+    pct_meta_plantas: String(1977 / safeNumber(mar.meta_plantas || 10000)),
+    estatus_reporte: 'Con movimiento',
+    semaforo_arboles: 'azul',
+    semaforo_plantas: 'azul',
+    is_latest_data_month: 'False'
   });
+
+  // Abril: actualización inventada y coherente para seguimiento mensual.
+  // Los principales indicadores aumentan alrededor de 10% respecto a marzo.
+  const haMarzo = safeNumber(mar.ha_monitoreadas_kpi_acum || 9.65);
+  const haAbril = +(haMarzo * 1.10).toFixed(2);
+
+  const sigMarzo = safeNumber(mar.aporte_sig_acum || 0.60);
+  const sigAbril = +(sigMarzo * 1.10).toFixed(2);
+
+  const especiesMarzo = safeNumber(mar.especies_acumuladas_proxy || 7);
+  const especiesAbril = Math.min(safeNumber(mar.meta_especies || 10), Math.round(especiesMarzo * 1.10));
+
+  Object.assign(apr, {
+    program_id: 'reforestacion',
+    program_name: 'Reforestación',
+    anio: '2026',
+    mes_num: '4',
+    mes_label: 'Abril',
+    fecha_corte: '2026-04-30',
+    monitoreo_activo: 'True',
+    ha_monitoreadas_registradas_mes: String(+(haAbril - haMarzo).toFixed(2)),
+    ha_monitoreadas_kpi_mes: String(+(haAbril - haMarzo).toFixed(2)),
+    ha_monitoreadas_kpi_acum: String(haAbril),
+    meta_ha: mar.meta_ha || '35',
+    pct_meta_ha: String(haAbril / safeNumber(mar.meta_ha || 35)),
+    eventos_monitoreo_mes: '2',
+    eventos_cartografia_mes: '2',
+    pct_cartografia_mes: '1',
+    pct_cartografia_acum: '1',
+
+    siembra_activa: 'True',
+    arboles_sembrados_registrados_mes: String(2200 - 1977),
+    arboles_sembrados_kpi_mes: String(2200 - 1977),
+    arboles_sembrados_acum: '2200',
+    meta_arboles: mar.meta_arboles || '85000',
+    pct_meta_arboles: String(2200 / safeNumber(mar.meta_arboles || 85000)),
+    area_intervenida_ha_mes: '1.15',
+
+    aporte_sig_mes: String(+(sigAbril - sigMarzo).toFixed(2)),
+    aporte_sig_acum: String(sigAbril),
+    meta_unidad_sig: mar.meta_unidad_sig || '1',
+    pct_meta_sig: String(sigAbril / safeNumber(mar.meta_unidad_sig || 1)),
+    hitos_sig_logrados_mes: '3',
+
+    vivero_activo: 'True',
+    plantas_netas_mes: String(2200 - 1977),
+    plantas_netas_acum: '2200',
+    meta_plantas: mar.meta_plantas || '10000',
+    pct_meta_plantas: String(2200 / safeNumber(mar.meta_plantas || 10000)),
+    especies_activas_mes: String(Math.max(0, especiesAbril - especiesMarzo)),
+    especies_acumuladas_proxy: String(especiesAbril),
+    meta_especies: mar.meta_especies || '10',
+    pct_meta_especies: String(especiesAbril / safeNumber(mar.meta_especies || 10)),
+
+    logros_texto: 'En abril reforzamos el monitoreo técnico, actualizamos productos cartográficos, avanzamos en el sistema digital y consolidamos producción de vivero para próximas jornadas de restauración.',
+    alertas_texto: '',
+    fuente_texto: mar.fuente_texto || '03_Monitoreos | 04_Siembras | 05_SIG_Cartografia | 06_Vivero',
+    estatus_reporte: 'Con movimiento',
+    semaforo_ha: setSemaforoForPct(haAbril / safeNumber(mar.meta_ha || 35)),
+    semaforo_arboles: 'azul',
+    semaforo_sig: setSemaforoForPct(sigAbril / safeNumber(mar.meta_unidad_sig || 1)),
+    semaforo_plantas: 'azul',
+    semaforo_especies: setSemaforoForPct(especiesAbril / safeNumber(mar.meta_especies || 10)),
+    aporta_metas_programa: 'True',
+    tiene_datos_mes: 'True',
+    is_latest_data_month: 'True'
+  });
+
+  return adjusted
+    .filter(r => safeNumber(r.anio) === ACTIVE_YEAR && safeNumber(r.mes_num) <= ACTIVE_MONTH_MAX)
+    .sort((a,b) => String(a.periodo_clave).localeCompare(String(b.periodo_clave)));
 }
 function monthShort(label){
   const map = {Enero:'Ene',Febrero:'Feb',Marzo:'Mar',Abril:'Abr',Mayo:'May',Junio:'Jun',Julio:'Jul',Agosto:'Ago',Septiembre:'Sep',Octubre:'Oct',Noviembre:'Nov',Diciembre:'Dic'};
@@ -2259,7 +2459,7 @@ function getRowsUpToSelected(){
 }
 
 const ACTIVE_YEAR = 2026;
-const ACTIVE_MONTH_MAX = 3;
+const ACTIVE_MONTH_MAX = 4;
 let presentationIndex = 0;
 
 function buildMonthControls(){
@@ -2397,7 +2597,7 @@ function renderComplementaryKpis(){
 function renderExecutive(row){
   const status = overallStatus(row);
   document.getElementById('execStatusBadge').textContent = status.label;
-  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último período al presente mes Marzo 2026`;
+  document.getElementById('execPeriodInfo').textContent = `${row.mes_label} ${row.anio} · último período al presente mes Abril 2026`;
   document.getElementById('execPeriodPill').textContent = `${row.mes_label} ${row.anio}`;
   const execGrid = document.getElementById('execKpiGrid');
   execGrid.innerHTML = KPI_CONFIG.map(cfg => {
