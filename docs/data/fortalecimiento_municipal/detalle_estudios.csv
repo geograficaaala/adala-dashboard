@@ -6,11 +6,11 @@ row_number,module_name,fecha,anio,mes_num,mes_nombre,periodo,registro_valido,est
 5,estudios,2026-02-16,2026,2,Febrero,2026-02,True,OK,False,San Andrés Semetabaj,Caracterización de residuos sólidos,Análisis,False,False,False,Domiciliar,AALA,Corrección de observaciónes del MARN
 6,estudios,2026-02-16,2026,2,Febrero,2026-02,True,OK,False,Santa Lucía Utatlán,Caracterización de residuos sólidos,Finalizado,True,False,False,Domiciliar,AALA-AMSCLAE,
 7,estudios,2026-03-10,2026,3,Marzo,2026-03,True,OK,False,Panajachel,Caracterización de residuos sólidos,Borrador,True,True,True,Comercial,AALA-INTERCOP,Borrador informe final de estudio de carcaterización de residuos sólidos.
-8,estudios,2026-03-12,2026,3,Marzo,2026-03,True,OK,False,San Antonio Palopó,Caracterización de aguas residuales,Levantamiento,True,False,False,Mixto,AALA- MUNI-EPSUM,
+8,estudios,2026-03-12,2026,3,Marzo,2026-03,True,OK,False,San Antonio Palopó,Caracterización de aguas residuales,Levantamiento,True,False,False,Mixto,AALA- MUNI-EPSUM,Caracterización de descarga de aguas residuales
 9,estudios,2026-03-13,2026,3,Marzo,2026-03,True,OK,False,San Andrés Semetabaj,Caracterización de residuos sólidos,Finalizado,True,False,False,Domiciliar,AALA,"Se finalizo la correccion del estudio y entrega a UGAM, San Andrés Semetabaj"
-10,estudios,,,,,,False,,False,,,,False,False,False,,,
-11,estudios,,,,,,False,,False,,,,False,False,False,,,
-12,estudios,,,,,,False,,False,,,,False,False,False,,,
+10,estudios,2026-04-07,2026,4,Abril,2026-04,True,OK,False,Sololá,Caracterización de residuos sólidos,Finalizado,True,False,False,Domiciliar,AMSCLAE,"Revisión y entrega en conjunto el estudio de caracterizacion de aldes Argueta, Sololá"
+11,estudios,2026-04-22,2026,4,Abril,2026-04,True,OK,False,San Antonio Palopó,Caracterización de aguas residuales,Análisis,True,False,False,Mixto,,Se análiso los resultados del estudio de descarga de aguas residuales del municipio.
+12,estudios,2026-03-31,2026,3,Marzo,2026-03,True,OK,False,Panajachel,Caracterización de residuos sólidos,Finalizado,True,True,True,Comercial,AALA-INTERCOP,Entrega informe técnico estudio de caracterización de residuos y desechos solidos agencias INTERCOP
 13,estudios,,,,,,False,,False,,,,False,False,False,,,
 14,estudios,,,,,,False,,False,,,,False,False,False,,,
 15,estudios,,,,,,False,,False,,,,False,False,False,,,

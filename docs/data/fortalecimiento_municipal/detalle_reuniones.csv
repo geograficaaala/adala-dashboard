@@ -20,9 +20,9 @@ row_number,module_name,fecha,anio,mes_num,mes_nombre,periodo,registro_valido,est
 19,reuniones,2026-03-13 00:00:00.000000000,2026,3,Marzo,2026-03,True,OK,False,Otro,Cumplimiento de avances de cumplimiento de indicadores AALA,Coordinadores AALA,Vaciado de cumplimiento de indicadores de POA de proyectos AALA,False,False,False,
 20,reuniones,2026-03-18 00:00:00.000000000,2026,3,Marzo,2026-03,True,OK,False,Otro,Corredor Biocultural Zunil-Atitlán-Acatenango,"AALA, VM,CONAP, Municipalidades, ONGs, CONRED",Fortalecimiento a la construccion de la estrategia biocultural,False,False,False,
 21,reuniones,2026-03-24 00:00:00.000000000,2026,3,Marzo,2026-03,True,OK,False,Otro,Jornada de limpieza en Panajachel,"AALA, PORTA HOTEL, INTERCOP, MUNICIPALIDAD, AMSCLAE, CENTRO EDUCATIVO",Limpieza de orillas de playa pública en Panajachel.,False,False,False,
-22,reuniones,,,,,,False,,False,,,,,False,False,False,
-23,reuniones,,,,,,False,,False,,,,,False,False,False,
-24,reuniones,,,,,,False,,False,,,,,False,False,False,
+22,reuniones,2026-04-10 00:00:00.000000000,2026,4,Abril,2026-04,True,OK,False,Otro,Programa de pequeñas donaciones Fondo patrimonial,FCA,Socialización informativa para participar en la postulacion de proyectos forestales,False,False,False,
+23,reuniones,2026-04-08 00:00:00.000000000,2026,4,Abril,2026-04,True,OK,False,Mesa técnica municipal,Estrategia de reduccion de desechos de un solo uso en el municipio de San Marcos La Laguna.,"Municipalidad, MARN, AALA, Area de Salud","Establecer la estrategia de comunicacion para la reduccion de productos de un solo uso, socialización del acuerdo municipal, construccion de PIRDS y actualizacion del estudio de caracterizacion de residuos y desechos solidos del sector domiciliar, comercial y de mercado.",False,False,True,San Marcos La Laguna
+24,reuniones,2026-04-24 00:00:00.000000000,2026,4,Abril,2026-04,True,OK,False,Otro,Programa de pequeñas donaciones Fondo patrimonial,AALA,Revisión de lineamiento de postulacion para proyectos del programa de pequeñas donaciones del fondo patrimonial FCA,False,False,False,
 25,reuniones,,,,,,False,,False,,,,,False,False,False,
 26,reuniones,,,,,,False,,False,,,,,False,False,False,
 27,reuniones,,,,,,False,,False,,,,,False,False,False,
