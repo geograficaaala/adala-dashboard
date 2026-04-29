@@ -4,56 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Manejo de Tul · AALA</title>
+  <meta name="description" content="Tablero institucional del programa Manejo de Tul — Asociación Amigos del Lago de Atitlán">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    :root {
+    :root{
       --bg:#eef4fc;
       --surface:#f4f8fe;
-      --card:#ffffff;
+      --card:#fff;
       --text:#0c1d3a;
       --text-2:#2a4570;
       --muted:#6685aa;
-
       --line:#c5d8f0;
       --line-soft:#ddeaf8;
-
       --blue:#1a56a8;
       --blue-mid:#2575cc;
       --blue-light:#4a90d9;
       --blue-soft:#d0e6f8;
       --blue-pale:#eaf3fd;
-
       --sky:#38b6e8;
-      --sky-soft:#d0f0fb;
-      --sky-pale:#eaf9fe;
-
       --green:#157a50;
       --green-mid:#1d9e68;
       --green-soft:#c5eed9;
       --green-pale:#eafaf2;
-
       --gold:#7a5500;
       --gold-soft:#fef4cc;
       --red:#8f1c1c;
       --red-soft:#fce8e8;
-
       --shadow-sm:0 1px 4px rgba(10,35,80,.06),0 4px 16px rgba(10,35,80,.06);
       --shadow:0 2px 12px rgba(10,35,80,.09),0 8px 32px rgba(10,35,80,.08);
-      --shadow-lg:0 8px 40px rgba(10,35,80,.15),0 2px 8px rgba(10,35,80,.06);
-
       --radius:18px;
       --radius-sm:11px;
       --radius-xs:7px;
-
       --font-head:'Lora',Georgia,serif;
       --font-body:'Sora',system-ui,sans-serif;
       --font-mono:'JetBrains Mono',monospace;
     }
 
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    *,*::before,*::after{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
 
-    html{scroll-behavior:smooth}
+    html{
+      scroll-behavior:smooth;
+    }
 
     body{
       font-family:var(--font-body);
@@ -66,7 +62,10 @@
 
     body::before{
       content:'';
-      position:fixed; inset:0; pointer-events:none; z-index:0;
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
       background:
         radial-gradient(ellipse 90% 70% at 0% -5%,rgba(37,117,204,.20) 0%,transparent 50%),
         radial-gradient(ellipse 70% 60% at 100% 110%,rgba(56,182,232,.16) 0%,transparent 50%),
@@ -75,39 +74,69 @@
 
     body::after{
       content:'';
-      position:fixed; inset:0; pointer-events:none; z-index:0;
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
       background-image:radial-gradient(circle 1px at 1px 1px,rgba(37,117,204,.06) 1px,transparent 0);
       background-size:38px 38px;
     }
 
-    a{color:inherit}
+    body.view-exec .exec-only{
+      display:block!important;
+    }
+
+    body.view-exec .full-only{
+      display:none!important;
+    }
+
+    body.view-full .exec-only{
+      display:none!important;
+    }
+
+    body.view-full .full-only{
+      display:block!important;
+    }
+
+    .exec-only{
+      display:none;
+    }
+
+    .full-only{
+      display:block;
+    }
+
+    a{
+      color:inherit;
+    }
 
     .wrap{
-      width:min(1700px, calc(100vw - 24px));
+      max-width:1320px;
       margin:0 auto;
-      padding:26px 0 64px;
+      padding:26px 20px 64px;
       position:relative;
       z-index:1;
     }
 
-    /* =========================
-       HEADER · línea Reforestación
-       ========================= */
+    /* Header copiado de la línea visual de Reforestando Atitlán */
     .header{
-      position:sticky;
-      top:0;
-      z-index:200;
       display:grid;
       grid-template-columns:auto minmax(0,1fr);
       align-items:center;
       gap:24px;
       min-height:88px;
-      margin-bottom:22px;
-      padding:12px 0;
+      position:sticky;
+      top:0;
+      z-index:200;
       background:rgba(238,244,252,.90);
       backdrop-filter:blur(18px) saturate(1.6);
       -webkit-backdrop-filter:blur(18px) saturate(1.6);
       border-bottom:1px solid var(--line-soft);
+      margin-left:-20px;
+      margin-right:-20px;
+      padding:12px 20px;
+      margin-top:-26px;
+      margin-bottom:20px;
     }
 
     .header-brand{
@@ -119,7 +148,7 @@
     }
 
     .header-logo-img{
-      height:46px;
+      height:44px;
       width:auto;
       display:block;
       flex-shrink:0;
@@ -129,7 +158,11 @@
       box-shadow:0 2px 8px rgba(0,0,0,.18);
     }
 
-    .brand-text{display:grid;gap:1px}
+    .brand-text{
+      display:grid;
+      gap:1px;
+    }
+
     .brand-kicker{
       font-size:.72rem;
       letter-spacing:.12em;
@@ -138,6 +171,7 @@
       font-weight:800;
       line-height:1.1;
     }
+
     .brand-title{
       font-size:1rem;
       font-weight:700;
@@ -155,38 +189,39 @@
 
     .nav-tabs{
       display:flex;
-      flex-wrap:wrap;
       gap:8px;
       align-items:center;
       justify-content:flex-end;
-      min-width:0;
+      flex-wrap:wrap;
     }
 
     .nav-tab{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
-      min-height:38px;
-      padding:9px 14px;
+      gap:7px;
+      padding:8px 14px;
       border-radius:999px;
-      border:1px solid transparent;
-      background:rgba(255,255,255,.74);
-      color:var(--text-2);
+      border:1px solid var(--line-soft);
+      background:rgba(255,255,255,.7);
       text-decoration:none;
+      color:var(--text-2);
       font-size:.82rem;
       font-weight:700;
-      transition:all .2s ease;
       white-space:nowrap;
+      transition:all .2s ease;
     }
+
     .nav-tab:hover{
       background:var(--blue-pale);
       border-color:var(--blue-soft);
       color:var(--blue);
       transform:translateY(-1px);
     }
+
     .nav-tab.active{
       background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));
       color:#fff;
+      border-color:transparent;
       box-shadow:0 2px 10px rgba(37,117,204,.35);
     }
 
@@ -213,12 +248,14 @@
       font-size:.84rem;
       transition:all .2s ease;
     }
+
     .back:hover{
       background:var(--blue-pale);
       border-color:var(--blue-soft);
       color:var(--blue);
       transform:translateY(-1px);
     }
+
     .back-arrow{
       display:inline-flex;
       align-items:center;
@@ -233,19 +270,57 @@
       flex-shrink:0;
     }
 
+    .view-switcher{
+      display:inline-flex;
+      background:rgba(255,255,255,.7);
+      border:1px solid var(--line-soft);
+      border-radius:999px;
+      padding:4px;
+      gap:3px;
+    }
+
+    .view-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 15px;
+      border-radius:999px;
+      border:none;
+      background:transparent;
+      font-family:var(--font-body);
+      font-size:.8rem;
+      font-weight:600;
+      color:var(--muted);
+      cursor:pointer;
+      transition:all .2s ease;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+
+    .view-btn:hover{
+      color:var(--blue-mid);
+      background:rgba(37,117,204,.08);
+    }
+
+    .view-btn.active{
+      background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));
+      color:#fff;
+      box-shadow:0 2px 10px rgba(37,117,204,.35);
+    }
+
     .period-rack{
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:8px;
       flex-wrap:wrap;
     }
+
     .period-rack-label{
-      font-size:.72rem;
+      font-size:.68rem;
       font-weight:800;
-      letter-spacing:.12em;
+      letter-spacing:.1em;
       text-transform:uppercase;
       color:var(--muted);
-      white-space:nowrap;
     }
 
     .month-pills{
@@ -273,43 +348,39 @@
       transition:all .2s ease;
       letter-spacing:.02em;
     }
+
     .month-pill:hover:not(:disabled){
       color:var(--blue-mid);
       background:var(--blue-pale);
     }
+
     .month-pill.active{
       background:linear-gradient(135deg,var(--blue-mid),var(--blue-light));
       color:#fff;
       box-shadow:0 2px 10px rgba(26,86,168,.28);
     }
+
     .month-pill:disabled{
       opacity:.34;
       cursor:default;
-      filter:grayscale(.1);
     }
 
-    /* =========================
-       tarjetas
-       ========================= */
     .card{
       background:var(--card);
       border:1.5px solid var(--line-soft);
       border-radius:var(--radius);
       box-shadow:var(--shadow-sm);
-      transition:transform .25s ease, box-shadow .25s ease, border-color .2s ease;
+      transition:transform .3s cubic-bezier(.25,.46,.45,.94),box-shadow .3s ease,border-color .2s;
     }
+
     .card:hover{
-      transform:translateY(-3px);
+      transform:translateY(-4px);
       box-shadow:0 16px 48px rgba(10,35,80,.16),0 4px 12px rgba(10,35,80,.08);
       border-color:var(--blue-soft);
     }
 
-    .panel{
-      padding:22px 24px;
-    }
-
     .section{
-      margin-bottom:22px;
+      margin-bottom:18px;
     }
 
     .section-head{
@@ -321,14 +392,15 @@
       padding-bottom:10px;
       border-bottom:1px solid var(--line-soft);
     }
+
     .section-head h2{
       font-family:var(--font-head);
-      font-size:1.26rem;
+      font-size:1.22rem;
       font-weight:600;
       color:var(--text);
       letter-spacing:-.01em;
-      margin-bottom:2px;
     }
+
     .section-head p{
       margin:3px 0 0;
       color:var(--muted);
@@ -346,6 +418,7 @@
       color:var(--blue-mid);
       margin-bottom:8px;
     }
+
     .section-kicker::before{
       content:'';
       display:inline-block;
@@ -355,15 +428,33 @@
       border-radius:2px;
     }
 
-    /* =========================
-       hero
-       ========================= */
+    .panel{
+      padding:20px 22px;
+    }
+
+    .panel h3{
+      font-family:var(--font-head);
+      font-size:1.03rem;
+      font-weight:600;
+      color:var(--text);
+      margin-bottom:3px;
+      letter-spacing:-.01em;
+    }
+
+    .panel p.sub{
+      margin:0 0 14px;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.5;
+    }
+
+    /* Hero en la misma arquitectura visual de Reforestando */
     .hero{
       display:grid;
       grid-template-columns:minmax(0,1.9fr) minmax(280px,.85fr);
       align-items:stretch;
       gap:18px;
-      margin-bottom:20px;
+      margin-bottom:18px;
     }
 
     .hero-main{
@@ -386,7 +477,6 @@
     }
 
     .hero-copy-text{
-      display:block;
       position:relative;
       z-index:1;
     }
@@ -405,11 +495,12 @@
 
     .hero-copy-text .hero-lead{
       max-width:none;
-      font-size:.84rem;
+      font-size:.82rem;
       line-height:1.78;
       text-align:justify;
-      margin:0 0 12px 0;
+      margin:0 0 12px;
       color:var(--text-2);
+      hyphens:auto;
     }
 
     .hero-side{
@@ -436,21 +527,20 @@
     }
 
     .hero-logo{
-      width:min(100%,280px);
-      max-width:100%;
-      max-height:220px;
+      max-width:250px;
+      width:78%;
       height:auto;
-      object-fit:contain;
-      display:block;
       margin:0 auto;
-      filter:none !important;
+      display:block;
+      object-fit:contain;
+      filter:none!important;
     }
 
     .chip-row{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin:16px 0 4px;
+      margin:16px 0 8px;
     }
 
     .stat-chip{
@@ -465,58 +555,113 @@
       font-size:.8rem;
       font-weight:700;
     }
+
     .stat-chip::before{
       content:'●';
       font-size:.65em;
       color:var(--green);
     }
 
-    /* =========================
-       objetivos y metas
-       ========================= */
-    .grid-2{
-      display:grid;
-      grid-template-columns:1.1fr 1fr;
-      gap:16px;
+    .period-card{
+      margin-bottom:18px;
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      background:linear-gradient(135deg,rgba(20,90,122,.96),rgba(47,125,77,.94));
+      color:#fff;
     }
 
-    .objective-box{
+    .period-card strong{
+      font-family:var(--font-head);
+      font-size:1.28rem;
+    }
+
+    .period-card span{
+      color:rgba(255,255,255,.84);
+      font-size:.88rem;
+    }
+
+    .period-card .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 13px;
+      border-radius:999px;
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      font-size:.78rem;
+      font-weight:800;
+      color:#fff;
+    }
+
+    /* Objetivos sin cuadros blancos */
+    .objectives-panel{
+      padding:24px 26px;
+      background:rgba(255,255,255,.48);
+      border:1px solid var(--line-soft);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .objective-general{
+      padding:0 0 18px;
+      margin-bottom:18px;
+      border-bottom:1px solid var(--line-soft);
+    }
+
+    .objective-general h3,
+    .objective-list h3{
+      font-family:var(--font-head);
+      font-size:1.14rem;
+      font-weight:600;
+      color:var(--text);
+      margin-bottom:8px;
+    }
+
+    .objective-general p{
+      color:var(--text-2);
+      font-size:.9rem;
+      line-height:1.78;
+      max-width:1100px;
+    }
+
+    .objective-list{
       display:grid;
       gap:12px;
     }
 
-    .objective-item{
+    .objective-row{
       display:grid;
-      grid-template-columns:50px 1fr;
+      grid-template-columns:42px minmax(0,1fr);
       gap:14px;
       align-items:start;
-      padding:14px 15px;
-      border-radius:20px;
-      background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%);
-      border:1.5px solid var(--line-soft);
+      padding:2px 0;
     }
 
     .objective-n{
-      width:50px;
-      height:50px;
-      border-radius:16px;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--blue-mid),var(--green));
+      color:#fff;
+      font-family:var(--font-mono);
+      font-size:.82rem;
       display:grid;
       place-items:center;
-      font-family:var(--font-mono);
-      font-size:1rem;
-      color:var(--blue-mid);
-      background:var(--blue-pale);
-      border:1px solid var(--blue-soft);
+      box-shadow:0 6px 18px rgba(21,122,80,.14);
     }
 
-    .objective-item strong{
+    .objective-row strong{
       display:block;
-      font-size:.95rem;
       color:var(--text);
-      margin-bottom:4px;
+      font-size:.94rem;
+      margin-bottom:3px;
     }
 
-    .objective-item span{
+    .objective-row span{
       display:block;
       color:var(--text-2);
       font-size:.84rem;
@@ -525,7 +670,7 @@
 
     .annual-goals-grid{
       display:grid;
-      grid-template-columns:repeat(2,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:10px;
     }
 
@@ -536,10 +681,12 @@
       border:1.5px solid var(--line-soft);
       transition:background .2s,transform .2s;
     }
+
     .goal-card:hover{
       background:var(--blue-pale);
       transform:translateY(-1px);
     }
+
     .goal-card small{
       display:block;
       color:var(--muted);
@@ -549,19 +696,22 @@
       text-transform:uppercase;
       letter-spacing:.07em;
     }
+
     .goal-card strong{
       display:block;
       font-size:.93rem;
       line-height:1.35;
-      margin-bottom:4px;
+      margin-bottom:3px;
       color:var(--text);
     }
+
     .goal-card .goal-meta{
       font-size:.8rem;
       color:var(--muted);
       margin-bottom:7px;
       font-family:var(--font-mono);
     }
+
     .goal-card .goal-progress{
       font-size:.81rem;
       font-weight:700;
@@ -569,9 +719,7 @@
       line-height:1.5;
     }
 
-    /* =========================
-       KPI estilo Atitlán Recicla
-       ========================= */
+    /* KPIs estilo Atitlán Recicla, avance acumulado siempre verde */
     .kpis{
       display:grid;
       grid-template-columns:repeat(4,1fr);
@@ -583,8 +731,9 @@
       position:relative;
       overflow:hidden;
       border-top:3px solid var(--line-soft);
-      transition:box-shadow .2s, transform .25s;
+      transition:box-shadow .2s,transform .25s;
     }
+
     .kpi:hover{
       transform:translateY(-4px);
       box-shadow:0 16px 40px rgba(10,35,80,.16);
@@ -625,7 +774,9 @@
       line-height:1.55;
     }
 
-    .kpi-meta + .kpi-meta{margin-top:3px}
+    .kpi-meta+.kpi-meta{
+      margin-top:3px;
+    }
 
     .chip{
       padding:4px 9px;
@@ -638,10 +789,10 @@
       flex-shrink:0;
     }
 
-    .chip.green{background:var(--green-soft);color:var(--green)}
-    .chip.yellow{background:var(--gold-soft);color:var(--gold)}
-    .chip.red{background:var(--red-soft);color:var(--red)}
-    .chip.blue{background:var(--blue-soft);color:var(--blue)}
+    .chip.green{
+      background:var(--green-soft);
+      color:var(--green);
+    }
 
     .progress{
       height:5px;
@@ -651,21 +802,12 @@
       margin-top:12px;
     }
 
-    .progress > span{
+    .progress>span{
       display:block;
       height:100%;
       border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--blue-mid));
+      background:linear-gradient(90deg,var(--green),var(--green-mid));
       transition:width .7s cubic-bezier(.4,0,.2,1);
-    }
-
-    /* =========================
-       calendario
-       ========================= */
-    .calendar-layout{
-      display:grid;
-      grid-template-columns:1.35fr 1fr;
-      gap:16px;
     }
 
     .calendar-grid{
@@ -673,198 +815,156 @@
       gap:14px;
     }
 
-    .calendar-month{
+    .month-group{
       border:1.5px solid var(--line-soft);
       border-radius:20px;
-      background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
-      overflow:hidden;
+      padding:16px;
+      background:rgba(255,255,255,.78);
     }
 
-    .calendar-month-head{
+    .month-group.is-current{
+      border-color:rgba(21,122,80,.32);
+      box-shadow:0 0 0 4px rgba(21,122,80,.06);
+    }
+
+    .month-title{
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap:12px;
-      padding:14px 16px;
-      border-bottom:1px solid var(--line-soft);
-      background:rgba(234,243,253,.65);
+      margin-bottom:12px;
     }
 
-    .calendar-month-head h3{
+    .month-title h3{
+      margin:0;
       font-family:var(--font-head);
-      font-size:1.02rem;
-      font-weight:600;
+      font-size:1.14rem;
       color:var(--text);
     }
 
-    .calendar-month-head span{
-      font-size:.74rem;
-      font-weight:700;
-      color:var(--muted);
+    .month-title span{
+      font-size:.72rem;
       text-transform:uppercase;
-      letter-spacing:.08em;
+      letter-spacing:.09em;
+      font-weight:900;
+      color:var(--muted);
     }
 
     .event-list{
       display:grid;
-      gap:10px;
-      padding:14px;
+      gap:9px;
     }
 
     .event-card{
       display:grid;
-      grid-template-columns:74px 1fr auto;
+      grid-template-columns:76px 1fr auto;
       gap:12px;
-      align-items:start;
+      align-items:center;
       padding:12px 13px;
-      border-radius:16px;
-      border:1.5px solid var(--line-soft);
+      border-radius:18px;
+      border:1px solid var(--line-soft);
       background:#fff;
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+
+    .event-card:hover{
+      transform:translateY(-1px);
+      box-shadow:var(--shadow-sm);
     }
 
     .event-card.done{
-      background:rgba(197,238,217,.56);
-      border-color:rgba(21,122,80,.20);
+      background:linear-gradient(135deg,rgba(197,238,217,.65),rgba(255,255,255,.86));
+      border-color:rgba(21,122,80,.24);
     }
 
     .event-card.pending{
-      background:rgba(255,255,255,.92);
+      background:rgba(255,255,255,.78);
     }
 
     .event-date{
       font-family:var(--font-mono);
       font-size:.82rem;
-      color:var(--blue-mid);
-      font-weight:500;
+      color:var(--green);
+      font-weight:600;
     }
 
     .event-main strong{
       display:block;
       color:var(--text);
-      font-size:.88rem;
-      line-height:1.35;
-      margin-bottom:2px;
+      font-size:.9rem;
+      line-height:1.3;
     }
 
     .event-main span{
       display:block;
       color:var(--muted);
-      font-size:.77rem;
-      line-height:1.5;
+      font-size:.78rem;
+      line-height:1.45;
+      margin-top:2px;
     }
 
-    .status-badge{
+    .status{
       display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:5px 9px;
+      padding:6px 10px;
       border-radius:999px;
-      font-size:.66rem;
-      font-weight:700;
-      letter-spacing:.05em;
+      font-size:.68rem;
+      font-weight:900;
+      letter-spacing:.07em;
       text-transform:uppercase;
       white-space:nowrap;
     }
 
-    .status-badge.done{
-      background:var(--green-soft);
+    .status.done{
+      background:rgba(21,122,80,.12);
       color:var(--green);
+      border:1px solid rgba(21,122,80,.18);
     }
 
-    .status-badge.pending{
+    .status.pending{
       background:var(--blue-pale);
       color:var(--blue);
+      border:1px solid rgba(26,86,168,.14);
     }
 
-    .side-stack{
+    .territory-list{
       display:grid;
-      gap:16px;
-      align-items:start;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
     }
 
-    .mini-list{
-      display:grid;
-      gap:7px;
-    }
-
-    .mini-item{
+    .territory-item{
       display:flex;
+      align-items:center;
       justify-content:space-between;
-      align-items:center;
       gap:12px;
-      padding:10px 12px;
-      border-radius:var(--radius-sm);
-      background:rgba(255,255,255,.7);
-      border:1.5px solid var(--line-soft);
-      transition:background .2s;
+      padding:13px 14px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid var(--line-soft);
     }
 
-    .mini-item:hover{background:rgba(255,255,255,.9)}
-
-    .mini-item .muted{
-      font-size:.82rem;
-      color:var(--text-2);
+    .territory-item strong{
+      font-size:.86rem;
     }
 
-    .mini-item strong{
-      font-family:var(--font-mono);
-      font-size:.88rem;
-      color:var(--blue-mid);
-    }
-
-    .month-bars{
-      display:grid;
-      gap:10px;
-    }
-
-    .bar-row{
-      display:grid;
-      grid-template-columns:90px 1fr 42px;
-      gap:10px;
-      align-items:center;
-    }
-
-    .bar-label{
-      font-size:.79rem;
-      color:var(--text-2);
-      font-weight:700;
-    }
-
-    .bar-track{
-      height:8px;
-      border-radius:999px;
-      background:var(--line-soft);
-      overflow:hidden;
-    }
-
-    .bar-fill{
-      height:100%;
-      border-radius:999px;
-      background:linear-gradient(90deg,var(--green),var(--blue-mid));
-      width:0;
-      transition:width .7s ease;
-    }
-
-    .bar-num{
+    .territory-item span{
       font-family:var(--font-mono);
       font-size:.78rem;
-      color:var(--muted);
-      text-align:right;
+      color:var(--green);
+      font-weight:600;
     }
 
-    /* =========================
-       iframe
-       ========================= */
     .iframe-shell{
       padding:16px;
     }
 
     .iframe-box{
-      border:1.5px solid var(--line-soft);
-      border-radius:20px;
+      border:1px solid var(--line);
+      border-radius:24px;
       overflow:hidden;
       background:#fff;
       min-height:620px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);
     }
 
     .iframe-box iframe{
@@ -874,44 +974,54 @@
       display:block;
     }
 
-    /* =========================
-       footer · igual línea Reforestación
-       ========================= */
     .site-footer{
       margin-top:34px;
-      background:linear-gradient(145deg,#18324c 0%, #1b4f68 62%, #2b6b60 100%);
+      background:linear-gradient(145deg,#18324c 0%,#1b4f68 62%,#2b6b60 100%);
       color:rgba(255,255,255,.92);
       position:relative;
       overflow:hidden;
     }
+
     .site-footer::before{
       content:'';
       position:absolute;
       inset:auto -10% -120px -10%;
       height:220px;
-      background:radial-gradient(60px 20px at 0 100%, rgba(255,255,255,.12) 50%, transparent 52%) repeat-x;
+      background:radial-gradient(60px 20px at 0 100%,rgba(255,255,255,.12) 50%,transparent 52%) repeat-x;
       background-size:140px 90px;
       opacity:.55;
       pointer-events:none;
     }
+
     .footer-wrap{
-      width:min(1700px, calc(100vw - 24px));
+      width:min(1700px,calc(100vw - 24px));
       margin:0 auto;
       padding:34px 0 30px;
       display:grid;
-      grid-template-columns:1.25fr .85fr .85fr .75fr;
+      grid-template-columns:1.25fr .85fr .85fr;
       gap:28px;
       position:relative;
       z-index:1;
     }
-    .footer-brand{display:grid;gap:12px;max-width:50ch}
-    .footer-brandline{display:flex;align-items:center;gap:12px}
-    .footer-title{font-size:1.1rem;font-weight:700;line-height:1.2}
+
+    .footer-brand{
+      display:grid;
+      gap:12px;
+      max-width:50ch;
+    }
+
+    .footer-title{
+      font-size:1.1rem;
+      font-weight:700;
+      line-height:1.2;
+    }
+
     .footer-copy{
       color:rgba(255,255,255,.8);
       font-size:.92rem;
       line-height:1.75;
     }
+
     .footer-col h3{
       font-size:.8rem;
       font-weight:800;
@@ -920,7 +1030,12 @@
       margin-bottom:12px;
       color:rgba(255,255,255,.76);
     }
-    .footer-links{display:grid;gap:10px}
+
+    .footer-links{
+      display:grid;
+      gap:10px;
+    }
+
     .footer-links a{
       color:#fff;
       text-decoration:none;
@@ -932,11 +1047,13 @@
       align-items:center;
       gap:10px;
     }
+
     .footer-links a:hover{
       opacity:1;
       text-decoration:underline;
       text-underline-offset:3px;
     }
+
     .social-icon{
       width:18px;
       height:18px;
@@ -946,46 +1063,16 @@
       color:rgba(255,255,255,.96);
       flex-shrink:0;
     }
+
     .social-icon svg{
       width:18px;
       height:18px;
       display:block;
     }
 
-    .footer-mark{
-      display:flex;
-      align-items:end;
-      justify-content:flex-end;
-    }
-    .footer-mark img{
-      width:min(100%,220px);
-      display:block;
-      opacity:.95;
-    }
-
-    /* =========================
-       responsive
-       ========================= */
-    @media (max-width: 1180px){
-      .hero,
-      .grid-2,
-      .calendar-layout{
-        grid-template-columns:1fr;
-      }
-
-      .kpis{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .footer-wrap{
-        grid-template-columns:1fr 1fr;
-      }
-    }
-
-    @media (max-width: 900px){
+    @media(max-width:1180px){
       .header{
         grid-template-columns:1fr;
-        gap:14px;
       }
 
       .header-stack{
@@ -998,9 +1085,17 @@
         justify-content:flex-start;
       }
 
-      .kpis,
-      .annual-goals-grid{
+      .hero{
         grid-template-columns:1fr;
+      }
+
+      .kpis{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .annual-goals-grid,
+      .territory-list{
+        grid-template-columns:repeat(2,1fr);
       }
 
       .footer-wrap{
@@ -1008,13 +1103,38 @@
       }
     }
 
-    @media (max-width: 760px){
-      .wrap{width:min(100vw - 16px, 1700px)}
+    @media(max-width:760px){
+      .wrap{
+        padding-left:8px;
+        padding-right:8px;
+      }
+
+      .header{
+        margin-left:-8px;
+        margin-right:-8px;
+      }
+
       .hero-main,
-      .panel{padding:18px 16px}
-      .event-card{
+      .panel,
+      .objectives-panel{
+        padding:20px 18px;
+      }
+
+      .kpis,
+      .annual-goals-grid,
+      .territory-list{
         grid-template-columns:1fr;
       }
+
+      .event-card{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+
+      .status{
+        width:max-content;
+      }
+
       .iframe-box iframe{
         height:520px;
       }
@@ -1022,16 +1142,11 @@
   </style>
 </head>
 
-<body>
+<body class="view-full">
   <div class="wrap">
     <header class="header">
       <a class="header-brand" href="./index.html">
-        <img
-          src="./aala_logo.png"
-          alt="Logo Amigos del Lago de Atitlán"
-          class="header-logo-img"
-          onerror="if(!this.dataset.tryDocs){this.dataset.tryDocs='1';this.src='./docs/aala_logo.png';}"
-        >
+        <img src="./aala_logo.png" alt="Logo Amigos del Lago de Atitlán" class="header-logo-img">
         <span class="brand-text">
           <span class="brand-kicker">Asociación Amigos del Lago de Atitlán</span>
           <span class="brand-title">Manejo de Tul · Tablero de programa</span>
@@ -1041,15 +1156,22 @@
       <div class="header-stack">
         <nav class="nav-tabs" aria-label="Navegación de la página">
           <a class="nav-tab active" href="#resumen">Resumen</a>
-          <a class="nav-tab" href="#objetivos">Objetivos</a>
-          <a class="nav-tab" href="#indicadores-mensuales">Indicadores mensuales</a>
-          <a class="nav-tab" href="#indicadores-anuales">Indicadores acumulados</a>
+          <a class="nav-tab" href="#indicadoresMensuales">Indicadores mensuales</a>
+          <a class="nav-tab" href="#indicadoresAnuales">Indicadores acumulados</a>
           <a class="nav-tab" href="#programacion">Programación</a>
           <a class="nav-tab" href="#geoportal">Geoportal</a>
         </nav>
 
         <div class="header-utility">
-          <a class="back" href="./index.html"><span class="back-arrow">&#8592;</span>Volver al inicio</a>
+          <a class="back" href="./index.html">
+            <span class="back-arrow">&#8592;</span>
+            Volver al inicio
+          </a>
+
+          <div class="view-switcher" role="group" aria-label="Cambiar vista del tablero">
+            <button class="view-btn active" id="btnFull" onclick="switchView('full')">Tablero completo</button>
+            <button class="view-btn" id="btnExec" onclick="switchView('exec')">Resumen ejecutivo</button>
+          </div>
 
           <div class="period-rack">
             <span class="period-rack-label">Período de lectura</span>
@@ -1066,10 +1188,10 @@
           <h1>Manejo de Tul</h1>
 
           <p class="hero-lead">
-            En el lago de Atitlán se han identificado dos tipos de tul: <strong>Schoenoplectus californicus</strong>,
-            comúnmente conocido como tul macho, utilizado para la elaboración de artesanías como petates y sopladores;
-            y <strong>Typha domingensis</strong>, conocido como tul hembra, utilizado principalmente para amarrar
-            cangrejos de agua dulce.
+            En el lago de Atitlán se han identificado dos tipos de tul:
+            <strong>Schoenoplectus californicus</strong>, comúnmente conocido como tul macho, utilizado para la
+            elaboración de artesanías como petates y sopladores; y <strong>Typha domingensis</strong>, conocido como
+            tul hembra, utilizado principalmente para amarrar cangrejos de agua dulce.
           </p>
 
           <p class="hero-lead">
@@ -1086,7 +1208,7 @@
           </p>
 
           <div class="chip-row">
-            <span class="stat-chip">Período activo de lectura: febrero–abril 2026</span>
+            <span class="stat-chip">Período activo: febrero–abril 2026</span>
             <span class="stat-chip">Meta anual: 2,300 metros lineales</span>
             <span class="stat-chip">Meta anual: 1,350 macollas</span>
             <span class="stat-chip">Programación anual: 21 jornadas</span>
@@ -1100,79 +1222,68 @@
             class="hero-logo"
             src="./Siembra%20de%20tul.png"
             alt="Logo del programa Siembra de Tul"
-            onerror="if(!this.dataset.try1){this.dataset.try1='1';this.src='./Siembra de tul.png';}else if(!this.dataset.try2){this.dataset.try2='1';this.src='Siembra de tul.png';}else if(!this.dataset.try3){this.dataset.try3='1';this.src='./docs/Siembra de tul.png';}"
+            onerror="if(!this.dataset.try1){this.dataset.try1='1';this.src='./Siembra de tul.png';}else if(!this.dataset.try2){this.dataset.try2='1';this.src='./siembra_de_tul.png';}"
           >
         </div>
       </aside>
     </section>
 
-    <section class="section" id="objetivos">
-      <div class="grid-2">
-        <article class="card panel">
-          <div class="section-head">
-            <div>
-              <h2>Objetivo general</h2>
-              <p>Propósito principal del programa.</p>
-            </div>
-          </div>
-
-          <div class="objective-box">
-            <div class="objective-item">
-              <div class="objective-n">01</div>
-              <div>
-                <strong>Conservar la biodiversidad de macrófitas</strong>
-                <span>
-                  Conservar la biodiversidad de macrófitas por medio de la restauración ecológica y el fomento de la
-                  resiliencia ambiental en el Lago de Atitlán, a través de la siembra y mantenimiento de tul macho.
-                </span>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="card panel">
-          <div class="section-head">
-            <div>
-              <h2>Objetivos específicos</h2>
-              <p>Líneas de trabajo priorizadas para 2026.</p>
-            </div>
-          </div>
-
-          <div class="objective-box">
-            <div class="objective-item">
-              <div class="objective-n">01</div>
-              <div>
-                <strong>Ampliar la cobertura de tul</strong>
-                <span>Ampliar la cobertura de tul a las orillas del Lago de Atitlán.</span>
-              </div>
-            </div>
-
-            <div class="objective-item">
-              <div class="objective-n">02</div>
-              <div>
-                <strong>Realizar mantenimiento a masas tulares</strong>
-                <span>Realizar jornadas de mantenimiento a las masas tulares.</span>
-              </div>
-            </div>
-
-            <div class="objective-item">
-              <div class="objective-n">03</div>
-              <div>
-                <strong>Actualizar el mapeo de masas tulares</strong>
-                <span>Actualizar el mapeo de masas tulares a través de implementación de fotogrametría para la digitalización de jornadas de siembra.</span>
-              </div>
-            </div>
-
-            <div class="objective-item">
-              <div class="objective-n">04</div>
-              <div>
-                <strong>Generar capas vectoriales históricas</strong>
-                <span>Obtener las capas en formato vectorial de la cobertura histórica de tul mediante el método S2DR3.</span>
-              </div>
-            </div>
-          </div>
-        </article>
+    <section class="card period-card" aria-live="polite">
+      <div>
+        <strong id="periodTitle">Avance acumulado al presente mes</strong><br>
+        <span id="periodSubtitle">El programa inicia su lectura anual en febrero de 2026.</span>
       </div>
+      <span class="tag" id="periodTag">Al presente mes</span>
+    </section>
+
+    <section class="section" id="objetivos">
+      <article class="objectives-panel">
+        <div class="section-kicker">Objetivos del programa</div>
+
+        <div class="objective-general">
+          <h3>Objetivo general</h3>
+          <p>
+            Conservar la biodiversidad de macrófitas por medio de la restauración ecológica y el fomento de la
+            resiliencia ambiental en el Lago de Atitlán, a través de la siembra y mantenimiento de tul macho.
+          </p>
+        </div>
+
+        <div class="objective-list">
+          <h3>Objetivos específicos</h3>
+
+          <div class="objective-row">
+            <div class="objective-n">01</div>
+            <div>
+              <strong>Ampliar la cobertura de tul</strong>
+              <span>Ampliar la cobertura de tul a las orillas del Lago de Atitlán.</span>
+            </div>
+          </div>
+
+          <div class="objective-row">
+            <div class="objective-n">02</div>
+            <div>
+              <strong>Realizar mantenimiento a masas tulares</strong>
+              <span>Realizar jornadas de mantenimiento a las masas tulares.</span>
+            </div>
+          </div>
+
+          <div class="objective-row">
+            <div class="objective-n">03</div>
+            <div>
+              <strong>Actualizar el mapeo de masas tulares</strong>
+              <span>Actualizar el mapeo de masas tulares a través de implementación de fotogrametría para la digitalización de jornadas de siembra.</span>
+            </div>
+          </div>
+
+          <div class="objective-row">
+            <div class="objective-n">04</div>
+            <div>
+              <strong>Generar capas vectoriales históricas</strong>
+              <span>Obtener las capas en formato vectorial de la cobertura histórica de tul mediante el método S2DR3.</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
 
     <section class="section">
@@ -1189,64 +1300,66 @@
             <small>Siembra anual</small>
             <strong>2,300 metros lineales sembrados</strong>
             <div class="goal-meta">10 puntos de siembra</div>
-            <div class="goal-progress">Meta institucional de cobertura lineal a lo largo del litoral del Lago de Atitlán.</div>
+            <div class="goal-progress">Cobertura lineal a lo largo del litoral del Lago de Atitlán.</div>
           </div>
 
           <div class="goal-card">
             <small>Material vegetal</small>
             <strong>1,350 macollas establecidas</strong>
             <div class="goal-meta">Meta anual</div>
-            <div class="goal-progress">Corresponde al material vegetal programado para las jornadas de siembra del año.</div>
+            <div class="goal-progress">Material vegetal programado para las jornadas de siembra.</div>
           </div>
 
           <div class="goal-card">
             <small>Mantenimiento</small>
             <strong>10 jornadas de mantenimiento</strong>
             <div class="goal-meta">Áreas estratégicas</div>
-            <div class="goal-progress">Acciones orientadas al cuidado y permanencia de las masas tulares en sitios priorizados.</div>
+            <div class="goal-progress">Acciones orientadas al cuidado y permanencia de masas tulares.</div>
           </div>
 
           <div class="goal-card">
             <small>Cartografía temática</small>
-            <strong>11 mapas actualizados de cobertura de tul</strong>
+            <strong>11 mapas actualizados</strong>
             <div class="goal-meta">Por municipio</div>
-            <div class="goal-progress">Actualización de información territorial para seguimiento y toma de decisiones.</div>
+            <div class="goal-progress">Información territorial para seguimiento y toma de decisiones.</div>
           </div>
 
           <div class="goal-card">
             <small>Capas históricas</small>
-            <strong>4 capas vectoriales de cobertura histórica</strong>
+            <strong>4 capas vectoriales</strong>
             <div class="goal-meta">Meta anual</div>
-            <div class="goal-progress">Base geográfica para consolidar el análisis histórico de la cobertura de tul.</div>
+            <div class="goal-progress">Base geográfica para el análisis histórico de cobertura de tul.</div>
           </div>
 
           <div class="goal-card">
             <small>Programación anual</small>
             <strong>21 jornadas programadas</strong>
             <div class="goal-meta">Febrero–diciembre</div>
-            <div class="goal-progress">Incluye jornadas de siembra, resiembra, mantenimiento y monitoreo anual.</div>
+            <div class="goal-progress">Incluye siembra, resiembra, mantenimiento y monitoreo.</div>
           </div>
         </div>
       </article>
     </section>
 
-    <section class="section" id="indicadores-mensuales">
+    <section class="section" id="indicadoresMensuales">
       <div class="section-head">
         <div>
           <h2>Avance mensual frente a metas mensuales</h2>
           <p id="monthlyPeriodText">Lectura correspondiente al mes seleccionado.</p>
         </div>
       </div>
+
       <div class="kpis" id="monthlyKpiGrid"></div>
     </section>
 
-    <section class="section" id="indicadores-anuales">
+    <section class="section" id="indicadoresAnuales">
       <div class="section-head">
         <div>
           <h2>Avance acumulado frente a metas anuales</h2>
           <p id="annualPeriodText">Avance acumulado del programa desde febrero de 2026.</p>
         </div>
       </div>
+
       <div class="kpis" id="annualKpiGrid"></div>
     </section>
 
@@ -1258,23 +1371,22 @@
         </div>
       </div>
 
-      <div class="calendar-layout">
-        <article class="card panel">
-          <div class="calendar-grid" id="calendarGrid"></div>
-        </article>
+      <article class="card panel">
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </article>
+    </section>
 
-        <aside class="side-stack">
-          <article class="card panel">
-            <div class="section-kicker">Resumen del período</div>
-            <div class="mini-list" id="summaryList"></div>
-          </article>
+    <section class="section">
+      <article class="card panel">
+        <div class="section-head">
+          <div>
+            <h2>Cobertura territorial acumulada</h2>
+            <p>Municipios donde el programa ha registrado actividades durante el período seleccionado.</p>
+          </div>
+        </div>
 
-          <article class="card panel">
-            <div class="section-kicker">Jornadas por mes</div>
-            <div class="month-bars" id="monthBars"></div>
-          </article>
-        </aside>
-      </div>
+        <div class="territory-list" id="territoryList"></div>
+      </article>
     </section>
 
     <section class="section" id="geoportal">
@@ -1302,9 +1414,7 @@
   <footer class="site-footer">
     <div class="footer-wrap">
       <section class="footer-brand">
-        <div class="footer-brandline">
-          <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
-        </div>
+        <div class="footer-title">Asociación Amigos del Lago de Atitlán</div>
         <p class="footer-copy">
           La Asociación Amigos del Lago de Atitlán se enfoca en generar una cultura regenerativa en la cuenca Lago,
           para que los seres humanos podamos coexistir de forma sostenible y sana con el entorno natural. Hacemos
@@ -1371,20 +1481,23 @@
           </a>
         </div>
       </section>
-
-      <section class="footer-mark" aria-label="Imagen institucional">
-        <img
-          src="./chill_lago.png"
-          alt="AALA — Cuenca del Lago de Atitlán"
-          onerror="if(!this.dataset.tryDocs){this.dataset.tryDocs='1';this.src='./docs/chill_lago.png';}"
-        >
-      </section>
     </div>
   </footer>
 
   <script>
+    const ACTIVE_YEAR = 2026;
     const ACTIVE_MONTH_MAX = 4;
     const DEFAULT_MONTH = 4;
+
+    const ANNUAL_GOALS = {
+      jornadas: 21,
+      metros: 2300,
+      macollas: 1350,
+      mantenimiento: 10,
+      mapas: 11,
+      capas: 4,
+      municipios: 6
+    };
 
     const MONTHS = [
       { num: 2, short: 'Feb', name: 'Febrero' },
@@ -1400,24 +1513,19 @@
       { num: 12, short: 'Dic', name: 'Diciembre' }
     ];
 
-    const ANNUAL_GOALS = {
-      jornadas: 21,
-      metros: 2300,
-      macollas: 1350,
-      mantenimiento: 10,
-      mapas: 11,
-      capas: 4,
-      municipios: 6
-    };
-
     const MONTHLY_DATA = {
       2: {
         monthly: {
-          jornadas: 2, jornadasGoal: 2,
-          metros: 230, metrosGoal: 225,
-          macollas: 135, macollasGoal: 132,
-          mantenimiento: 1, mantenimientoGoal: 1,
-          sitios: 2, sitiosGoal: 2
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 230,
+          metrosGoal: 225,
+          macollas: 135,
+          macollasGoal: 132,
+          mantenimiento: 1,
+          mantenimientoGoal: 1,
+          sitios: 2,
+          sitiosGoal: 2
         },
         annual: {
           jornadas: 2,
@@ -1432,11 +1540,16 @@
       },
       3: {
         monthly: {
-          jornadas: 2, jornadasGoal: 2,
-          metros: 250, metrosGoal: 245,
-          macollas: 147, macollasGoal: 145,
-          mantenimiento: 1, mantenimientoGoal: 1,
-          sitios: 2, sitiosGoal: 2
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 250,
+          metrosGoal: 245,
+          macollas: 147,
+          macollasGoal: 145,
+          mantenimiento: 1,
+          mantenimientoGoal: 1,
+          sitios: 2,
+          sitiosGoal: 2
         },
         annual: {
           jornadas: 4,
@@ -1451,11 +1564,16 @@
       },
       4: {
         monthly: {
-          jornadas: 2, jornadasGoal: 2,
-          metros: 225, metrosGoal: 225,
-          macollas: 132, macollasGoal: 132,
-          mantenimiento: 1, mantenimientoGoal: 1,
-          sitios: 2, sitiosGoal: 2
+          jornadas: 2,
+          jornadasGoal: 2,
+          metros: 225,
+          metrosGoal: 225,
+          macollas: 132,
+          macollasGoal: 132,
+          mantenimiento: 1,
+          mantenimientoGoal: 1,
+          sitios: 2,
+          sitiosGoal: 2
         },
         annual: {
           jornadas: 6,
@@ -1471,37 +1589,195 @@
     };
 
     const EVENTS = [
-      { no: 1,  month: 2,  date: '13-feb', municipio: 'Santa Cruz La Laguna', sitio: 'Patalik', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '423421, 1629737' },
-      { no: 2,  month: 2,  date: '27-feb', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '431825, 1620374' },
-
-      { no: 3,  month: 3,  date: '13-mar', municipio: 'San Pablo La Laguna', sitio: 'Las Cristalinas', actividad: 'Resiembra', semillero: 'Mismo lugar', coords: '416103, 1626975' },
-      { no: 4,  month: 3,  date: '27-mar', municipio: 'San Antonio Palopó', sitio: 'Tzampetey 2, 3, 4, 5', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '431955, 1620392' },
-
-      { no: 5,  month: 4,  date: '10-abr', municipio: 'San Juan La Laguna', sitio: 'Pachites 1', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415428, 1626315' },
-      { no: 6,  month: 4,  date: '24-abr', municipio: 'San Juan La Laguna', sitio: 'Las Cristalinas', actividad: 'Siembra', semillero: 'San Pablo La Laguna (2 puntos)', coords: '415592, 1626421' },
-
-      { no: 7,  month: 5,  date: '08-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '419710, 1623057' },
-      { no: 8,  month: 5,  date: '22-may', municipio: 'San Pedro La Laguna', sitio: 'Playa Dorada 2, 3, 4', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '419942, 1622765' },
-
-      { no: 9,  month: 6,  date: '12-jun', municipio: 'San Antonio Palopó', sitio: 'Chicaman', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432879, 1621322' },
-      { no: 10, month: 6,  date: '26-jun', municipio: 'San Juan La Laguna', sitio: 'Pachites 2', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415350, 1626251' },
-
-      { no: 11, month: 7,  date: '10-jul', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 1', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '433656, 1621863' },
-      { no: 12, month: 7,  date: '24-jul', municipio: 'Panajachel', sitio: 'Mariposario 2', actividad: 'Siembra', semillero: 'Por validar', coords: '427622, 1630608' },
-
-      { no: 13, month: 8,  date: '07-ago', municipio: 'San Antonio Palopó', sitio: 'Chicaman, Agua Escondida 2', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '433646, 1621925' },
-      { no: 14, month: 8,  date: '21-ago', municipio: 'San Juan La Laguna', sitio: 'Pachites 3', actividad: 'Siembra', semillero: 'San Pablo La Laguna', coords: '415374, 1625879' },
-
-      { no: 15, month: 9,  date: '11-sep', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Piedra del Mono', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432772, 1621333' },
-      { no: 16, month: 9,  date: '25-sep', municipio: 'San Antonio Palopó', sitio: 'Panka', actividad: 'Siembra', semillero: 'Santa Catarina Palopó', coords: '432250, 1620460' },
-
-      { no: 17, month: 10, date: '09-oct', municipio: 'San Antonio Palopó', sitio: 'Tzampetey, Villa de los Dioses', actividad: 'Siembra', semillero: 'Por validar', coords: '432701, 1621339' },
-      { no: 18, month: 10, date: '23-oct', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', semillero: 'Tzanjuyú', coords: '428565, 1630563' },
-
-      { no: 19, month: 11, date: '13-nov', municipio: 'Panajachel', sitio: 'San Buenaventura', actividad: 'Siembra', semillero: 'Por validar', coords: '428084, 1630878' },
-      { no: 20, month: 11, date: '27-nov', municipio: 'Panajachel', sitio: 'Mariposario 3', actividad: 'Siembra', semillero: 'Por validar', coords: '427507, 1630445' },
-
-      { no: 21, month: 12, date: '04-dic', municipio: 'Por confirmar', sitio: 'Monitoreo anual de masas tulares', actividad: 'Monitoreo', semillero: 'No aplica', coords: 'Por validar' }
+      {
+        month: 2,
+        date: '13-feb',
+        municipio: 'Santa Cruz La Laguna',
+        sitio: 'Patalik',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '423421, 1629737'
+      },
+      {
+        month: 2,
+        date: '27-feb',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Tzampetey 1',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '431825, 1620374'
+      },
+      {
+        month: 3,
+        date: '13-mar',
+        municipio: 'San Pablo La Laguna',
+        sitio: 'Las Cristalinas',
+        actividad: 'Resiembra',
+        semillero: 'Mismo lugar',
+        coords: '416103, 1626975'
+      },
+      {
+        month: 3,
+        date: '27-mar',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Tzampetey 2, 3, 4, 5',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '431955, 1620392'
+      },
+      {
+        month: 4,
+        date: '10-abr',
+        municipio: 'San Juan La Laguna',
+        sitio: 'Pachites 1',
+        actividad: 'Siembra',
+        semillero: 'San Pablo La Laguna',
+        coords: '415428, 1626315'
+      },
+      {
+        month: 4,
+        date: '24-abr',
+        municipio: 'San Juan La Laguna',
+        sitio: 'Las Cristalinas',
+        actividad: 'Siembra',
+        semillero: 'San Pablo La Laguna (2 puntos)',
+        coords: '415592, 1626421'
+      },
+      {
+        month: 5,
+        date: '08-may',
+        municipio: 'San Pedro La Laguna',
+        sitio: 'Playa Dorada 1',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '419710, 1623057'
+      },
+      {
+        month: 5,
+        date: '22-may',
+        municipio: 'San Pedro La Laguna',
+        sitio: 'Playa Dorada 2, 3, 4',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '419942, 1622765'
+      },
+      {
+        month: 6,
+        date: '12-jun',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Chicaman',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '432879, 1621322'
+      },
+      {
+        month: 6,
+        date: '26-jun',
+        municipio: 'San Juan La Laguna',
+        sitio: 'Pachites 2',
+        actividad: 'Siembra',
+        semillero: 'San Pablo La Laguna',
+        coords: '415350, 1626251'
+      },
+      {
+        month: 7,
+        date: '10-jul',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Chicaman, Agua Escondida 1',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '433656, 1621863'
+      },
+      {
+        month: 7,
+        date: '24-jul',
+        municipio: 'Panajachel',
+        sitio: 'Mariposario 2',
+        actividad: 'Siembra',
+        semillero: 'Por validar',
+        coords: '427622, 1630608'
+      },
+      {
+        month: 8,
+        date: '07-ago',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Chicaman, Agua Escondida 2',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '433646, 1621925'
+      },
+      {
+        month: 8,
+        date: '21-ago',
+        municipio: 'San Juan La Laguna',
+        sitio: 'Pachites 3',
+        actividad: 'Siembra',
+        semillero: 'San Pablo La Laguna',
+        coords: '415374, 1625879'
+      },
+      {
+        month: 9,
+        date: '11-sep',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Tzampetey, Piedra del Mono',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '432772, 1621333'
+      },
+      {
+        month: 9,
+        date: '25-sep',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Panka',
+        actividad: 'Siembra',
+        semillero: 'Santa Catarina Palopó',
+        coords: '432250, 1620460'
+      },
+      {
+        month: 10,
+        date: '09-oct',
+        municipio: 'San Antonio Palopó',
+        sitio: 'Tzampetey, Villa de los Dioses',
+        actividad: 'Siembra',
+        semillero: 'Por validar',
+        coords: '432701, 1621339'
+      },
+      {
+        month: 10,
+        date: '23-oct',
+        municipio: 'Panajachel',
+        sitio: 'San Buenaventura',
+        actividad: 'Siembra',
+        semillero: 'Tzanjuyú',
+        coords: '428565, 1630563'
+      },
+      {
+        month: 11,
+        date: '13-nov',
+        municipio: 'Panajachel',
+        sitio: 'San Buenaventura',
+        actividad: 'Siembra',
+        semillero: 'Por validar',
+        coords: '428084, 1630878'
+      },
+      {
+        month: 11,
+        date: '27-nov',
+        municipio: 'Panajachel',
+        sitio: 'Mariposario 3',
+        actividad: 'Siembra',
+        semillero: 'Por validar',
+        coords: '427507, 1630445'
+      },
+      {
+        month: 12,
+        date: '04-dic',
+        municipio: 'Por confirmar',
+        sitio: 'Monitoreo anual de masas tulares',
+        actividad: 'Monitoreo',
+        semillero: 'No aplica',
+        coords: 'Por validar'
+      }
     ];
 
     let selectedMonth = DEFAULT_MONTH;
@@ -1511,47 +1787,34 @@
     }
 
     function pct(value, goal){
-      if (!goal || goal <= 0) return 0;
-      return Math.max(0, Math.min(100, Math.round((value / goal) * 100)));
+      return goal ? Math.max(0, Math.min(100, Math.round((value / goal) * 100))) : 0;
     }
 
-    function monthName(monthNum){
-      const match = MONTHS.find(m => m.num === monthNum);
-      return match ? match.name : '';
-    }
-
-    function chipClass(percent){
-      if (percent >= 90) return 'green';
-      if (percent >= 65) return 'blue';
-      if (percent >= 45) return 'yellow';
-      return 'red';
+    function monthName(num){
+      const month = MONTHS.find(x => x.num === num);
+      return month ? month.name : '';
     }
 
     function buildMonthPills(){
-      const container = document.getElementById('monthPills');
+      const el = document.getElementById('monthPills');
 
-      container.innerHTML = MONTHS.map(m => {
-        const enabled = m.num <= ACTIVE_MONTH_MAX;
-        return `
-          <button
-            class="month-pill ${m.num === selectedMonth ? 'active' : ''}"
-            data-month="${m.num}"
-            ${enabled ? '' : 'disabled'}
-            type="button"
-          >${m.short}</button>
-        `;
-      }).join('');
+      el.innerHTML = MONTHS.map(m => `
+        <button
+          class="month-pill ${m.num === selectedMonth ? 'active' : ''}"
+          data-month="${m.num}"
+          ${m.num > ACTIVE_MONTH_MAX ? 'disabled title="Mes pendiente de publicación"' : ''}
+          type="button"
+        >
+          ${m.short}
+        </button>
+      `).join('');
 
-      container.querySelectorAll('.month-pill').forEach(btn => {
-        if (!btn.disabled) {
-          btn.addEventListener('click', () => {
-            setMonth(Number(btn.dataset.month));
-          });
-        }
+      el.querySelectorAll('button:not(:disabled)').forEach(btn => {
+        btn.addEventListener('click', () => setMonth(Number(btn.dataset.month)));
       });
     }
 
-    function buildKpiCard(label, value, meta1, meta2, percent, suffix = ''){
+    function buildKpi(label, value, meta1, meta2, percent, suffix = ''){
       return `
         <article class="card kpi">
           <div class="kpi-top">
@@ -1559,173 +1822,168 @@
               <div class="kpi-label">${label}</div>
               <div class="kpi-value">${value}${suffix}</div>
             </div>
-            <span class="chip ${chipClass(percent)}">${percent}%</span>
+            <span class="chip green">${percent}%</span>
           </div>
           <div class="kpi-meta">${meta1}</div>
           <div class="kpi-meta">${meta2}</div>
-          <div class="progress"><span style="width:${percent}%"></span></div>
+          <div class="progress">
+            <span style="width:${percent}%"></span>
+          </div>
         </article>
       `;
     }
 
     function renderMonthlyKpis(month){
-      const data = MONTHLY_DATA[month].monthly;
-      const monthlyGrid = document.getElementById('monthlyKpiGrid');
+      const d = MONTHLY_DATA[month].monthly;
 
-      const cards = [
-        buildKpiCard(
-          'Jornadas del mes',
-          data.jornadas,
-          `Meta mensual: ${data.jornadasGoal} jornadas.`,
-          `Resultado del mes ${monthName(month).toLowerCase()}.`,
-          pct(data.jornadas, data.jornadasGoal)
-        ),
-        buildKpiCard(
-          'Metros lineales del mes',
-          fmt(data.metros),
-          `Meta mensual: ${fmt(data.metrosGoal)} metros lineales.`,
-          'Cobertura lineal intervenida durante el mes.',
-          pct(data.metros, data.metrosGoal)
-        ),
-        buildKpiCard(
-          'Macollas del mes',
-          fmt(data.macollas),
-          `Meta mensual: ${fmt(data.macollasGoal)} macollas.`,
-          'Material vegetal utilizado en las jornadas del mes.',
-          pct(data.macollas, data.macollasGoal)
-        ),
-        buildKpiCard(
-          'Mantenimiento del mes',
-          data.mantenimiento,
-          `Meta mensual: ${data.mantenimientoGoal} jornada de mantenimiento.`,
-          'Acciones de cuidado y permanencia de masas tulares.',
-          pct(data.mantenimiento, data.mantenimientoGoal)
-        ),
-        buildKpiCard(
-          'Sitios atendidos en el mes',
-          data.sitios,
-          `Meta mensual: ${data.sitiosGoal} sitios.`,
-          'Sitios intervenidos en jornadas del período.',
-          pct(data.sitios, data.sitiosGoal)
-        ),
-        buildKpiCard(
-          'Cumplimiento mensual',
-          Math.round((
-            pct(data.jornadas, data.jornadasGoal) +
-            pct(data.metros, data.metrosGoal) +
-            pct(data.macollas, data.macollasGoal) +
-            pct(data.mantenimiento, data.mantenimientoGoal)
-          ) / 4),
-          'Promedio simple de cumplimiento de metas del mes.',
-          'Lectura sintética del comportamiento mensual.',
-          Math.round((
-            pct(data.jornadas, data.jornadasGoal) +
-            pct(data.metros, data.metrosGoal) +
-            pct(data.macollas, data.macollasGoal) +
-            pct(data.mantenimiento, data.mantenimientoGoal)
-          ) / 4),
-          '%'
-        )
-      ];
+      const avg = Math.round((
+        pct(d.jornadas, d.jornadasGoal) +
+        pct(d.metros, d.metrosGoal) +
+        pct(d.macollas, d.macollasGoal) +
+        pct(d.mantenimiento, d.mantenimientoGoal)
+      ) / 4);
 
-      monthlyGrid.innerHTML = cards.join('');
       document.getElementById('monthlyPeriodText').textContent =
         `Lectura correspondiente a ${monthName(month)} de 2026.`;
+
+      document.getElementById('monthlyKpiGrid').innerHTML = [
+        buildKpi(
+          'Jornadas del mes',
+          d.jornadas,
+          `Meta mensual: ${d.jornadasGoal} jornadas.`,
+          'Resultado del período seleccionado.',
+          pct(d.jornadas, d.jornadasGoal)
+        ),
+        buildKpi(
+          'Metros lineales del mes',
+          fmt(d.metros),
+          `Meta mensual: ${fmt(d.metrosGoal)} metros lineales.`,
+          'Cobertura lineal intervenida durante el mes.',
+          pct(d.metros, d.metrosGoal)
+        ),
+        buildKpi(
+          'Macollas del mes',
+          fmt(d.macollas),
+          `Meta mensual: ${fmt(d.macollasGoal)} macollas.`,
+          'Material vegetal utilizado en jornadas del mes.',
+          pct(d.macollas, d.macollasGoal)
+        ),
+        buildKpi(
+          'Mantenimiento del mes',
+          d.mantenimiento,
+          `Meta mensual: ${d.mantenimientoGoal} jornada.`,
+          'Acciones de cuidado de masas tulares.',
+          pct(d.mantenimiento, d.mantenimientoGoal)
+        ),
+        buildKpi(
+          'Sitios atendidos',
+          d.sitios,
+          `Meta mensual: ${d.sitiosGoal} sitios.`,
+          'Sitios intervenidos en el período.',
+          pct(d.sitios, d.sitiosGoal)
+        ),
+        buildKpi(
+          'Cumplimiento mensual',
+          avg,
+          'Promedio de cumplimiento de metas mensuales.',
+          'Lectura sintética del comportamiento mensual.',
+          avg,
+          '%'
+        )
+      ].join('');
     }
 
     function renderAnnualKpis(month){
-      const data = MONTHLY_DATA[month].annual;
-      const annualGrid = document.getElementById('annualKpiGrid');
+      const d = MONTHLY_DATA[month].annual;
 
-      const cards = [
-        buildKpiCard(
+      document.getElementById('annualPeriodText').textContent =
+        `Avance acumulado desde febrero hasta ${monthName(month).toLowerCase()} de 2026.`;
+
+      document.getElementById('annualKpiGrid').innerHTML = [
+        buildKpi(
           'Jornadas acumuladas',
-          data.jornadas,
+          d.jornadas,
           `Meta anual: ${ANNUAL_GOALS.jornadas} jornadas.`,
           'Avance acumulado desde febrero.',
-          pct(data.jornadas, ANNUAL_GOALS.jornadas)
+          pct(d.jornadas, ANNUAL_GOALS.jornadas)
         ),
-        buildKpiCard(
+        buildKpi(
           'Metros lineales acumulados',
-          fmt(data.metros),
+          fmt(d.metros),
           `Meta anual: ${fmt(ANNUAL_GOALS.metros)} metros lineales.`,
           'Cobertura acumulada trabajada.',
-          pct(data.metros, ANNUAL_GOALS.metros)
+          pct(d.metros, ANNUAL_GOALS.metros)
         ),
-        buildKpiCard(
+        buildKpi(
           'Macollas acumuladas',
-          fmt(data.macollas),
+          fmt(d.macollas),
           `Meta anual: ${fmt(ANNUAL_GOALS.macollas)} macollas.`,
-          'Material vegetal acumulado en jornadas realizadas.',
-          pct(data.macollas, ANNUAL_GOALS.macollas)
+          'Material vegetal acumulado.',
+          pct(d.macollas, ANNUAL_GOALS.macollas)
         ),
-        buildKpiCard(
+        buildKpi(
           'Mantenimiento acumulado',
-          data.mantenimiento,
+          d.mantenimiento,
           `Meta anual: ${ANNUAL_GOALS.mantenimiento} jornadas.`,
-          'Avance acumulado en acciones de mantenimiento.',
-          pct(data.mantenimiento, ANNUAL_GOALS.mantenimiento)
+          'Acciones de cuidado y permanencia.',
+          pct(d.mantenimiento, ANNUAL_GOALS.mantenimiento)
         ),
-        buildKpiCard(
+        buildKpi(
           'Mapas actualizados',
-          data.mapas,
+          d.mapas,
           `Meta anual: ${ANNUAL_GOALS.mapas} mapas.`,
-          'Actualización cartográfica de cobertura de tul.',
-          pct(data.mapas, ANNUAL_GOALS.mapas)
+          'Actualización cartográfica de cobertura.',
+          pct(d.mapas, ANNUAL_GOALS.mapas)
         ),
-        buildKpiCard(
+        buildKpi(
           'Capas vectoriales',
-          data.capas,
+          d.capas,
           `Meta anual: ${ANNUAL_GOALS.capas} capas.`,
           'Capas históricas en formato vectorial.',
-          pct(data.capas, ANNUAL_GOALS.capas)
+          pct(d.capas, ANNUAL_GOALS.capas)
         ),
-        buildKpiCard(
+        buildKpi(
           'Municipios atendidos',
-          data.municipios,
+          d.municipios,
           `Meta de referencia: ${ANNUAL_GOALS.municipios} municipios.`,
-          'Cobertura territorial del programa al mes seleccionado.',
-          pct(data.municipios, ANNUAL_GOALS.municipios)
+          'Cobertura territorial acumulada.',
+          pct(d.municipios, ANNUAL_GOALS.municipios)
         ),
-        buildKpiCard(
+        buildKpi(
           'Sitios atendidos',
-          data.sitios,
-          `Sitios acumulados trabajados: ${data.sitios}.`,
-          'Puntos intervenidos mediante siembra, resiembra o mantenimiento.',
-          pct(data.sitios, 10)
+          d.sitios,
+          `Sitios acumulados: ${d.sitios}.`,
+          'Puntos intervenidos mediante jornadas.',
+          pct(d.sitios, 10)
         )
-      ];
-
-      annualGrid.innerHTML = cards.join('');
-      document.getElementById('annualPeriodText').textContent =
-        `Avance acumulado del programa desde febrero hasta ${monthName(month).toLowerCase()} de 2026.`;
+      ].join('');
     }
 
     function renderCalendar(month){
-      const calendarGrid = document.getElementById('calendarGrid');
-
-      calendarGrid.innerHTML = MONTHS.map(m => {
-        const monthEvents = EVENTS.filter(e => e.month === m.num);
-        const isDoneMonth = m.num <= month && m.num <= ACTIVE_MONTH_MAX;
+      document.getElementById('calendarGrid').innerHTML = MONTHS.map(m => {
+        const items = EVENTS.filter(e => e.month === m.num);
+        const done = m.num <= month && m.num <= ACTIVE_MONTH_MAX;
 
         return `
-          <section class="calendar-month">
-            <div class="calendar-month-head">
+          <section class="month-group ${m.num === month ? 'is-current' : ''}">
+            <div class="month-title">
               <h3>${m.name}</h3>
-              <span>${monthEvents.length} jornada${monthEvents.length === 1 ? '' : 's'}</span>
+              <span>${items.length} jornada${items.length === 1 ? '' : 's'}</span>
             </div>
+
             <div class="event-list">
-              ${monthEvents.map(e => `
-                <article class="event-card ${isDoneMonth ? 'done' : 'pending'}">
+              ${items.map(e => `
+                <article class="event-card ${done ? 'done' : 'pending'}">
                   <div class="event-date">${e.date}</div>
+
                   <div class="event-main">
                     <strong>${e.municipio} · ${e.sitio}</strong>
-                    <span>${e.actividad}</span>
-                    <span>Semillero: ${e.semillero}</span>
+                    <span>${e.actividad} · Semillero: ${e.semillero}</span>
                     <span>Coordenadas: ${e.coords}</span>
                   </div>
-                  <span class="status-badge ${isDoneMonth ? 'done' : 'pending'}">
-                    ${isDoneMonth ? 'Realizada' : 'Programada'}
+
+                  <span class="status ${done ? 'done' : 'pending'}">
+                    ${done ? 'Realizada' : 'Programada'}
                   </span>
                 </article>
               `).join('')}
@@ -1735,61 +1993,66 @@
       }).join('');
     }
 
-    function renderSummary(month){
-      const annual = MONTHLY_DATA[month].annual;
-      const doneEvents = EVENTS.filter(e => e.month <= month && e.month <= ACTIVE_MONTH_MAX);
-      const nextEvent = EVENTS.find(e => e.month > ACTIVE_MONTH_MAX);
+    function renderTerritory(month){
+      const done = EVENTS.filter(e =>
+        e.month <= month &&
+        e.month <= ACTIVE_MONTH_MAX &&
+        !e.municipio.includes('Por confirmar')
+      );
 
-      const summaryList = document.getElementById('summaryList');
-      summaryList.innerHTML = `
-        <div class="mini-item"><span class="muted">Mes seleccionado</span><strong>${monthName(month)}</strong></div>
-        <div class="mini-item"><span class="muted">Jornadas realizadas</span><strong>${annual.jornadas}</strong></div>
-        <div class="mini-item"><span class="muted">Sitios atendidos</span><strong>${annual.sitios}</strong></div>
-        <div class="mini-item"><span class="muted">Municipios atendidos</span><strong>${annual.municipios}</strong></div>
-        <div class="mini-item"><span class="muted">Metros lineales acumulados</span><strong>${fmt(annual.metros)}</strong></div>
-        <div class="mini-item"><span class="muted">Próxima jornada programada</span><strong>${nextEvent ? nextEvent.date : '—'}</strong></div>
-      `;
-    }
+      const counts = done.reduce((acc, e) => {
+        acc[e.municipio] = (acc[e.municipio] || 0) + 1;
+        return acc;
+      }, {});
 
-    function renderMonthBars(){
-      const container = document.getElementById('monthBars');
-      const max = Math.max(...MONTHS.map(m => EVENTS.filter(e => e.month === m.num).length));
+      const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
-      container.innerHTML = MONTHS.map(m => {
-        const count = EVENTS.filter(e => e.month === m.num).length;
-        return `
-          <div class="bar-row" style="${m.num > ACTIVE_MONTH_MAX ? 'opacity:.4;' : ''}">
-            <div class="bar-label">${m.short}</div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:${(count / max) * 100}%"></div>
-            </div>
-            <div class="bar-num">${count}</div>
-          </div>
-        `;
-      }).join('');
+      document.getElementById('territoryList').innerHTML = entries.map(([name, count]) => `
+        <div class="territory-item">
+          <strong>${name}</strong>
+          <span>${count} jornada${count === 1 ? '' : 's'}</span>
+        </div>
+      `).join('');
     }
 
     function setMonth(month){
       if (month > ACTIVE_MONTH_MAX) return;
+
       selectedMonth = month;
 
       document.querySelectorAll('.month-pill').forEach(btn => {
         btn.classList.toggle('active', Number(btn.dataset.month) === month);
       });
 
+      const d = MONTHLY_DATA[month];
+
+      document.getElementById('periodTitle').textContent =
+        `Avance acumulado a ${monthName(month)} ${ACTIVE_YEAR}`;
+
+      document.getElementById('periodSubtitle').textContent =
+        `Lectura del programa desde febrero hasta ${monthName(month).toLowerCase()}, con ${d.annual.jornadas} jornadas realizadas de ${ANNUAL_GOALS.jornadas} programadas.`;
+
+      document.getElementById('periodTag').textContent =
+        month === DEFAULT_MONTH ? 'Al presente mes' : `Mes seleccionado: ${monthName(month)}`;
+
       renderMonthlyKpis(month);
       renderAnnualKpis(month);
       renderCalendar(month);
-      renderSummary(month);
-      renderMonthBars();
+      renderTerritory(month);
     }
 
-    function init(){
+    function switchView(mode){
+      document.body.classList.toggle('view-exec', mode === 'exec');
+      document.body.classList.toggle('view-full', mode !== 'exec');
+
+      document.getElementById('btnExec').classList.toggle('active', mode === 'exec');
+      document.getElementById('btnFull').classList.toggle('active', mode !== 'exec');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
       buildMonthPills();
       setMonth(DEFAULT_MONTH);
-    }
-
-    document.addEventListener('DOMContentLoaded', init);
+    });
   </script>
 </body>
 </html>
