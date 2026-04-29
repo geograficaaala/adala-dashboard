@@ -1894,7 +1894,7 @@ function applyCoverageField(field){
   const matches = coverageGeojson.features.filter(feature => {
     const municipio = feature?.properties?.municipio || '';
     if (isExcludedCoverageMunicipio(municipio)) return false;
-    if (field === 'Siembra y poda de Tul' &&
+    if (field === 'Siembra de tul' &&
         normalizeCoverageMunicipio(municipio).includes('nahua')) return false;
     return normalizeCoverageValue(feature?.properties?.[field]);
   });
