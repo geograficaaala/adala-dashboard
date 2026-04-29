@@ -2341,7 +2341,7 @@ async function loadEPC(cfg){
   const momentosDesarrolladosCohorteUno = 2;
   const pctAvanceFormacion = (momentosDesarrolladosCohorteUno / momentosPorCohorte) * (100 / cohortesTotales);
 
-  const actividadesVal = 10;
+  const actividadesVal = 11;
   const actividadesMeta = 128;
 
   // Visita mensual: si se hizo = 100%, si no = 0% (meta es 1 visita por mes activo, 7 en el año)
@@ -2359,16 +2359,16 @@ async function loadEPC(cfg){
 
   const keyMetrics = [
     {
-      label:'Fortalecimiento de las capacidades pedagógicas de 121 docentes de los niveles primaria, básico y diversificado, pertenecientes a 50 centros educativos en 13 municipios de la cuenca del Lago de Atitlán, mediante la capacitación en 7 ejes temáticos ambientales.',
-      acumDisplay:`${docentesVisitasRealizadas} / ${docentesVisitasMeta} visitas sostenidas a ${fmt(docentesPorVisita)} docentes`,
+      label:'Capacidades pedagógicas instaladas de los 7 módulos del Material de Referencia Educando para Conservar en 121 docentes de los niveles ordinario, básico y diversificado de 50 centros educativos de 13 municipios de la cuenca del Lago de Atitlán.',
+      acumDisplay:'1/7 módulos desarrollados',
       pct:pctDocentes,
       pctDisplay:`${fmtPct(pctDocentes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctDocentes,
       temporality: 'Este indicador tiene por temporalidad desde marzo a septiembre de 2026'
     },
     {
-      label:'Fortalecimiento de la educación ambiental en 3,514 estudiantes de primaria, básico y diversificado, mediante la capacitación de 7 temas ambientales del material de referencia \'Educando para Conservar\', con cobertura en 50 centros educativos de 13 municipios de la cuenca del Lago de Atitlán.',
-      acumDisplay:`${estudiantesVisitasRealizadas} / ${estudiantesVisitasMeta} visitas sostenidas a ${fmt(estudiantesPorVisita)} estudiantes`,
+      label:'3,514 estudiantes de los niveles ordinario, básico y diversificado de 50 centros educativos de la Cuenca del Lago de Atitlán, capacitados en los 7 módulos del Material de Referencia Educando para Conservar.',
+      acumDisplay:'1/7 módulos desarrollados',
       pct:pctEstudiantes,
       pctDisplay:`${fmtPct(pctEstudiantes)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctEstudiantes,
@@ -2376,7 +2376,7 @@ async function loadEPC(cfg){
     },
     {
       label:'Participación de 120 jóvenes de 12 municipios de la cuenca del Lago de Atitlán en el \'Diplomado de Gestión Ambiental y Liderazgo Juvenil\', estructurado en dos cohortes anuales de 60 estudiantes cada una, cubriendo cinco módulos temáticos y el desarrollo y presentación de un proyecto con un sólido enfoque social y ambiental.',
-      acumDisplay:`Avance en el desarrollo de la formación de estudiantes acumulada a la fecha: ${fmtPct(pctAvanceFormacion)}`,
+      acumDisplay:`1/7 módulos desarrollados`,
       pct:pctAvanceFormacion,
       pctDisplay:`${fmtPct(pctAvanceFormacion)} de avance acumulado hasta el mes de marzo con respecto a meta anual`,
       barPct:pctAvanceFormacion,
