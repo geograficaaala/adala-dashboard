@@ -1629,6 +1629,22 @@
   overflow-wrap:anywhere !important;
 }
 
+
+/* Temporalidad larga a lo ancho de toda la fila del indicador */
+.metric-note-full{
+  grid-column:1 / -1;
+  margin-top:2px;
+  padding:8px 10px;
+  border-radius:12px;
+  background:rgba(28,96,132,.045);
+  color:var(--lake);
+  font-size:.74rem;
+  font-weight:700;
+  line-height:1.5;
+  text-align:justify;
+  text-justify:inter-word;
+}
+
 </style>
 </head>
 <body>
@@ -2347,40 +2363,44 @@ async function loadFM(cfg){
   const pctPlanes = (planesVal / planesMeta) * 100;
   const pctAsistencias = (asistenciasVal / asistenciasMeta) * 100;
 
-  const vigenciaMunicipal = 'Vigencia: considerando los procesos burocráticos de las municipalidades.';
+  const vigenciaMunicipal = 'Este indicador tiene por periodo de enero a diciembre de 2026, considerando los plazos y procedimientos administrativos propios de las municipalidades';
 
   const keyMetrics = [
     {
-      label:'15 municipios de la Cuenca del Lago de Atitlán con capacidad instalada en los temas de Sistema Nacional de Inversión Pública, Sistemas de Información Geográfica, recolección digital de datos y cumplimiento legal ambiental.',
+      label:'15 municipalidades de la Cuenca del Lago de Atitlán con capacidad instalada en los temas de SNIP (Sistema nacional de inversión pública), SIG (Sistemas de Información Geográfica), recolección digital de datos y cumplimiento legal ambiental.',
       acumDisplay:`${municipiosVal}/${municipiosMeta} municipalidades`,
       pct:pctMunicipios,
       pctDisplay:`${fmtPct(pctMunicipios)} de avance`,
       barPct:pctMunicipios,
-      temporality: vigenciaMunicipal
+      temporality: vigenciaMunicipal,
+      temporalFullRow:true
     },
     {
-      label:'6 estudios de caracterización de desechos y residuos sólidos.',
+      label:'6 Estudios de caracterización de desechos y residuos sólidos y o aguas residuales.',
       acumDisplay:`${estudiosVal}/${estudiosMeta} estudios`,
       pct:pctEstudios,
       pctDisplay:`${fmtPct(pctEstudios)} de avance`,
       barPct:pctEstudios,
-      temporality: vigenciaMunicipal
+      temporality: vigenciaMunicipal,
+      temporalFullRow:true
     },
     {
-      label:'Planes Integrales de Residuos y Desechos Sólidos.',
+      label:'5 PIRDES Municipales (Planes de Manejo integrales de residuos y desechos sólidos)',
       acumDisplay:`${planesVal}/${planesMeta} planes integrales`,
       pct:pctPlanes,
       pctDisplay:`${fmtPct(pctPlanes)} de avance`,
       barPct:pctPlanes,
-      temporality: vigenciaMunicipal
+      temporality: vigenciaMunicipal,
+      temporalFullRow:true
     },
     {
-      label:'5 asistencias técnicas municipales en aguas residuales.',
+      label:'5 Asistencias técnicas municipales en aguas residuales.',
       acumDisplay:`${asistenciasVal}/${asistenciasMeta} asistencias técnicas`,
       pct:pctAsistencias,
       pctDisplay:`${fmtPct(pctAsistencias)} de avance`,
       barPct:pctAsistencias,
-      temporality: vigenciaMunicipal
+      temporality: vigenciaMunicipal,
+      temporalFullRow:true
     }
   ];
 
@@ -2689,8 +2709,11 @@ async function loadTul(cfg){
 ──────────────────────────────── */
 function metricRow(m, index = 0){
   const objectiveNumber = `${index + 1}`;
-  const temporalityMarkup = m.temporality
+  const temporalityMarkup = (m.temporality && !m.temporalFullRow)
     ? `<span class="metric-temporality">(${m.temporality})</span>`
+    : '';
+  const temporalFullMarkup = (m.temporality && m.temporalFullRow)
+    ? `<div class="metric-note-full">${m.temporality}</div>`
     : '';
   const metricNameMarkup = `<span class="metric-number">${objectiveNumber}</span><span class="metric-label-text">${m.label}${temporalityMarkup}</span>`;
 
@@ -2738,6 +2761,7 @@ function metricRow(m, index = 0){
         <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
         ${subIndicators}
       </div>
+      ${temporalFullMarkup}
     </div>
   `;
   }
@@ -2754,6 +2778,7 @@ function metricRow(m, index = 0){
         <div class="metric-primary">${pctLabel}</div>
         <div class="mbar"><span class="${cls}" style="width:${hasPct ? w : 0}%"></span></div>
       </div>
+      ${temporalFullMarkup}
     </div>
   `;
 }
